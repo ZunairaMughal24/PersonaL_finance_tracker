@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/const/utils/widget_utility_extention.dart';
+
+import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
 
 class TransactionCard extends StatelessWidget {
   const TransactionCard({

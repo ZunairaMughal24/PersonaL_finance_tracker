@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/const/appColors.dart';
-import 'package:personal_finance_tracker/core/const/utils/padding_extention.dart';
-import 'package:personal_finance_tracker/core/const/utils/validators.dart';
-import 'package:personal_finance_tracker/core/const/utils/widget_utility_extention.dart';
+
+import 'package:personal_finance_tracker/core/contants/appColors.dart';
+import 'package:personal_finance_tracker/core/utils/date_formatter.dart';
+import 'package:personal_finance_tracker/core/utils/padding_extention.dart';
+import 'package:personal_finance_tracker/core/utils/validators.dart';
+import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
 import 'package:personal_finance_tracker/models/transaction_model.dart';
 import 'package:personal_finance_tracker/providers/transaction_provider.dart';
 import 'package:personal_finance_tracker/services/database_services.dart';
+import 'package:personal_finance_tracker/widgets/Custome_Date_picker.dart';
 import 'package:personal_finance_tracker/widgets/appButton.dart';
 import 'package:personal_finance_tracker/widgets/appTextField.dart';
+import 'package:personal_finance_tracker/widgets/transaction_type_toggle.dart';
 import 'package:provider/provider.dart';
 
 class TransactionScreen extends StatefulWidget {
@@ -19,8 +23,9 @@ class TransactionScreen extends StatefulWidget {
 
 class _TransactionScreenState extends State<TransactionScreen> {
   final _formKey = GlobalKey<FormState>();
+  bool isIncome = true;
+  DateTime? _selectedDate;
 
-  // Controllers
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _typeController = TextEditingController();
@@ -28,10 +33,10 @@ class _TransactionScreenState extends State<TransactionScreen> {
   final TextEditingController _categoryController = TextEditingController();
 
   final DatabaseService db = DatabaseService();
- 
+
   @override
   Widget build(BuildContext context) {
-     final transaction = Provider.of<TransactionProvider>(context);
+    final transaction = Provider.of<TransactionProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -47,7 +52,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
             children: [
               30.heightBox,
 
-              /// Title
               AppTextField(
                 title: "Title",
                 hint: "Add transaction title",
@@ -56,7 +60,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
               ),
               8.heightBox,
 
-              /// Amount
               AppTextField(
                 title: "Amount",
                 hint: r"$ 0.00",
@@ -64,42 +67,56 @@ class _TransactionScreenState extends State<TransactionScreen> {
                 validator: Validators.amount,
                 keyboardType: TextInputType.number,
               ),
-              8.heightBox,
+              14.heightBox,
 
-              /// Type (Income/Expense)
-              AppTextField(
-                title: "Type",
-                hint: "Income / Expense",
-                controller: _typeController,
-                validator: Validators.type,
+              // AppTextField(
+              //   title: "Type",
+              //   hint: "Income / Expense",
+              //   controller: _typeController,
+              //   validator: Validators.type,
+              // ),
+              TransactionTypeToggle(
+                onChanged: (value) {
+                  setState(() {
+                    isIncome = value;
+                  });
+                  print("Selected: ${isIncome ? 'Income' : 'Expense'}");
+                },
               ),
               8.heightBox,
 
-              /// Date
-              AppTextField(
-                title: "Date",
-                hint: "Select a date",
-                controller: _dateController,
-                validator: Validators.emptyValidator,
-                prefixChild: const Icon(
-                  Icons.calendar_month,
-                  color: AppColors.grey,
-                  size: 20,
-                ),
+              // AppTextField(
+              //   title: "Date",
+              //   hint: "Select a date",
+              //   controller: _dateController,
+              //   validator: Validators.emptyValidator,
+              //   prefixChild: const Icon(
+              //     Icons.calendar_month,
+              //     color: AppColors.grey,
+              //     size: 20,
+              //   ),
+              // ),
+              CustomDatePicker(
+                selectedDate: _selectedDate,
+                onDateSelected: (newDate) {
+                  setState(() {
+                    _selectedDate = newDate;
+
+                    _dateController.text = DateUtilsCustom.formatDate(newDate);
+                  });
+                },
               ),
+
               8.heightBox,
 
-              /// Category
               AppTextField(
                 title: "Category",
                 hint: "Select a category",
                 controller: _categoryController,
                 validator: Validators.category,
-               
               ),
               50.heightBox,
 
-              /// Save Button
               AppButton(
                 text: "Save Transaction",
                 onPressed: () {
@@ -111,16 +128,15 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       );
                       return;
                     }
-                    //function all
-                      transaction.addTransaction(
+
+                    transaction.addTransaction(
                       //sending all data at once as model object
                       TransactionModel(
                         title: _titleController.text.trim(),
                         amount: amount,
-                        isIncome: true,
+                        isIncome: isIncome,
                         date: _dateController.text.trim(),
                         category: _categoryController.text.trim(),
-                      
                       ),
                     );
 

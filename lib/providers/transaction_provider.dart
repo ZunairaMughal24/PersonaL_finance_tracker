@@ -100,11 +100,7 @@ import 'package:personal_finance_tracker/services/database_services.dart';
 class TransactionProvider extends ChangeNotifier {
   final DatabaseService db = DatabaseService();
   
-  // We no longer need the 'income', 'expense', and 'totalBalance' variables
-  // because we calculate them live from the source of truth.
-
-  // --- GETTERS (Calculated State) ---
-
+ 
   /// Calculates total income by filtering and folding the transaction list
   double get totalIncome {
     return db.getAllTransaction()
@@ -112,35 +108,30 @@ class TransactionProvider extends ChangeNotifier {
         .fold(0.0, (sum, item) => sum + item.amount);
   }
 
-  /// Calculates total expense
+
   double get totalExpense {
     return db.getAllTransaction()
         .where((tx) => !tx.isIncome)
         .fold(0.0, (sum, item) => sum + item.amount);
   }
 
-  /// Calculates total balance (Income - Expense)
-  /// Returns 0.0 if the balance would be negative (optional professional safety)
   double get totalBalance {
     final balance = totalIncome - totalExpense;
     return balance < 0 ? 0.0 : balance;
   }
 
-  // --- METHODS ---
-
-  /// Adds a transaction and notifies the UI to recalculate totals
+ 
   Future<void> addTransaction(TransactionModel tx) async {
     await db.addTransaction(tx);
     notifyListeners(); 
   }
 
-  /// Deletes a transaction using its unique Hive key
+ 
   Future<void> deleteTransaction(int key) async {
     await db.deleteTransaction(key);
     notifyListeners();
   }
 
-  /// Updates a transaction and triggers a UI refresh
   Future<void> updateTransaction(int key, TransactionModel updatedTx) async {
     await db.updateTransaction(key, updatedTx);
     notifyListeners();

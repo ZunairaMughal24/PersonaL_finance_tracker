@@ -1,14 +1,15 @@
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
 import "package:personal_finance_tracker/config/router.dart";
-import "package:personal_finance_tracker/core/const/appColors.dart";
-import "package:personal_finance_tracker/core/const/utils/padding_extention.dart";
-import "package:personal_finance_tracker/core/const/utils/widget_utility_extention.dart";
-import "package:personal_finance_tracker/providers/transaction_provider.dart";
+
+import 'package:personal_finance_tracker/core/contants/appColors.dart';
+import 'package:personal_finance_tracker/core/utils/padding_extention.dart';
+import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
+import 'package:personal_finance_tracker/providers/transaction_provider.dart';
+import 'package:provider/provider.dart';
 import "package:personal_finance_tracker/widgets/balance_card.dart";
 import "package:personal_finance_tracker/widgets/info_card.dart";
 import "package:personal_finance_tracker/widgets/recent_transactions_list.dart";
-import "package:provider/provider.dart";
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -37,12 +38,12 @@ class HomeScreen extends StatelessWidget {
             children: [
               InfoBox(
                 title: " Total Income",
-                amount: "\$${transaction.totalIncome.toStringAsFixed(2)}",
+                amount: "${transaction.totalIncome.toStringAsFixed(2)}",
                 amountColor: AppColors.green,
               ),
               InfoBox(
                 title: " Total Expense",
-                amount: "\$${transaction.totalExpense.toStringAsFixed(2)}",
+                amount: "${transaction.totalExpense.toStringAsFixed(2)}",
                 amountColor: AppColors.red,
               ),
             ],

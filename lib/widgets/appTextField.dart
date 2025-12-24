@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/const/appColors.dart';
-import 'package:personal_finance_tracker/core/const/utils/widget_utility_extention.dart';
+import 'package:personal_finance_tracker/core/contants/appColors.dart';
+import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
+
 
 class AppTextField extends StatelessWidget {
   const AppTextField({
@@ -58,7 +59,7 @@ class AppTextField extends StatelessWidget {
             ),
             prefixIcon: prefixChild,
 
-            /// *** this shows dropdown or custom child ***
+           
             suffixIcon:
                 suffixChild ??
                 (showDropdown

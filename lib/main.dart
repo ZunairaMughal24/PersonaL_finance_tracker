@@ -16,7 +16,6 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(TransactionModelAdapter());
 
-  await Hive.openBox('transactionUpdates');
   await Hive.openBox<TransactionModel>('transactions');
 
   runApp(

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:personal_finance_tracker/config/router.dart';
-import 'package:personal_finance_tracker/core/const/appColors.dart';
-import 'package:personal_finance_tracker/core/const/utils/widget_utility_extention.dart';
+import 'package:personal_finance_tracker/core/contants/appColors.dart';
+import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
 import 'package:personal_finance_tracker/providers/transaction_provider.dart';
 import 'package:personal_finance_tracker/screens/edit_transaction_screen.dart';
 import 'package:personal_finance_tracker/services/database_services.dart';
