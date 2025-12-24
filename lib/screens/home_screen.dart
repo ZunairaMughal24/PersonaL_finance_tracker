@@ -37,12 +37,12 @@ class HomeScreen extends StatelessWidget {
             children: [
               InfoBox(
                 title: " Total Income",
-                amount: transaction.income.toStringAsFixed(2),
+                amount: "\$${transaction.totalIncome.toStringAsFixed(2)}",
                 amountColor: AppColors.green,
               ),
               InfoBox(
                 title: " Total Expense",
-                amount: transaction.expense.toStringAsFixed(2),
+                amount: "\$${transaction.totalExpense.toStringAsFixed(2)}",
                 amountColor: AppColors.red,
               ),
             ],

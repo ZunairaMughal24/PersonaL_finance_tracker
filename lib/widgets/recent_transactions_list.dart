@@ -24,8 +24,8 @@ class RecentTransactionsList extends StatelessWidget {
       ),
       child: ValueListenableBuilder(
         valueListenable: db.listenToBox(),
-        builder: (context, value, child) {
-          final items = db.getAllTransaction();
+        builder: (context, box, child) {
+          final items = box.values.toList().reversed.toList();
 
           if (items.isEmpty) {
             return Center(
@@ -109,12 +109,13 @@ class RecentTransactionsList extends StatelessWidget {
                             SnackBar(content: Text('Transaction deleted')),
                           );
                         } else if (value == 'Edit') {
-                 Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => EditTransactionScreen(transaction: tx),
-  ),
-);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  EditTransactionScreen(transaction: tx),
+                            ),
+                          );
                         } else if (value == 'Detail') {
                           // Navigator.pushNamed(context, AppRoutes.detailTransactionScreenRoute);
                         }

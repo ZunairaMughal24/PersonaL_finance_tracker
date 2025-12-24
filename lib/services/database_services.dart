@@ -21,10 +21,10 @@ class DatabaseService {
   }
 
   Future<void> updateTransaction(int key, TransactionModel updatedTx) async {
-    await box.putAt(key, updatedTx);
+    await box.put(key, updatedTx);
   }
 
   ValueListenable<Box<TransactionModel>> listenToBox() {
-    return box.listenable();
+    return Hive.box<TransactionModel>('transactions').listenable();
   }
 }
