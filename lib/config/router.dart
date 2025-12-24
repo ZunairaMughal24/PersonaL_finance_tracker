@@ -57,7 +57,7 @@ final router = GoRouter(
       pageBuilder: (context, state) => _buildPageWithDefaultTransition(
         context: context,
         state: state,
-        child:  EditTransactionScreen(),
+        child:  EditTransactionScreen(transaction: state.extra as dynamic),
       ),
       
     ),

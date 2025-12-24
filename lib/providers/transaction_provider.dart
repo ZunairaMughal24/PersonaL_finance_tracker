@@ -42,26 +42,53 @@ class TransactionProvider extends ChangeNotifier {
   void deleteTransaction(int key) {
     final tx = transactionBox.get(key);
     db.deleteTransaction(key);
-   
-if (tx != null) {
-  recalculateBalance(tx);
-}
+
+    if (tx != null) {
+      recalculateBalance(tx);
+    }
     notifyListeners();
   }
 
-    void recalculateBalance(TransactionModel tx) {
-      if (tx.isIncome) {
-        income -= tx.amount;
-      } else {
-        expense -= tx.amount;
-      }
-      totalBalance = (income - expense);
-
-      box.putAll({
-        'income': income,
-        'expense': expense,
-        'totalBalance': totalBalance,
-      });
-      notifyListeners();
+  void recalculateBalance(TransactionModel tx) {
+    if (tx.isIncome) {
+      income -= tx.amount;
+    } else {
+      expense -= tx.amount;
     }
+    totalBalance = (income - expense);
+
+    box.putAll({
+      'income': income,
+      'expense': expense,
+      'totalBalance': totalBalance,
+    });
+    notifyListeners();
+  }
+
+  void updateTransaction(int key, TransactionModel updatedTx) {
+
+    final oldTx = transactionBox.get(key);
+
+    if (oldTx != null) {
+     
+      if (oldTx.isIncome) {
+        income -= oldTx.amount;
+      } else {
+        expense -= oldTx.amount;
+      }
+    }
+    if (updatedTx.isIncome) {
+      income += updatedTx.amount;
+    } else {
+      expense += updatedTx.amount;
+    }
+    totalBalance = (income - expense);
+    db.updateTransaction(key, updatedTx); 
+     box.putAll({
+      'income': income,
+      'expense': expense,
+      'totalBalance': totalBalance,
+    });
+    notifyListeners();
+  }
 }

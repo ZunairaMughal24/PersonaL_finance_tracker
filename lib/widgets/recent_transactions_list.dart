@@ -112,7 +112,7 @@ class RecentTransactionsList extends StatelessWidget {
                  Navigator.push(
   context,
   MaterialPageRoute(
-    builder: (context) => EditTransactionScreen(),
+    builder: (context) => EditTransactionScreen(transaction: tx),
   ),
 );
                         } else if (value == 'Detail') {

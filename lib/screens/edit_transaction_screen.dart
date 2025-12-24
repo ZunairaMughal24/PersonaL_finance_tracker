@@ -11,8 +11,8 @@ import 'package:personal_finance_tracker/widgets/appTextField.dart';
 import 'package:provider/provider.dart';
 
 class EditTransactionScreen extends StatefulWidget {
-  EditTransactionScreen({super.key});
-
+  const EditTransactionScreen({super.key, required this.transaction});
+  final TransactionModel transaction;
   @override
   State<EditTransactionScreen> createState() => _EditTransactionScreenState();
 }
@@ -20,18 +20,44 @@ class EditTransactionScreen extends StatefulWidget {
 class _EditTransactionScreenState extends State<EditTransactionScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  // Controllers
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _amountController = TextEditingController();
-  final TextEditingController _typeController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
-  final TextEditingController _categoryController = TextEditingController();
+ late TextEditingController _titleController = TextEditingController();
+   late TextEditingController _amountController = TextEditingController();
+ late  TextEditingController _typeController = TextEditingController();
+   late TextEditingController _dateController = TextEditingController();
+  late TextEditingController _categoryController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    // 2. Initialize controllers with the values passed from the previous screen
+    _titleController = TextEditingController(text: widget.transaction.title);
+    _amountController = TextEditingController(
+      text: widget.transaction.amount.toString(),
+    );
+    _typeController = TextEditingController(
+      text: widget.transaction.isIncome ? "Income" : "Expense",
+    );
+    _dateController = TextEditingController(text: widget.transaction.date);
+    _categoryController = TextEditingController(
+      text: widget.transaction.category,
+    );
+  }
+
+  @override
+  void dispose() {
+    // 3. Always dispose controllers to prevent memory leaks
+    _titleController.dispose();
+    _amountController.dispose();
+    _typeController.dispose();
+    _dateController.dispose();
+    _categoryController.dispose();
+    super.dispose();
+  }
 
   final DatabaseService db = DatabaseService();
- 
+
   @override
   Widget build(BuildContext context) {
-     final transaction = Provider.of<TransactionProvider>(context);
+    final transaction = Provider.of<TransactionProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -95,13 +121,12 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
                 hint: "Select a category",
                 controller: _categoryController,
                 validator: Validators.category,
-               
               ),
               50.heightBox,
 
               /// Save Button
               AppButton(
-                text: "Save Transaction",
+                text: "Update Transaction",
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     final amount = double.tryParse(_amountController.text);
@@ -111,16 +136,16 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
                       );
                       return;
                     }
-                    //function all
-                      transaction.addTransaction(
-                      //sending all data at once as model object
+                
+                    
+                       transaction.updateTransaction(widget.transaction.key as int,
+                      //sending all new data at once as model object
                       TransactionModel(
                         title: _titleController.text.trim(),
                         amount: amount,
                         isIncome: true,
                         date: _dateController.text.trim(),
                         category: _categoryController.text.trim(),
-                      
                       ),
                     );
 
