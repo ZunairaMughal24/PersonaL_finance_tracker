@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/contants/appTextTheme.dart';
+import 'package:personal_finance_tracker/core/const/appTextTheme.dart';
 
 
 
