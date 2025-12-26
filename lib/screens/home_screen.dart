@@ -26,6 +26,7 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: AppColors.primaryColor,
         child: const Icon(Icons.add),
       ),
+
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

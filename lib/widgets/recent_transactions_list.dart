@@ -102,7 +102,7 @@ class RecentTransactionsList extends StatelessWidget {
                     PopUpMenu(
                       onItemSelected: (value) {
                         if (value == 'Delete') {
-                          transaction.deleteTransaction(tx.key as int);
+                          transaction.deleteTransaction(tx.key as int, index);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text('Transaction deleted')),
                           );

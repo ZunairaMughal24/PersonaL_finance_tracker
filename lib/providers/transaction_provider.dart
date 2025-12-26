@@ -93,47 +93,75 @@
 //   }
 // }
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:personal_finance_tracker/models/transaction_model.dart';
 import 'package:personal_finance_tracker/services/database_services.dart';
-
 class TransactionProvider extends ChangeNotifier {
   final DatabaseService db = DatabaseService();
+  List<TransactionModel> _transactions = [];
+
   
- 
-  /// Calculates total income by filtering and folding the transaction list
-  double get totalIncome {
-    return db.getAllTransaction()
-        .where((tx) => tx.isIncome)
-        .fold(0.0, (sum, item) => sum + item.amount);
-  }
+  List<TransactionModel> get transactions => _transactions;
 
-
-  double get totalExpense {
-    return db.getAllTransaction()
-        .where((tx) => !tx.isIncome)
-        .fold(0.0, (sum, item) => sum + item.amount);
-  }
-
-  double get totalBalance {
-    final balance = totalIncome - totalExpense;
-    return balance < 0 ? 0.0 : balance;
-  }
-
- 
-  Future<void> addTransaction(TransactionModel tx) async {
-    await db.addTransaction(tx);
+  Future<void> fetchTransactions() async {
+    _transactions = await db.getAllTransaction(); 
     notifyListeners(); 
   }
 
- 
-  Future<void> deleteTransaction(int key) async {
-    await db.deleteTransaction(key);
+
+
+  Future<void> addTransaction(TransactionModel tx) async {
+    await db.addTransaction(tx);
+    _transactions.add(tx);
     notifyListeners();
   }
 
-  Future<void> updateTransaction(int key, TransactionModel updatedTx) async {
+  Future<void> deleteTransaction(int key, int index) async {
+    await db.deleteTransaction(key);
+_transactions.removeAt(index);
+notifyListeners();
+  }
+
+  Future<void> updateTransaction(int key,  TransactionModel updatedTx) async {
     await db.updateTransaction(key, updatedTx);
+
+  int index = _transactions.indexWhere((t) => t.key == key);
+
+
+  if (index != -1) {
+    _transactions[index] = updatedTx;
     notifyListeners();
+  }
+  }
+
+
+
+  double get totalIncome => _transactions
+      .where((tx) => tx.isIncome)
+      .fold(0.0, (sum, item) => sum + item.amount);
+
+  double get totalExpense => _transactions
+      .where((tx) => !tx.isIncome)
+      .fold(0.0, (sum, item) => sum + item.amount);
+
+  double get totalBalance => totalIncome - totalExpense;
+
+// for pie chart
+  Map<String, dynamic> calculateTotals() {
+    Map<String, double> categoryTotals = {};
+    double grandTotal = 0;
+    
+ 
+    final expenses = _transactions.where((t) => !t.isIncome);
+    
+    for (var transaction in expenses) {
+      categoryTotals[transaction.category] =
+          (categoryTotals[transaction.category] ?? 0) + transaction.amount;
+      grandTotal += transaction.amount;
+    }
+
+    return {
+      'categoryTotals': categoryTotals,
+      'grandTotal': grandTotal,
+    };
   }
 }

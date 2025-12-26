@@ -3,8 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:personal_finance_tracker/config/router.dart';
-import 'package:personal_finance_tracker/core/const/appTheme.dart';
-
+import 'package:personal_finance_tracker/core/themes/appTheme.dart';
 
 import 'package:personal_finance_tracker/models/transaction_model.dart';
 import 'package:personal_finance_tracker/providers/transaction_provider.dart';
@@ -18,6 +17,8 @@ void main() async {
 
   await Hive.openBox<TransactionModel>('transactions');
 
+  final transactionProvider = TransactionProvider();
+  await transactionProvider.fetchTransactions();
   runApp(
     ChangeNotifierProvider(
       create: (_) => TransactionProvider(),

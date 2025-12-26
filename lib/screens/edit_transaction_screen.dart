@@ -140,6 +140,7 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
 
                     transaction.updateTransaction(
                       widget.transaction.key as int,
+                     
                       //sending all new data at once as model object
                       TransactionModel(
                         title: _titleController.text.trim(),
@@ -147,7 +148,9 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
                         isIncome: isIncome,
                         date: _dateController.text.trim(),
                         category: _categoryController.text.trim(),
+                    
                       ),
+                      
                     );
 
                     Navigator.pop(context);

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:personal_finance_tracker/screens/analytics_screen.dart';
 import 'package:personal_finance_tracker/screens/edit_transaction_screen.dart';
 import 'package:personal_finance_tracker/screens/home_screen.dart';
+import 'package:personal_finance_tracker/screens/main_navigation_screen.dart';
 import 'package:personal_finance_tracker/screens/transaction_screen.dart';
 
 
@@ -26,15 +28,25 @@ CustomTransitionPage<void> _buildPageWithDefaultTransition<T>({
   );
 }
 class AppRoutes {
+  static const String mainNavigationScreenRoute = '/MainNavigationScreen';
   static const String homeScreenRoute = '/homeScreen';
     static const String transactionScreenRoute = '/trasactionScreen';
     static const String editTransactionScreenRoute = '/editTransactionScreen';
+      static const String analyticsScreenRoute = '/analyticsScreen';
      
  
 }
 final router = GoRouter(
-  initialLocation: AppRoutes.homeScreenRoute,
+  initialLocation: AppRoutes.mainNavigationScreenRoute,
   routes: [
+    GoRoute(
+      path: AppRoutes.mainNavigationScreenRoute,
+      pageBuilder: (context, state) => _buildPageWithDefaultTransition(
+        context: context,
+        state: state,
+        child: const MainNavScreen(),
+      ),
+    ),
      GoRoute(
       path: AppRoutes.homeScreenRoute,
       pageBuilder: (context, state) => _buildPageWithDefaultTransition(
@@ -61,6 +73,13 @@ final router = GoRouter(
       ),
       
     ),
- 
+  GoRoute(
+      path: AppRoutes.analyticsScreenRoute,
+      pageBuilder: (context, state) => _buildPageWithDefaultTransition(
+        context: context,
+        state: state,
+        child: const AnalyticsScreen(),
+      ),
+    ),
   ],
 );

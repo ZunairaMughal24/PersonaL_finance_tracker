@@ -15,7 +15,7 @@ import 'package:personal_finance_tracker/widgets/transaction_type_toggle.dart';
 import 'package:provider/provider.dart';
 
 class TransactionScreen extends StatefulWidget {
-  TransactionScreen({super.key});
+ const TransactionScreen({super.key});
 
   @override
   State<TransactionScreen> createState() => _TransactionScreenState();
@@ -28,7 +28,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
-  final TextEditingController _typeController = TextEditingController();
+
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
 
@@ -69,12 +69,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
               ),
               14.heightBox,
 
-              // AppTextField(
-              //   title: "Type",
-              //   hint: "Income / Expense",
-              //   controller: _typeController,
-              //   validator: Validators.type,
-              // ),
+           
               TransactionTypeToggle(
                 onChanged: (value) {
                   setState(() {
@@ -85,17 +80,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
               ),
               8.heightBox,
 
-              // AppTextField(
-              //   title: "Date",
-              //   hint: "Select a date",
-              //   controller: _dateController,
-              //   validator: Validators.emptyValidator,
-              //   prefixChild: const Icon(
-              //     Icons.calendar_month,
-              //     color: AppColors.grey,
-              //     size: 20,
-              //   ),
-              // ),
               CustomDatePicker(
                 selectedDate: _selectedDate,
                 onDateSelected: (newDate) {
