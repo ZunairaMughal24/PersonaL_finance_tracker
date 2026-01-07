@@ -6,6 +6,8 @@ import 'package:personal_finance_tracker/screens/home_screen.dart';
 import 'package:personal_finance_tracker/screens/main_navigation_screen.dart';
 import 'package:personal_finance_tracker/screens/profile_screen.dart';
 import 'package:personal_finance_tracker/screens/transaction_screen.dart';
+import 'package:personal_finance_tracker/screens/splash_screen.dart';
+import 'package:personal_finance_tracker/screens/activity_screen.dart';
 
 CustomTransitionPage<void> _buildPageWithDefaultTransition<T>({
   required BuildContext context,
@@ -29,17 +31,27 @@ CustomTransitionPage<void> _buildPageWithDefaultTransition<T>({
 }
 
 class AppRoutes {
+  static const String splashScreenRoute = '/splash';
   static const String mainNavigationScreenRoute = '/MainNavigationScreen';
   static const String homeScreenRoute = '/homeScreen';
   static const String transactionScreenRoute = '/trasactionScreen';
   static const String editTransactionScreenRoute = '/editTransactionScreen';
   static const String analyticsScreenRoute = '/analyticsScreen';
+  static const String activityScreenRoute = '/activityScreen';
   static const String profileScreenRoute = '/profileScreen';
 }
 
 final router = GoRouter(
-  initialLocation: AppRoutes.mainNavigationScreenRoute,
+  initialLocation: AppRoutes.splashScreenRoute,
   routes: [
+    GoRoute(
+      path: AppRoutes.splashScreenRoute,
+      pageBuilder: (context, state) => _buildPageWithDefaultTransition(
+        context: context,
+        state: state,
+        child: const SplashScreen(),
+      ),
+    ),
     GoRoute(
       path: AppRoutes.mainNavigationScreenRoute,
       pageBuilder: (context, state) => _buildPageWithDefaultTransition(
@@ -78,6 +90,14 @@ final router = GoRouter(
         context: context,
         state: state,
         child: const AnalyticsScreen(),
+      ),
+    ),
+    GoRoute(
+      path: AppRoutes.activityScreenRoute,
+      pageBuilder: (context, state) => _buildPageWithDefaultTransition(
+        context: context,
+        state: state,
+        child: const ActivityScreen(),
       ),
     ),
     GoRoute(

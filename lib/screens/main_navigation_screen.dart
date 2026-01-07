@@ -5,7 +5,7 @@ import 'package:personal_finance_tracker/core/constants/appColors.dart';
 import 'package:personal_finance_tracker/screens/analytics_screen.dart';
 import 'package:personal_finance_tracker/screens/home_screen.dart';
 import 'package:personal_finance_tracker/screens/profile_screen.dart';
-import 'package:personal_finance_tracker/screens/transaction_screen.dart';
+import 'package:personal_finance_tracker/screens/activity_screen.dart';
 import 'package:provider/provider.dart';
 import '../providers/transaction_provider.dart';
 
@@ -22,7 +22,7 @@ class _MainNavScreenState extends State<MainNavScreen> {
   final List<Widget> _screens = const [
     HomeScreen(),
     AnalyticsScreen(),
-    TransactionScreen(),
+    ActivityScreen(),
     ProfileScreen(),
   ];
 
@@ -40,11 +40,13 @@ class _MainNavScreenState extends State<MainNavScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       body: IndexedStack(index: _currentIndex, children: _screens),
 
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.primaryColor,
         elevation: 6,
+        shape: const CircleBorder(),
         onPressed: () {
           context.push(AppRoutes.transactionScreenRoute);
         },
@@ -58,27 +60,32 @@ class _MainNavScreenState extends State<MainNavScreen> {
           topRight: Radius.circular(20),
         ),
         child: BottomAppBar(
-          color: const Color(0xFF1E1E1E),
+          color: const Color.fromARGB(255, 31, 38, 73),
           elevation: 0,
-          shape: const CircularNotchedRectangle(),
-          notchMargin: 6,
-          child: Container(
-            height: 55,
-            decoration: BoxDecoration(
-              color: const Color(0xFF1E1E1E),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-            ),
+          // shape: const CircularNotchedRectangle(),
+          notchMargin: 0,
+          padding: EdgeInsets.zero,
+          child: SizedBox(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _navItem(icon: Icons.home_outlined, index: 0),
-                _navItem(icon: Icons.pie_chart_outline, index: 1),
-                const SizedBox(width: 40), // space for FAB
-                _navItem(icon: Icons.list_alt_outlined, index: 2),
-                _navItem(icon: Icons.person_outline, index: 3),
+                _navItem(icon: Icons.home_rounded, label: 'Home', index: 0),
+                _navItem(
+                  icon: Icons.bar_chart_rounded,
+                  label: 'Analytics',
+                  index: 1,
+                ),
+                const SizedBox(width: 48),
+                _navItem(
+                  icon: Icons.receipt_long_rounded,
+                  label: 'Activity',
+                  index: 2,
+                ),
+                _navItem(
+                  icon: Icons.person_rounded,
+                  label: 'Profile',
+                  index: 3,
+                ),
               ],
             ),
           ),
@@ -87,11 +94,16 @@ class _MainNavScreenState extends State<MainNavScreen> {
     );
   }
 
-  Widget _navItem({required IconData icon, required int index}) {
+  Widget _navItem({
+    required IconData icon,
+    required String label,
+    required int index,
+  }) {
+    final isSelected = _currentIndex == index;
     return Material(
-      color: Colors.transparent, // transparent to see ripple
+      color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(50),
+        borderRadius: BorderRadius.circular(12),
         splashColor: AppColors.primaryColor.withOpacity(0.2),
         onTap: () {
           setState(() {
@@ -99,13 +111,30 @@ class _MainNavScreenState extends State<MainNavScreen> {
           });
         },
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Icon(
-            icon,
-            color: _currentIndex == index
-                ? AppColors.primaryColor
-                : AppColors.grey,
-            size: 28,
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                color: isSelected
+                    ? AppColors.primaryColor
+                    : AppColors.white.withOpacity(0.5),
+                size: 24,
+              ),
+              const SizedBox(height: 2),
+              Text(
+                label,
+                style: TextStyle(
+                  color: isSelected
+                      ? AppColors.primaryColor
+                      : AppColors.white.withOpacity(0.5),
+                  fontSize: 12,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                ),
+              ),
+            ],
           ),
         ),
       ),

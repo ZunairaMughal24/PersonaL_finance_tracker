@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:personal_finance_tracker/core/constants/appColors.dart';
-import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
-
 
 class AppTextField extends StatelessWidget {
   const AppTextField({
@@ -15,7 +13,8 @@ class AppTextField extends StatelessWidget {
     this.suffixChild,
     this.prefixChild,
     required this.title,
-    this.label,  this.validator,
+    this.label,
+    this.validator,
   });
   final String title;
   final String? label;
@@ -23,7 +22,7 @@ class AppTextField extends StatelessWidget {
   final TextEditingController? controller;
   final bool obscureText;
   final TextInputType keyboardType;
- final String? Function(String?)? validator;
+  final String? Function(String?)? validator;
   final bool showDropdown;
   final Widget? suffixChild;
   final Widget? prefixChild;
@@ -35,43 +34,67 @@ class AppTextField extends StatelessWidget {
       children: [
         Text(
           title,
-          style: const TextStyle(
-            fontSize: 16,
+          style: TextStyle(
+            fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: AppColors.white,
+            color: AppColors.white.withOpacity(0.7),
           ),
         ),
-        8.heightBox,
-        TextFormField(
-       validator: validator,
-          controller: controller,
-          obscureText: obscureText,
-          keyboardType: keyboardType,
-          readOnly: showDropdown,
-          style: TextStyle(color: AppColors.white),
-          decoration: InputDecoration(
-            hintText: hint,
-            labelText: label,
-
-            contentPadding: const EdgeInsets.symmetric(
-              vertical: 14,
-              horizontal: 12,
+        const SizedBox(height: 8),
+        Container(
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                offset: const Offset(2, 2),
+                blurRadius: 4,
+              ),
+              BoxShadow(
+                color: AppColors.white.withOpacity(0.05),
+                offset: const Offset(-1, -1),
+                blurRadius: 2,
+              ),
+            ],
+          ),
+          child: TextFormField(
+            validator: validator,
+            controller: controller,
+            obscureText: obscureText,
+            keyboardType: keyboardType,
+            readOnly: showDropdown,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
             ),
-            prefixIcon: prefixChild,
+            decoration: InputDecoration(
+              hintText: hint,
+              labelText: label,
+              hintStyle: TextStyle(color: AppColors.grey.withOpacity(0.5)),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 16,
+              ),
+              prefixIcon: prefixChild,
+              suffixIcon:
+                  suffixChild ??
+                  (showDropdown
+                      ? const Icon(Icons.arrow_drop_down, color: Colors.white)
+                      : null),
 
-           
-            suffixIcon:
-                suffixChild ??
-                (showDropdown
-                    ? const Icon(Icons.arrow_drop_down, color: Colors.white)
-                    : null),
-
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(
-                color: AppColors.primaryColor,
-                width: 1.5,
+              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(
+                  color: AppColors.primaryColor.withOpacity(0.5),
+                  width: 1.5,
+                ),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: const BorderSide(color: AppColors.red, width: 1),
               ),
             ),
           ),

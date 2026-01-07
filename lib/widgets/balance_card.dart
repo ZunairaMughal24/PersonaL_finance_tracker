@@ -4,61 +4,59 @@ import 'package:personal_finance_tracker/core/constants/appColors.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
 
 class TotalBalanceCard extends StatelessWidget {
-  final double balance;
+  final String formattedBalance;
 
-  const TotalBalanceCard({super.key, required this.balance});
+  const TotalBalanceCard({super.key, required this.formattedBalance});
 
   @override
   Widget build(BuildContext context) {
     final today = DateTime.now();
     return Container(
-      height: 160,
+      height: 140,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColors.primaryColor,
+        gradient: AppColors.transactionCardGradient,
         borderRadius: BorderRadius.circular(12),
       ),
       padding: const EdgeInsets.all(12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          15.heightBox,
+          13.heightBox,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Total Balance',
                 style: TextStyle(
-                  fontSize: 17,
+                  fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.black,
+                  color: AppColors.white,
                 ),
               ),
               Icon(
                 Icons.account_balance_wallet_outlined,
-                color: AppColors.black,
+                color: AppColors.white,
                 size: 20,
               ),
             ],
           ),
-          14.heightBox,
-          Center(
-            child: Text(
-              '\$${balance.toStringAsFixed(2)}',
-              style: TextStyle(
-                fontSize: 34,
-                fontWeight: FontWeight.bold,
-                color: AppColors.black,
-              ),
+          8.heightBox,
+          Text(
+            formattedBalance,
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              color: AppColors.white,
             ),
           ),
-          12.heightBox,
+          6.heightBox,
           Text(
             'As of ${today.day}-${today.month}-${today.year}',
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 13,
               fontWeight: FontWeight.w500,
-              color: AppColors.black,
+              color: AppColors.white,
             ),
           ),
         ],

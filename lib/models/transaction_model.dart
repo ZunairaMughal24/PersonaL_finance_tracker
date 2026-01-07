@@ -11,7 +11,7 @@ class TransactionModel extends HiveObject {
   double amount;
 
   @HiveField(2)
-  bool isIncome = true; // Income / Expense
+  bool isIncome = true;
 
   @HiveField(3)
   String date;
@@ -19,22 +19,26 @@ class TransactionModel extends HiveObject {
   @HiveField(4)
   String category;
 
+  @HiveField(5, defaultValue: 'USD')
+  String currency;
+
   TransactionModel({
     required this.title,
     required this.amount,
     required this.isIncome,
     required this.date,
     required this.category,
+    this.currency = 'USD',
   });
 
-  // Optional: for map conversion
   Map<String, dynamic> toMap() {
     return {
       'title': title,
       'amount': amount,
-     "isIncome': isIncome,"
+      'isIncome': isIncome,
       'date': date,
       'category': category,
+      'currency': currency,
     };
   }
 
@@ -45,6 +49,7 @@ class TransactionModel extends HiveObject {
       isIncome: map['isIncome'],
       date: map['date'],
       category: map['category'] ?? '',
+      currency: map['currency'] ?? 'USD',
     );
   }
 }

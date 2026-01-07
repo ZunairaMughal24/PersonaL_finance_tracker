@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
-
 
 class InfoBox extends StatelessWidget {
   final String title;
@@ -21,8 +19,8 @@ class InfoBox extends StatelessWidget {
       height: 90,
       width: 150,
       decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 44, 51, 86),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.grey),
       ),
       padding: const EdgeInsets.all(8),
       child: Column(
@@ -30,10 +28,10 @@ class InfoBox extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(fontSize: 18, color: Colors.white),
+            style: const TextStyle(fontSize: 16, color: Colors.white),
           ),
           4.heightBox,
-          Text("\$$amount", style: TextStyle(fontSize: 20, color: amountColor)),
+          Text(amount, style: TextStyle(fontSize: 18, color: amountColor)),
         ],
       ),
     );

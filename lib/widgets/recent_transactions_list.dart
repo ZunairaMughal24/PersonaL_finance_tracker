@@ -4,7 +4,7 @@ import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dar
 import 'package:personal_finance_tracker/providers/transaction_provider.dart';
 import 'package:personal_finance_tracker/screens/edit_transaction_screen.dart';
 import 'package:personal_finance_tracker/services/database_services.dart';
-import 'package:personal_finance_tracker/widgets/menu_bar.dart';
+import 'package:personal_finance_tracker/widgets/transaction/transaction_list_item.dart';
 import 'package:provider/provider.dart';
 
 class RecentTransactionsList extends StatelessWidget {
@@ -17,8 +17,8 @@ class RecentTransactionsList extends StatelessWidget {
     return Container(
       height: MediaQuery.of(context).size.height * 0.4,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.grey, width: 1),
+        color: const Color.fromARGB(255, 44, 51, 86),
+        borderRadius: BorderRadius.circular(16),
       ),
       child: ValueListenableBuilder(
         valueListenable: db.listenToBox(),
@@ -35,8 +35,8 @@ class RecentTransactionsList extends StatelessWidget {
                   Text(
                     "No transactions yet",
                     style: TextStyle(
-                      color: AppColors.grey,
-                      fontSize: 16,
+                      color: AppColors.white,
+                      fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -45,82 +45,31 @@ class RecentTransactionsList extends StatelessWidget {
             );
           }
 
-          //Otherwise show list of transactions
-          return ListView.builder(
+          return ListView.separated(
+            padding: const EdgeInsets.symmetric(vertical: 8),
             itemCount: items.length,
+            separatorBuilder: (context, index) =>
+                Divider(color: AppColors.surface, height: 1.2),
             itemBuilder: (context, index) {
               final tx = items[index];
 
-              return ListTile(
-                leading: Icon(
-                  Icons.monetization_on,
-                  color: AppColors.primaryColor,
-                ),
-                title: Text(
-                  tx.title,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.white,
-                  ),
-                ),
-                subtitle: Text(
-                  tx.isIncome ? 'Income' : 'Expense',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.white.withOpacity(0.7),
-                  ),
-                ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          "\$${tx.amount.toStringAsFixed(2)}",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: tx.isIncome
-                                ? AppColors.green
-                                : AppColors.red,
-                          ),
-                        ),
-                        2.heightBox,
-                        Text(
-                          tx.date,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.white.withOpacity(0.7),
-                          ),
-                        ),
-                      ],
+              return TransactionListItem(
+                transaction: tx,
+                onDelete: () {
+                  transaction.deleteTransaction(tx.key as int, index);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Transaction deleted')),
+                  );
+                },
+                onEdit: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          EditTransactionScreen(transaction: tx),
                     ),
-                    PopUpMenu(
-                      onItemSelected: (value) {
-                        if (value == 'Delete') {
-                          transaction.deleteTransaction(tx.key as int, index);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Transaction deleted')),
-                          );
-                        } else if (value == 'Edit') {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  EditTransactionScreen(transaction: tx),
-                            ),
-                          );
-                        } else if (value == 'Detail') {
-                          // Navigator.pushNamed(context, AppRoutes.detailTransactionScreenRoute);
-                        }
-                      },
-                    ),
-                  ],
-                ),
+                  );
+                },
               );
             },
           );

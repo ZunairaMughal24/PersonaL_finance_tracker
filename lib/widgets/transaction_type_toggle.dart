@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 
-class TransactionTypeToggle extends StatefulWidget {
+class TransactionTypeToggle extends StatelessWidget {
+  final bool isIncome;
   final Function(bool) onChanged;
-  const TransactionTypeToggle({super.key, required this.onChanged});
 
-  @override
-  State<TransactionTypeToggle> createState() => _TransactionTypeToggleState();
-}
-
-class _TransactionTypeToggleState extends State<TransactionTypeToggle> {
-  bool isIncome = true;
+  const TransactionTypeToggle({
+    super.key,
+    required this.isIncome,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +18,7 @@ class _TransactionTypeToggleState extends State<TransactionTypeToggle> {
       width: width,
       height: 55,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.10), // Subtle dark background
+        color: Colors.white.withOpacity(0.10),
         borderRadius: BorderRadius.circular(15),
       ),
       child: Stack(
@@ -30,7 +29,7 @@ class _TransactionTypeToggleState extends State<TransactionTypeToggle> {
             alignment: isIncome ? Alignment.centerLeft : Alignment.centerRight,
             child: Container(
               width: (width - 40) / 2,
-              // margin: const EdgeInsets.all(4),
+
               decoration: BoxDecoration(
                 color: isIncome
                     ? Colors.green.withOpacity(0.2)
@@ -49,8 +48,7 @@ class _TransactionTypeToggleState extends State<TransactionTypeToggle> {
               Expanded(
                 child: GestureDetector(
                   onTap: () {
-                    setState(() => isIncome = true);
-                    widget.onChanged(true);
+                    if (!isIncome) onChanged(true);
                   },
                   child: Center(
                     child: Text(
@@ -66,8 +64,7 @@ class _TransactionTypeToggleState extends State<TransactionTypeToggle> {
               Expanded(
                 child: GestureDetector(
                   onTap: () {
-                    setState(() => isIncome = false);
-                    widget.onChanged(false);
+                    if (isIncome) onChanged(false);
                   },
                   child: Center(
                     child: Text(

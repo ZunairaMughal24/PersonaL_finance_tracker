@@ -1,137 +1,201 @@
 import 'package:flutter/material.dart';
-
 import 'package:personal_finance_tracker/core/constants/appColors.dart';
-import 'package:personal_finance_tracker/core/utils/date_formatter.dart';
-import 'package:personal_finance_tracker/core/utils/padding_extention.dart';
-import 'package:personal_finance_tracker/core/utils/validators.dart';
-import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
-import 'package:personal_finance_tracker/models/transaction_model.dart';
+import 'package:personal_finance_tracker/core/constants/category_constants.dart';
 import 'package:personal_finance_tracker/providers/transaction_provider.dart';
-import 'package:personal_finance_tracker/services/database_services.dart';
-import 'package:personal_finance_tracker/widgets/Custome_Date_picker.dart';
+import 'package:personal_finance_tracker/viewmodels/transaction_form_view_model.dart';
 import 'package:personal_finance_tracker/widgets/appButton.dart';
-import 'package:personal_finance_tracker/widgets/appTextField.dart';
 import 'package:personal_finance_tracker/widgets/transaction_type_toggle.dart';
+import 'package:personal_finance_tracker/widgets/custom_keypad.dart';
+import 'package:personal_finance_tracker/widgets/category_selector.dart';
+import 'package:personal_finance_tracker/widgets/transaction/amount_display.dart';
+import 'package:personal_finance_tracker/widgets/transaction/transaction_date_picker.dart';
+import 'package:personal_finance_tracker/widgets/transaction/transaction_title_field.dart';
 import 'package:provider/provider.dart';
 
-class TransactionScreen extends StatefulWidget {
- const TransactionScreen({super.key});
-
-  @override
-  State<TransactionScreen> createState() => _TransactionScreenState();
-}
-
-class _TransactionScreenState extends State<TransactionScreen> {
-  final _formKey = GlobalKey<FormState>();
-  bool isIncome = true;
-  DateTime? _selectedDate;
-
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _amountController = TextEditingController();
-
-  final TextEditingController _dateController = TextEditingController();
-  final TextEditingController _categoryController = TextEditingController();
-
-  final DatabaseService db = DatabaseService();
+class TransactionScreen extends StatelessWidget {
+  const TransactionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final transaction = Provider.of<TransactionProvider>(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Add Transaction',
-          style: TextStyle(color: AppColors.white),
-        ),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              30.heightBox,
+    return ChangeNotifierProvider(
+      create: (_) => TransactionFormViewModel(),
+      child: const _TransactionScreenContent(),
+    );
+  }
+}
 
-              AppTextField(
-                title: "Title",
-                hint: "Add transaction title",
-                controller: _titleController,
-                validator: Validators.title,
+class _TransactionScreenContent extends StatefulWidget {
+  const _TransactionScreenContent();
+
+  @override
+  State<_TransactionScreenContent> createState() =>
+      _TransactionScreenContentState();
+}
+
+class _TransactionScreenContentState extends State<_TransactionScreenContent> {
+  late TextEditingController _titleController;
+
+  @override
+  void initState() {
+    super.initState();
+    _titleController = TextEditingController();
+
+    _titleController.addListener(() {
+      Provider.of<TransactionFormViewModel>(
+        context,
+        listen: false,
+      ).setTitle(_titleController.text);
+    });
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    super.dispose();
+  }
+
+  void _saveTransaction(BuildContext context) {
+    final vm = Provider.of<TransactionFormViewModel>(context, listen: false);
+    final error = vm.validate();
+
+    if (error != null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(error)));
+      return;
+    }
+    Provider.of<TransactionProvider>(
+      context,
+      listen: false,
+    ).addTransaction(vm.getTransactionModel());
+
+    Navigator.pop(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<TransactionFormViewModel>(
+      builder: (context, vm, child) {
+        return GestureDetector(
+          onTap: () => vm.toggleKeypad(false),
+          child: Scaffold(
+            backgroundColor: AppColors.background,
+            appBar: AppBar(
+              title: const Text(
+                'Add Transaction',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              8.heightBox,
-
-              AppTextField(
-                title: "Amount",
-                hint: r"$ 0.00",
-                controller: _amountController,
-                validator: Validators.amount,
-                keyboardType: TextInputType.number,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: IconButton(
+                icon: const Icon(Icons.close, color: Colors.white),
+                onPressed: () => Navigator.pop(context),
               ),
-              14.heightBox,
+            ),
+            body: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.symmetric(vertical: 20),
+                          child: Column(
+                            key: const ValueKey('TransactionFormContent'),
+                            children: [
+                              AmountDisplay(
+                                amount: vm.amount,
+                                currency: vm.selectedCurrency,
+                                isIncome: vm.isIncome,
+                                onTap: () => vm.toggleKeypad(true),
+                              ),
+                            ],
+                          ),
+                        ),
 
-           
-              TransactionTypeToggle(
-                onChanged: (value) {
-                  setState(() {
-                    isIncome = value;
-                  });
-                  print("Selected: ${isIncome ? 'Income' : 'Expense'}");
-                },
-              ),
-              8.heightBox,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: TransactionTypeToggle(
+                            isIncome: vm.isIncome,
+                            onChanged: (val) => vm.toggleType(val),
+                          ),
+                        ),
 
-              CustomDatePicker(
-                selectedDate: _selectedDate,
-                onDateSelected: (newDate) {
-                  setState(() {
-                    _selectedDate = newDate;
+                        const SizedBox(height: 20),
 
-                    _dateController.text = DateUtilsCustom.formatDate(newDate);
-                  });
-                },
-              ),
+                        TransactionTitleField(controller: _titleController),
 
-              8.heightBox,
+                        const SizedBox(height: 20),
 
-              AppTextField(
-                title: "Category",
-                hint: "Select a category",
-                controller: _categoryController,
-                validator: Validators.category,
-              ),
-              50.heightBox,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Category",
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.white.withOpacity(0.7),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        CategorySelector(
+                          selectedCategory: vm.selectedCategory,
+                          categories: vm.isIncome
+                              ? CategoryConstants.incomeCategories
+                              : CategoryConstants.expenseCategories,
+                          onCategorySelected: (cat) => vm.setCategory(cat),
+                        ),
 
-              AppButton(
-                text: "Save Transaction",
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    final amount = double.tryParse(_amountController.text);
-                    if (amount == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Enter a valid amount")),
-                      );
-                      return;
-                    }
+                        const SizedBox(height: 20),
 
-                    transaction.addTransaction(
-                      //sending all data at once as model object
-                      TransactionModel(
-                        title: _titleController.text.trim(),
-                        amount: amount,
-                        isIncome: isIncome,
-                        date: _dateController.text.trim(),
-                        category: _categoryController.text.trim(),
-                      ),
-                    );
+                        TransactionDatePicker(
+                          selectedDate: vm.selectedDate,
+                          onDateChanged: (date) => vm.setDate(date),
+                        ),
 
-                    Navigator.pop(context);
-                  }
-                },
-              ),
-            ],
-          ).px16(),
-        ),
-      ),
-    ).safeArea();
+                        const SizedBox(height: 10),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: AppButton(
+                            text: "Save Transaction",
+                            onPressed: () => _saveTransaction(context),
+                          ),
+                        ),
+                        const SizedBox(height: 100),
+                      ],
+                    ),
+                  ),
+                ),
+
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  height: vm.showKeypad ? 350 : 0,
+                  curve: Curves.easeInOut,
+                  child: vm.showKeypad
+                      ? SingleChildScrollView(
+                          physics: const NeverScrollableScrollPhysics(),
+                          child: CustomKeypad(
+                            onKeyPressed: vm.onKeyPressed,
+                            onBackPressed: vm.onBackspace,
+                            onClear: vm.onClear,
+                            onComplete: () => vm.toggleKeypad(false),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

@@ -32,7 +32,6 @@ class AnalyticsScreen extends StatelessWidget {
     );
   }
 
-  // UI Building Methods
   Widget _buildEmptyState() {
     return Center(
       child: Text(

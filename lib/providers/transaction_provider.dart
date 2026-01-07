@@ -103,32 +103,34 @@ class TransactionProvider extends ChangeNotifier {
 
   List<TransactionModel> get transactions => _transactions;
 
-  Future<void> fetchTransactions() async {
-    _transactions = await db.getAllTransaction();
+  TransactionProvider() {
+    _loadTransactions();
+  }
+
+  void _loadTransactions() {
+    _transactions = db.getAllTransaction();
     notifyListeners();
+  }
+
+  Future<void> fetchTransactions() async {
+    _loadTransactions();
   }
 
   Future<void> addTransaction(TransactionModel tx) async {
     await db.addTransaction(tx);
-    _transactions.add(tx);
-    notifyListeners();
+
+    _loadTransactions();
   }
 
   Future<void> deleteTransaction(int key, int index) async {
     await db.deleteTransaction(key);
-    _transactions.removeAt(index);
-    notifyListeners();
+    _loadTransactions();
   }
 
   Future<void> updateTransaction(int key, TransactionModel updatedTx) async {
     await db.updateTransaction(key, updatedTx);
 
-    int index = _transactions.indexWhere((t) => t.key == key);
-
-    if (index != -1) {
-      _transactions[index] = updatedTx;
-      notifyListeners();
-    }
+    _loadTransactions();
   }
 
   double get totalIncome => _transactions
@@ -140,6 +142,9 @@ class TransactionProvider extends ChangeNotifier {
       .fold(0.0, (sum, item) => sum + item.amount);
 
   double get totalBalance => totalIncome - totalExpense;
+
+  String get displayCurrency =>
+      _transactions.isNotEmpty ? _transactions.last.currency : 'USD';
 
   /// Professional approach: Single getter that returns a typed object
   /// containing all spending analytics data calculated in one pass
