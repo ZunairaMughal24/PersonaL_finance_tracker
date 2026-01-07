@@ -70,7 +70,7 @@
 //     final oldTx = transactionBox.get(key);
 
 //     if (oldTx != null) {
-     
+
 //       if (oldTx.isIncome) {
 //         income -= oldTx.amount;
 //       } else {
@@ -83,7 +83,7 @@
 //       expense += updatedTx.amount;
 //     }
 //     totalBalance = (income - expense);
-//     db.updateTransaction(key, updatedTx); 
+//     db.updateTransaction(key, updatedTx);
 //      box.putAll({
 //       'income': income,
 //       'expense': expense,
@@ -94,20 +94,19 @@
 // }
 import 'package:flutter/material.dart';
 import 'package:personal_finance_tracker/models/transaction_model.dart';
+import 'package:personal_finance_tracker/models/spending_summary.dart';
 import 'package:personal_finance_tracker/services/database_services.dart';
+
 class TransactionProvider extends ChangeNotifier {
   final DatabaseService db = DatabaseService();
   List<TransactionModel> _transactions = [];
 
-  
   List<TransactionModel> get transactions => _transactions;
 
   Future<void> fetchTransactions() async {
-    _transactions = await db.getAllTransaction(); 
-    notifyListeners(); 
+    _transactions = await db.getAllTransaction();
+    notifyListeners();
   }
-
-
 
   Future<void> addTransaction(TransactionModel tx) async {
     await db.addTransaction(tx);
@@ -117,23 +116,20 @@ class TransactionProvider extends ChangeNotifier {
 
   Future<void> deleteTransaction(int key, int index) async {
     await db.deleteTransaction(key);
-_transactions.removeAt(index);
-notifyListeners();
-  }
-
-  Future<void> updateTransaction(int key,  TransactionModel updatedTx) async {
-    await db.updateTransaction(key, updatedTx);
-
-  int index = _transactions.indexWhere((t) => t.key == key);
-
-
-  if (index != -1) {
-    _transactions[index] = updatedTx;
+    _transactions.removeAt(index);
     notifyListeners();
   }
+
+  Future<void> updateTransaction(int key, TransactionModel updatedTx) async {
+    await db.updateTransaction(key, updatedTx);
+
+    int index = _transactions.indexWhere((t) => t.key == key);
+
+    if (index != -1) {
+      _transactions[index] = updatedTx;
+      notifyListeners();
+    }
   }
-
-
 
   double get totalIncome => _transactions
       .where((tx) => tx.isIncome)
@@ -145,23 +141,23 @@ notifyListeners();
 
   double get totalBalance => totalIncome - totalExpense;
 
-// for pie chart
-  Map<String, dynamic> calculateTotals() {
+  /// Professional approach: Single getter that returns a typed object
+  /// containing all spending analytics data calculated in one pass
+  SpendingSummary get spendingSummary {
     Map<String, double> categoryTotals = {};
     double grandTotal = 0;
-    
- 
+
     final expenses = _transactions.where((t) => !t.isIncome);
-    
+
     for (var transaction in expenses) {
       categoryTotals[transaction.category] =
           (categoryTotals[transaction.category] ?? 0) + transaction.amount;
       grandTotal += transaction.amount;
     }
 
-    return {
-      'categoryTotals': categoryTotals,
-      'grandTotal': grandTotal,
-    };
+    return SpendingSummary(
+      categoryTotals: categoryTotals,
+      grandTotal: grandTotal,
+    );
   }
 }

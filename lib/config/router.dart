@@ -4,14 +4,14 @@ import 'package:personal_finance_tracker/screens/analytics_screen.dart';
 import 'package:personal_finance_tracker/screens/edit_transaction_screen.dart';
 import 'package:personal_finance_tracker/screens/home_screen.dart';
 import 'package:personal_finance_tracker/screens/main_navigation_screen.dart';
+import 'package:personal_finance_tracker/screens/profile_screen.dart';
 import 'package:personal_finance_tracker/screens/transaction_screen.dart';
-
 
 CustomTransitionPage<void> _buildPageWithDefaultTransition<T>({
   required BuildContext context,
   required GoRouterState state,
   required Widget child,
-}){
+}) {
   return CustomTransitionPage<T>(
     key: state.pageKey,
     child: child,
@@ -27,15 +27,16 @@ CustomTransitionPage<void> _buildPageWithDefaultTransition<T>({
     },
   );
 }
+
 class AppRoutes {
   static const String mainNavigationScreenRoute = '/MainNavigationScreen';
   static const String homeScreenRoute = '/homeScreen';
-    static const String transactionScreenRoute = '/trasactionScreen';
-    static const String editTransactionScreenRoute = '/editTransactionScreen';
-      static const String analyticsScreenRoute = '/analyticsScreen';
-     
- 
+  static const String transactionScreenRoute = '/trasactionScreen';
+  static const String editTransactionScreenRoute = '/editTransactionScreen';
+  static const String analyticsScreenRoute = '/analyticsScreen';
+  static const String profileScreenRoute = '/profileScreen';
 }
+
 final router = GoRouter(
   initialLocation: AppRoutes.mainNavigationScreenRoute,
   routes: [
@@ -47,7 +48,7 @@ final router = GoRouter(
         child: const MainNavScreen(),
       ),
     ),
-     GoRoute(
+    GoRoute(
       path: AppRoutes.homeScreenRoute,
       pageBuilder: (context, state) => _buildPageWithDefaultTransition(
         context: context,
@@ -60,25 +61,31 @@ final router = GoRouter(
       pageBuilder: (context, state) => _buildPageWithDefaultTransition(
         context: context,
         state: state,
-        child:  TransactionScreen(),
+        child: TransactionScreen(),
       ),
-      
     ),
-     GoRoute(
+    GoRoute(
       path: AppRoutes.editTransactionScreenRoute,
       pageBuilder: (context, state) => _buildPageWithDefaultTransition(
         context: context,
         state: state,
-        child:  EditTransactionScreen(transaction: state.extra as dynamic),
+        child: EditTransactionScreen(transaction: state.extra as dynamic),
       ),
-      
     ),
-  GoRoute(
+    GoRoute(
       path: AppRoutes.analyticsScreenRoute,
       pageBuilder: (context, state) => _buildPageWithDefaultTransition(
         context: context,
         state: state,
         child: const AnalyticsScreen(),
+      ),
+    ),
+    GoRoute(
+      path: AppRoutes.profileScreenRoute,
+      pageBuilder: (context, state) => _buildPageWithDefaultTransition(
+        context: context,
+        state: state,
+        child: const ProfileScreen(),
       ),
     ),
   ],

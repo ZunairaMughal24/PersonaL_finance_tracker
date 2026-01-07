@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:personal_finance_tracker/config/router.dart';
-import 'package:personal_finance_tracker/providers/transaction_provider.dart';
+import 'package:personal_finance_tracker/core/constants/appColors.dart';
 import 'package:personal_finance_tracker/screens/analytics_screen.dart';
 import 'package:personal_finance_tracker/screens/home_screen.dart';
+import 'package:personal_finance_tracker/screens/profile_screen.dart';
 import 'package:personal_finance_tracker/screens/transaction_screen.dart';
 import 'package:provider/provider.dart';
+import '../providers/transaction_provider.dart';
 
 class MainNavScreen extends StatefulWidget {
   const MainNavScreen({super.key});
@@ -21,11 +23,12 @@ class _MainNavScreenState extends State<MainNavScreen> {
     HomeScreen(),
     AnalyticsScreen(),
     TransactionScreen(),
+    ProfileScreen(),
   ];
+
   @override
   void initState() {
     super.initState();
-    // use listen: false because we are in initState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<TransactionProvider>(
         context,
@@ -37,53 +40,74 @@ class _MainNavScreenState extends State<MainNavScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Main tab body using IndexedStack to preserve state
       body: IndexedStack(index: _currentIndex, children: _screens),
 
-      // Center Add FAB
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue,
+        backgroundColor: AppColors.primaryColor,
         elevation: 6,
         onPressed: () {
-          // Navigate to Add/Edit transaction
           context.push(AppRoutes.transactionScreenRoute);
         },
-        child: const Icon(Icons.add, size: 30),
+        child: const Icon(Icons.add, size: 28, color: Colors.white),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
-      // Bottom navbar
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 10,
-        child: SizedBox(
-          height: 65,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _navItem(icon: Icons.home_outlined, index: 0),
-              _navItem(icon: Icons.pie_chart_outline, index: 1),
-              const SizedBox(width: 40), // space for FAB
-              _navItem(icon: Icons.list_alt_outlined, index: 2),
-              //_navItem(icon: Icons.person_outline, index: 3), // optional
-            ],
+      bottomNavigationBar: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+        child: BottomAppBar(
+          color: const Color(0xFF1E1E1E),
+          elevation: 0,
+          shape: const CircularNotchedRectangle(),
+          notchMargin: 6,
+          child: Container(
+            height: 55,
+            decoration: BoxDecoration(
+              color: const Color(0xFF1E1E1E),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _navItem(icon: Icons.home_outlined, index: 0),
+                _navItem(icon: Icons.pie_chart_outline, index: 1),
+                const SizedBox(width: 40), // space for FAB
+                _navItem(icon: Icons.list_alt_outlined, index: 2),
+                _navItem(icon: Icons.person_outline, index: 3),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  // Navbar item
   Widget _navItem({required IconData icon, required int index}) {
-    return IconButton(
-      onPressed: () {
-        setState(() {
-          _currentIndex = index;
-        });
-      },
-      icon: Icon(
-        icon,
-        color: _currentIndex == index ? Colors.blue : Colors.grey,
+    return Material(
+      color: Colors.transparent, // transparent to see ripple
+      child: InkWell(
+        borderRadius: BorderRadius.circular(50),
+        splashColor: AppColors.primaryColor.withOpacity(0.2),
+        onTap: () {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Icon(
+            icon,
+            color: _currentIndex == index
+                ? AppColors.primaryColor
+                : AppColors.grey,
+            size: 28,
+          ),
+        ),
       ),
     );
   }

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:personal_finance_tracker/core/contants/category_const.dart';
+import 'package:personal_finance_tracker/core/constants/category_const.dart';
 import 'package:provider/provider.dart';
 import '../providers/transaction_provider.dart';
-
 
 class AnalyticsScreen extends StatelessWidget {
   const AnalyticsScreen({super.key});
@@ -11,108 +10,142 @@ class AnalyticsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Spending Analytics"),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text("Spending Analytic"), centerTitle: true),
       body: Consumer<TransactionProvider>(
         builder: (context, provider, child) {
-          // 1. Call your logic
-          final results = provider.calculateTotals();
-          
-          final Map<String, double> categoryTotals = results['categoryTotals'];
-          final double grandTotal = results['grandTotal'];
+          final summary = provider.spendingSummary;
 
-          if (categoryTotals.isEmpty) {
-            return const Center(child: Text("No data to display"));
+          if (summary.categoryTotals.isEmpty) {
+            return _buildEmptyState();
           }
 
           return Column(
             children: [
               const SizedBox(height: 30),
-              
-              // --- THE PIE CHART SECTION ---
-              SizedBox(
-                height: 250,
-                child: Stack(
-                  children: [
-                    PieChart(
-                      PieChartData(
-                        sectionsSpace: 3,
-                        centerSpaceRadius: 75,
-                        sections: categoryTotals.entries.map((entry) {
-                          // Look up color from your constant map
-                          final color = categoryDetails[entry.key]?.color ?? Colors.grey;
-                          return PieChartSectionData(
-                            color: color,
-                            value: entry.value,
-                            radius: 45,
-                            showTitle: false, // Cleaner look
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                    // Center Text
-                    Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text("Total Spent", 
-                            style: TextStyle(color: Colors.grey[600], fontSize: 14)),
-                          Text(
-                            "\$${grandTotal.toStringAsFixed(2)}",
-                            style: const TextStyle(
-                              fontSize: 22, 
-                              fontWeight: FontWeight.bold
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
+              _buildPieChart(summary.categoryTotals, summary.grandTotal),
               const SizedBox(height: 40),
-
-              // --- THE LEGEND SECTION ---
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  itemCount: categoryTotals.length,
-                  itemBuilder: (context, index) {
-                    String category = categoryTotals.keys.elementAt(index);
-                    double amount = categoryTotals.values.elementAt(index);
-                    Color color = categoryDetails[category]?.color ?? Colors.grey;
-
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 12,
-                            height: 12,
-                            decoration: BoxDecoration(
-                              color: color,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          const SizedBox(width: 15),
-                          Text(category, style: const TextStyle(fontSize: 16)),
-                          const Spacer(),
-                          Text(
-                            "\$${amount.toStringAsFixed(2)}",
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
+              _buildLegend(summary.categoryTotals),
             ],
           );
         },
+      ),
+    );
+  }
+
+  // UI Building Methods
+  Widget _buildEmptyState() {
+    return Center(
+      child: Text(
+        "No data to display",
+        style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 16),
+      ),
+    );
+  }
+
+  Widget _buildPieChart(Map<String, double> categoryTotals, double grandTotal) {
+    return SizedBox(
+      height: 250,
+      child: Stack(
+        children: [
+          PieChart(
+            PieChartData(
+              sectionsSpace: 3,
+              centerSpaceRadius: 75,
+              sections: _buildPieChartSections(categoryTotals),
+            ),
+          ),
+          _buildCenterText(grandTotal),
+        ],
+      ),
+    );
+  }
+
+  List<PieChartSectionData> _buildPieChartSections(
+    Map<String, double> categoryTotals,
+  ) {
+    return categoryTotals.entries.map((entry) {
+      final color = categoryDetails[entry.key]?.color ?? Colors.grey;
+      return PieChartSectionData(
+        color: color,
+        value: entry.value,
+        radius: 45,
+        showTitle: false,
+      );
+    }).toList();
+  }
+
+  Widget _buildCenterText(double grandTotal) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            "Total Spent",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            "\$${grandTotal.toStringAsFixed(2)}",
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLegend(Map<String, double> categoryTotals) {
+    return Expanded(
+      child: ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 25),
+        itemCount: categoryTotals.length,
+        itemBuilder: (context, index) {
+          final category = categoryTotals.keys.elementAt(index);
+          final amount = categoryTotals.values.elementAt(index);
+          return _buildLegendItem(category, amount);
+        },
+      ),
+    );
+  }
+
+  Widget _buildLegendItem(String category, double amount) {
+    final color = categoryDetails[category]?.color ?? Colors.grey;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        children: [
+          Container(
+            width: 12,
+            height: 12,
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+          ),
+          const SizedBox(width: 15),
+          Text(
+            category,
+            style: const TextStyle(
+              fontSize: 16,
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const Spacer(),
+          Text(
+            "\$${amount.toStringAsFixed(2)}",
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: Colors.white,
+            ),
+          ),
+        ],
       ),
     );
   }
