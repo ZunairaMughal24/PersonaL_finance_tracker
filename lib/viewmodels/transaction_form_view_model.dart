@@ -5,7 +5,8 @@ import 'package:personal_finance_tracker/models/transaction_model.dart';
 class TransactionFormViewModel extends ChangeNotifier {
   bool _isIncome = true;
   DateTime _selectedDate = DateTime.now();
-  String _amount = "0";
+  String _amountExpression = "0";
+  String _amountResult = "0";
   String _selectedCategory = "";
   String _title = "";
   String _selectedCurrency = 'USD';
@@ -13,7 +14,8 @@ class TransactionFormViewModel extends ChangeNotifier {
 
   bool get isIncome => _isIncome;
   DateTime get selectedDate => _selectedDate;
-  String get amount => _amount;
+  String get amountExpression => _amountExpression;
+  String get amountResult => _amountResult;
   String get selectedCategory => _selectedCategory;
   String get title => _title;
   String get selectedCurrency => _selectedCurrency;
@@ -30,10 +32,11 @@ class TransactionFormViewModel extends ChangeNotifier {
   void _loadTransaction(TransactionModel tx) {
     _title = tx.title;
     _isIncome = tx.isIncome;
-    _amount = tx.amount.toString();
-    if (_amount.endsWith(".0")) {
-      _amount = _amount.substring(0, _amount.length - 2);
+    _amountResult = tx.amount.toString();
+    if (_amountResult.endsWith(".0")) {
+      _amountResult = _amountResult.substring(0, _amountResult.length - 2);
     }
+    _amountExpression = _amountResult;
     _selectedCategory = tx.category;
     _selectedCurrency = tx.currency;
 
@@ -52,6 +55,7 @@ class TransactionFormViewModel extends ChangeNotifier {
 
   void setTitle(String value) {
     _title = value;
+    notifyListeners();
   }
 
   void setCurrency(String value) {
@@ -81,39 +85,76 @@ class TransactionFormViewModel extends ChangeNotifier {
   }
 
   void onKeyPressed(String value) {
-    if (_amount == "0") {
-      if (value == ".") {
-        _amount = "0.";
+    if (RegExp(r'[0-9.]').hasMatch(value)) {
+      if (_amountExpression == "0") {
+        if (value == ".") {
+          _amountExpression = "0.";
+        } else {
+          _amountExpression = value;
+        }
       } else {
-        _amount = value;
+        if (value == "." && _amountExpression.endsWith(".")) return;
+
+        final int digitCount = _amountExpression
+            .replaceAll(RegExp(r'[^0-9]'), '')
+            .length;
+        if (digitCount >= 10 && RegExp(r'[0-9]').hasMatch(value)) return;
+
+        _amountExpression += value;
       }
-    } else {
-      if (value == "." && _amount.contains(".")) return;
-      if (_amount.length < 10) {
-        _amount += value;
+    } else if (RegExp(r'[+\-*/]').hasMatch(value)) {
+      if (_amountExpression == "0" && value == "-") {
+        _amountExpression = "-";
+      } else if (!RegExp(r'[+\-*/]$').hasMatch(_amountExpression)) {
+        _amountExpression += value;
       }
     }
+
+    _evaluateExpression();
     notifyListeners();
   }
 
-  void onBackspace() {
-    if (_amount.length > 1) {
-      _amount = _amount.substring(0, _amount.length - 1);
-    } else {
-      _amount = "0";
+  void _evaluateExpression() {
+    try {
+      _amountResult = _calculate(_amountExpression);
+    } catch (_) {}
+  }
+
+  String _calculate(String expression) {
+    try {
+      String exp = expression;
+      if (RegExp(r'[+\-*/]$').hasMatch(exp)) {
+        exp = exp.substring(0, exp.length - 1);
+      }
+
+      return exp;
+    } catch (_) {
+      return "0";
     }
+  }
+
+  void onBackspace() {
+    if (_amountExpression.length > 1) {
+      _amountExpression = _amountExpression.substring(
+        0,
+        _amountExpression.length - 1,
+      );
+    } else {
+      _amountExpression = "0";
+    }
+    _evaluateExpression();
     notifyListeners();
   }
 
   void onClear() {
-    _amount = "0";
+    _amountExpression = "0";
+    _amountResult = "0";
     notifyListeners();
   }
 
   String? validate() {
-    if (_title.isEmpty) return "Please enter a title";
     if (_selectedCategory.isEmpty) return "Please select a category";
-    final amountVal = double.tryParse(_amount);
+    final amountVal = double.tryParse(_amountResult);
     if (amountVal == null || amountVal <= 0)
       return "Please enter a valid amount";
     return null;
@@ -121,8 +162,8 @@ class TransactionFormViewModel extends ChangeNotifier {
 
   TransactionModel getTransactionModel() {
     return TransactionModel(
-      title: _title.trim(),
-      amount: double.parse(_amount),
+      title: _title.isEmpty ? "Note" : _title.trim(),
+      amount: double.tryParse(_amountResult) ?? 0.0,
       isIncome: _isIncome,
       date: DateUtilsCustom.formatDate(_selectedDate),
       category: _selectedCategory,

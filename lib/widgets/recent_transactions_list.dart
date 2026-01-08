@@ -4,7 +4,8 @@ import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dar
 import 'package:personal_finance_tracker/providers/transaction_provider.dart';
 import 'package:personal_finance_tracker/screens/edit_transaction_screen.dart';
 import 'package:personal_finance_tracker/services/database_services.dart';
-import 'package:personal_finance_tracker/widgets/transaction/transaction_list_item.dart';
+import 'package:personal_finance_tracker/widgets/transaction_list_item.dart';
+import 'package:personal_finance_tracker/core/utils/toast_utility.dart';
 import 'package:provider/provider.dart';
 
 class RecentTransactionsList extends StatelessWidget {
@@ -17,7 +18,7 @@ class RecentTransactionsList extends StatelessWidget {
     return Container(
       height: MediaQuery.of(context).size.height * 0.4,
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 44, 51, 86),
+        color: AppColors.surfaceLight,
         borderRadius: BorderRadius.circular(16),
       ),
       child: ValueListenableBuilder(
@@ -35,9 +36,9 @@ class RecentTransactionsList extends StatelessWidget {
                   Text(
                     "No transactions yet",
                     style: TextStyle(
-                      color: AppColors.white,
+                      color: AppColors.white.withOpacity(0.3),
                       fontSize: 14,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ],
@@ -49,16 +50,19 @@ class RecentTransactionsList extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 8),
             itemCount: items.length,
             separatorBuilder: (context, index) =>
-                Divider(color: AppColors.surface, height: 1.2),
+                Divider(color: AppColors.surface, thickness: 1.5, height: 1),
             itemBuilder: (context, index) {
               final tx = items[index];
 
               return TransactionListItem(
                 transaction: tx,
+                index: index,
                 onDelete: () {
                   transaction.deleteTransaction(tx.key as int, index);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Transaction deleted')),
+                  ToastUtils.show(
+                    context,
+                    'Transaction deleted',
+                    isError: false,
                   );
                 },
                 onEdit: () {

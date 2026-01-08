@@ -9,13 +9,14 @@ class Validators {
     }
     return null;
   }
+
   static String? emptyValidator(String? text) {
     if (text!.isEmpty) {
       return 'Please Fill in the field';
     }
     return null;
   }
-  /// For amount field
+
   static String? amount(String? value) {
     if (value == null || value.trim().isEmpty) {
       return "This field is required";
@@ -26,7 +27,6 @@ class Validators {
     return null;
   }
 
-  /// For dropdown fields (category)
   static String? category(String? value) {
     if (value == null || value.trim().isEmpty) {
       return "Please select an option";
@@ -34,13 +34,13 @@ class Validators {
     return null;
   }
 
-  /// For dropdown fields (type: income/expense)
   static String? type(String? value) {
     if (value == null || value.trim().isEmpty) {
       return "Please select an option";
     }
     return null;
   }
+
   static String? doubleValidator(String? text) {
     if (text!.isEmpty) {
       return 'Please Fill in the field';
@@ -67,7 +67,8 @@ class Validators {
 
     return null;
   }
-static String? usernameValidator(String? email) {
+
+  static String? usernameValidator(String? email) {
     if (email!.isEmpty) {
       return 'Please fill in the username';
     }
@@ -136,6 +137,4 @@ static String? usernameValidator(String? email) {
     }
     return null;
   }
-
-
 }

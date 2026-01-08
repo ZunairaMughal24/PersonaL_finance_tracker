@@ -20,7 +20,7 @@ class SplashScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              400.heightBox,
+              const Spacer(flex: 2),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Text(
@@ -48,7 +48,6 @@ class SplashScreen extends StatelessWidget {
               ),
               const Spacer(),
 
-              // Buttons
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Column(

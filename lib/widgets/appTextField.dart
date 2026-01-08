@@ -35,7 +35,7 @@ class AppTextField extends StatelessWidget {
         Text(
           title,
           style: TextStyle(
-            fontSize: 14,
+            fontSize: 15,
             fontWeight: FontWeight.w500,
             color: AppColors.white.withOpacity(0.7),
           ),

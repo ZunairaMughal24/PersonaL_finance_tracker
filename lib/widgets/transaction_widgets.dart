@@ -1,6 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:personal_finance_tracker/core/constants/appColors.dart';
+import 'package:personal_finance_tracker/core/utils/currency_utils.dart';
 import 'package:personal_finance_tracker/core/utils/date_formatter.dart';
+import 'package:personal_finance_tracker/widgets/appTextField.dart';
+
+class AmountDisplay extends StatelessWidget {
+  final String amount;
+  final String currency;
+  final bool isIncome;
+  final VoidCallback onTap;
+
+  const AmountDisplay({
+    super.key,
+    required this.amount,
+    required this.currency,
+    required this.isIncome,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final symbol = CurrencyUtils.getCurrencySymbol(currency);
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        color: Colors.transparent,
+        child: Column(
+          children: [
+            Text(
+              "$symbol $amount",
+              style: TextStyle(
+                fontSize: 48,
+                fontWeight: FontWeight.bold,
+                color: isIncome ? AppColors.green : AppColors.red,
+                shadows: [
+                  BoxShadow(
+                    color: (isIncome ? AppColors.green : AppColors.red)
+                        .withOpacity(0.3),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            Text(
+              "Tap to edit amount",
+              style: TextStyle(
+                fontSize: 13,
+                color: AppColors.white.withOpacity(0.5),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class TransactionDatePicker extends StatelessWidget {
   final DateTime selectedDate;
@@ -22,7 +80,7 @@ class TransactionDatePicker extends StatelessWidget {
           Text(
             "Date",
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 15,
               fontWeight: FontWeight.w500,
               color: AppColors.white.withOpacity(0.7),
             ),
@@ -92,6 +150,25 @@ class TransactionDatePicker extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class TransactionTitleField extends StatelessWidget {
+  final TextEditingController controller;
+
+  const TransactionTitleField({super.key, required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: AppTextField(
+        title: "Title",
+        hint: "What is this for?",
+        controller: controller,
+        validator: (val) => val!.isEmpty ? "Required" : null,
       ),
     );
   }

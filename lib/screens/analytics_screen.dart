@@ -1,16 +1,68 @@
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:personal_finance_tracker/core/constants/category_const.dart';
+import 'package:personal_finance_tracker/core/constants/appColors.dart';
+import 'package:personal_finance_tracker/screens/main_navigation_screen.dart';
+import 'package:personal_finance_tracker/widgets/analytics/analytics_breakdown.dart';
+import 'package:personal_finance_tracker/widgets/analytics/analytics_chart_section.dart';
 import 'package:provider/provider.dart';
 import '../providers/transaction_provider.dart';
 
-class AnalyticsScreen extends StatelessWidget {
+class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({super.key});
+
+  @override
+  State<AnalyticsScreen> createState() => _AnalyticsScreenState();
+}
+
+class _AnalyticsScreenState extends State<AnalyticsScreen> {
+  bool _isPieChart = true;
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: 0);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Spending Analytic"), centerTitle: true),
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        leading: Center(
+          child: GestureDetector(
+            onTap: () => MainNavScreen.navKey.currentState?.switchToHome(),
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.surfaceLight.withOpacity(0.3),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+                size: 18,
+              ),
+            ),
+          ),
+        ),
+        title: const Text(
+          "Spending Analytics",
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 0.5,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
       body: Consumer<TransactionProvider>(
         builder: (context, provider, child) {
           final summary = provider.spendingSummary;
@@ -21,10 +73,35 @@ class AnalyticsScreen extends StatelessWidget {
 
           return Column(
             children: [
-              const SizedBox(height: 30),
-              _buildPieChart(summary.categoryTotals, summary.grandTotal),
-              const SizedBox(height: 40),
-              _buildLegend(summary.categoryTotals),
+              const SizedBox(height: 10),
+              _buildToggle(),
+              // const SizedBox(height: ),
+              AnalyticsChartSection(
+                categoryTotals: summary.categoryTotals,
+                grandTotal: summary.grandTotal,
+                controller: _pageController,
+                onPageChanged: (index) {
+                  setState(() {
+                    _isPieChart = index == 0;
+                  });
+                },
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 10),
+                      AnalyticsBreakdown(
+                        categoryTotals: summary.categoryTotals,
+                        grandTotal: summary.grandTotal,
+                        transactions: provider.transactions,
+                      ),
+                      const SizedBox(height: 100),
+                    ],
+                  ),
+                ),
+              ),
             ],
           );
         },
@@ -32,117 +109,76 @@ class AnalyticsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
-    return Center(
-      child: Text(
-        "No data to display",
-        style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 16),
+  Widget _buildToggle() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 40),
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceLight.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(15),
       ),
-    );
-  }
-
-  Widget _buildPieChart(Map<String, double> categoryTotals, double grandTotal) {
-    return SizedBox(
-      height: 250,
-      child: Stack(
-        children: [
-          PieChart(
-            PieChartData(
-              sectionsSpace: 3,
-              centerSpaceRadius: 75,
-              sections: _buildPieChartSections(categoryTotals),
-            ),
-          ),
-          _buildCenterText(grandTotal),
-        ],
-      ),
-    );
-  }
-
-  List<PieChartSectionData> _buildPieChartSections(
-    Map<String, double> categoryTotals,
-  ) {
-    return categoryTotals.entries.map((entry) {
-      final color = categoryDetails[entry.key]?.color ?? Colors.grey;
-      return PieChartSectionData(
-        color: color,
-        value: entry.value,
-        radius: 45,
-        showTitle: false,
-      );
-    }).toList();
-  }
-
-  Widget _buildCenterText(double grandTotal) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            "Total Spent",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            "\$${grandTotal.toStringAsFixed(2)}",
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLegend(Map<String, double> categoryTotals) {
-    return Expanded(
-      child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 25),
-        itemCount: categoryTotals.length,
-        itemBuilder: (context, index) {
-          final category = categoryTotals.keys.elementAt(index);
-          final amount = categoryTotals.values.elementAt(index);
-          return _buildLegendItem(category, amount);
-        },
-      ),
-    );
-  }
-
-  Widget _buildLegendItem(String category, double amount) {
-    final color = categoryDetails[category]?.color ?? Colors.grey;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
-          Container(
-            width: 12,
-            height: 12,
-            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+          _toggleItem("Spendings", _isPieChart, 0),
+          _toggleItem("Trends", !_isPieChart, 1),
+        ],
+      ),
+    );
+  }
+
+  Widget _toggleItem(String label, bool isSelected, int page) {
+    return Expanded(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          _pageController.animateToPage(
+            page,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.decelerate,
+          );
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected ? AppColors.primaryColor : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: AppColors.primaryColor.withOpacity(0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ]
+                : [],
           ),
-          const SizedBox(width: 15),
-          Text(
-            category,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? Colors.white : Colors.white24,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                fontSize: 14,
+              ),
             ),
           ),
-          const Spacer(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.analytics_outlined, size: 80, color: Colors.white10),
+          const SizedBox(height: 20),
           Text(
-            "\$${amount.toStringAsFixed(2)}",
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: Colors.white,
-            ),
+            "No data to display",
+            style: TextStyle(color: Colors.white30, fontSize: 16),
           ),
         ],
       ),

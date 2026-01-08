@@ -3,7 +3,7 @@ import 'package:personal_finance_tracker/core/constants/appColors.dart';
 import 'package:personal_finance_tracker/core/utils/currency_utils.dart';
 import 'package:personal_finance_tracker/core/utils/category_utils.dart';
 import 'package:personal_finance_tracker/models/transaction_model.dart';
-import 'package:personal_finance_tracker/widgets/transaction/transaction_action_dialog.dart';
+import 'package:personal_finance_tracker/widgets/transaction_action_dialog.dart';
 
 class TransactionListItem extends StatelessWidget {
   final TransactionModel transaction;
@@ -110,14 +110,25 @@ class TransactionListItem extends StatelessWidget {
                         size: 16,
                       ),
                       const SizedBox(width: 4),
-                      Text(
-                        "${CurrencyUtils.getCurrencySymbol(transaction.currency)} ${transaction.amount.toStringAsFixed(2)}",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                          color: transaction.isIncome
-                              ? AppColors.green
-                              : AppColors.red,
+
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width * 0.35,
+                        ),
+                        child: Text(
+                          CurrencyUtils.formatAmount(
+                            transaction.amount,
+                            transaction.currency,
+                          ),
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: transaction.isIncome
+                                ? AppColors.green
+                                : AppColors.red,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],

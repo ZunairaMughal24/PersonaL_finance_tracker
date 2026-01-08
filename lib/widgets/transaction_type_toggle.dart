@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:personal_finance_tracker/core/constants/appColors.dart';
 
 class TransactionTypeToggle extends StatelessWidget {
   final bool isIncome;
@@ -16,10 +17,11 @@ class TransactionTypeToggle extends StatelessWidget {
 
     return Container(
       width: width,
-      height: 55,
+      height: 50,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.10),
+        color: AppColors.surfaceLight,
         borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: Colors.white.withOpacity(0.05), width: 1),
       ),
       child: Stack(
         children: [
@@ -29,20 +31,27 @@ class TransactionTypeToggle extends StatelessWidget {
             alignment: isIncome ? Alignment.centerLeft : Alignment.centerRight,
             child: Container(
               width: (width - 40) / 2,
-
+              margin: const EdgeInsets.all(2),
               decoration: BoxDecoration(
                 color: isIncome
-                    ? Colors.green.withOpacity(0.2)
-                    : Colors.red.withOpacity(0.2),
+                    ? AppColors.green.withOpacity(0.15)
+                    : AppColors.red.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: isIncome ? Colors.green : Colors.red,
-                  width: 1,
+                  color: isIncome ? AppColors.green : AppColors.red,
+                  width: 1.5,
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: (isIncome ? AppColors.green : AppColors.red)
+                        .withOpacity(0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
             ),
           ),
-
           Row(
             children: [
               Expanded(
@@ -50,12 +59,29 @@ class TransactionTypeToggle extends StatelessWidget {
                   onTap: () {
                     if (!isIncome) onChanged(true);
                   },
-                  child: Center(
-                    child: Text(
-                      "Income",
-                      style: TextStyle(
-                        color: isIncome ? Colors.green : Colors.grey,
-                        fontWeight: FontWeight.bold,
+                  child: Container(
+                    color: Colors.transparent,
+                    child: Center(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.arrow_upward_rounded,
+                            size: 16,
+                            color: isIncome ? AppColors.green : AppColors.grey,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            "Income",
+                            style: TextStyle(
+                              color: isIncome
+                                  ? AppColors.green
+                                  : AppColors.grey,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -66,12 +92,27 @@ class TransactionTypeToggle extends StatelessWidget {
                   onTap: () {
                     if (isIncome) onChanged(false);
                   },
-                  child: Center(
-                    child: Text(
-                      "Expense",
-                      style: TextStyle(
-                        color: !isIncome ? Colors.red : Colors.grey,
-                        fontWeight: FontWeight.bold,
+                  child: Container(
+                    color: Colors.transparent,
+                    child: Center(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.arrow_downward_rounded,
+                            size: 16,
+                            color: !isIncome ? AppColors.red : AppColors.grey,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            "Expense",
+                            style: TextStyle(
+                              color: !isIncome ? AppColors.red : AppColors.grey,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

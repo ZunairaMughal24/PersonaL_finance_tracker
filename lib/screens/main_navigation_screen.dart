@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 import '../providers/transaction_provider.dart';
 
 class MainNavScreen extends StatefulWidget {
+  static final GlobalKey<_MainNavScreenState> navKey =
+      GlobalKey<_MainNavScreenState>();
   const MainNavScreen({super.key});
 
   @override
@@ -18,6 +20,12 @@ class MainNavScreen extends StatefulWidget {
 
 class _MainNavScreenState extends State<MainNavScreen> {
   int _currentIndex = 0;
+
+  void switchToHome() {
+    setState(() {
+      _currentIndex = 0;
+    });
+  }
 
   final List<Widget> _screens = const [
     HomeScreen(),
@@ -62,7 +70,7 @@ class _MainNavScreenState extends State<MainNavScreen> {
         child: BottomAppBar(
           color: const Color.fromARGB(255, 31, 38, 73),
           elevation: 0,
-          // shape: const CircularNotchedRectangle(),
+
           notchMargin: 0,
           padding: EdgeInsets.zero,
           child: SizedBox(

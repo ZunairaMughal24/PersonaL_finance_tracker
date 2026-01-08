@@ -30,8 +30,8 @@ class TotalBalanceCard extends StatelessWidget {
                 'Total Balance',
                 style: TextStyle(
                   fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.white,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.white.withOpacity(0.9),
                 ),
               ),
               Icon(
@@ -44,19 +44,22 @@ class TotalBalanceCard extends StatelessWidget {
           8.heightBox,
           Text(
             formattedBalance,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.bold,
               color: AppColors.white,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
           6.heightBox,
           Text(
-            'As of ${today.day}-${today.month}-${today.year}',
+            'Updated on ${today.day}/${today.month}/${today.year}',
             style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-              color: AppColors.white,
+              fontSize: 11,
+              fontWeight: FontWeight.w400,
+              color: AppColors.white.withOpacity(0.6),
+              letterSpacing: 0.5,
             ),
           ),
         ],

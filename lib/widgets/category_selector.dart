@@ -5,55 +5,68 @@ class CategorySelector extends StatelessWidget {
   final String selectedCategory;
   final Function(String) onCategorySelected;
   final List<Map<String, dynamic>> categories;
+  final bool isIncome;
 
   const CategorySelector({
     super.key,
     required this.selectedCategory,
     required this.onCategorySelected,
     required this.categories,
+    required this.isIncome,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 100,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 4,
+          mainAxisSpacing: 7,
+          crossAxisSpacing: 30,
+          childAspectRatio: 0.75,
+        ),
         itemCount: categories.length,
-        separatorBuilder: (context, index) => const SizedBox(width: 16),
         itemBuilder: (context, index) {
           final category = categories[index];
           final isSelected = selectedCategory == category['name'];
+
+          final Color activeColor = isIncome ? AppColors.green : AppColors.red;
 
           return GestureDetector(
             onTap: () => onCategorySelected(category['name']),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  width: 60,
-                  height: 60,
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: 52,
+                  height: 52,
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? (category['color'] as Color)
+                        ? activeColor.withOpacity(0.12)
                         : AppColors.surfaceLight,
                     shape: BoxShape.circle,
                     border: isSelected
-                        ? Border.all(color: Colors.white, width: 2)
+                        ? Border.all(color: activeColor, width: 1.5)
                         : null,
                   ),
                   child: Icon(
                     category['icon'] as IconData,
                     color: isSelected
-                        ? Colors.white
+                        ? activeColor
                         : Colors.white.withOpacity(0.5),
-                    size: 28,
+                    size: 22,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
                 Text(
                   category['name'] as String,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: isSelected
                         ? Colors.white

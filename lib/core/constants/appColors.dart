@@ -16,8 +16,8 @@ class AppColors {
   static const Color accentPink = Color(0xFFFF6B9D);
 
   // Semantic Colors
-  static const Color green = Color(0xFF00E676);
-  static const Color red = Color(0xFFFF5252);
+  static const Color green = Color.fromARGB(255, 0, 199, 103);
+  static const Color red = Color.fromARGB(255, 222, 61, 61);
   static const Color orange = Color(0xFFFFAB40);
   static const Color blue = Color(0xFF448AFF);
 
@@ -59,13 +59,13 @@ class AppColors {
       Color.fromARGB(255, 216, 141, 243),
       Color.fromARGB(255, 54, 47, 113),
       Color.fromARGB(255, 54, 47, 113),
-    ], // Darker shades of the previous gradient
+    ],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );
 
   static const LinearGradient homeGradient = LinearGradient(
-    colors: [surface, surfaceLight], // Darker shades of the previous gradient
+    colors: [surface, surfaceLight],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );
@@ -78,4 +78,26 @@ class AppColors {
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );
+  static const LinearGradient mainBackgroundGradient = LinearGradient(
+    colors: [
+      Color.fromARGB(255, 26, 33, 74),
+      Color(0xFF141A3B),
+      Color(0xFF1A1F3A),
+    ],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
+
+  static const List<Color> chartPalette = [
+    Color(0xFF6C5CE7),
+    Color(0xFF00D9FF),
+    Color(0xFFFF6B9D),
+    Color(0xFF00E676),
+    Color(0xFFFFAB40),
+    Color(0xFF448AFF),
+    Color(0xFFFDCB6E),
+    Color(0xFFE84393),
+    Color(0xFF00CEC9),
+    Color(0xFF55E6C1),
+  ];
 }

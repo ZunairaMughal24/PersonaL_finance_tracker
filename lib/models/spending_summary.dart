@@ -1,4 +1,3 @@
-/// Model class to hold spending analytics data
 class SpendingSummary {
   final Map<String, double> categoryTotals;
   final double grandTotal;

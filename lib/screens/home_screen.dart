@@ -20,13 +20,11 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final transaction = Provider.of<TransactionProvider>(context);
-    final symbol = CurrencyUtils.getCurrencySymbol(transaction.displayCurrency);
 
     return Scaffold(
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(gradient: AppColors.homeGradient),
         child: SafeArea(
           child: SingleChildScrollView(
             child: Column(
@@ -42,8 +40,10 @@ class HomeScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       TotalBalanceCard(
-                        formattedBalance:
-                            "$symbol ${transaction.totalBalance.ceilToDouble().toStringAsFixed(2)}",
+                        formattedBalance: CurrencyUtils.formatAmount(
+                          transaction.totalBalance,
+                          transaction.displayCurrency,
+                        ),
                       ),
                       20.heightBox,
                       Row(
@@ -51,28 +51,33 @@ class HomeScreen extends StatelessWidget {
                         children: [
                           InfoBox(
                             title: " Total Income",
-                            amount:
-                                "$symbol ${transaction.totalIncome.toStringAsFixed(2)}",
+                            amount: CurrencyUtils.formatAmount(
+                              transaction.totalIncome,
+                              transaction.displayCurrency,
+                            ),
                             amountColor: AppColors.green,
                           ),
+                          15.widthBox,
                           InfoBox(
                             title: " Total Expense",
-                            amount:
-                                "$symbol ${transaction.totalExpense.toStringAsFixed(2)}",
+                            amount: CurrencyUtils.formatAmount(
+                              transaction.totalExpense,
+                              transaction.displayCurrency,
+                            ),
                             amountColor: AppColors.red,
                           ),
                         ],
                       ),
-
+                      6.heightBox,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Activity',
+                            'Recent Transactions',
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 18,
                               fontWeight: FontWeight.w600,
-                              color: AppColors.white,
+                              color: AppColors.white.withOpacity(0.9),
                             ),
                           ),
                           TextButton(

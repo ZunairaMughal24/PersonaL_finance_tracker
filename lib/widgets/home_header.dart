@@ -58,9 +58,10 @@ class HomeHeader extends StatelessWidget {
                   Text(
                     summaryText,
                     style: TextStyle(
-                      color: AppColors.white.withValues(alpha: 0.6),
-                      fontSize: 13,
+                      color: AppColors.white.withOpacity(0.4),
+                      fontSize: 12,
                       fontWeight: FontWeight.w400,
+                      letterSpacing: 0.3,
                     ),
                   ),
                 ],
