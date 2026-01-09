@@ -5,34 +5,18 @@ import 'package:personal_finance_tracker/core/utils/currency_utils.dart';
 
 class AnalyticsBreakdown extends StatelessWidget {
   final Map<String, double> categoryTotals;
+  final List<String> sortedCategories;
   final double grandTotal;
-  final List<dynamic> transactions;
 
   const AnalyticsBreakdown({
     super.key,
     required this.categoryTotals,
+    required this.sortedCategories,
     required this.grandTotal,
-    required this.transactions,
   });
 
   @override
   Widget build(BuildContext context) {
-    final expenses = transactions.where((t) => !t.isIncome).toList();
-    final categoriesByRecency = <String>[];
-
-    for (var tx in expenses.reversed) {
-      if (!categoriesByRecency.contains(tx.category) &&
-          categoryTotals.containsKey(tx.category)) {
-        categoriesByRecency.add(tx.category);
-      }
-    }
-
-    for (var cat in categoryTotals.keys) {
-      if (!categoriesByRecency.contains(cat)) {
-        categoriesByRecency.add(cat);
-      }
-    }
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25),
       child: Column(
@@ -47,7 +31,7 @@ class AnalyticsBreakdown extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          ...categoriesByRecency.map((category) {
+          ...sortedCategories.map((category) {
             return _buildLegendItem(
               context,
               category,

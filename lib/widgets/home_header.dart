@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:personal_finance_tracker/core/constants/appColors.dart';
 
+import 'package:personal_finance_tracker/widgets/glass_container.dart';
+
 class HomeHeader extends StatelessWidget {
   final String userName;
   final String summaryText;
@@ -14,38 +16,37 @@ class HomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.all(2),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: AppColors.primaryColor.withValues(alpha: 0.5),
+                    color: Colors.white.withOpacity(0.2),
                     width: 2,
                   ),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(25),
-                  child: Center(
-                    child: Image.network(
-                      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
-                      width: 50,
-                      height: 50,
-                      fit: BoxFit.cover,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primaryColor.withOpacity(0.3),
+                      blurRadius: 15,
+                      spreadRadius: 2,
                     ),
+                  ],
+                ),
+                child: const CircleAvatar(
+                  radius: 27,
+                  backgroundImage: NetworkImage(
+                    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop',
                   ),
                 ),
               ),
               const SizedBox(width: 12),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     'Hello, $userName!',
@@ -53,51 +54,45 @@ class HomeHeader extends StatelessWidget {
                       color: AppColors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
+                      letterSpacing: -0.5,
                     ),
                   ),
                   Text(
                     summaryText,
                     style: TextStyle(
-                      color: AppColors.white.withOpacity(0.4),
+                      color: AppColors.white.withOpacity(0.6),
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
-                      letterSpacing: 0.3,
                     ),
                   ),
                 ],
               ),
             ],
           ),
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: AppColors.surfaceLight,
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: AppColors.white.withValues(alpha: 0.05),
-                width: 1,
-              ),
-            ),
+          GlassContainer(
+            borderRadius: 50,
+            padding: const EdgeInsets.all(10),
+            blur: 10,
             child: Stack(
               clipBehavior: Clip.none,
               children: [
                 const Icon(
                   Icons.notifications_none_rounded,
                   color: Colors.white,
-                  size: 28,
+                  size: 26,
                 ),
                 Positioned(
-                  right: 1,
+                  right: 2,
                   top: 2,
                   child: Container(
-                    height: 9,
-                    width: 9,
+                    height: 8,
+                    width: 8,
                     decoration: BoxDecoration(
                       color: AppColors.red,
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: AppColors.surfaceLight,
-                        width: 1.5,
+                        color: Colors.white.withOpacity(0.5),
+                        width: 1,
                       ),
                     ),
                   ),

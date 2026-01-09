@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:personal_finance_tracker/core/constants/appColors.dart';
+import 'package:personal_finance_tracker/widgets/glass_container.dart';
 
 class TransactionTypeToggle extends StatelessWidget {
   final bool isIncome;
@@ -15,38 +16,41 @@ class TransactionTypeToggle extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
 
-    return Container(
+    return GlassContainer(
       width: width,
-      height: 50,
-      decoration: BoxDecoration(
-        color: AppColors.surfaceLight,
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: Colors.white.withOpacity(0.05), width: 1),
-      ),
+      height: 52,
+      borderRadius: 16,
+      blur: 10,
+      gradientColors: [
+        Colors.white.withOpacity(0.08),
+        Colors.white.withOpacity(0.02),
+      ],
+      padding: EdgeInsets.zero,
       child: Stack(
         children: [
           AnimatedAlign(
-            duration: const Duration(milliseconds: 250),
-            curve: Curves.easeInOut,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOutCubic,
             alignment: isIncome ? Alignment.centerLeft : Alignment.centerRight,
             child: Container(
               width: (width - 40) / 2,
-              margin: const EdgeInsets.all(2),
+              margin: const EdgeInsets.all(4),
               decoration: BoxDecoration(
                 color: isIncome
-                    ? AppColors.green.withOpacity(0.15)
-                    : AppColors.red.withOpacity(0.15),
+                    ? AppColors.green.withOpacity(0.2)
+                    : AppColors.red.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: isIncome ? AppColors.green : AppColors.red,
+                  color: (isIncome ? AppColors.green : AppColors.red)
+                      .withOpacity(0.5),
                   width: 1.5,
                 ),
                 boxShadow: [
                   BoxShadow(
                     color: (isIncome ? AppColors.green : AppColors.red)
                         .withOpacity(0.2),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
+                    blurRadius: 10,
+                    spreadRadius: 1,
                   ),
                 ],
               ),
@@ -67,18 +71,23 @@ class TransactionTypeToggle extends StatelessWidget {
                         children: [
                           Icon(
                             Icons.arrow_upward_rounded,
-                            size: 16,
-                            color: isIncome ? AppColors.green : AppColors.grey,
+                            size: 18,
+                            color: isIncome
+                                ? AppColors.green
+                                : Colors.white.withOpacity(0.4),
                           ),
-                          const SizedBox(width: 6),
+                          const SizedBox(width: 8),
                           Text(
                             "Income",
                             style: TextStyle(
                               color: isIncome
-                                  ? AppColors.green
-                                  : AppColors.grey,
-                              fontWeight: FontWeight.bold,
+                                  ? Colors.white
+                                  : Colors.white.withOpacity(0.4),
+                              fontWeight: isIncome
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
                               fontSize: 14,
+                              letterSpacing: 0.5,
                             ),
                           ),
                         ],
@@ -100,16 +109,23 @@ class TransactionTypeToggle extends StatelessWidget {
                         children: [
                           Icon(
                             Icons.arrow_downward_rounded,
-                            size: 16,
-                            color: !isIncome ? AppColors.red : AppColors.grey,
+                            size: 18,
+                            color: !isIncome
+                                ? AppColors.red
+                                : Colors.white.withOpacity(0.4),
                           ),
-                          const SizedBox(width: 6),
+                          const SizedBox(width: 8),
                           Text(
                             "Expense",
                             style: TextStyle(
-                              color: !isIncome ? AppColors.red : AppColors.grey,
-                              fontWeight: FontWeight.bold,
+                              color: !isIncome
+                                  ? Colors.white
+                                  : Colors.white.withOpacity(0.4),
+                              fontWeight: !isIncome
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
                               fontSize: 14,
+                              letterSpacing: 0.5,
                             ),
                           ),
                         ],

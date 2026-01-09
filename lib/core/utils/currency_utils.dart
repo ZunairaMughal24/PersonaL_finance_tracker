@@ -19,10 +19,9 @@ class CurrencyUtils {
   }
 
   static String formatAmount(double amount, String currency) {
-    final format = NumberFormat.currency(
-      symbol: "${getCurrencySymbol(currency)} ",
-      decimalDigits: 2,
-    );
-    return format.format(amount);
+    final String pattern = amount % 1 == 0 ? "###,###,###" : "###,###,###.00";
+    final format = NumberFormat(pattern);
+
+    return "${getCurrencySymbol(currency)} ${format.format(amount)}";
   }
 }

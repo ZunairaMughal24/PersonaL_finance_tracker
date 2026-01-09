@@ -23,41 +23,33 @@ class TransactionListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color baseColor = AppColors.primaryColor;
-    final Color iconColor = transaction.isIncome
+    final Color themeColor = transaction.isIncome
         ? AppColors.green
         : AppColors.red;
-
-    final double baseOpacity = 0.25;
-    final double depthStep = 0.04;
-    final double currentOpacity = (baseOpacity - (index * depthStep)).clamp(
-      0.08,
-      0.3,
-    );
 
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onDetail,
-        onLongPress: () => _showClassyDialog(context),
+        onLongPress: () => _showDialog(context),
         borderRadius: BorderRadius.circular(16),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
           child: Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: baseColor.withOpacity(currentOpacity),
+                  color: themeColor.withOpacity(0.15),
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: baseColor.withOpacity(currentOpacity + 0.1),
+                    color: themeColor.withOpacity(0.2),
                     width: 1.5,
                   ),
                 ),
                 child: Icon(
                   CategoryUtils.getIconForCategory(transaction.category),
-                  color: iconColor,
+                  color: Colors.white.withOpacity(0.9),
                   size: 24,
                 ),
               ),
@@ -110,14 +102,24 @@ class TransactionListItem extends StatelessWidget {
                         size: 16,
                       ),
                       const SizedBox(width: 4),
-                      Text(
-                        "${CurrencyUtils.getCurrencySymbol(transaction.currency)} ${transaction.amount.toStringAsFixed(2)}",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                          color: transaction.isIncome
-                              ? AppColors.green
-                              : AppColors.red,
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width * 0.35,
+                        ),
+                        child: Text(
+                          CurrencyUtils.formatAmount(
+                            transaction.amount,
+                            transaction.currency,
+                          ),
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: transaction.isIncome
+                                ? AppColors.green
+                                : AppColors.red,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
@@ -140,7 +142,7 @@ class TransactionListItem extends StatelessWidget {
     );
   }
 
-  void _showClassyDialog(BuildContext context) {
+  void _showDialog(BuildContext context) {
     showDialog(
       context: context,
       barrierColor: Colors.black45,

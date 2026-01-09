@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:personal_finance_tracker/models/transaction_model.dart';
 import 'package:personal_finance_tracker/models/spending_summary.dart';
 import 'package:personal_finance_tracker/services/database_services.dart';
+import 'package:personal_finance_tracker/services/finance_service.dart';
 
 class TransactionProvider extends ChangeNotifier {
   final DatabaseService db = DatabaseService();
@@ -39,34 +40,21 @@ class TransactionProvider extends ChangeNotifier {
     _loadTransactions();
   }
 
-  double get totalIncome => _transactions
-      .where((tx) => tx.isIncome)
-      .fold(0.0, (sum, item) => sum + item.amount);
+  double get totalIncome => FinanceService.calculateTotalIncome(_transactions);
 
-  double get totalExpense => _transactions
-      .where((tx) => !tx.isIncome)
-      .fold(0.0, (sum, item) => sum + item.amount);
+  double get totalExpense =>
+      FinanceService.calculateTotalExpense(_transactions);
 
-  double get totalBalance => totalIncome - totalExpense;
+  double get totalBalance =>
+      FinanceService.calculateBalance(totalIncome, totalExpense);
 
   String get displayCurrency =>
       _transactions.isNotEmpty ? _transactions.last.currency : 'USD';
 
-  SpendingSummary get spendingSummary {
-    Map<String, double> categoryTotals = {};
-    double grandTotal = 0;
+  SpendingSummary get spendingSummary =>
+      FinanceService.getSpendingSummary(_transactions);
 
-    final expenses = _transactions.where((t) => !t.isIncome);
-
-    for (var transaction in expenses) {
-      categoryTotals[transaction.category] =
-          (categoryTotals[transaction.category] ?? 0) + transaction.amount;
-      grandTotal += transaction.amount;
-    }
-
-    return SpendingSummary(
-      categoryTotals: categoryTotals,
-      grandTotal: grandTotal,
-    );
+  List<TransactionModel> getTransactionsByType(bool isIncome) {
+    return FinanceService.getTransactionsByType(_transactions, isIncome);
   }
 }

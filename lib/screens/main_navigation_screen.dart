@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:personal_finance_tracker/config/router.dart';
@@ -67,34 +68,44 @@ class _MainNavScreenState extends State<MainNavScreen> {
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
         ),
-        child: BottomAppBar(
-          color: const Color.fromARGB(255, 31, 38, 73),
-          elevation: 0,
-
-          notchMargin: 0,
-          padding: EdgeInsets.zero,
-          child: SizedBox(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _navItem(icon: Icons.home_rounded, label: 'Home', index: 0),
-                _navItem(
-                  icon: Icons.bar_chart_rounded,
-                  label: 'Analytics',
-                  index: 1,
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+          child: BottomAppBar(
+            color: Colors.white.withOpacity(0.08),
+            elevation: 0,
+            notchMargin: 0,
+            padding: EdgeInsets.zero,
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                    color: Colors.white.withOpacity(0.12),
+                    width: 0.5,
+                  ),
                 ),
-                const SizedBox(width: 48),
-                _navItem(
-                  icon: Icons.receipt_long_rounded,
-                  label: 'Activity',
-                  index: 2,
-                ),
-                _navItem(
-                  icon: Icons.person_rounded,
-                  label: 'Profile',
-                  index: 3,
-                ),
-              ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _navItem(icon: Icons.home_rounded, label: 'Home', index: 0),
+                  _navItem(
+                    icon: Icons.bar_chart_rounded,
+                    label: 'Analytics',
+                    index: 1,
+                  ),
+                  const SizedBox(width: 48),
+                  _navItem(
+                    icon: Icons.receipt_long_rounded,
+                    label: 'Activity',
+                    index: 2,
+                  ),
+                  _navItem(
+                    icon: Icons.person_rounded,
+                    label: 'Profile',
+                    index: 3,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

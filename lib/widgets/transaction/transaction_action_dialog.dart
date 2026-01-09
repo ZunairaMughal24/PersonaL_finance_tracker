@@ -45,8 +45,8 @@ class TransactionActionDialog extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 55,
-                height: 55,
+                width: 50,
+                height: 50,
                 decoration: BoxDecoration(
                   color: AppColors.primaryColor.withOpacity(0.1),
                   shape: BoxShape.circle,
@@ -66,7 +66,7 @@ class TransactionActionDialog extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-
+              const SizedBox(height: 4),
               Text(
                 CurrencyUtils.formatAmount(amount, "USD"),
                 style: TextStyle(
@@ -86,7 +86,7 @@ class TransactionActionDialog extends StatelessWidget {
                   onEdit();
                 },
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 12),
               _buildActionButton(
                 label: "Delete Transaction",
                 icon: Icons.delete_outline_rounded,
@@ -96,7 +96,7 @@ class TransactionActionDialog extends StatelessWidget {
                   onDelete();
                 },
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text(
@@ -151,7 +151,7 @@ class TransactionActionDialog extends StatelessWidget {
               Icon(
                 Icons.chevron_right_rounded,
                 color: AppColors.white.withOpacity(0.2),
-                size: 24,
+                size: 20,
               ),
             ],
           ),

@@ -138,7 +138,6 @@ class _KeypadHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Basic live formatting for numerals in the expression
     String formattedAmount = amount.replaceAllMapped(
       RegExp(r'\d+'),
       (Match m) => NumberFormat("#,###").format(int.parse(m[0]!)),

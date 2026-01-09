@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
-import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
+import 'package:personal_finance_tracker/widgets/glass_container.dart';
 
 class InfoBox extends StatelessWidget {
   final String title;
@@ -16,34 +15,47 @@ class InfoBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 90,
-      width: 150,
-      decoration: BoxDecoration(
-        color: AppColors.surfaceLight,
-        borderRadius: BorderRadius.circular(16),
-        // border: Border.all(color: AppColors.white.withOpacity(0.05), width: 1),
-      ),
-      padding: const EdgeInsets.all(8),
+    bool isIncome = title.toLowerCase().contains('income');
+
+    return GlassContainer(
+      borderRadius: 16,
+      blur: 15,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            title.trim(),
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: AppColors.white,
-              letterSpacing: 0.4,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                isIncome
+                    ? Icons.trending_up_rounded
+                    : Icons.trending_down_rounded,
+                size: 16,
+                color: amountColor.withOpacity(0.8),
+              ),
+              const SizedBox(width: 6),
+              Text(
+                title.trim().toUpperCase(),
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white.withOpacity(0.6),
+                  letterSpacing: 0.8,
+                ),
+              ),
+            ],
           ),
-          4.heightBox,
+          const SizedBox(height: 6),
           Text(
             amount,
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 18,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.bold,
               color: amountColor,
+              letterSpacing: -0.5,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

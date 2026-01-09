@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:personal_finance_tracker/core/constants/appColors.dart';
 import 'package:personal_finance_tracker/core/utils/category_utils.dart';
 import 'package:personal_finance_tracker/core/utils/currency_utils.dart';
+import 'package:personal_finance_tracker/widgets/glass_container.dart';
 
 class AnalyticsChartSection extends StatelessWidget {
   final Map<String, double> categoryTotals;
@@ -34,19 +35,26 @@ class AnalyticsChartSection extends StatelessWidget {
   }
 
   Widget _buildPieChart(Map<String, double> categoryTotals, double grandTotal) {
-    return SizedBox(
-      height: 350,
-      child: Stack(
-        children: [
-          PieChart(
-            PieChartData(
-              sectionsSpace: 4,
-              centerSpaceRadius: 110,
-              sections: _buildPieChartSections(categoryTotals),
-            ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: GlassContainer(
+        borderRadius: 30,
+        blur: 15,
+        child: SizedBox(
+          height: 350,
+          child: Stack(
+            children: [
+              PieChart(
+                PieChartData(
+                  sectionsSpace: 4,
+                  centerSpaceRadius: 100,
+                  sections: _buildPieChartSections(categoryTotals),
+                ),
+              ),
+              _buildCenterText(grandTotal),
+            ],
           ),
-          _buildCenterText(grandTotal),
-        ],
+        ),
       ),
     );
   }
@@ -94,70 +102,83 @@ class AnalyticsChartSection extends StatelessWidget {
   }
 
   Widget _buildBarChart(Map<String, double> categoryTotals) {
-    return Container(
-      height: 350,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: BarChart(
-        BarChartData(
-          alignment: BarChartAlignment.spaceAround,
-          maxY: categoryTotals.values.reduce((a, b) => a > b ? a : b) * 1.2,
-          barTouchData: BarTouchData(enabled: true),
-          titlesData: FlTitlesData(
-            show: true,
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                getTitlesWidget: (value, meta) {
-                  if (value.toInt() >= 0 &&
-                      value.toInt() < categoryTotals.length) {
-                    final cat = categoryTotals.keys.elementAt(value.toInt());
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        cat.length > 3 ? cat.substring(0, 3) : cat,
-                        style: const TextStyle(
-                          color: Colors.white54,
-                          fontSize: 10,
-                        ),
-                      ),
-                    );
-                  }
-                  return const Text('');
-                },
-              ),
-            ),
-            leftTitles: const AxisTitles(
-              sideTitles: SideTitles(showTitles: false),
-            ),
-            topTitles: const AxisTitles(
-              sideTitles: SideTitles(showTitles: false),
-            ),
-            rightTitles: const AxisTitles(
-              sideTitles: SideTitles(showTitles: false),
-            ),
-          ),
-          gridData: const FlGridData(show: false),
-          borderData: FlBorderData(show: false),
-          barGroups: categoryTotals.entries.toList().asMap().entries.map((e) {
-            return BarChartGroupData(
-              x: e.key,
-              barRods: [
-                BarChartRodData(
-                  toY: e.value.value,
-                  color: CategoryUtils.getCategoryColor(e.value.key),
-                  width: 18,
-                  borderRadius: BorderRadius.circular(4),
-                  backDrawRodData: BackgroundBarChartRodData(
-                    show: true,
-                    toY:
-                        categoryTotals.values.reduce((a, b) => a > b ? a : b) *
-                        1.2,
-                    color: AppColors.surfaceLight.withOpacity(0.5),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: GlassContainer(
+        borderRadius: 30,
+        blur: 15,
+        child: Container(
+          height: 350,
+          padding: const EdgeInsets.all(20),
+          child: BarChart(
+            BarChartData(
+              alignment: BarChartAlignment.spaceAround,
+              maxY: categoryTotals.values.reduce((a, b) => a > b ? a : b) * 1.2,
+              barTouchData: BarTouchData(enabled: true),
+              titlesData: FlTitlesData(
+                show: true,
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    getTitlesWidget: (value, meta) {
+                      if (value.toInt() >= 0 &&
+                          value.toInt() < categoryTotals.length) {
+                        final cat = categoryTotals.keys.elementAt(
+                          value.toInt(),
+                        );
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            cat.length > 3 ? cat.substring(0, 3) : cat,
+                            style: const TextStyle(
+                              color: Colors.white54,
+                              fontSize: 10,
+                            ),
+                          ),
+                        );
+                      }
+                      return const Text('');
+                    },
                   ),
                 ),
-              ],
-            );
-          }).toList(),
+                leftTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                topTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                rightTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+              ),
+              gridData: const FlGridData(show: false),
+              borderData: FlBorderData(show: false),
+              barGroups: categoryTotals.entries.toList().asMap().entries.map((
+                e,
+              ) {
+                return BarChartGroupData(
+                  x: e.key,
+                  barRods: [
+                    BarChartRodData(
+                      toY: e.value.value,
+                      color: CategoryUtils.getCategoryColor(e.value.key),
+                      width: 18,
+                      borderRadius: BorderRadius.circular(4),
+                      backDrawRodData: BackgroundBarChartRodData(
+                        show: true,
+                        toY:
+                            categoryTotals.values.reduce(
+                              (a, b) => a > b ? a : b,
+                            ) *
+                            1.2,
+                        color: AppColors.surfaceLight.withOpacity(0.5),
+                      ),
+                    ),
+                  ],
+                );
+              }).toList(),
+            ),
+          ),
         ),
       ),
     );

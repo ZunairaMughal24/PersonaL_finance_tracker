@@ -41,22 +41,34 @@ class CategorySelector extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
+                  duration: const Duration(milliseconds: 250),
                   width: 52,
                   height: 52,
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? activeColor.withOpacity(0.12)
-                        : AppColors.surfaceLight,
+                        ? activeColor.withOpacity(0.2)
+                        : Colors.white.withOpacity(0.05),
                     shape: BoxShape.circle,
-                    border: isSelected
-                        ? Border.all(color: activeColor, width: 1.5)
+                    border: Border.all(
+                      color: isSelected
+                          ? activeColor.withOpacity(0.5)
+                          : Colors.white.withOpacity(0.1),
+                      width: 1.5,
+                    ),
+                    boxShadow: isSelected
+                        ? [
+                            BoxShadow(
+                              color: activeColor.withOpacity(0.2),
+                              blurRadius: 10,
+                              spreadRadius: 1,
+                            ),
+                          ]
                         : null,
                   ),
                   child: Icon(
                     category['icon'] as IconData,
                     color: isSelected
-                        ? activeColor
+                        ? Colors.white
                         : Colors.white.withOpacity(0.5),
                     size: 22,
                   ),

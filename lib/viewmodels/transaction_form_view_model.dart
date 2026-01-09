@@ -170,4 +170,35 @@ class TransactionFormViewModel extends ChangeNotifier {
       currency: _selectedCurrency,
     );
   }
+
+  Future<void> saveTransaction({
+    required dynamic provider,
+    required VoidCallback onSuccess,
+    required Function(String) onError,
+  }) async {
+    final error = validate();
+    if (error != null) {
+      onError(error);
+      return;
+    }
+
+    await provider.addTransaction(getTransactionModel());
+    onSuccess();
+  }
+
+  Future<void> updateTransaction({
+    required dynamic provider,
+    required int key,
+    required VoidCallback onSuccess,
+    required Function(String) onError,
+  }) async {
+    final error = validate();
+    if (error != null) {
+      onError(error);
+      return;
+    }
+
+    await provider.updateTransaction(key, getTransactionModel());
+    onSuccess();
+  }
 }
