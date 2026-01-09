@@ -4,6 +4,9 @@ import 'package:personal_finance_tracker/screens/main_navigation_screen.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
 import 'package:personal_finance_tracker/widgets/app_background.dart';
 import 'package:personal_finance_tracker/widgets/custom_app_bar.dart';
+import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
+import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
+import 'package:personal_finance_tracker/core/utils/padding_extention.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -21,20 +24,17 @@ class ProfileScreen extends StatelessWidget {
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                children: [
-                  const SizedBox(height: 20),
-                  _buildProfileHeader(),
-                  const SizedBox(height: 20),
-                  _buildSettingsSection(context),
-                  const SizedBox(height: 20),
-                  _buildAppInfo(),
-                  const SizedBox(height: 100),
-                ],
-              ),
-            ),
+            child: Column(
+              children: [
+                20.heightBox,
+                _buildProfileHeader(),
+                20.heightBox,
+                _buildSettingsSection(context),
+                20.heightBox,
+                _buildAppInfo(),
+                100.heightBox,
+              ],
+            ).px16(),
           ),
         ),
       ),
@@ -65,7 +65,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               child: const CircleAvatar(
-                radius: 54,
+                radius: 50,
                 backgroundColor: Colors.white12,
                 backgroundImage: NetworkImage(
                   'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop',
@@ -94,32 +94,21 @@ class ProfileScreen extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 20),
+        20.heightBox,
         const Text(
           'Zunaira Mughal',
-          style: TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-            letterSpacing: -0.5,
-          ),
-        ),
-        const SizedBox(height: 6),
+        ).h2(color: Colors.white, weight: FontWeight.bold),
+        6.heightBox,
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.05),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(12),
             border: Border.all(color: Colors.white.withOpacity(0.05)),
           ),
-          child: Text(
-            'zunaira@example.com',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Colors.white.withOpacity(0.5),
-              letterSpacing: 0.2,
-            ),
+          child: Text('zunaira@example.com').bodyMedium(
+            color: Colors.white.withOpacity(0.5),
+            weight: FontWeight.w500,
           ),
         ),
       ],
@@ -130,7 +119,7 @@ class ProfileScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
       child: GlassContainer(
-        borderRadius: 24,
+        borderRadius: 20,
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Column(
           children: [
@@ -177,22 +166,16 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildAppInfo() {
     return GlassContainer(
+      borderRadius: 15,
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: Center(
         child: Column(
           children: [
-            const Text(
-              'Personal Finance Tracker',
-              style: TextStyle(color: Colors.white24, fontSize: 12),
-            ),
-            const SizedBox(height: 4),
             Text(
-              'Version 1.0.0',
-              style: TextStyle(
-                fontSize: 11,
-                color: Colors.white.withOpacity(0.2),
-              ),
-            ),
+              'Personal Finance Tracker',
+            ).labelLarge(color: Colors.white.withOpacity(0.3)),
+            4.heightBox,
+            Text('Version 1.0.0').caption(color: Colors.white.withOpacity(0.2)),
           ],
         ),
       ),
@@ -210,7 +193,7 @@ class ProfileScreen extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         child: Row(
           children: [
             Container(
@@ -219,31 +202,19 @@ class ProfileScreen extends StatelessWidget {
                 color: color.withOpacity(0.08),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, color: color, size: 22),
+              child: Icon(icon, color: color, size: 20),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      color: color,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: -0.2,
-                    ),
-                  ),
+                  Text(title).labelLarge(color: color, weight: FontWeight.w600),
                   if (subtitle != null) ...[
                     const SizedBox(height: 2),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.3),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    Text(subtitle).caption(
+                      color: Colors.white.withOpacity(0.3),
+                      weight: FontWeight.w500,
                     ),
                   ],
                 ],
@@ -262,11 +233,6 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget _buildDivider() {
-    return Divider(
-      height: 0.5,
-      indent: 10,
-      endIndent: 10,
-      color: Colors.white.withOpacity(0.05),
-    );
+    return Divider(height: 0.5, color: Colors.white.withOpacity(0.05));
   }
 }

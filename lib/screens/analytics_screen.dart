@@ -8,6 +8,9 @@ import 'package:personal_finance_tracker/widgets/app_background.dart';
 import 'package:personal_finance_tracker/widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 import '../providers/transaction_provider.dart';
+import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
+import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
+import 'package:personal_finance_tracker/core/utils/padding_extention.dart';
 
 class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({super.key});
@@ -50,42 +53,39 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
               return _buildEmptyState();
             }
 
-            return SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 20),
-                  _buildToggle(),
-                  // const SizedBox(height: ),
-                  AnalyticsChartSection(
-                    categoryTotals: summary.categoryTotals,
-                    grandTotal: summary.grandTotal,
-                    controller: _pageController,
-                    onPageChanged: (index) {
-                      setState(() {
-                        _isPieChart = index == 0;
-                      });
-                    },
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 10),
-                          AnalyticsBreakdown(
-                            categoryTotals: summary.categoryTotals,
-                            sortedCategories: summary.sortedCategories,
-                            grandTotal: summary.grandTotal,
-                          ),
-                          const SizedBox(height: 100),
-                        ],
-                      ),
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                20.heightBox,
+                _buildToggle(),
+                AnalyticsChartSection(
+                  categoryTotals: summary.categoryTotals,
+                  grandTotal: summary.grandTotal,
+                  controller: _pageController,
+                  onPageChanged: (index) {
+                    setState(() {
+                      _isPieChart = index == 0;
+                    });
+                  },
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Column(
+                      children: [
+                        10.heightBox,
+                        AnalyticsBreakdown(
+                          categoryTotals: summary.categoryTotals,
+                          sortedCategories: summary.sortedCategories,
+                          grandTotal: summary.grandTotal,
+                        ).px(16),
+                        100.heightBox,
+                      ],
                     ),
                   ),
-                ],
-              ),
-            );
+                ),
+              ],
+            ).safeArea();
           },
         ),
       ),
@@ -94,11 +94,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 
   Widget _buildToggle() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40),
+      padding: const EdgeInsets.symmetric(horizontal: 30),
       child: GlassContainer(
-        borderRadius: 15,
+        borderRadius: 12,
         blur: 10,
-        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+        padding: const EdgeInsets.all(4),
         child: Row(
           children: [
             _toggleItem("Spendings", _isPieChart, 0),
@@ -122,7 +122,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
-          margin: const EdgeInsets.symmetric(horizontal: 4),
+          margin: const EdgeInsets.symmetric(horizontal: 2),
           padding: const EdgeInsets.symmetric(vertical: 8),
           decoration: BoxDecoration(
             color: isSelected ? AppColors.primaryColor : Colors.transparent,
@@ -138,13 +138,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                 : [],
           ),
           child: Center(
-            child: Text(
-              label,
-              style: TextStyle(
-                color: isSelected ? Colors.white : Colors.white24,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                fontSize: 14,
-              ),
+            child: Text(label).labelMedium(
+              color: isSelected
+                  ? Colors.white
+                  : AppColors.white.withOpacity(0.5),
+              weight: isSelected ? FontWeight.w600 : FontWeight.w500,
             ),
           ),
         ),
@@ -157,12 +155,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.analytics_outlined, size: 80, color: Colors.white10),
-          const SizedBox(height: 20),
-          Text(
-            "No data to display",
-            style: TextStyle(color: Colors.white30, fontSize: 16),
-          ),
+          const Icon(Icons.analytics_outlined, size: 64, color: Colors.white10),
+          20.heightBox,
+          const Text("No data to display").bodyMedium(color: Colors.white30),
         ],
       ),
     );

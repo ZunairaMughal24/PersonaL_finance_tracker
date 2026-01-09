@@ -5,6 +5,7 @@ import 'package:personal_finance_tracker/core/constants/appColors.dart';
 
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
 import 'package:personal_finance_tracker/widgets/appButton.dart';
+import 'package:personal_finance_tracker/widgets/app_background.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -12,10 +13,7 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(gradient: AppColors.splashGradient),
+      body: AppBackground(
         child: SafeArea(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -65,7 +63,7 @@ class SplashScreen extends StatelessWidget {
                     AppButton(
                       text: "Sign In",
                       onPressed: () {
-                        context.go(AppRoutes.mainNavigationScreenRoute);
+                        context.go(AppRoutes.signInScreenRoute);
                       },
                       color: Colors.white,
                       textColor: AppColors.primaryColor,

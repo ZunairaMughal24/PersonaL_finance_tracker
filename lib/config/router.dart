@@ -8,6 +8,8 @@ import 'package:personal_finance_tracker/screens/profile_screen.dart';
 import 'package:personal_finance_tracker/screens/transaction_screen.dart';
 import 'package:personal_finance_tracker/screens/splash_screen.dart';
 import 'package:personal_finance_tracker/screens/activity_screen.dart';
+import 'package:personal_finance_tracker/screens/sign_in_screen.dart';
+import 'package:personal_finance_tracker/screens/sign_up_screen.dart';
 
 CustomTransitionPage<void> _buildPageWithDefaultTransition<T>({
   required BuildContext context,
@@ -39,6 +41,8 @@ class AppRoutes {
   static const String analyticsScreenRoute = '/analyticsScreen';
   static const String activityScreenRoute = '/activityScreen';
   static const String profileScreenRoute = '/profileScreen';
+  static const String signInScreenRoute = '/signIn';
+  static const String signUpScreenRoute = '/signUp';
 }
 
 final router = GoRouter(
@@ -106,6 +110,22 @@ final router = GoRouter(
         context: context,
         state: state,
         child: const ProfileScreen(),
+      ),
+    ),
+    GoRoute(
+      path: AppRoutes.signInScreenRoute,
+      pageBuilder: (context, state) => _buildPageWithDefaultTransition(
+        context: context,
+        state: state,
+        child: const SignInScreen(),
+      ),
+    ),
+    GoRoute(
+      path: AppRoutes.signUpScreenRoute,
+      pageBuilder: (context, state) => _buildPageWithDefaultTransition(
+        context: context,
+        state: state,
+        child: const SignUpScreen(),
       ),
     ),
   ],

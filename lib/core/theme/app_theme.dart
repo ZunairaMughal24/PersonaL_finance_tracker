@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:personal_finance_tracker/core/constants/appColors.dart';
 
 class AppTheme {
@@ -43,15 +44,15 @@ class AppTheme {
         onError: Colors.white,
       ),
 
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: AppColors.background,
         elevation: 0,
         centerTitle: true,
         scrolledUnderElevation: 0,
-        iconTheme: IconThemeData(color: AppColors.textPrimary),
-        titleTextStyle: TextStyle(
+        iconTheme: const IconThemeData(color: AppColors.textPrimary),
+        titleTextStyle: GoogleFonts.nunito(
           color: AppColors.textPrimary,
-          fontSize: 20,
+          fontSize: 18,
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -70,43 +71,51 @@ class AppTheme {
         elevation: elevationLg,
       ),
 
-      textTheme: const TextTheme(
-        displayLarge: TextStyle(
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
-          color: AppColors.textPrimary,
-        ),
-        displayMedium: TextStyle(
-          fontSize: 28,
-          fontWeight: FontWeight.bold,
-          color: AppColors.textPrimary,
-        ),
-        displaySmall: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.w600,
-          color: AppColors.textPrimary,
-        ),
-        headlineMedium: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-          color: AppColors.textPrimary,
-        ),
-        titleLarge: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-          color: AppColors.textPrimary,
-        ),
-        titleMedium: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textPrimary,
-        ),
-        bodyLarge: TextStyle(fontSize: 16, color: AppColors.textPrimary),
-        bodyMedium: TextStyle(fontSize: 14, color: AppColors.textSecondary),
-        labelLarge: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textPrimary,
+      textTheme: GoogleFonts.nunitoTextTheme(
+        const TextTheme(
+          displayLarge: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textPrimary,
+          ),
+          displayMedium: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textPrimary,
+          ),
+          displaySmall: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary,
+          ),
+          headlineMedium: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary,
+          ),
+          titleLarge: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary,
+          ),
+          titleMedium: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: AppColors.textPrimary,
+          ),
+          bodyLarge: TextStyle(fontSize: 15, color: AppColors.textPrimary),
+          bodyMedium: TextStyle(fontSize: 14, color: AppColors.textSecondary),
+          bodySmall: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+          labelLarge: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: AppColors.textPrimary,
+          ),
+          labelSmall: TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.w500,
+            color: AppColors.textSecondary,
+          ),
         ),
       ),
     );
