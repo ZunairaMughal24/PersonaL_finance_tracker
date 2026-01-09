@@ -12,7 +12,7 @@ class TotalBalanceCard extends StatelessWidget {
     final today = DateTime.now();
     return Container(
       width: double.infinity,
-      constraints: const BoxConstraints(minHeight: 180),
+      constraints: const BoxConstraints(minHeight: 170),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(32),
         boxShadow: [
@@ -22,13 +22,6 @@ class TotalBalanceCard extends StatelessWidget {
             offset: const Offset(0, 15),
           ),
         ],
-        // Simple Gradient fallback: Commented for Premium Look
-        // gradient: const LinearGradient(
-        //   begin: Alignment.topLeft,
-        //   end: Alignment.bottomRight,
-        //   colors: [Color(0xFF6C5CE7), Color(0xFF5443C7), Color(0xFF1A1F3A)],
-        //   stops: [0.0, 0.5, 1.0],
-        // ),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(32),
@@ -79,10 +72,10 @@ class TotalBalanceCard extends StatelessWidget {
               borderRadius: 32,
               blur: 10,
               gradientColors: [
-                Colors.white.withOpacity(0.1),
-                Colors.white.withOpacity(0.01),
+                Colors.white.withOpacity(0.08),
+                Colors.white.withOpacity(0.02),
               ],
-              padding: const EdgeInsets.all(18),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -149,7 +142,7 @@ class TotalBalanceCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.end,
