@@ -135,7 +135,7 @@ class TotalBalanceCard extends StatelessWidget {
                         ),
 
                         SizedBox(
-                          height: 24,
+                          height: 26,
                           width: 44,
                           child: Stack(
                             children: [

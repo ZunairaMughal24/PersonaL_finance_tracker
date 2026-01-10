@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:personal_finance_tracker/core/themes/appTextTheme.dart';
 
 extension TextThemeExtension on Text {
-  Text h1({Color? color, FontWeight weight = FontWeight.w700}) => Text(
+  Text h1({
+    Color? color,
+    FontWeight weight = FontWeight.w700,
+    double fontSize = 28,
+  }) => Text(
     data!,
-    style: AppTextTheme.h1(color: color, weight: weight),
+    style: AppTextTheme.h1(
+      color: color,
+      weight: weight,
+    ).copyWith(fontSize: fontSize),
     textAlign: textAlign,
     maxLines: maxLines,
     overflow: overflow,
@@ -28,7 +35,7 @@ extension TextThemeExtension on Text {
 
   Text h4({Color? color, FontWeight weight = FontWeight.w600}) => Text(
     data!,
-    style: AppTextTheme.h4(color: color, weight: weight),
+    style: AppTextTheme.h3(color: color, weight: weight).copyWith(fontSize: 16),
     textAlign: textAlign,
     maxLines: maxLines,
     overflow: overflow,
@@ -36,7 +43,7 @@ extension TextThemeExtension on Text {
 
   Text bodyLarge({Color? color, FontWeight weight = FontWeight.w400}) => Text(
     data!,
-    style: AppTextTheme.bodyLarge(color: color, weight: weight),
+    style: AppTextTheme.body(color: color, weight: weight, fontSize: 16),
     textAlign: textAlign,
     maxLines: maxLines,
     overflow: overflow,
@@ -44,7 +51,7 @@ extension TextThemeExtension on Text {
 
   Text bodyMedium({Color? color, FontWeight weight = FontWeight.w400}) => Text(
     data!,
-    style: AppTextTheme.bodyMedium(color: color, weight: weight),
+    style: AppTextTheme.body(color: color, weight: weight, fontSize: 14),
     textAlign: textAlign,
     maxLines: maxLines,
     overflow: overflow,
@@ -52,7 +59,7 @@ extension TextThemeExtension on Text {
 
   Text bodySmall({Color? color, FontWeight weight = FontWeight.w400}) => Text(
     data!,
-    style: AppTextTheme.bodySmall(color: color, weight: weight),
+    style: AppTextTheme.body(color: color, weight: weight, fontSize: 12),
     textAlign: textAlign,
     maxLines: maxLines,
     overflow: overflow,
@@ -60,15 +67,23 @@ extension TextThemeExtension on Text {
 
   Text labelLarge({Color? color, FontWeight weight = FontWeight.w500}) => Text(
     data!,
-    style: AppTextTheme.labelLarge(color: color, weight: weight),
+    style: AppTextTheme.body(color: color, weight: weight, fontSize: 14),
     textAlign: textAlign,
     maxLines: maxLines,
     overflow: overflow,
   );
 
-  Text labelMedium({Color? color, FontWeight weight = FontWeight.w500}) => Text(
+  Text labelMedium({
+    Color? color,
+    FontWeight weight = FontWeight.w500,
+    TextDecoration? decoration,
+  }) => Text(
     data!,
-    style: AppTextTheme.labelMedium(color: color, weight: weight),
+    style: AppTextTheme.body(
+      color: color,
+      weight: weight,
+      fontSize: 12,
+    ).copyWith(decoration: decoration),
     textAlign: textAlign,
     maxLines: maxLines,
     overflow: overflow,
@@ -76,7 +91,7 @@ extension TextThemeExtension on Text {
 
   Text labelSmall({Color? color, FontWeight weight = FontWeight.w500}) => Text(
     data!,
-    style: AppTextTheme.labelSmall(color: color, weight: weight),
+    style: AppTextTheme.body(color: color, weight: weight, fontSize: 10),
     textAlign: textAlign,
     maxLines: maxLines,
     overflow: overflow,
@@ -84,7 +99,7 @@ extension TextThemeExtension on Text {
 
   Text caption({Color? color, FontWeight weight = FontWeight.w400}) => Text(
     data!,
-    style: AppTextTheme.caption(color: color, weight: weight),
+    style: AppTextTheme.body(color: color, weight: weight, fontSize: 11),
     textAlign: textAlign,
     maxLines: maxLines,
     overflow: overflow,
@@ -108,7 +123,7 @@ extension TextThemeExtension on Text {
 
   Text titleLarge({Color? color, FontWeight weight = FontWeight.w600}) => Text(
     data!,
-    style: AppTextTheme.title(color: color, weight: weight),
+    style: AppTextTheme.h3(color: color, weight: weight).copyWith(fontSize: 18),
     textAlign: textAlign,
     maxLines: maxLines,
     overflow: overflow,
@@ -116,7 +131,7 @@ extension TextThemeExtension on Text {
 
   Text titleMedium({Color? color, FontWeight weight = FontWeight.w500}) => Text(
     data!,
-    style: AppTextTheme.subtitle(color: color, weight: weight),
+    style: AppTextTheme.h3(color: color, weight: weight).copyWith(fontSize: 16),
     textAlign: textAlign,
     maxLines: maxLines,
     overflow: overflow,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:personal_finance_tracker/core/constants/appColors.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
 
-
 class AppButton extends StatelessWidget {
   const AppButton({
     super.key,
@@ -14,6 +13,8 @@ class AppButton extends StatelessWidget {
     this.width,
     this.borderRadius = 12,
     this.icon,
+    this.isLoading = false,
+    this.borderColor,
   });
 
   final String text;
@@ -23,7 +24,9 @@ class AppButton extends StatelessWidget {
   final double height;
   final double? width;
   final double borderRadius;
-  final Widget? icon; 
+  final Widget? icon;
+  final bool isLoading;
+  final Color? borderColor;
 
   @override
   Widget build(BuildContext context) {
@@ -35,29 +38,41 @@ class AppButton extends StatelessWidget {
           backgroundColor: color,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
+            side: borderColor != null
+                ? BorderSide(color: borderColor!, width: 1.5)
+                : BorderSide.none,
           ),
-          elevation: 3,
+          elevation: color == Colors.transparent ? 0 : 3,
         ),
-        onPressed: onPressed,
-        child: icon == null
+        onPressed: isLoading ? null : onPressed,
+        child: isLoading
+            ? SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(
+                  color: textColor,
+                  strokeWidth: 2,
+                ),
+              )
+            : icon == null
             ? Text(
                 text,
                 style: TextStyle(
                   color: textColor,
                   fontSize: 17,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w700,
                 ),
               )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   icon!,
-                  8.heightBox,
+                  8.widthBox,
                   Text(
                     text,
                     style: TextStyle(
                       color: textColor,
-                      fontSize: 17,
+                      fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:personal_finance_tracker/widgets/glass_back_button.dart';
+import 'package:personal_finance_tracker/config/router.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -25,9 +25,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading:
           leading ??
           (showBackButton
-              ? GlassBackButton(onTap: onLeadingTap ?? () => context.pop())
+              ? IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed:
+                      onLeadingTap ??
+                      () => context.go(AppRoutes.mainNavigationScreenRoute),
+                )
               : null),
-      leadingWidth: 70,
       title: Text(
         title,
         style: const TextStyle(

@@ -57,6 +57,14 @@ class _EditTransactionScreenContentState
             appBar: CustomAppBar(title: "Edit Transaction"),
             body: Stack(
               children: [
+                // New Background Image (from Sign In screens):
+                // Positioned.fill(
+                //   child: Image.network(
+                //     'https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2187&auto=format&fit=crop',
+                //     fit: BoxFit.cover,
+                //   ),
+                // ),
+                // Old Background Image (dark abstract - recommended for transaction screens):
                 Positioned.fill(
                   child: Image.network(
                     'https://images.unsplash.com/photo-1635776062127-d379bfcba9f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',

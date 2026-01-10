@@ -8,8 +8,8 @@ import 'package:personal_finance_tracker/screens/profile_screen.dart';
 import 'package:personal_finance_tracker/screens/transaction_screen.dart';
 import 'package:personal_finance_tracker/screens/splash_screen.dart';
 import 'package:personal_finance_tracker/screens/activity_screen.dart';
-import 'package:personal_finance_tracker/screens/sign_in_screen.dart';
-import 'package:personal_finance_tracker/screens/sign_up_screen.dart';
+import 'package:personal_finance_tracker/features/auth/presentation/pages/sign_in_screen.dart';
+import 'package:personal_finance_tracker/features/auth/presentation/pages/sign_up_screen.dart';
 
 CustomTransitionPage<void> _buildPageWithDefaultTransition<T>({
   required BuildContext context,

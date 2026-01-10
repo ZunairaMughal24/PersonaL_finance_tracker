@@ -4,7 +4,6 @@ import 'package:personal_finance_tracker/core/constants/appColors.dart';
 class AppTextField extends StatelessWidget {
   const AppTextField({
     super.key,
-
     required this.hint,
     this.controller,
     this.obscureText = false,
@@ -16,6 +15,7 @@ class AppTextField extends StatelessWidget {
     this.label,
     this.validator,
   });
+
   final String title;
   final String? label;
   final String hint;
@@ -43,20 +43,9 @@ class AppTextField extends StatelessWidget {
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                offset: const Offset(2, 2),
-                blurRadius: 4,
-              ),
-              BoxShadow(
-                color: AppColors.white.withOpacity(0.05),
-                offset: const Offset(-1, -1),
-                blurRadius: 2,
-              ),
-            ],
+            color: Colors.white.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.white.withOpacity(0.1), width: 1),
           ),
           child: TextFormField(
             validator: validator,
@@ -74,7 +63,7 @@ class AppTextField extends StatelessWidget {
               hintStyle: TextStyle(color: AppColors.grey.withOpacity(0.5)),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 20,
-                vertical: 16,
+                vertical: 12,
               ),
               prefixIcon: prefixChild,
               suffixIcon:
@@ -82,20 +71,19 @@ class AppTextField extends StatelessWidget {
                   (showDropdown
                       ? const Icon(Icons.arrow_drop_down, color: Colors.white)
                       : null),
-
+              // Use InputBorder.none for all states
               border: InputBorder.none,
               enabledBorder: InputBorder.none,
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(
-                  color: AppColors.primaryColor.withOpacity(0.5),
-                  width: 1.5,
-                ),
+              focusedBorder: InputBorder.none,
+              errorBorder: InputBorder.none,
+              focusedErrorBorder: InputBorder.none,
+              // Completely hide internal error text
+              errorStyle: const TextStyle(
+                height: 0,
+                fontSize: 0,
+                color: Colors.transparent,
               ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: const BorderSide(color: AppColors.red, width: 1),
-              ),
+              errorMaxLines: 1,
             ),
           ),
         ),

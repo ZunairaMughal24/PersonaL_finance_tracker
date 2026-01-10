@@ -24,12 +24,28 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       body: Stack(
         children: [
+          // Old Background Image
+          // Positioned.fill(
+          //   child: Image.network(
+          //     'https://images.unsplash.com/photo-1635776062127-d379bfcba9f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+          //     fit: BoxFit.cover,
+          //     errorBuilder: (context, error, stackTrace) =>
+          //         Container(color: AppColors.background),
+          //   ),
+          // ),
+          // New Background Image
           Positioned.fill(
-            child: Image.network(
-              'https://images.unsplash.com/photo-1635776062127-d379bfcba9f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) =>
-                  Container(color: AppColors.background),
+            child: Container(
+              height: double.infinity,
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage(
+                    'https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2187&auto=format&fit=crop',
+                  ),
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
           ),
           Positioned.fill(
@@ -119,9 +135,7 @@ class HomeScreen extends StatelessWidget {
                                 context.push(AppRoutes.activityScreenRoute),
                             style: TextButton.styleFrom(
                               foregroundColor: AppColors.primaryLight,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                              ),
+                              padding: EdgeInsets.zero,
                             ),
                             child: const Text(
                               'See All',

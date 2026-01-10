@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:personal_finance_tracker/config/router.dart';
@@ -87,20 +88,24 @@ class _MainNavScreenState extends State<MainNavScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _navItem(icon: Icons.home_rounded, label: 'Home', index: 0),
                   _navItem(
-                    icon: Icons.bar_chart_rounded,
+                    icon: CupertinoIcons.house_fill,
+                    label: 'Home',
+                    index: 0,
+                  ),
+                  _navItem(
+                    icon: CupertinoIcons.chart_bar_fill,
                     label: 'Analytics',
                     index: 1,
                   ),
                   const SizedBox(width: 48),
                   _navItem(
-                    icon: Icons.receipt_long_rounded,
+                    icon: CupertinoIcons.doc_text_fill,
                     label: 'Activity',
                     index: 2,
                   ),
                   _navItem(
-                    icon: Icons.person_rounded,
+                    icon: CupertinoIcons.person_fill,
                     label: 'Profile',
                     index: 3,
                   ),
@@ -114,11 +119,16 @@ class _MainNavScreenState extends State<MainNavScreen> {
   }
 
   Widget _navItem({
-    required IconData icon,
+    IconData? icon,
+    String? assetPath,
     required String label,
     required int index,
   }) {
     final isSelected = _currentIndex == index;
+    final color = isSelected
+        ? AppColors.primaryColor
+        : AppColors.white.withOpacity(0.5);
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -135,20 +145,15 @@ class _MainNavScreenState extends State<MainNavScreen> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                icon,
-                color: isSelected
-                    ? AppColors.primaryColor
-                    : AppColors.white.withOpacity(0.5),
-                size: 24,
-              ),
+              if (assetPath != null)
+                Image.asset(assetPath, width: 24, height: 24, color: color)
+              else
+                Icon(icon, color: color, size: 24),
               const SizedBox(height: 2),
               Text(
                 label,
                 style: TextStyle(
-                  color: isSelected
-                      ? AppColors.primaryColor
-                      : AppColors.white.withOpacity(0.5),
+                  color: color,
                   fontSize: 12,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                 ),
