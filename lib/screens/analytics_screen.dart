@@ -37,57 +37,54 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      extendBodyBehindAppBar: true,
+    return AppBackground(
+      style: BackgroundStyle.silkDark,
       appBar: CustomAppBar(
         title: "Spending Analytics",
         onLeadingTap: () => MainNavScreen.navKey.currentState?.switchToHome(),
       ),
-      body: AppBackground(
-        child: Consumer<TransactionProvider>(
-          builder: (context, provider, child) {
-            final summary = provider.spendingSummary;
+      child: Consumer<TransactionProvider>(
+        builder: (context, provider, child) {
+          final summary = provider.spendingSummary;
 
-            if (summary.categoryTotals.isEmpty) {
-              return _buildEmptyState();
-            }
+          if (summary.categoryTotals.isEmpty) {
+            return _buildEmptyState();
+          }
 
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                20.heightBox,
-                _buildToggle(),
-                AnalyticsChartSection(
-                  categoryTotals: summary.categoryTotals,
-                  grandTotal: summary.grandTotal,
-                  controller: _pageController,
-                  onPageChanged: (index) {
-                    setState(() {
-                      _isPieChart = index == 0;
-                    });
-                  },
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    child: Column(
-                      children: [
-                        10.heightBox,
-                        AnalyticsBreakdown(
-                          categoryTotals: summary.categoryTotals,
-                          sortedCategories: summary.sortedCategories,
-                          grandTotal: summary.grandTotal,
-                        ).px(16),
-                        100.heightBox,
-                      ],
-                    ),
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              20.heightBox,
+              _buildToggle(),
+              AnalyticsChartSection(
+                categoryTotals: summary.categoryTotals,
+                grandTotal: summary.grandTotal,
+                controller: _pageController,
+                onPageChanged: (index) {
+                  setState(() {
+                    _isPieChart = index == 0;
+                  });
+                },
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      10.heightBox,
+                      AnalyticsBreakdown(
+                        categoryTotals: summary.categoryTotals,
+                        sortedCategories: summary.sortedCategories,
+                        grandTotal: summary.grandTotal,
+                      ).px(16),
+                      100.heightBox,
+                    ],
                   ),
                 ),
-              ],
-            ).safeArea();
-          },
-        ),
+              ),
+            ],
+          ).safeArea();
+        },
       ),
     );
   }

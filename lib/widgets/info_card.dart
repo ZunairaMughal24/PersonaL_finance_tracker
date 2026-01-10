@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:personal_finance_tracker/core/constants/appColors.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
 import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
@@ -21,7 +22,12 @@ class InfoBox extends StatelessWidget {
 
     return GlassContainer(
       borderRadius: 15,
-      blur: 15,
+      blur: 20,
+      gradientColors: [
+        Colors.white.withOpacity(0.08),
+        AppColors.primaryColor.withOpacity(0.02),
+        Colors.white.withOpacity(0.04),
+      ],
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

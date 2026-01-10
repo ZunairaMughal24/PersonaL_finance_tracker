@@ -31,7 +31,7 @@ class TotalBalanceCard extends StatelessWidget {
           children: [
             Positioned.fill(
               child: Image.network(
-                'https://images.unsplash.com/photo-1635776062127-d379bfcba9f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+                'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=2574&auto=format&fit=crop',
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) =>
                     Container(color: const Color(0xFF0A0E27)),
@@ -45,9 +45,9 @@ class TotalBalanceCard extends StatelessWidget {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      Colors.black.withOpacity(0.6),
-                      Colors.transparent,
-                      Colors.black.withOpacity(0.4),
+                      Colors.black.withOpacity(0.7),
+                      Colors.black.withOpacity(0.2),
+                      Colors.black.withOpacity(0.5),
                     ],
                   ),
                 ),
@@ -56,10 +56,10 @@ class TotalBalanceCard extends StatelessWidget {
             Positioned.fill(
               child: GlassContainer(
                 borderRadius: 20,
-                blur: 15,
+                blur: 20,
                 gradientColors: [
-                  Colors.white.withOpacity(0.05),
-                  Colors.white.withOpacity(0.01),
+                  Colors.white.withOpacity(0.1),
+                  Colors.white.withOpacity(0.02),
                 ],
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,

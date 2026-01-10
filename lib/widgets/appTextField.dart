@@ -60,7 +60,7 @@ class AppTextField extends StatelessWidget {
             decoration: InputDecoration(
               hintText: hint,
               labelText: label,
-              hintStyle: TextStyle(color: AppColors.grey.withOpacity(0.5)),
+              hintStyle: TextStyle(color: AppColors.white.withOpacity(0.4)),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 20,
                 vertical: 12,
@@ -71,13 +71,13 @@ class AppTextField extends StatelessWidget {
                   (showDropdown
                       ? const Icon(Icons.arrow_drop_down, color: Colors.white)
                       : null),
-              // Use InputBorder.none for all states
+
               border: InputBorder.none,
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
               errorBorder: InputBorder.none,
               focusedErrorBorder: InputBorder.none,
-              // Completely hide internal error text
+
               errorStyle: const TextStyle(
                 height: 0,
                 fontSize: 0,

@@ -13,29 +13,26 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      extendBodyBehindAppBar: true,
+    return AppBackground(
+      style: BackgroundStyle.silkDark,
       appBar: CustomAppBar(
         title: "Profile",
         onLeadingTap: () => MainNavScreen.navKey.currentState?.switchToHome(),
       ),
-      body: AppBackground(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: SafeArea(
-            child: Column(
-              children: [
-                20.heightBox,
-                _buildProfileHeader(),
-                20.heightBox,
-                _buildSettingsSection(context),
-                20.heightBox,
-                _buildAppInfo(),
-                100.heightBox,
-              ],
-            ).px16(),
-          ),
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: SafeArea(
+          child: Column(
+            children: [
+              20.heightBox,
+              _buildProfileHeader(),
+              20.heightBox,
+              _buildSettingsSection(context),
+              20.heightBox,
+              _buildAppInfo(),
+              100.heightBox,
+            ],
+          ).px16(),
         ),
       ),
     );
