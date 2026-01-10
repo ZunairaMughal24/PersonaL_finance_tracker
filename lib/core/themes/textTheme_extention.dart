@@ -17,9 +17,16 @@ extension TextThemeExtension on Text {
     overflow: overflow,
   );
 
-  Text h2({Color? color, FontWeight weight = FontWeight.w700}) => Text(
+  Text h2({
+    Color? color,
+    FontWeight weight = FontWeight.w700,
+    double? fontSize,
+  }) => Text(
     data!,
-    style: AppTextTheme.h2(color: color, weight: weight),
+    style: AppTextTheme.h2(
+      color: color,
+      weight: weight,
+    ).copyWith(fontSize: fontSize),
     textAlign: textAlign,
     maxLines: maxLines,
     overflow: overflow,
@@ -65,9 +72,18 @@ extension TextThemeExtension on Text {
     overflow: overflow,
   );
 
-  Text labelLarge({Color? color, FontWeight weight = FontWeight.w500}) => Text(
+  Text labelLarge({
+    Color? color,
+    FontWeight weight = FontWeight.w500,
+    double? fontSize,
+    double? letterSpacing,
+  }) => Text(
     data!,
-    style: AppTextTheme.body(color: color, weight: weight, fontSize: 14),
+    style: AppTextTheme.body(
+      color: color,
+      weight: weight,
+      fontSize: fontSize ?? 14,
+    ).copyWith(letterSpacing: letterSpacing),
     textAlign: textAlign,
     maxLines: maxLines,
     overflow: overflow,

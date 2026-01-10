@@ -185,6 +185,21 @@ class AppBackground extends StatelessWidget {
             ),
           ),
         ),
+        // Add subtle premium accents
+        Positioned(
+          top: -50,
+          left: -50,
+          child: _GlowBlob(
+            color: AppColors.primaryColor,
+            opacity: 0.15,
+            blur: 150,
+          ),
+        ),
+        Positioned(
+          bottom: 100,
+          right: -80,
+          child: _GlowBlob(color: AppColors.accent, opacity: 0.07, blur: 120),
+        ),
       ],
     );
   }
