@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
 import 'package:personal_finance_tracker/core/utils/category_utils.dart';
 import 'package:personal_finance_tracker/core/utils/currency_utils.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
+import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
 
 class AnalyticsChartSection extends StatelessWidget {
   final Map<String, double> categoryTotals;
@@ -36,19 +36,22 @@ class AnalyticsChartSection extends StatelessWidget {
 
   Widget _buildPieChart(Map<String, double> categoryTotals, double grandTotal) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       child: GlassContainer(
-        borderRadius: 30,
-        blur: 15,
+        borderRadius: 32,
+        blur: 25,
+        borderOpacity: 0.1,
         child: SizedBox(
-          height: 350,
+          height: 320,
           child: Stack(
+            alignment: Alignment.center,
             children: [
               PieChart(
                 PieChartData(
-                  sectionsSpace: 4,
-                  centerSpaceRadius: 100,
+                  sectionsSpace: 6,
+                  centerSpaceRadius: 90,
                   sections: _buildPieChartSections(categoryTotals),
+                  startDegreeOffset: 270,
                 ),
               ),
               _buildCenterText(grandTotal),
@@ -65,56 +68,79 @@ class AnalyticsChartSection extends StatelessWidget {
     return categoryTotals.entries.map((entry) {
       final color = CategoryUtils.getCategoryColor(entry.key);
       return PieChartSectionData(
-        color: color,
+        color: color.withOpacity(0.9),
         value: entry.value,
-        radius: 30,
+        radius: 24,
         showTitle: false,
+        badgeWidget: null,
       );
     }).toList();
   }
 
   Widget _buildCenterText(double grandTotal) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text(
-            "Total Spent",
-            style: TextStyle(
-              color: Colors.white70,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            CurrencyUtils.formatAmount(grandTotal, "USD"),
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1,
-            ),
+    return Container(
+      width: 140,
+      height: 140,
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.03),
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 20,
+            spreadRadius: -10,
           ),
         ],
+      ),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("Total Spent").labelSmall(
+              color: Colors.white.withOpacity(0.4),
+              weight: FontWeight.w600,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              CurrencyUtils.formatAmount(grandTotal, "USD").split('.')[0],
+            ).h2(color: Colors.white, fontSize: 24),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildBarChart(Map<String, double> categoryTotals) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       child: GlassContainer(
-        borderRadius: 30,
-        blur: 15,
-        child: Container(
-          height: 350,
-          padding: const EdgeInsets.all(20),
+        borderRadius: 32,
+        blur: 25,
+        borderOpacity: 0.1,
+        padding: const EdgeInsets.fromLTRB(16, 32, 16, 16),
+        child: SizedBox(
+          height: 320,
           child: BarChart(
             BarChartData(
-              alignment: BarChartAlignment.spaceAround,
-              maxY: categoryTotals.values.reduce((a, b) => a > b ? a : b) * 1.2,
-              barTouchData: BarTouchData(enabled: true),
+              alignment: BarChartAlignment.spaceEvenly,
+              maxY: categoryTotals.values.reduce((a, b) => a > b ? a : b) * 1.3,
+              barTouchData: BarTouchData(
+                enabled: true,
+                touchTooltipData: BarTouchTooltipData(
+                  tooltipBgColor: Colors.black.withOpacity(0.8),
+                  tooltipRoundedRadius: 8,
+                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                    return BarTooltipItem(
+                      CurrencyUtils.formatAmount(rod.toY, "USD"),
+                      const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    );
+                  },
+                ),
+              ),
               titlesData: FlTitlesData(
                 show: true,
                 bottomTitles: AxisTitles(
@@ -127,17 +153,17 @@ class AnalyticsChartSection extends StatelessWidget {
                           value.toInt(),
                         );
                         return Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Text(
-                            cat.length > 3 ? cat.substring(0, 3) : cat,
-                            style: const TextStyle(
-                              color: Colors.white54,
-                              fontSize: 10,
-                            ),
-                          ),
+                          padding: const EdgeInsets.only(top: 12.0),
+                          child:
+                              Text(
+                                cat.length > 5 ? cat.substring(0, 4) : cat,
+                              ).labelSmall(
+                                color: Colors.white.withOpacity(0.3),
+                                weight: FontWeight.w600,
+                              ),
                         );
                       }
-                      return const Text('');
+                      return const SizedBox.shrink();
                     },
                   ),
                 ),
@@ -156,22 +182,25 @@ class AnalyticsChartSection extends StatelessWidget {
               barGroups: categoryTotals.entries.toList().asMap().entries.map((
                 e,
               ) {
+                final color = CategoryUtils.getCategoryColor(e.value.key);
                 return BarChartGroupData(
                   x: e.key,
                   barRods: [
                     BarChartRodData(
                       toY: e.value.value,
-                      color: CategoryUtils.getCategoryColor(e.value.key),
-                      width: 18,
-                      borderRadius: BorderRadius.circular(4),
+                      color: color,
+                      width: 22,
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(8),
+                      ),
                       backDrawRodData: BackgroundBarChartRodData(
                         show: true,
                         toY:
                             categoryTotals.values.reduce(
                               (a, b) => a > b ? a : b,
                             ) *
-                            1.2,
-                        color: AppColors.surfaceLight.withOpacity(0.5),
+                            1.3,
+                        color: Colors.white.withOpacity(0.03),
                       ),
                     ),
                   ],

@@ -91,11 +91,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 
   Widget _buildToggle() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       child: GlassContainer(
-        borderRadius: 12,
-        blur: 10,
-        padding: const EdgeInsets.all(4),
+        borderRadius: 16,
+        blur: 15,
+        borderOpacity: 0.1,
+        padding: const EdgeInsets.all(6),
         child: Row(
           children: [
             _toggleItem("Spendings", _isPieChart, 0),
@@ -113,33 +114,28 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         onTap: () {
           _pageController.animateToPage(
             page,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.decelerate,
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.fastOutSlowIn,
           );
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
-          margin: const EdgeInsets.symmetric(horizontal: 2),
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.primaryColor : Colors.transparent,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: isSelected
-                ? [
-                    BoxShadow(
-                      color: AppColors.primaryColor.withOpacity(0.3),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ]
-                : [],
+            color: isSelected
+                ? Colors.white.withOpacity(0.12)
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+            border: isSelected
+                ? Border.all(color: Colors.white.withOpacity(0.1), width: 0.5)
+                : null,
           ),
           child: Center(
-            child: Text(label).labelMedium(
+            child: Text(label).labelLarge(
               color: isSelected
                   ? Colors.white
-                  : AppColors.white.withOpacity(0.5),
-              weight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                  : AppColors.white.withOpacity(0.4),
+              weight: isSelected ? FontWeight.w700 : FontWeight.w600,
             ),
           ),
         ),

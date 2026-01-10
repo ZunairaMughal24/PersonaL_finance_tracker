@@ -154,8 +154,32 @@ class AppBackground extends StatelessWidget {
         ),
         Positioned.fill(
           child: Container(
-            decoration: BoxDecoration(color: Colors.black.withOpacity(0.6)),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0.4),
+                  Colors.black.withOpacity(0.7),
+                ],
+              ),
+            ),
           ),
+        ),
+
+        Positioned(
+          top: -100,
+          right: -50,
+          child: _GlowBlob(
+            color: AppColors.primaryColor,
+            opacity: 0.15,
+            blur: 150,
+          ),
+        ),
+        Positioned(
+          bottom: -50,
+          left: -80,
+          child: _GlowBlob(color: AppColors.accent, opacity: 0.1, blur: 120),
         ),
       ],
     );
@@ -185,7 +209,7 @@ class AppBackground extends StatelessWidget {
             ),
           ),
         ),
-        // Add subtle premium accents
+
         Positioned(
           top: -50,
           left: -50,

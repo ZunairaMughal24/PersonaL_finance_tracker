@@ -34,7 +34,6 @@ class TransactionActionDialog extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Pull handle-like indicator for modern feel
               Container(
                 width: 40,
                 height: 4,
@@ -45,7 +44,6 @@ class TransactionActionDialog extends StatelessWidget {
               ),
               const SizedBox(height: 24),
 
-              // Icon Cluster
               Stack(
                 alignment: Alignment.center,
                 children: [
