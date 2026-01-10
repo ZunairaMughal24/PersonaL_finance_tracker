@@ -16,22 +16,67 @@ class SplashScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          Container(
-            height: double.infinity,
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(
-                  'https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2187&auto=format&fit=crop',
-                ),
-                fit: BoxFit.cover,
+          // Base Background
+          Container(color: AppColors.background),
+          // Top-Right Glow
+          Positioned(
+            top: -100,
+            right: -100,
+            child: Container(
+              width: 300,
+              height: 300,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.primaryColor.withOpacity(0.4),
+                boxShadow: const [
+                  BoxShadow(
+                    color: AppColors.primaryColor,
+                    blurRadius: 120,
+                    spreadRadius: 50,
+                  ),
+                ],
               ),
             ),
           ),
-          Container(
-            height: double.infinity,
-            width: double.infinity,
-            color: Colors.black.withOpacity(0.6),
+          // Bottom-Left Glow
+          Positioned(
+            bottom: -100,
+            left: -100,
+            child: Container(
+              width: 300,
+              height: 300,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.accent.withOpacity(0.2),
+                boxShadow: const [
+                  BoxShadow(
+                    color: AppColors.accent,
+                    blurRadius: 150,
+                    spreadRadius: 40,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          // Center Subtle Glow
+          Positioned(
+            top: MediaQuery.of(context).size.height * 0.3,
+            left: -50,
+            child: Container(
+              width: 200,
+              height: 200,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.primaryDark.withOpacity(0.1),
+                boxShadow: const [
+                  BoxShadow(
+                    color: AppColors.primaryDark,
+                    blurRadius: 100,
+                    spreadRadius: 20,
+                  ),
+                ],
+              ),
+            ),
           ),
           SafeArea(
             child: Column(
