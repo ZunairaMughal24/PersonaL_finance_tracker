@@ -7,6 +7,7 @@ enum BackgroundStyle {
   silkDark, // Analytics/Profile: Silk Image
   abstractDark, // Transactions: Dark Abstract + Gradient
   authVibrant, // Auth: Purple + Teal Glow
+  deepFluid, // Transactions: Professional Deep Navy + Violet Glow
 }
 
 class AppBackground extends StatelessWidget {
@@ -53,6 +54,8 @@ class AppBackground extends StatelessWidget {
         return _buildAbstractDark(context);
       case BackgroundStyle.authVibrant:
         return _buildAuthVibrant(context);
+      case BackgroundStyle.deepFluid:
+        return _buildDeepFluid(context);
     }
   }
 
@@ -294,6 +297,75 @@ class AppBackground extends StatelessWidget {
                   spreadRadius: 20,
                 ),
               ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDeepFluid(BuildContext context) {
+    return Stack(
+      children: [
+        // Premium Deep Foundation
+        Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF0B0E14), // Deep Space Black/Navy
+                Color(0xFF131720), // Rich Slate
+              ],
+            ),
+          ),
+        ),
+        // Subtle Aurora Glow (Top Left)
+        Positioned(
+          top: -150,
+          left: -100,
+          child: _GlowBlob(
+            color: const Color(0xFF6C5CE7), // Brand Primary
+            opacity: 0.12,
+            blur: 160,
+            size: 500,
+          ),
+        ),
+        // Subtle Aurora Glow (Bottom Right)
+        Positioned(
+          bottom: -100,
+          right: -100,
+          child: _GlowBlob(
+            color: const Color(0xFF00D9FF), // Brand Accent
+            opacity: 0.08,
+            blur: 180,
+            size: 600,
+          ),
+        ),
+        // Center-Right Hint of Violet
+        Positioned(
+          top: MediaQuery.of(context).size.height * 0.3,
+          right: -50,
+          child: _GlowBlob(
+            color: Colors.purpleAccent,
+            opacity: 0.05,
+            blur: 140,
+            size: 400,
+          ),
+        ),
+        // High-end Silk/Grain Overlay (Simulated)
+        Positioned.fill(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0.2),
+                  Colors.transparent,
+                  Colors.black.withOpacity(0.4),
+                ],
+              ),
             ),
           ),
         ),

@@ -23,19 +23,22 @@ class AnalyticsBreakdown extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          padding: const EdgeInsets.only(left: 4, bottom: 12),
           child: Text("BREAKDOWN").labelLarge(
             color: Colors.white.withOpacity(0.4),
             weight: FontWeight.w800,
             letterSpacing: 1.5,
           ),
         ),
-        const SizedBox(height: 8),
         GlassContainer(
-          borderRadius: 28,
-          blur: 20,
-          borderOpacity: 0.1,
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          borderRadius: 24,
+          blur: 40,
+          borderOpacity: 0.12,
+          gradientColors: [
+            Colors.white.withOpacity(0.05),
+            Colors.white.withOpacity(0.02),
+          ],
+          padding: const EdgeInsets.symmetric(vertical: 8),
           child: Column(
             children: sortedCategories.asMap().entries.map((entry) {
               final isLast = entry.key == sortedCategories.length - 1;
@@ -48,11 +51,12 @@ class AnalyticsBreakdown extends StatelessWidget {
                     grandTotal,
                   ),
                   if (!isLast)
-                    Divider(
-                      height: 1,
-                      color: Colors.white.withOpacity(0.05),
-                      indent: 70,
-                      endIndent: 20,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Divider(
+                        height: 1,
+                        color: Colors.white.withOpacity(0.03),
+                      ),
                     ),
                 ],
               );
@@ -73,7 +77,7 @@ class AnalyticsBreakdown extends StatelessWidget {
     final percentage = (amount / grandTotal);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Column(
         children: [
           Row(

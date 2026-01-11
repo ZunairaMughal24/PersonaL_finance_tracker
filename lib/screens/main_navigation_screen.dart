@@ -6,7 +6,7 @@ import 'package:personal_finance_tracker/config/router.dart';
 import 'package:personal_finance_tracker/core/constants/appColors.dart';
 import 'package:personal_finance_tracker/screens/analytics_screen.dart';
 import 'package:personal_finance_tracker/screens/home_screen.dart';
-import 'package:personal_finance_tracker/screens/profile_screen.dart';
+import 'package:personal_finance_tracker/screens/settings_screen.dart';
 import 'package:personal_finance_tracker/screens/activity_screen.dart';
 import 'package:provider/provider.dart';
 import '../providers/transaction_provider.dart';

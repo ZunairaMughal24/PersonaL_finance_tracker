@@ -22,7 +22,7 @@ class AnalyticsChartSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 350,
+      height: 310,
       child: PageView(
         controller: controller,
         onPageChanged: onPageChanged,
@@ -36,27 +36,28 @@ class AnalyticsChartSection extends StatelessWidget {
 
   Widget _buildPieChart(Map<String, double> categoryTotals, double grandTotal) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: GlassContainer(
-        borderRadius: 32,
-        blur: 25,
+        borderRadius: 24,
+        blur: 30,
         borderOpacity: 0.1,
-        child: SizedBox(
-          height: 320,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              PieChart(
-                PieChartData(
-                  sectionsSpace: 6,
-                  centerSpaceRadius: 90,
-                  sections: _buildPieChartSections(categoryTotals),
-                  startDegreeOffset: 270,
-                ),
+        gradientColors: [
+          Colors.white.withOpacity(0.05),
+          Colors.white.withOpacity(0.02),
+        ],
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            PieChart(
+              PieChartData(
+                sectionsSpace: 6,
+                centerSpaceRadius: 80,
+                sections: _buildPieChartSections(categoryTotals),
+                startDegreeOffset: 270,
               ),
-              _buildCenterText(grandTotal),
-            ],
-          ),
+            ),
+            _buildCenterText(grandTotal),
+          ],
         ),
       ),
     );
@@ -79,8 +80,8 @@ class AnalyticsChartSection extends StatelessWidget {
 
   Widget _buildCenterText(double grandTotal) {
     return Container(
-      width: 140,
-      height: 140,
+      width: 120,
+      height: 120,
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.03),
         shape: BoxShape.circle,
@@ -113,100 +114,95 @@ class AnalyticsChartSection extends StatelessWidget {
 
   Widget _buildBarChart(Map<String, double> categoryTotals) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: GlassContainer(
-        borderRadius: 32,
-        blur: 25,
+        borderRadius: 24,
+        blur: 30,
         borderOpacity: 0.1,
-        padding: const EdgeInsets.fromLTRB(16, 32, 16, 16),
-        child: SizedBox(
-          height: 320,
-          child: BarChart(
-            BarChartData(
-              alignment: BarChartAlignment.spaceEvenly,
-              maxY: categoryTotals.values.reduce((a, b) => a > b ? a : b) * 1.3,
-              barTouchData: BarTouchData(
-                enabled: true,
-                touchTooltipData: BarTouchTooltipData(
-                  tooltipBgColor: Colors.black.withOpacity(0.8),
-                  tooltipRoundedRadius: 8,
-                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                    return BarTooltipItem(
-                      CurrencyUtils.formatAmount(rod.toY, "USD"),
-                      const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    );
+        gradientColors: [
+          Colors.white.withOpacity(0.05),
+          Colors.white.withOpacity(0.02),
+        ],
+        padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
+        child: BarChart(
+          BarChartData(
+            alignment: BarChartAlignment.spaceEvenly,
+            maxY: categoryTotals.values.reduce((a, b) => a > b ? a : b) * 1.3,
+            barTouchData: BarTouchData(
+              enabled: true,
+              touchTooltipData: BarTouchTooltipData(
+                tooltipBgColor: Colors.black.withOpacity(0.8),
+                tooltipRoundedRadius: 8,
+                getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                  return BarTooltipItem(
+                    CurrencyUtils.formatAmount(rod.toY, "USD"),
+                    const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                },
+              ),
+            ),
+            titlesData: FlTitlesData(
+              show: true,
+              bottomTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  getTitlesWidget: (value, meta) {
+                    if (value.toInt() >= 0 &&
+                        value.toInt() < categoryTotals.length) {
+                      final cat = categoryTotals.keys.elementAt(value.toInt());
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 12.0),
+                        child: Text(cat.length > 5 ? cat.substring(0, 4) : cat)
+                            .labelSmall(
+                              color: Colors.white.withOpacity(0.3),
+                              weight: FontWeight.w600,
+                            ),
+                      );
+                    }
+                    return const SizedBox.shrink();
                   },
                 ),
               ),
-              titlesData: FlTitlesData(
-                show: true,
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    getTitlesWidget: (value, meta) {
-                      if (value.toInt() >= 0 &&
-                          value.toInt() < categoryTotals.length) {
-                        final cat = categoryTotals.keys.elementAt(
-                          value.toInt(),
-                        );
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 12.0),
-                          child:
-                              Text(
-                                cat.length > 5 ? cat.substring(0, 4) : cat,
-                              ).labelSmall(
-                                color: Colors.white.withOpacity(0.3),
-                                weight: FontWeight.w600,
-                              ),
-                        );
-                      }
-                      return const SizedBox.shrink();
-                    },
-                  ),
-                ),
-                leftTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                topTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                rightTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
+              leftTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
               ),
-              gridData: const FlGridData(show: false),
-              borderData: FlBorderData(show: false),
-              barGroups: categoryTotals.entries.toList().asMap().entries.map((
-                e,
-              ) {
-                final color = CategoryUtils.getCategoryColor(e.value.key);
-                return BarChartGroupData(
-                  x: e.key,
-                  barRods: [
-                    BarChartRodData(
-                      toY: e.value.value,
-                      color: color,
-                      width: 22,
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(8),
-                      ),
-                      backDrawRodData: BackgroundBarChartRodData(
-                        show: true,
-                        toY:
-                            categoryTotals.values.reduce(
-                              (a, b) => a > b ? a : b,
-                            ) *
-                            1.3,
-                        color: Colors.white.withOpacity(0.03),
-                      ),
-                    ),
-                  ],
-                );
-              }).toList(),
+              topTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
+              rightTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
             ),
+            gridData: const FlGridData(show: false),
+            borderData: FlBorderData(show: false),
+            barGroups: categoryTotals.entries.toList().asMap().entries.map((e) {
+              final color = CategoryUtils.getCategoryColor(e.value.key);
+              return BarChartGroupData(
+                x: e.key,
+                barRods: [
+                  BarChartRodData(
+                    toY: e.value.value,
+                    color: color,
+                    width: 22,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(8),
+                    ),
+                    backDrawRodData: BackgroundBarChartRodData(
+                      show: true,
+                      toY:
+                          categoryTotals.values.reduce(
+                            (a, b) => a > b ? a : b,
+                          ) *
+                          1.3,
+                      color: Colors.white.withOpacity(0.03),
+                    ),
+                  ),
+                ],
+              );
+            }).toList(),
           ),
         ),
       ),

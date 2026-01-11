@@ -63,7 +63,7 @@ class _TransactionScreenContentState extends State<_TransactionScreenContent> {
         return GestureDetector(
           onTap: () => vm.toggleKeypad(false),
           child: AppBackground(
-            style: BackgroundStyle.abstractDark,
+            style: BackgroundStyle.deepFluid,
             appBar: const CustomAppBar(title: "Transaction Details"),
             child: SafeArea(
               child: Column(

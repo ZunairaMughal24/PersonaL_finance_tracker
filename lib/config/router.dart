@@ -4,7 +4,7 @@ import 'package:personal_finance_tracker/screens/analytics_screen.dart';
 import 'package:personal_finance_tracker/screens/edit_transaction_screen.dart';
 import 'package:personal_finance_tracker/screens/home_screen.dart';
 import 'package:personal_finance_tracker/screens/main_navigation_screen.dart';
-import 'package:personal_finance_tracker/screens/profile_screen.dart';
+import 'package:personal_finance_tracker/screens/settings_screen.dart';
 import 'package:personal_finance_tracker/screens/transaction_screen.dart';
 import 'package:personal_finance_tracker/screens/splash_screen.dart';
 import 'package:personal_finance_tracker/screens/activity_screen.dart';

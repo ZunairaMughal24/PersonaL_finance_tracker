@@ -26,17 +26,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: "Settings",
         onLeadingTap: () => MainNavScreen.navKey.currentState?.switchToHome(),
       ),
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: SafeArea(
+      child: SafeArea(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              15.heightBox,
+              16.heightBox,
               _buildProfileCard(),
-              24.heightBox,
+              32.heightBox,
               _buildSectionHeader("Account"),
-              12.heightBox,
+              16.heightBox,
               _buildSettingsGroup([
                 _buildSettingsTile(
                   icon: Icons.person_outline_rounded,
@@ -60,9 +60,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onTap: () {},
                 ),
               ]),
-              24.heightBox,
+              32.heightBox,
               _buildSectionHeader("Preferences"),
-              12.heightBox,
+              16.heightBox,
               _buildSettingsGroup([
                 _buildSettingsTile(
                   icon: Icons.notifications_none_rounded,
@@ -74,7 +74,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     onChanged: (val) =>
                         setState(() => _notificationsEnabled = val),
                     activeColor: AppColors.primaryColor,
-
                     activeTrackColor: AppColors.primaryColor.withOpacity(0.3),
                   ),
                   onTap: () {},
@@ -108,9 +107,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onTap: () {},
                 ),
               ]),
-              24.heightBox,
+              32.heightBox,
               _buildSectionHeader("Support"),
-              12.heightBox,
+              16.heightBox,
               _buildSettingsGroup([
                 _buildSettingsTile(
                   icon: Icons.help_outline_rounded,
@@ -146,6 +145,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildProfileCard() {
     return GlassContainer(
       borderRadius: 24,
+      blur: 35,
+      borderOpacity: 0.12,
+      gradientColors: [
+        Colors.white.withOpacity(0.08),
+        Colors.white.withOpacity(0.02),
+      ],
       padding: const EdgeInsets.all(16),
       child: Row(
         children: [
@@ -212,6 +217,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildSettingsGroup(List<Widget> tiles) {
     return GlassContainer(
       borderRadius: 20,
+      blur: 30,
+      borderOpacity: 0.1,
+      gradientColors: [
+        Colors.white.withOpacity(0.05),
+        Colors.white.withOpacity(0.02),
+      ],
       padding: EdgeInsets.zero,
       child: Column(
         children: List.generate(tiles.length, (index) {

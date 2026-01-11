@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 import '../providers/transaction_provider.dart';
 import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
-import 'package:personal_finance_tracker/core/utils/padding_extention.dart';
 
 class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({super.key});
@@ -51,38 +50,35 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             return _buildEmptyState();
           }
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              20.heightBox,
-              _buildToggle(),
-              AnalyticsChartSection(
-                categoryTotals: summary.categoryTotals,
-                grandTotal: summary.grandTotal,
-                controller: _pageController,
-                onPageChanged: (index) {
-                  setState(() {
-                    _isPieChart = index == 0;
-                  });
-                },
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(
-                    children: [
-                      10.heightBox,
-                      AnalyticsBreakdown(
-                        categoryTotals: summary.categoryTotals,
-                        sortedCategories: summary.sortedCategories,
-                        grandTotal: summary.grandTotal,
-                      ).px(16),
-                      100.heightBox,
-                    ],
+          return SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                12.heightBox,
+                _buildToggle(),
+                8.heightBox,
+                AnalyticsChartSection(
+                  categoryTotals: summary.categoryTotals,
+                  grandTotal: summary.grandTotal,
+                  controller: _pageController,
+                  onPageChanged: (index) {
+                    setState(() {
+                      _isPieChart = index == 0;
+                    });
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                  child: AnalyticsBreakdown(
+                    categoryTotals: summary.categoryTotals,
+                    sortedCategories: summary.sortedCategories,
+                    grandTotal: summary.grandTotal,
                   ),
                 ),
-              ),
-            ],
+                80.heightBox,
+              ],
+            ),
           ).safeArea();
         },
       ),

@@ -53,7 +53,7 @@ class _EditTransactionScreenContentState
         return GestureDetector(
           onTap: () => vm.toggleKeypad(false),
           child: AppBackground(
-            style: BackgroundStyle.abstractDark,
+            style: BackgroundStyle.deepFluid,
             appBar: CustomAppBar(title: "Edit Transaction"),
             child: SafeArea(
               child: Column(
