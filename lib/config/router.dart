@@ -40,7 +40,7 @@ class AppRoutes {
   static const String editTransactionScreenRoute = '/editTransactionScreen';
   static const String analyticsScreenRoute = '/analyticsScreen';
   static const String activityScreenRoute = '/activityScreen';
-  static const String profileScreenRoute = '/profileScreen';
+  static const String settingsScreenRoute = '/settingsScreen';
   static const String signInScreenRoute = '/signIn';
   static const String signUpScreenRoute = '/signUp';
 }
@@ -105,11 +105,11 @@ final router = GoRouter(
       ),
     ),
     GoRoute(
-      path: AppRoutes.profileScreenRoute,
+      path: AppRoutes.settingsScreenRoute,
       pageBuilder: (context, state) => _buildPageWithDefaultTransition(
         context: context,
         state: state,
-        child: const ProfileScreen(),
+        child: const SettingsScreen(),
       ),
     ),
     GoRoute(

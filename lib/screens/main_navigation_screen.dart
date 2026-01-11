@@ -33,7 +33,7 @@ class _MainNavScreenState extends State<MainNavScreen> {
     HomeScreen(),
     AnalyticsScreen(),
     ActivityScreen(),
-    ProfileScreen(),
+    SettingsScreen(),
   ];
 
   @override
@@ -106,7 +106,7 @@ class _MainNavScreenState extends State<MainNavScreen> {
                   ),
                   _navItem(
                     icon: CupertinoIcons.person_fill,
-                    label: 'Profile',
+                    label: 'Settings',
                     index: 3,
                   ),
                 ],

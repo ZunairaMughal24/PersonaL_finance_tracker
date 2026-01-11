@@ -40,7 +40,7 @@ class _SignUpContentState extends State<SignUpContent> {
     final viewModel = context.watch<AuthViewModel>();
 
     return AppBackground(
-      style: BackgroundStyle.glowMesh,
+      style: BackgroundStyle.authVibrant,
       child: SafeArea(
         child: SingleChildScrollView(
           child: Column(

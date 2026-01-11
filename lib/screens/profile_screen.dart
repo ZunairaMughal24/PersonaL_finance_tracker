@@ -8,28 +8,133 @@ import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
 import 'package:personal_finance_tracker/core/utils/padding_extention.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class SettingsScreen extends StatefulWidget {
+  const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  bool _notificationsEnabled = true;
 
   @override
   Widget build(BuildContext context) {
     return AppBackground(
       style: BackgroundStyle.silkDark,
       appBar: CustomAppBar(
-        title: "Profile",
+        title: "Settings",
         onLeadingTap: () => MainNavScreen.navKey.currentState?.switchToHome(),
       ),
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: SafeArea(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              20.heightBox,
-              _buildProfileHeader(),
-              20.heightBox,
-              _buildSettingsSection(context),
-              20.heightBox,
-              _buildAppInfo(),
+              15.heightBox,
+              _buildProfileCard(),
+              24.heightBox,
+              _buildSectionHeader("Account"),
+              12.heightBox,
+              _buildSettingsGroup([
+                _buildSettingsTile(
+                  icon: Icons.person_outline_rounded,
+                  iconColor: Colors.blueAccent,
+                  title: "Personal Information",
+                  subtitle: "Name, email",
+                  onTap: () {},
+                ),
+                _buildSettingsTile(
+                  icon: Icons.lock_outline_rounded,
+                  iconColor: Colors.redAccent,
+                  title: "Password",
+                  subtitle: "Change password",
+                  onTap: () {},
+                ),
+                _buildSettingsTile(
+                  icon: Icons.account_balance_wallet_outlined,
+                  iconColor: Colors.greenAccent,
+                  title: "Financial Wallets",
+                  subtitle: "Manage your accounts and cards",
+                  onTap: () {},
+                ),
+              ]),
+              24.heightBox,
+              _buildSectionHeader("Preferences"),
+              12.heightBox,
+              _buildSettingsGroup([
+                _buildSettingsTile(
+                  icon: Icons.notifications_none_rounded,
+                  iconColor: Colors.orangeAccent,
+                  title: "Notifications",
+                  subtitle: "Manage notification settings",
+                  trailing: Switch.adaptive(
+                    value: _notificationsEnabled,
+                    onChanged: (val) =>
+                        setState(() => _notificationsEnabled = val),
+                    activeColor: AppColors.primaryColor,
+
+                    activeTrackColor: AppColors.primaryColor.withOpacity(0.3),
+                  ),
+                  onTap: () {},
+                ),
+                _buildSettingsTile(
+                  icon: Icons.language_rounded,
+                  iconColor: Colors.tealAccent,
+                  title: "Language",
+                  subtitle: "Change app language",
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "English",
+                      ).bodySmall(color: Colors.white.withOpacity(0.7)),
+                      const SizedBox(width: 4),
+                      Icon(
+                        Icons.chevron_right_rounded,
+                        color: Colors.white.withOpacity(0.3),
+                        size: 25,
+                      ),
+                    ],
+                  ),
+                  onTap: () {},
+                ),
+                _buildSettingsTile(
+                  icon: Icons.monetization_on_outlined,
+                  iconColor: Colors.amberAccent,
+                  title: "Currency",
+                  subtitle: "Default currency: USD",
+                  onTap: () {},
+                ),
+              ]),
+              24.heightBox,
+              _buildSectionHeader("Support"),
+              12.heightBox,
+              _buildSettingsGroup([
+                _buildSettingsTile(
+                  icon: Icons.help_outline_rounded,
+                  iconColor: Colors.indigoAccent,
+                  title: "Help Center",
+                  subtitle: "FAQs and help center",
+                  onTap: () {},
+                ),
+                _buildSettingsTile(
+                  icon: Icons.info_outline_rounded,
+                  iconColor: Colors.cyanAccent,
+                  title: "About",
+                  subtitle: "Version 1.0.0",
+                  onTap: () {},
+                ),
+                _buildSettingsTile(
+                  icon: Icons.logout_rounded,
+                  iconColor: Colors.redAccent.withOpacity(0.8),
+                  title: "Sign Out",
+                  subtitle: "Exit from your account",
+                  onTap: () {},
+                  showChevron: false,
+                ),
+              ]),
               100.heightBox,
             ],
           ).px16(),
@@ -38,198 +143,145 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileHeader() {
-    return Column(
-      children: [
-        Stack(
-          alignment: Alignment.bottomRight,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  colors: [
-                    AppColors.primaryColor.withOpacity(0.5),
-                    AppColors.primaryColor.withOpacity(0.1),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                border: Border.all(
-                  color: Colors.white.withOpacity(0.1),
-                  width: 1,
-                ),
-              ),
-              child: const CircleAvatar(
-                radius: 50,
-                backgroundColor: Colors.white12,
-                backgroundImage: NetworkImage(
-                  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop',
-                ),
+  Widget _buildProfileCard() {
+    return GlassContainer(
+      borderRadius: 24,
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.white.withOpacity(0.5),
+                width: 1,
               ),
             ),
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: AppColors.primaryColor,
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white24, width: 2),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: const Icon(
-                Icons.edit_rounded,
-                size: 16,
-                color: Colors.white,
+            child: CircleAvatar(
+              radius: 32,
+              backgroundColor: AppColors.primaryColor.withOpacity(0.5),
+              backgroundImage: NetworkImage(
+                'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop',
               ),
             ),
-          ],
-        ),
-        20.heightBox,
-        const Text(
-          'Zunaira Mughal',
-        ).h2(color: Colors.white, weight: FontWeight.bold),
-        6.heightBox,
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.white.withOpacity(0.05)),
           ),
-          child: Text('zunaira@example.com').bodyMedium(
-            color: Colors.white.withOpacity(0.5),
-            weight: FontWeight.w500,
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Zunaira Mughal',
+                ).h4(color: Colors.white, weight: FontWeight.bold),
+                const SizedBox(height: 2),
+                Text('zunaira@example.com').bodyMedium(
+                  color: Colors.white.withOpacity(0.7),
+                  weight: FontWeight.w500,
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSettingsSection(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
-      child: GlassContainer(
-        borderRadius: 20,
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Column(
-          children: [
-            _buildSettingsTile(
-              icon: Icons.account_balance_wallet_outlined,
-              title: "Financial Wallets",
-              subtitle: "Manage your accounts and cards",
-              onTap: () {},
+          IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.edit_outlined,
+              color: Colors.white.withOpacity(0.6),
+              size: 20,
             ),
-            _buildDivider(),
-            _buildSettingsTile(
-              icon: Icons.notifications_none_rounded,
-              title: "Notification Center",
-              subtitle: "Alerts & updates configuration",
-              onTap: () {},
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+            style: IconButton.styleFrom(
+              backgroundColor: Colors.white.withOpacity(0.05),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
-            _buildDivider(),
-            _buildSettingsTile(
-              icon: Icons.security_outlined,
-              title: "Security & Privacy",
-              subtitle: "Passcode & biometrics",
-              onTap: () {},
-            ),
-            _buildDivider(),
-            _buildSettingsTile(
-              icon: Icons.help_outline_rounded,
-              title: "Support",
-              subtitle: "FAQs and help center",
-              onTap: () {},
-            ),
-            _buildDivider(),
-            _buildSettingsTile(
-              icon: Icons.logout_rounded,
-              title: "Sign Out",
-              color: Colors.redAccent.withOpacity(0.8),
-              onTap: () {},
-              showArrow: false,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildAppInfo() {
+  Widget _buildSectionHeader(String title) {
+    return Text(
+      title,
+    ).h3(color: Colors.white.withOpacity(0.7), weight: FontWeight.bold);
+  }
+
+  Widget _buildSettingsGroup(List<Widget> tiles) {
     return GlassContainer(
-      borderRadius: 15,
-      padding: const EdgeInsets.symmetric(vertical: 20),
-      child: Center(
-        child: Column(
-          children: [
-            Text(
-              'Personal Finance Tracker',
-            ).labelLarge(color: Colors.white.withOpacity(0.3)),
-            4.heightBox,
-            Text('Version 1.0.0').caption(color: Colors.white.withOpacity(0.2)),
-          ],
-        ),
+      borderRadius: 20,
+      padding: EdgeInsets.zero,
+      child: Column(
+        children: List.generate(tiles.length, (index) {
+          return Column(
+            children: [
+              tiles[index],
+              if (index != tiles.length - 1)
+                Divider(
+                  height: 1,
+                  thickness: 1.4,
+                  color: Colors.white.withOpacity(0.1),
+                ),
+            ],
+          );
+        }),
       ),
     );
   }
 
   Widget _buildSettingsTile({
     required IconData icon,
+    required Color iconColor,
     required String title,
-    String? subtitle,
+    required String subtitle,
     required VoidCallback onTap,
-    Color color = Colors.white,
-    bool showArrow = true,
+    Widget? trailing,
+    bool showChevron = true,
   }) {
     return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.08),
-                borderRadius: BorderRadius.circular(12),
+                color: iconColor.withOpacity(0.1),
+                shape: BoxShape.circle,
               ),
-              child: Icon(icon, color: color, size: 20),
+              child: Icon(icon, color: iconColor, size: 22),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title).labelLarge(color: color, weight: FontWeight.w600),
-                  if (subtitle != null) ...[
-                    const SizedBox(height: 2),
-                    Text(subtitle).caption(
-                      color: Colors.white.withOpacity(0.3),
-                      weight: FontWeight.w500,
-                    ),
-                  ],
+                  Text(
+                    title,
+                  ).bodyLarge(color: Colors.white, weight: FontWeight.w600),
+                  const SizedBox(height: 2),
+                  Text(subtitle).bodySmall(
+                    color: Colors.white.withOpacity(0.7),
+                    weight: FontWeight.w400,
+                  ),
                 ],
               ),
             ),
-            if (showArrow)
+            if (trailing != null)
+              trailing
+            else if (showChevron)
               Icon(
                 Icons.chevron_right_rounded,
-                color: Colors.white.withOpacity(0.2),
-                size: 20,
+                color: Colors.white.withOpacity(0.3),
+                size: 25,
               ),
           ],
         ),
       ),
     );
-  }
-
-  Widget _buildDivider() {
-    return Divider(height: 0.5, color: Colors.white.withOpacity(0.05));
   }
 }

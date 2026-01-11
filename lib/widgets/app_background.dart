@@ -6,6 +6,7 @@ enum BackgroundStyle {
   glowMesh, // Splash/Auth: Glow Blobs
   silkDark, // Analytics/Profile: Silk Image
   abstractDark, // Transactions: Dark Abstract + Gradient
+  authVibrant, // Auth: Purple + Teal Glow
 }
 
 class AppBackground extends StatelessWidget {
@@ -50,6 +51,8 @@ class AppBackground extends StatelessWidget {
         return _buildSilkDark(context);
       case BackgroundStyle.abstractDark:
         return _buildAbstractDark(context);
+      case BackgroundStyle.authVibrant:
+        return _buildAuthVibrant(context);
     }
   }
 
@@ -137,6 +140,7 @@ class AppBackground extends StatelessWidget {
             opacity: 0.1,
             blur: 100,
             spread: 20,
+            size: 200,
           ),
         ),
       ],
@@ -223,6 +227,75 @@ class AppBackground extends StatelessWidget {
           bottom: 100,
           right: -80,
           child: _GlowBlob(color: AppColors.accent, opacity: 0.07, blur: 120),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAuthVibrant(BuildContext context) {
+    return Stack(
+      children: [
+        // Base Background
+        Container(color: AppColors.background),
+        // Top-Right Glow
+        Positioned(
+          top: -100,
+          right: -100,
+          child: Container(
+            width: 300,
+            height: 300,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.primaryColor.withOpacity(0.4),
+              boxShadow: const [
+                BoxShadow(
+                  color: AppColors.primaryColor,
+                  blurRadius: 120,
+                  spreadRadius: 50,
+                ),
+              ],
+            ),
+          ),
+        ),
+        // Bottom-Left Glow
+        Positioned(
+          bottom: -100,
+          left: -100,
+          child: Container(
+            width: 300,
+            height: 300,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.accent.withOpacity(0.2),
+              boxShadow: const [
+                BoxShadow(
+                  color: AppColors.accent,
+                  blurRadius: 150,
+                  spreadRadius: 40,
+                ),
+              ],
+            ),
+          ),
+        ),
+        // Center Subtle Glow
+        Positioned(
+          top: MediaQuery.of(context).size.height * 0.3,
+          left: -50,
+          child: Container(
+            width: 200,
+            height: 200,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.primaryDark.withOpacity(0.1),
+              boxShadow: const [
+                BoxShadow(
+                  color: AppColors.primaryDark,
+                  blurRadius: 100,
+                  spreadRadius: 20,
+                ),
+              ],
+            ),
+          ),
         ),
       ],
     );
