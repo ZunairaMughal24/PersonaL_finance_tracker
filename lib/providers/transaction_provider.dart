@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:personal_finance_tracker/core/utils/date_formatter.dart';
 import 'package:personal_finance_tracker/models/transaction_model.dart';
 import 'package:personal_finance_tracker/models/spending_summary.dart';
+import 'package:personal_finance_tracker/models/trends_model.dart';
 import 'package:personal_finance_tracker/services/database_services.dart';
 import 'package:personal_finance_tracker/services/finance_service.dart';
 
@@ -56,5 +59,43 @@ class TransactionProvider extends ChangeNotifier {
 
   List<TransactionModel> getTransactionsByType(bool isIncome) {
     return FinanceService.getTransactionsByType(_transactions, isIncome);
+  }
+
+  List<FinancialPeriodData> get weeklyFinancialSummary {
+  
+    final Map<String, FinancialPeriodData> dayMap = {
+      'Mon': FinancialPeriodData(label: 'Mon', income: 0, expense: 0),
+      'Tue': FinancialPeriodData(label: 'Tue', income: 0, expense: 0),
+      'Wed': FinancialPeriodData(label: 'Wed', income: 0, expense: 0),
+      'Thu': FinancialPeriodData(label: 'Thu', income: 0, expense: 0),
+      'Fri': FinancialPeriodData(label: 'Fri', income: 0, expense: 0),
+      'Sat': FinancialPeriodData(label: 'Sat', income: 0, expense: 0),
+      'Sun': FinancialPeriodData(label: 'Sun', income: 0, expense: 0),
+    };
+
+    for (var tx in _transactions) {
+  DateTime parsedDate = DateUtilsCustom.parseDate(tx.date);
+
+  
+  String day = DateFormat('E').format(parsedDate);
+
+      if (dayMap.containsKey(day)) {
+        if (tx.isIncome) {
+          dayMap[day] = FinancialPeriodData(
+            label: day,
+            income: dayMap[day]!.income + tx.amount,
+            expense: dayMap[day]!.expense,
+          );
+        } else {
+          dayMap[day] = FinancialPeriodData(
+            label: day,
+            income: dayMap[day]!.income,
+            expense: dayMap[day]!.expense + tx.amount,
+          );
+        }
+      }
+    }
+
+    return dayMap.values.toList();
   }
 }
