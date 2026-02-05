@@ -7,6 +7,8 @@ import 'package:personal_finance_tracker/widgets/custom_app_bar.dart';
 import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
 import 'package:personal_finance_tracker/core/utils/padding_extention.dart';
+import 'package:personal_finance_tracker/providers/user_settings_provider.dart';
+import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -34,7 +36,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: [
               16.heightBox,
               _buildProfileCard(),
-              32.heightBox,
+              18.heightBox,
               _buildSectionHeader("Account"),
               16.heightBox,
               _buildSettingsGroup([
@@ -60,7 +62,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onTap: () {},
                 ),
               ]),
-              32.heightBox,
+              18.heightBox,
               _buildSectionHeader("Preferences"),
               16.heightBox,
               _buildSettingsGroup([
@@ -99,15 +101,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   onTap: () {},
                 ),
-                _buildSettingsTile(
-                  icon: Icons.monetization_on_outlined,
-                  iconColor: Colors.amberAccent,
-                  title: "Currency",
-                  subtitle: "Default currency: USD",
-                  onTap: () {},
+                Consumer<UserSettingsProvider>(
+                  builder: (context, settings, _) => _buildSettingsTile(
+                    icon: Icons.monetization_on_outlined,
+                    iconColor: Colors.amberAccent,
+                    title: "Currency",
+                    subtitle: "Default currency: ${settings.selectedCurrency}",
+                    onTap: () => _showCurrencyPicker(context, settings),
+                  ),
                 ),
               ]),
-              32.heightBox,
+              18.heightBox,
               _buildSectionHeader("Support"),
               16.heightBox,
               _buildSettingsGroup([
@@ -191,16 +195,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onPressed: () {},
             icon: Icon(
               Icons.edit_outlined,
-              color: Colors.white.withOpacity(0.6),
-              size: 20,
+              color: Colors.white.withOpacity(0.8),
+              size: 24,
             ),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
+            padding: const EdgeInsets.all(8),
             style: IconButton.styleFrom(
-              backgroundColor: Colors.white.withOpacity(0.05),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
+              backgroundColor: Colors.white.withOpacity(0.08),
+              shape: const CircleBorder(),
             ),
           ),
         ],
@@ -290,6 +291,81 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 color: Colors.white.withOpacity(0.3),
                 size: 25,
               ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showCurrencyPicker(
+    BuildContext context,
+    UserSettingsProvider settings,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => GlassContainer(
+        borderRadius: 24,
+        blur: 40,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            12.heightBox,
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            20.heightBox,
+            Text(
+              "Select Currency",
+            ).h4(color: Colors.white, weight: FontWeight.bold),
+            20.heightBox,
+            Flexible(
+              child: ListView.separated(
+                shrinkWrap: true,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                itemCount: UserSettingsProvider.availableCurrencies.length,
+                separatorBuilder: (context, index) =>
+                    Divider(color: Colors.white.withOpacity(0.05), height: 1),
+                itemBuilder: (context, index) {
+                  final currency =
+                      UserSettingsProvider.availableCurrencies[index];
+                  final isSelected = settings.selectedCurrency == currency;
+
+                  return InkWell(
+                    onTap: () {
+                      settings.setCurrency(currency);
+                      Navigator.pop(context);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(currency).bodyLarge(
+                            color: isSelected ? Colors.white : Colors.white60,
+                            weight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.w500,
+                          ),
+                          if (isSelected)
+                            const Icon(
+                              Icons.check_circle_rounded,
+                              color: AppColors.primaryColor,
+                              size: 24,
+                            ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            30.heightBox,
           ],
         ),
       ),

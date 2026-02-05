@@ -192,6 +192,17 @@ class CategoryUtils {
     },
   ];
 
+  static List<String> get spendingCategories {
+    final Set<String> categories = {};
+    for (var cat in expenseCategories) {
+      categories.add(cat['name'] as String);
+    }
+    for (var cat in incomeCategories) {
+      categories.add(cat['name'] as String);
+    }
+    return categories.toList();
+  }
+
   static IconData getIconForCategory(String category) {
     final allCategories = [...expenseCategories, ...incomeCategories];
     final match = allCategories.firstWhere(

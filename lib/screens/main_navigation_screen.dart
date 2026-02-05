@@ -51,6 +51,7 @@ class _MainNavScreenState extends State<MainNavScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
+      resizeToAvoidBottomInset: false,
       body: IndexedStack(index: _currentIndex, children: _screens),
 
       floatingActionButton: FloatingActionButton(

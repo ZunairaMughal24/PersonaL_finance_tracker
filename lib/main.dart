@@ -6,6 +6,7 @@ import 'package:personal_finance_tracker/config/router.dart';
 import 'package:personal_finance_tracker/core/theme/app_theme.dart';
 import 'package:personal_finance_tracker/models/transaction_model.dart';
 import 'package:personal_finance_tracker/providers/transaction_provider.dart';
+import 'package:personal_finance_tracker/providers/user_settings_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -16,11 +17,14 @@ void main() async {
 
   await Hive.openBox<TransactionModel>('transactions');
 
-  final transactionProvider = TransactionProvider();
-  await transactionProvider.fetchTransactions();
+  final userSettingsProvider = UserSettingsProvider();
+
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => TransactionProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => TransactionProvider()),
+        ChangeNotifierProvider(create: (_) => userSettingsProvider),
+      ],
       child: const MyApp(),
     ),
   );

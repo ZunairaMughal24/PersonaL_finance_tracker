@@ -9,7 +9,7 @@ import 'package:personal_finance_tracker/widgets/glass_container.dart';
 
 class TransactionListItem extends StatelessWidget {
   final TransactionModel transaction;
-  final int index;
+  final String currency;
   final VoidCallback? onDelete;
   final VoidCallback? onEdit;
   final VoidCallback? onDetail;
@@ -17,7 +17,7 @@ class TransactionListItem extends StatelessWidget {
   const TransactionListItem({
     super.key,
     required this.transaction,
-    required this.index,
+    required this.currency,
     this.onDelete,
     this.onEdit,
     this.onDetail,

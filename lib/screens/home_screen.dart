@@ -12,6 +12,7 @@ import 'package:personal_finance_tracker/core/utils/currency_utils.dart';
 import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
 import 'package:personal_finance_tracker/core/utils/padding_extention.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
+import 'package:personal_finance_tracker/providers/user_settings_provider.dart';
 import 'package:personal_finance_tracker/widgets/app_background.dart'; // Keep this import
 
 class HomeScreen extends StatelessWidget {
@@ -50,39 +51,36 @@ class HomeScreen extends StatelessWidget {
                     ],
                   ),
                   12.heightBox,
-                  TotalBalanceCard(
-                    formattedBalance: CurrencyUtils.formatAmount(
-                      transaction.totalBalance,
-                      transaction.displayCurrency,
+                  TotalBalanceCard(totalBalance: transaction.totalBalance),
+                  20.heightBox,
+                  Consumer<UserSettingsProvider>(
+                    builder: (context, settings, _) => Row(
+                      children: [
+                        Expanded(
+                          child: InfoBox(
+                            title: "Income",
+                            amount: CurrencyUtils.formatAmount(
+                              transaction.totalIncome,
+                              settings.selectedCurrency,
+                            ),
+                            amountColor: AppColors.green,
+                          ),
+                        ),
+                        16.widthBox,
+                        Expanded(
+                          child: InfoBox(
+                            title: "Expenses",
+                            amount: CurrencyUtils.formatAmount(
+                              transaction.totalExpense,
+                              settings.selectedCurrency,
+                            ),
+                            amountColor: AppColors.red,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  20.heightBox,
-                  Row(
-                    children: [
-                      Expanded(
-                        child: InfoBox(
-                          title: "Income",
-                          amount: CurrencyUtils.formatAmount(
-                            transaction.totalIncome,
-                            transaction.displayCurrency,
-                          ),
-                          amountColor: AppColors.green,
-                        ),
-                      ),
-                      16.widthBox,
-                      Expanded(
-                        child: InfoBox(
-                          title: "Expenses",
-                          amount: CurrencyUtils.formatAmount(
-                            transaction.totalExpense,
-                            transaction.displayCurrency,
-                          ),
-                          amountColor: AppColors.red,
-                        ),
-                      ),
-                    ],
-                  ),
-                  10.heightBox,
+                  6.heightBox,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -94,7 +92,7 @@ class HomeScreen extends StatelessWidget {
                         onPressed: () =>
                             context.push(AppRoutes.activityScreenRoute),
                         style: TextButton.styleFrom(
-                          foregroundColor: AppColors.primaryLight,
+                          foregroundColor: Colors.white.withOpacity(0.7),
                           padding: EdgeInsets.zero,
                         ),
                         child: const Text(
@@ -103,7 +101,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  2.heightBox,
+
                   RecentTransactionsList(),
                   24.heightBox,
                 ],

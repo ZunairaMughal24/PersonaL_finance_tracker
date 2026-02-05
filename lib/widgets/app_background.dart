@@ -27,7 +27,7 @@ class AppBackground extends StatelessWidget {
     this.floatingActionButton,
     this.floatingActionButtonLocation,
     this.extendBodyBehindAppBar = true,
-    this.resizeToAvoidBottomInset = true,
+    this.resizeToAvoidBottomInset = false,
   });
 
   @override
@@ -221,7 +221,7 @@ class AppBackground extends StatelessWidget {
           top: -50,
           left: -50,
           child: _GlowBlob(
-            color: AppColors.primaryColor,
+            color: AppColors.primaryDark,
             opacity: 0.15,
             blur: 150,
           ),
@@ -238,9 +238,8 @@ class AppBackground extends StatelessWidget {
   Widget _buildAuthVibrant(BuildContext context) {
     return Stack(
       children: [
-        // Base Background
         Container(color: AppColors.background),
-        // Top-Right Glow
+
         Positioned(
           top: -100,
           right: -100,
@@ -260,7 +259,7 @@ class AppBackground extends StatelessWidget {
             ),
           ),
         ),
-        // Bottom-Left Glow
+
         Positioned(
           bottom: -100,
           left: -100,
@@ -280,7 +279,7 @@ class AppBackground extends StatelessWidget {
             ),
           ),
         ),
-        // Center Subtle Glow
+
         Positioned(
           top: MediaQuery.of(context).size.height * 0.3,
           left: -50,
@@ -307,42 +306,38 @@ class AppBackground extends StatelessWidget {
   Widget _buildDeepFluid(BuildContext context) {
     return Stack(
       children: [
-        // Premium Deep Foundation
         Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
-                Color(0xFF0B0E14), // Deep Space Black/Navy
-                Color(0xFF131720), // Rich Slate
-              ],
+              colors: [Color(0xFF0B0E14), Color(0xFF131720)],
             ),
           ),
         ),
-        // Subtle Aurora Glow (Top Left)
+
         Positioned(
           top: -150,
           left: -100,
           child: _GlowBlob(
-            color: const Color(0xFF6C5CE7), // Brand Primary
+            color: const Color(0xFF6C5CE7),
             opacity: 0.12,
             blur: 160,
             size: 500,
           ),
         ),
-        // Subtle Aurora Glow (Bottom Right)
+
         Positioned(
           bottom: -100,
           right: -100,
           child: _GlowBlob(
-            color: const Color(0xFF00D9FF), // Brand Accent
+            color: const Color(0xFF00D9FF),
             opacity: 0.08,
             blur: 180,
             size: 600,
           ),
         ),
-        // Center-Right Hint of Violet
+
         Positioned(
           top: MediaQuery.of(context).size.height * 0.3,
           right: -50,
@@ -353,7 +348,7 @@ class AppBackground extends StatelessWidget {
             size: 400,
           ),
         ),
-        // High-end Silk/Grain Overlay (Simulated)
+
         Positioned.fill(
           child: Container(
             decoration: BoxDecoration(
