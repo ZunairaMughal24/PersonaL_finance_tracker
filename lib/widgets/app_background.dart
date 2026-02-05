@@ -85,12 +85,22 @@ class AppBackground extends StatelessWidget {
         ),
 
         Positioned(
-          top: -100,
-          right: -50,
-          child: _GlowBlob(
-            color: AppColors.primaryColor,
-            opacity: 0.15,
-            blur: 150,
+          top: -120,
+          right: -80,
+          child: Container(
+            width: 430,
+            height: 380,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(225),
+              color: AppColors.primaryColor.withOpacity(0.18),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.primaryColor.withOpacity(0.09),
+                  blurRadius: 200,
+                  spreadRadius: 80,
+                ),
+              ],
+            ),
           ),
         ),
         Positioned(

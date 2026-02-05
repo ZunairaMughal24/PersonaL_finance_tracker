@@ -40,21 +40,24 @@ class _ActivityScreenState extends State<ActivityScreen> {
       appBar: CustomAppBar(
         title: 'Activity Screen',
         actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                _isSearchVisible = !_isSearchVisible;
-                if (_isSearchVisible) {
-                  _searchFocusNode.requestFocus();
-                } else {
-                  transaction.setSearchQuery('');
-                  _searchFocusNode.unfocus();
-                }
-              });
-            },
-            icon: Icon(
-              _isSearchVisible ? Icons.close : Icons.search,
-              color: Colors.white,
+          Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: IconButton(
+              onPressed: () {
+                setState(() {
+                  _isSearchVisible = !_isSearchVisible;
+                  if (_isSearchVisible) {
+                    _searchFocusNode.requestFocus();
+                  } else {
+                    transaction.setSearchQuery('');
+                    _searchFocusNode.unfocus();
+                  }
+                });
+              },
+              icon: Icon(
+                _isSearchVisible ? Icons.close : Icons.search,
+                color: Colors.white,
+              ),
             ),
           ),
         ],
