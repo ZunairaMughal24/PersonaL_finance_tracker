@@ -110,7 +110,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         borderRadius: 16,
         blur: 15,
         borderOpacity: 0.1,
-        padding: const EdgeInsets.all(6),
+        padding: const EdgeInsets.all(4),
         child: Row(
           children: [
             _toggleItem("Spendings", _isPieChart, 0),
@@ -134,14 +134,17 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
-          padding: const EdgeInsets.symmetric(vertical: 7),
+          padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
             color: isSelected
-                ? Colors.white.withOpacity(0.12)
+                ? AppColors.primaryColor.withOpacity(0.4)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             border: isSelected
-                ? Border.all(color: Colors.white.withOpacity(0.1), width: 0.5)
+                ? Border.all(
+                    color: AppColors.primaryColor.withOpacity(0.3),
+                    width: 0.9,
+                  )
                 : null,
           ),
           child: Center(

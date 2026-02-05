@@ -23,45 +23,25 @@ class SpendingCategoryBreakdown extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 4, bottom: 12),
+          padding: const EdgeInsets.only(left: 4, bottom: 8),
           child: Text("BREAKDOWN").labelLarge(
             color: Colors.white.withOpacity(0.7),
             weight: FontWeight.w800,
             letterSpacing: 1.5,
           ),
         ),
-        GlassContainer(
-          borderRadius: 24,
-          blur: 40,
-          borderOpacity: 0.12,
-          gradientColors: [
-            Colors.white.withOpacity(0.05),
-            Colors.white.withOpacity(0.02),
-          ],
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Column(
-            children: sortedCategories.asMap().entries.map((entry) {
-              final isLast = entry.key == sortedCategories.length - 1;
-              return Column(
-                children: [
-                  _buildCategoryItem(
-                    context,
-                    entry.value,
-                    categoryTotals[entry.value]!,
-                    grandTotal,
-                  ),
-                  if (!isLast)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Divider(
-                        height: 1,
-                        color: Colors.white.withOpacity(0.03),
-                      ),
-                    ),
-                ],
-              );
-            }).toList(),
-          ),
+        Column(
+          children: sortedCategories.asMap().entries.map((entry) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: _buildCategoryItem(
+                context,
+                entry.value,
+                categoryTotals[entry.value]!,
+                grandTotal,
+              ),
+            );
+          }).toList(),
         ),
       ],
     );
@@ -76,27 +56,28 @@ class SpendingCategoryBreakdown extends StatelessWidget {
     final color = CategoryUtils.getCategoryColor(category);
     final percentage = (amount / grandTotal);
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.03),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.05), width: 1),
-      ),
+    return GlassContainer(
+      borderRadius: 16,
+      blur: 30,
+      borderOpacity: 0.1,
+      gradientColors: [
+        Colors.white.withOpacity(0.06),
+        Colors.white.withOpacity(0.02),
+      ],
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       child: Column(
         children: [
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: color.withOpacity(0.12),
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
                       color: color.withOpacity(0.1),
-                      blurRadius: 10,
+                      blurRadius: 8,
                       spreadRadius: 1,
                     ),
                   ],
@@ -104,18 +85,17 @@ class SpendingCategoryBreakdown extends StatelessWidget {
                 child: Icon(
                   CategoryUtils.getIconForCategory(category),
                   color: color,
-                  size: 20,
+                  size: 18,
                 ),
               ),
-              16.widthBox,
+              12.widthBox,
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       category,
-                    ).titleMedium(color: Colors.white, weight: FontWeight.w700),
-                    2.heightBox,
+                    ).bodyLarge(color: Colors.white, weight: FontWeight.w600),
                     Text(
                       '${(percentage * 100).toStringAsFixed(1)}% of total',
                     ).labelMedium(
@@ -129,7 +109,7 @@ class SpendingCategoryBreakdown extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(CurrencyUtils.formatAmount(amount, "USD")).mono(
-                    weight: FontWeight.w800,
+                    weight: FontWeight.w700,
                     fontSize: 16,
                     color: Colors.white,
                   ),
@@ -137,22 +117,22 @@ class SpendingCategoryBreakdown extends StatelessWidget {
               ),
             ],
           ),
-          16.heightBox,
+          10.heightBox,
           Stack(
             children: [
               Container(
-                height: 8,
+                height: 5,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.05),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
               AnimatedContainer(
                 duration: const Duration(milliseconds: 1200),
                 curve: Curves.easeOutCubic,
-                height: 8,
-                width: (MediaQuery.of(context).size.width - 64) * percentage,
+                height: 5,
+                width: (MediaQuery.of(context).size.width - 48) * percentage,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
@@ -163,11 +143,11 @@ class SpendingCategoryBreakdown extends StatelessWidget {
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                   ),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(8),
                   boxShadow: [
                     BoxShadow(
                       color: color.withOpacity(0.4),
-                      blurRadius: 12,
+                      blurRadius: 10,
                       offset: const Offset(0, 2),
                     ),
                   ],
