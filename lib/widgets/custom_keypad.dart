@@ -95,6 +95,7 @@ class _CustomKeypadState extends State<CustomKeypad> {
     return GestureDetector(
       onTap: () {}, // Swallow taps to prevent closing on background tap
       child: Container(
+        margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
           color: AppColors.primaryLight.withOpacity(0.05),
@@ -109,22 +110,14 @@ class _CustomKeypadState extends State<CustomKeypad> {
               onChanged: widget.onNoteChanged,
               focusNode: _noteFocusNode,
             ),
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 250),
-              transitionBuilder: (child, animation) => FadeTransition(
-                opacity: animation,
-                child: SizeTransition(sizeFactor: animation, child: child),
+            if (!_isNoteFocused)
+              _KeypadGrid(
+                selectedDate: widget.selectedDate,
+                onKeyPressed: widget.onKeyPressed,
+                onBackPressed: widget.onBackPressed,
+                onComplete: widget.onComplete,
+                onDateSelect: () => _selectDate(context),
               ),
-              child: _isNoteFocused
-                  ? const SizedBox.shrink()
-                  : _KeypadGrid(
-                      selectedDate: widget.selectedDate,
-                      onKeyPressed: widget.onKeyPressed,
-                      onBackPressed: widget.onBackPressed,
-                      onComplete: widget.onComplete,
-                      onDateSelect: () => _selectDate(context),
-                    ),
-            ),
           ],
         ),
       ),
@@ -178,7 +171,6 @@ class _KeypadNoteField extends StatelessWidget {
   final TextEditingController controller;
   final Function(String) onChanged;
   final FocusNode? focusNode;
-
   const _KeypadNoteField({
     required this.controller,
     required this.onChanged,
@@ -189,7 +181,7 @@ class _KeypadNoteField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: AppColors.primaryColor.withOpacity(0.09),
         borderRadius: BorderRadius.circular(8),
@@ -214,10 +206,11 @@ class _KeypadNoteField extends StatelessWidget {
                 hintStyle: TextStyle(color: Colors.white.withOpacity(0.2)),
                 border: InputBorder.none,
                 isDense: true,
-                contentPadding: EdgeInsets.zero,
+                contentPadding: const EdgeInsets.symmetric(vertical: 8),
               ),
             ),
           ),
+          const SizedBox(width: 8),
           Icon(
             Icons.camera_alt_outlined,
             color: Colors.white.withOpacity(0.4),

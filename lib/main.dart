@@ -1,16 +1,20 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:personal_finance_tracker/config/router.dart';
 import 'package:personal_finance_tracker/core/theme/app_theme.dart';
+import 'package:personal_finance_tracker/firebase_options.dart';
 import 'package:personal_finance_tracker/models/transaction_model.dart';
 import 'package:personal_finance_tracker/providers/transaction_provider.dart';
 import 'package:personal_finance_tracker/providers/user_settings_provider.dart';
+import 'package:personal_finance_tracker/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   _setPortraitMode();
   await Hive.initFlutter();
   Hive.registerAdapter(TransactionModelAdapter());
@@ -24,6 +28,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => TransactionProvider()),
         ChangeNotifierProvider(create: (_) => userSettingsProvider),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
       child: const MyApp(),
     ),

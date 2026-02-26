@@ -8,6 +8,7 @@ import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
 import 'package:personal_finance_tracker/core/utils/validators.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
 import 'package:personal_finance_tracker/providers/auth_provider.dart';
+import 'package:personal_finance_tracker/providers/user_settings_provider.dart';
 import 'package:personal_finance_tracker/widgets/appButton.dart';
 import 'package:personal_finance_tracker/widgets/appTextField.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
@@ -18,10 +19,7 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AuthProvider(),
-      child: const SignUpContent(),
-    );
+    return const SignUpContent();
   }
 }
 
@@ -41,6 +39,7 @@ class _SignUpContentState extends State<SignUpContent> {
 
     return AppBackground(
       style: BackgroundStyle.authVibrant,
+      resizeToAvoidBottomInset: true,
       child: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -176,9 +175,25 @@ class _SignUpContentState extends State<SignUpContent> {
                               return;
                             }
 
-                            provider.signUp().then((_) {
-                              context.go(AppRoutes.mainNavigationScreenRoute);
-                            });
+                            provider
+                                .signUp()
+                                .then((credential) {
+                                  if (credential != null) {
+                                    final user = credential.user;
+                                    final settings = context
+                                        .read<UserSettingsProvider>();
+                                    settings.setUserEmail(user?.email ?? "");
+                                    settings.setUserName(
+                                      provider.usernameController.text.trim(),
+                                    );
+                                    context.go(
+                                      AppRoutes.mainNavigationScreenRoute,
+                                    );
+                                  }
+                                })
+                                .catchError((e) {
+                                  ToastUtils.show(context, e.toString());
+                                });
                           },
                           color: AppColors.primaryColor.withOpacity(0.4),
                           textColor: Colors.white,

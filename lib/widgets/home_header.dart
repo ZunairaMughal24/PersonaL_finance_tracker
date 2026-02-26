@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:personal_finance_tracker/core/constants/appColors.dart';
 
@@ -5,11 +6,13 @@ import 'package:personal_finance_tracker/widgets/glass_container.dart';
 
 class HomeHeader extends StatelessWidget {
   final String userName;
+  final String? profileImagePath;
   final String summaryText;
 
   const HomeHeader({
     super.key,
     required this.userName,
+    this.profileImagePath,
     required this.summaryText,
   });
 
@@ -37,11 +40,14 @@ class HomeHeader extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: const CircleAvatar(
+                child: CircleAvatar(
                   radius: 27,
-                  backgroundImage: NetworkImage(
-                    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop',
-                  ),
+                  backgroundColor: AppColors.primaryLight.withOpacity(0.2),
+                  backgroundImage: profileImagePath != null
+                      ? FileImage(File(profileImagePath!)) as ImageProvider
+                      : const NetworkImage(
+                          'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop',
+                        ),
                 ),
               ),
               const SizedBox(width: 12),

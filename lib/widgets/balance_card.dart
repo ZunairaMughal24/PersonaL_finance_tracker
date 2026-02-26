@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:personal_finance_tracker/core/constants/appColors.dart';
 import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
 import 'package:personal_finance_tracker/core/utils/date_formatter.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
@@ -116,7 +117,9 @@ class TotalBalanceCard extends StatelessWidget {
                               ).mono(
                                 fontSize: 28,
                                 weight: FontWeight.w600,
-                                color: Colors.white,
+                                color: totalBalance < 0
+                                    ? const Color.fromARGB(255, 172, 174, 184)
+                                    : Colors.white,
                               ),
                         ),
                       ),

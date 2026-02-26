@@ -6,16 +6,49 @@ import 'package:personal_finance_tracker/models/spending_summary.dart';
 import 'package:personal_finance_tracker/models/trends_model.dart';
 import 'package:personal_finance_tracker/services/database_services.dart';
 import 'package:personal_finance_tracker/services/finance_service.dart';
+import 'package:personal_finance_tracker/services/ai_service.dart';
 
 class TransactionProvider extends ChangeNotifier {
   final DatabaseService db = DatabaseService();
+  late final AIService _aiService;
+
+  static const String _geminiApiKey = 'AIzaSyAU1QgBRmnLZmVHxmMlOXFmDlSfVRR5U2M';
+
   List<TransactionModel> _transactions = [];
   String _searchQuery = '';
   DateTimeRange? _selectedDateRange;
   String? _selectedCategory;
   bool? _isIncomeFilter = false;
+  String? _cachedInsights;
+  Future<String?>? _insightsFuture;
 
   List<TransactionModel> get transactions => _transactions;
+  Future<String?>? get insightsFuture => _insightsFuture;
+  String? get cachedInsightsValue => _cachedInsights;
+
+  TransactionProvider() {
+    _aiService = AIService(_geminiApiKey);
+    _loadTransactions();
+  }
+
+  void refreshInsights() {
+    if (_transactions.isEmpty) {
+      _insightsFuture = Future.value(null);
+      return;
+    }
+    _insightsFuture = _aiService
+        .getSuggestionsAndAppreciation(_transactions)
+        .then((val) {
+          _cachedInsights = val;
+          return val;
+        });
+    notifyListeners();
+  }
+
+  void _invalidateInsights() {
+    _cachedInsights = null;
+    refreshInsights();
+  }
 
   List<TransactionModel> get filteredTransactions {
     return _transactions.where((tx) {
@@ -82,12 +115,9 @@ class TransactionProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  TransactionProvider() {
-    _loadTransactions();
-  }
-
   void _loadTransactions() {
     _transactions = db.getAllTransaction();
+    _invalidateInsights();
     notifyListeners();
   }
 
@@ -97,7 +127,6 @@ class TransactionProvider extends ChangeNotifier {
 
   Future<void> addTransaction(TransactionModel tx) async {
     await db.addTransaction(tx);
-
     _loadTransactions();
   }
 
@@ -108,7 +137,6 @@ class TransactionProvider extends ChangeNotifier {
 
   Future<void> updateTransaction(int key, TransactionModel updatedTx) async {
     await db.updateTransaction(key, updatedTx);
-
     _loadTransactions();
   }
 
@@ -143,9 +171,7 @@ class TransactionProvider extends ChangeNotifier {
 
     for (var tx in _transactions) {
       DateTime parsedDate = DateUtilsCustom.parseDate(tx.date);
-
       String day = DateFormat('E').format(parsedDate);
-
       if (dayMap.containsKey(day)) {
         if (tx.isIncome) {
           dayMap[day] = FinancialPeriodData(
@@ -162,7 +188,6 @@ class TransactionProvider extends ChangeNotifier {
         }
       }
     }
-
     return dayMap.values.toList();
   }
 }

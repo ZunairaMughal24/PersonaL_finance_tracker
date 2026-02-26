@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:personal_finance_tracker/providers/auth_provider.dart';
 import 'package:personal_finance_tracker/config/router.dart';
 import 'package:personal_finance_tracker/core/constants/appColors.dart';
 import 'package:personal_finance_tracker/core/constants/appImages.dart';
@@ -64,7 +66,12 @@ class SplashScreen extends StatelessWidget {
                   AppButton(
                     text: "Get Started",
                     onPressed: () {
-                      context.go(AppRoutes.mainNavigationScreenRoute);
+                      final auth = context.read<AuthProvider>();
+                      if (auth.currentUser != null) {
+                        context.go(AppRoutes.mainNavigationScreenRoute);
+                      } else {
+                        context.go(AppRoutes.signInScreenRoute);
+                      }
                     },
                     color: AppColors.primaryColor.withOpacity(0.4),
                     textColor: Colors.white,

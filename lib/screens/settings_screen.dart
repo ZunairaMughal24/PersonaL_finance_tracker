@@ -1,4 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:personal_finance_tracker/config/router.dart';
 import 'package:personal_finance_tracker/core/constants/appColors.dart';
 import 'package:personal_finance_tracker/screens/main_navigation_screen.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
@@ -8,6 +12,7 @@ import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
 import 'package:personal_finance_tracker/core/utils/padding_extention.dart';
 import 'package:personal_finance_tracker/providers/user_settings_provider.dart';
+import 'package:personal_finance_tracker/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -19,6 +24,133 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _notificationsEnabled = true;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage(UserSettingsProvider settings) async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      await settings.setProfileImage(image.path);
+    }
+  }
+
+  void _showEditProfileMenu(
+    BuildContext context,
+    UserSettingsProvider settings,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => GlassContainer(
+        borderRadius: 24,
+        blur: 40,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            12.heightBox,
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            20.heightBox,
+            Text(
+              "Edit Profile",
+            ).h4(color: Colors.white, weight: FontWeight.bold),
+            20.heightBox,
+            _buildMenuOption(
+              icon: Icons.person_outline_rounded,
+              title: "Edit Name",
+              onTap: () {
+                Navigator.pop(context);
+                _showEditNameDialog(context, settings);
+              },
+            ),
+            Divider(color: Colors.white.withOpacity(0.05), height: 1),
+            _buildMenuOption(
+              icon: Icons.photo_library_outlined,
+              title: "Change Photo",
+              onTap: () {
+                Navigator.pop(context);
+                _pickImage(settings);
+              },
+            ),
+            30.heightBox,
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showEditNameDialog(
+    BuildContext context,
+    UserSettingsProvider settings,
+  ) {
+    final TextEditingController nameController = TextEditingController(
+      text: settings.userName,
+    );
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF1E1E1E),
+        title: const Text("Edit Name", style: TextStyle(color: Colors.white)),
+        content: TextField(
+          controller: nameController,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: "Enter your name",
+            hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () {
+              if (nameController.text.trim().isNotEmpty) {
+                settings.setUserName(nameController.text.trim());
+                Navigator.pop(context);
+              }
+            },
+            child: const Text("Save"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMenuOption({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        child: Row(
+          children: [
+            Icon(icon, color: Colors.white, size: 24),
+            const SizedBox(width: 16),
+            Text(title).bodyLarge(color: Colors.white, weight: FontWeight.w500),
+            const Spacer(),
+            Icon(
+              Icons.chevron_right_rounded,
+              color: Colors.white.withOpacity(0.3),
+              size: 24,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +266,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   iconColor: Colors.redAccent.withOpacity(0.8),
                   title: "Sign Out",
                   subtitle: "Exit from your account",
-                  onTap: () {},
+                  onTap: () {
+                    context.read<AuthProvider>().signOut().then((_) {
+                      context.go(AppRoutes.signInScreenRoute);
+                    });
+                  },
                   showChevron: false,
                 ),
               ]),
@@ -147,64 +283,69 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildProfileCard() {
-    return GlassContainer(
-      borderRadius: 24,
-      blur: 35,
-      borderOpacity: 0.12,
-      gradientColors: [
-        Colors.white.withOpacity(0.08),
-        Colors.white.withOpacity(0.02),
-      ],
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(2),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: Colors.white.withOpacity(0.5),
-                width: 1,
-              ),
-            ),
-            child: CircleAvatar(
-              radius: 32,
-              backgroundColor: AppColors.primaryColor.withOpacity(0.5),
-              backgroundImage: NetworkImage(
-                'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop',
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Zunaira Mughal',
-                ).h4(color: Colors.white, weight: FontWeight.bold),
-                const SizedBox(height: 2),
-                Text('zunaira@example.com').bodyMedium(
-                  color: Colors.white.withOpacity(0.7),
-                  weight: FontWeight.w500,
-                ),
-              ],
-            ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.edit_outlined,
-              color: Colors.white.withOpacity(0.8),
-              size: 24,
-            ),
-            padding: const EdgeInsets.all(8),
-            style: IconButton.styleFrom(
-              backgroundColor: Colors.white.withOpacity(0.08),
-              shape: const CircleBorder(),
-            ),
-          ),
+    return Consumer<UserSettingsProvider>(
+      builder: (context, settings, _) => GlassContainer(
+        borderRadius: 24,
+        blur: 35,
+        borderOpacity: 0.12,
+        gradientColors: [
+          Colors.white.withOpacity(0.08),
+          Colors.white.withOpacity(0.02),
         ],
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.5),
+                  width: 1,
+                ),
+              ),
+              child: CircleAvatar(
+                radius: 32,
+                backgroundColor: AppColors.primaryColor.withOpacity(0.5),
+                backgroundImage: settings.profileImagePath != null
+                    ? FileImage(File(settings.profileImagePath!))
+                          as ImageProvider
+                    : const NetworkImage(
+                        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop',
+                      ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    settings.userName,
+                  ).h4(color: Colors.white, weight: FontWeight.bold),
+                  const SizedBox(height: 2),
+                  Text(settings.userEmail).bodyMedium(
+                    color: Colors.white.withOpacity(0.7),
+                    weight: FontWeight.w500,
+                  ),
+                ],
+              ),
+            ),
+            IconButton(
+              onPressed: () => _showEditProfileMenu(context, settings),
+              icon: Icon(
+                Icons.edit_outlined,
+                color: Colors.white.withOpacity(0.8),
+                size: 20,
+              ),
+              padding: const EdgeInsets.all(8),
+              style: IconButton.styleFrom(
+                backgroundColor: Colors.white.withOpacity(0.08),
+                shape: const CircleBorder(),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -58,6 +58,7 @@ class TransactionFormViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+
   void setCurrency(String value) {
     _selectedCurrency = value;
     notifyListeners();

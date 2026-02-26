@@ -8,6 +8,7 @@ import 'package:personal_finance_tracker/core/utils/toast_utility.dart';
 import 'package:personal_finance_tracker/core/utils/validators.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
 import 'package:personal_finance_tracker/providers/auth_provider.dart';
+import 'package:personal_finance_tracker/providers/user_settings_provider.dart';
 import 'package:personal_finance_tracker/widgets/appButton.dart';
 import 'package:personal_finance_tracker/widgets/appTextField.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
@@ -18,10 +19,7 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AuthProvider(),
-      child: const SignInContent(),
-    );
+    return const SignInContent();
   }
 }
 
@@ -41,6 +39,7 @@ class _SignInContentState extends State<SignInContent> {
 
     return AppBackground(
       style: BackgroundStyle.authVibrant,
+      resizeToAvoidBottomInset: true,
       child: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -67,12 +66,12 @@ class _SignInContentState extends State<SignInContent> {
                         ).bodyMedium(color: Colors.white70),
                         20.heightBox,
                         AppTextField(
-                          title: "Username",
-                          hint: "Enter your username",
-                          controller: provider.usernameController,
-                          validator: Validators.usernameValidator,
+                          title: "Email Address",
+                          hint: "Enter your email",
+                          controller: provider.emailController,
+                          validator: Validators.emailValidator,
                           prefixChild: const Icon(
-                            Icons.person_rounded,
+                            Icons.email_rounded,
                             color: Colors.white70,
                             size: 20,
                           ),
@@ -149,15 +148,14 @@ class _SignInContentState extends State<SignInContent> {
 
                           isLoading: provider.isLoading,
                           onPressed: () {
-                            final usernameError = Validators.usernameValidator(
-                              provider.usernameController.text,
+                            final emailError = Validators.emailValidator(
+                              provider.emailController.text,
                             );
                             final passwordError = Validators.passwordValidator(
                               provider.passwordController.text,
                             );
-
-                            if (usernameError != null) {
-                              ToastUtils.show(context, usernameError);
+                            if (emailError != null) {
+                              ToastUtils.show(context, emailError);
                               return;
                             }
                             if (passwordError != null) {
@@ -165,28 +163,31 @@ class _SignInContentState extends State<SignInContent> {
                               return;
                             }
 
-                            provider.signIn().then((_) {
-                              context.go(AppRoutes.mainNavigationScreenRoute);
-                            });
+                            provider
+                                .signIn()
+                                .then((credential) {
+                                  if (credential != null) {
+                                    final user = credential.user;
+                                    final settings = context
+                                        .read<UserSettingsProvider>();
+                                    settings.setUserEmail(user?.email ?? "");
+                                    if (user?.displayName != null &&
+                                        user!.displayName!.isNotEmpty) {
+                                      settings.setUserName(user.displayName!);
+                                    }
+                                    context.go(
+                                      AppRoutes.mainNavigationScreenRoute,
+                                    );
+                                  }
+                                })
+                                .catchError((e) {
+                                  ToastUtils.show(context, e.toString());
+                                });
                           },
 
                           color: AppColors.primaryColor.withOpacity(0.4),
                           textColor: Colors.white,
                           width: double.infinity,
-                        ),
-                        12.heightBox,
-                        AppButton(
-                          text: "Login with Google",
-                          onPressed: provider.signInWithGoogle,
-                          color: Colors.transparent,
-                          textColor: Colors.white,
-                          width: double.infinity,
-                          borderColor: Colors.white.withOpacity(0.5),
-                          icon: const Icon(
-                            Icons.g_mobiledata_rounded,
-                            color: Colors.white,
-                            size: 30,
-                          ),
                         ),
                         20.heightBox,
                         Row(

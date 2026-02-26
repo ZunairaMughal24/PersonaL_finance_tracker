@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:personal_finance_tracker/services/auth_service.dart';
 
 class AuthProvider extends ChangeNotifier {
+  final AuthService _authService = AuthService();
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
@@ -15,12 +19,11 @@ class AuthProvider extends ChangeNotifier {
   bool get isSignUpPasswordVisible => _isSignUpPasswordVisible;
   bool get isConfirmPasswordVisible => _isConfirmPasswordVisible;
 
-  // Sign In
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-
-  // Sign Up
+  // Sign In / Sign Up
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController usernameController =
+      TextEditingController(); // For Profile Name
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
@@ -44,38 +47,57 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> signIn() async {
+  // Firebase Authentication
+  Future<UserCredential?> signIn() async {
     _isLoading = true;
     notifyListeners();
+    try {
+      final credential = await _authService.signInWithEmailAndPassword(
+        emailController.text.trim(),
+        passwordController.text.trim(),
+      );
+      _isLoading = false;
+      notifyListeners();
+      return credential;
+    } on FirebaseAuthException catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      rethrow;
+    }
+  }
 
-    // Simulate API call
-    await Future.delayed(const Duration(seconds: 2));
+  Future<UserCredential?> signUp() async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      final credential = await _authService.createUserWithEmailAndPassword(
+        emailController.text.trim(),
+        passwordController.text.trim(),
+      );
 
+      if (usernameController.text.isNotEmpty) {
+        await _authService.updateDisplayName(usernameController.text.trim());
+      }
+
+      _isLoading = false;
+      notifyListeners();
+      return credential;
+    } on FirebaseAuthException catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      rethrow;
+    }
+  }
+
+  Future<void> signOut() async {
+    _isLoading = true;
+    notifyListeners();
+    await _authService.signOut();
     _isLoading = false;
     notifyListeners();
   }
 
-  Future<void> signUp() async {
-    _isLoading = true;
-    notifyListeners();
-
-    // Simulate API call
-    await Future.delayed(const Duration(seconds: 2));
-
-    _isLoading = false;
-    notifyListeners();
-  }
-
-  Future<void> signInWithGoogle() async {
-    _isLoading = true;
-    notifyListeners();
-
-    // Simulate API call
-    await Future.delayed(const Duration(seconds: 2));
-
-    _isLoading = false;
-    notifyListeners();
-  }
+  User? get currentUser => _authService.currentUser;
 
   @override
   void dispose() {
