@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:personal_finance_tracker/core/constants/appColors.dart';
 import 'package:personal_finance_tracker/core/utils/date_formatter.dart';
 
-
 class CustomDatePicker extends StatelessWidget {
   final DateTime? selectedDate;
   final Function(DateTime) onDateSelected;
@@ -15,8 +14,8 @@ class CustomDatePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var textValue = selectedDate == null 
-        ? '' 
+    var textValue = selectedDate == null
+        ? ''
         : DateUtilsCustom.formatDate(selectedDate!);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,8 +31,8 @@ class CustomDatePicker extends StatelessWidget {
         TextFormField(
           readOnly: true,
           style: const TextStyle(color: Colors.white),
-controller: TextEditingController(text: textValue),
-          
+          controller: TextEditingController(text: textValue),
+
           onTap: () async {
             final DateTime? picked = await showDatePicker(
               context: context,

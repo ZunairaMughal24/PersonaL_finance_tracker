@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:personal_finance_tracker/config/router.dart';
 import 'package:personal_finance_tracker/core/constants/appColors.dart';
 import 'package:personal_finance_tracker/screens/main_navigation_screen.dart';
@@ -11,9 +10,11 @@ import 'package:personal_finance_tracker/widgets/custom_app_bar.dart';
 import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
 import 'package:personal_finance_tracker/core/utils/padding_extention.dart';
+import 'package:personal_finance_tracker/core/constants/appImages.dart';
 import 'package:personal_finance_tracker/providers/user_settings_provider.dart';
 import 'package:personal_finance_tracker/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -23,14 +24,20 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool _notificationsEnabled = true;
-  final ImagePicker _picker = ImagePicker();
+  bool _isEditingName = false;
+  late TextEditingController _nameController;
 
-  Future<void> _pickImage(UserSettingsProvider settings) async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      await settings.setProfileImage(image.path);
-    }
+  @override
+  void initState() {
+    super.initState();
+    final settings = context.read<UserSettingsProvider>();
+    _nameController = TextEditingController(text: settings.userName);
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
   }
 
   void _showEditProfileMenu(
@@ -65,7 +72,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: "Edit Name",
               onTap: () {
                 Navigator.pop(context);
-                _showEditNameDialog(context, settings);
+                setState(() => _isEditingName = true);
               },
             ),
             Divider(color: Colors.white.withOpacity(0.05), height: 1),
@@ -74,54 +81,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: "Change Photo",
               onTap: () {
                 Navigator.pop(context);
-                _pickImage(settings);
+                settings.pickAndUpdateProfileImage();
               },
             ),
             30.heightBox,
           ],
         ),
-      ),
-    );
-  }
-
-  void _showEditNameDialog(
-    BuildContext context,
-    UserSettingsProvider settings,
-  ) {
-    final TextEditingController nameController = TextEditingController(
-      text: settings.userName,
-    );
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1E1E1E),
-        title: const Text("Edit Name", style: TextStyle(color: Colors.white)),
-        content: TextField(
-          controller: nameController,
-          style: const TextStyle(color: Colors.white),
-          decoration: InputDecoration(
-            hintText: "Enter your name",
-            hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
-            ),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
-          ),
-          TextButton(
-            onPressed: () {
-              if (nameController.text.trim().isNotEmpty) {
-                settings.setUserName(nameController.text.trim());
-                Navigator.pop(context);
-              }
-            },
-            child: const Text("Save"),
-          ),
-        ],
       ),
     );
   }
@@ -173,14 +138,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               16.heightBox,
               _buildSettingsGroup([
                 _buildSettingsTile(
-                  icon: Icons.person_outline_rounded,
+                  svgAsset: AppImages.user,
                   iconColor: Colors.blueAccent,
                   title: "Personal Information",
                   subtitle: "Name, email",
                   onTap: () {},
                 ),
                 _buildSettingsTile(
-                  icon: Icons.lock_outline_rounded,
+                  svgAsset: AppImages.lock,
                   iconColor: Colors.redAccent,
                   title: "Password",
                   subtitle: "Change password",
@@ -198,19 +163,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildSectionHeader("Preferences"),
               16.heightBox,
               _buildSettingsGroup([
-                _buildSettingsTile(
-                  icon: Icons.notifications_none_rounded,
-                  iconColor: Colors.orangeAccent,
-                  title: "Notifications",
-                  subtitle: "Manage notification settings",
-                  trailing: Switch.adaptive(
-                    value: _notificationsEnabled,
-                    onChanged: (val) =>
-                        setState(() => _notificationsEnabled = val),
-                    activeColor: AppColors.primaryColor,
-                    activeTrackColor: AppColors.primaryColor.withOpacity(0.3),
+                Consumer<UserSettingsProvider>(
+                  builder: (context, settings, _) => _buildSettingsTile(
+                    svgAsset: AppImages.bell,
+                    iconColor: Colors.orangeAccent,
+                    title: "Notifications",
+                    subtitle: "Manage notification settings",
+                    trailing: Switch.adaptive(
+                      value: settings.notificationsEnabled,
+                      onChanged: (val) => settings.setNotificationsEnabled(val),
+                      activeColor: AppColors.primaryColor,
+                      activeTrackColor: AppColors.primaryColor.withOpacity(0.3),
+                    ),
+                    onTap: () {},
                   ),
-                  onTap: () {},
                 ),
                 _buildSettingsTile(
                   icon: Icons.language_rounded,
@@ -295,34 +261,111 @@ class _SettingsScreenState extends State<SettingsScreen> {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            Container(
-              padding: const EdgeInsets.all(2),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Colors.white.withOpacity(0.5),
-                  width: 1,
+            Stack(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.5),
+                      width: 1,
+                    ),
+                  ),
+                  child: CircleAvatar(
+                    radius: 32,
+                    backgroundColor: AppColors.primaryColor.withOpacity(0.5),
+                    backgroundImage: settings.profileImagePath != null
+                        ? FileImage(File(settings.profileImagePath!))
+                              as ImageProvider
+                        : const NetworkImage(
+                            'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop',
+                          ),
+                  ),
                 ),
-              ),
-              child: CircleAvatar(
-                radius: 32,
-                backgroundColor: AppColors.primaryColor.withOpacity(0.5),
-                backgroundImage: settings.profileImagePath != null
-                    ? FileImage(File(settings.profileImagePath!))
-                          as ImageProvider
-                    : const NetworkImage(
-                        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop',
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: GestureDetector(
+                    onTap: () => settings.pickAndUpdateProfileImage(),
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: const BoxDecoration(
+                        color: AppColors.primaryColor,
+                        shape: BoxShape.circle,
                       ),
-              ),
+                      child: const Icon(
+                        Icons.camera_alt_rounded,
+                        color: Colors.white,
+                        size: 14,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    settings.userName,
-                  ).h4(color: Colors.white, weight: FontWeight.bold),
+                  _isEditingName
+                      ? TextField(
+                          controller: _nameController,
+                          autofocus: true,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          decoration: InputDecoration(
+                            isDense: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 4,
+                            ),
+                            enabledBorder: const UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: AppColors.primaryColor,
+                              ),
+                            ),
+                            suffixIcon: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.check,
+                                    color: Colors.greenAccent,
+                                    size: 20,
+                                  ),
+                                  onPressed: () {
+                                    settings.updateUserName(
+                                      _nameController.text,
+                                    );
+                                    setState(() => _isEditingName = false);
+                                  },
+                                ),
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.close,
+                                    color: Colors.redAccent,
+                                    size: 20,
+                                  ),
+                                  onPressed: () {
+                                    _nameController.text = settings.userName;
+                                    setState(() => _isEditingName = false);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          onSubmitted: (val) {
+                            settings.updateUserName(val);
+                            setState(() => _isEditingName = false);
+                          },
+                        )
+                      : Text(
+                          settings.userName,
+                        ).h4(color: Colors.white, weight: FontWeight.bold),
                   const SizedBox(height: 2),
                   Text(settings.userEmail).bodyMedium(
                     color: Colors.white.withOpacity(0.7),
@@ -331,19 +374,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ],
               ),
             ),
-            IconButton(
-              onPressed: () => _showEditProfileMenu(context, settings),
-              icon: Icon(
-                Icons.edit_outlined,
-                color: Colors.white.withOpacity(0.8),
-                size: 20,
+            if (!_isEditingName)
+              IconButton(
+                onPressed: () => _showEditProfileMenu(context, settings),
+                icon: Icon(
+                  Icons.edit_outlined,
+                  color: Colors.white.withOpacity(0.8),
+                  size: 20,
+                ),
+                padding: const EdgeInsets.all(8),
+                style: IconButton.styleFrom(
+                  backgroundColor: Colors.white.withOpacity(0.08),
+                  shape: const CircleBorder(),
+                ),
               ),
-              padding: const EdgeInsets.all(8),
-              style: IconButton.styleFrom(
-                backgroundColor: Colors.white.withOpacity(0.08),
-                shape: const CircleBorder(),
-              ),
-            ),
           ],
         ),
       ),
@@ -385,7 +429,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildSettingsTile({
-    required IconData icon,
+    IconData? icon,
+    String? svgAsset,
     required Color iconColor,
     required String title,
     required String subtitle,
@@ -406,7 +451,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 color: iconColor.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, color: iconColor, size: 22),
+              child: svgAsset != null
+                  ? SvgPicture.asset(
+                      svgAsset,
+                      colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                      height: 22,
+                    )
+                  : Icon(icon, color: iconColor, size: 22),
             ),
             const SizedBox(width: 16),
             Expanded(

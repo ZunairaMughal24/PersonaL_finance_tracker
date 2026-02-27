@@ -9,4 +9,10 @@ class AppImages {
   static const String journalIcon = 'assets/icons/journal_icon.png';
   static const String lineChartIcon = 'assets/icons/line_chart.png';
   static const String salesIcon = 'assets/icons/sales.png';
+
+  // SVGs
+  static const String bell = 'assets/icons/svgs/bell.svg';
+  static const String lock = 'assets/icons/svgs/lock.svg';
+  static const String user = 'assets/icons/svgs/user.svg';
+  static const String calendar = 'assets/icons/svgs/calendar.svg';
 }

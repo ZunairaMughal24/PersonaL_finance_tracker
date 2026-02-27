@@ -93,9 +93,11 @@ class _CustomKeypadState extends State<CustomKeypad> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {}, // Swallow taps to prevent closing on background tap
+      onTap: () {},
       child: Container(
-        margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        margin: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
           color: AppColors.primaryLight.withOpacity(0.05),

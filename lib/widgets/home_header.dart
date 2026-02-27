@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:personal_finance_tracker/core/constants/appColors.dart';
+import 'package:personal_finance_tracker/core/constants/appImages.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
 
@@ -82,10 +84,13 @@ class HomeHeader extends StatelessWidget {
             child: Stack(
               clipBehavior: Clip.none,
               children: [
-                const Icon(
-                  Icons.notifications_none_rounded,
-                  color: Colors.white,
-                  size: 26,
+                SvgPicture.asset(
+                  AppImages.bell,
+                  colorFilter: const ColorFilter.mode(
+                    Colors.white,
+                    BlendMode.srcIn,
+                  ),
+                  height: 22,
                 ),
                 Positioned(
                   right: 2,

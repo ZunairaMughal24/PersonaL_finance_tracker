@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:personal_finance_tracker/core/utils/date_formatter.dart';
 import 'package:personal_finance_tracker/models/transaction_model.dart';
@@ -43,6 +44,12 @@ class TransactionProvider extends ChangeNotifier {
           return val;
         });
     notifyListeners();
+  }
+
+  void _checkBalanceAndTriggerHaptic() {
+    if (totalBalance < 0) {
+      HapticFeedback.heavyImpact();
+    }
   }
 
   void _invalidateInsights() {
@@ -128,16 +135,19 @@ class TransactionProvider extends ChangeNotifier {
   Future<void> addTransaction(TransactionModel tx) async {
     await db.addTransaction(tx);
     _loadTransactions();
+    _checkBalanceAndTriggerHaptic();
   }
 
   Future<void> deleteTransaction(int key, int index) async {
     await db.deleteTransaction(key);
     _loadTransactions();
+    _checkBalanceAndTriggerHaptic();
   }
 
   Future<void> updateTransaction(int key, TransactionModel updatedTx) async {
     await db.updateTransaction(key, updatedTx);
     _loadTransactions();
+    _checkBalanceAndTriggerHaptic();
   }
 
   double get totalIncome => FinanceService.calculateTotalIncome(_transactions);

@@ -45,17 +45,26 @@ class InfoBox extends StatelessWidget {
                 color: amountColor.withOpacity(0.8),
               ),
               const SizedBox(width: 4),
-              Text(title.trim().toUpperCase()).bodySmall(
-                color: Colors.white.withOpacity(0.6),
-                weight: FontWeight.bold,
+              Flexible(
+                child:
+                    Text(
+                      title.trim().toUpperCase(),
+                      overflow: TextOverflow.ellipsis,
+                    ).bodySmall(
+                      color: Colors.white.withOpacity(0.6),
+                      weight: FontWeight.bold,
+                    ),
               ),
             ],
           ),
           4.heightBox,
-          Text(amount, textAlign: TextAlign.center).mono(
-            fontSize: 18,
-            weight: FontWeight.w600,
-            color: amountColor.withOpacity(0.9),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(amount, textAlign: TextAlign.center).mono(
+              fontSize: 18,
+              weight: FontWeight.w600,
+              color: amountColor.withOpacity(0.9),
+            ),
           ),
         ],
       ),

@@ -120,8 +120,7 @@ class _MainNavScreenState extends State<MainNavScreen> {
   }
 
   Widget _navItem({
-    IconData? icon,
-    String? assetPath,
+    required IconData icon,
     required String label,
     required int index,
   }) {
@@ -146,10 +145,7 @@ class _MainNavScreenState extends State<MainNavScreen> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (assetPath != null)
-                Image.asset(assetPath, width: 24, height: 24, color: color)
-              else
-                Icon(icon, color: color, size: 24),
+              Icon(icon, color: color, size: 24),
               const SizedBox(height: 2),
               Text(
                 label,

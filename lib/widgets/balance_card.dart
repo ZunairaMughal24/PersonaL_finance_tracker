@@ -110,15 +110,17 @@ class TotalBalanceCard extends StatelessWidget {
                           fit: BoxFit.scaleDown,
                           child:
                               Text(
-                                CurrencyUtils.formatAmount(
-                                  totalBalance,
-                                  settings.selectedCurrency,
-                                ),
+                                totalBalance < 0
+                                    ? "(${CurrencyUtils.formatAmount(totalBalance.abs(), settings.selectedCurrency)})"
+                                    : CurrencyUtils.formatAmount(
+                                        totalBalance,
+                                        settings.selectedCurrency,
+                                      ),
                               ).mono(
                                 fontSize: 28,
                                 weight: FontWeight.w600,
                                 color: totalBalance < 0
-                                    ? const Color.fromARGB(255, 172, 174, 184)
+                                    ? Colors.redAccent.withOpacity(0.9)
                                     : Colors.white,
                               ),
                         ),
