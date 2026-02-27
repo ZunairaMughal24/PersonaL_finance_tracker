@@ -214,7 +214,8 @@ class _SignUpContentState extends State<SignUpContent> {
                                 "Already have an account? ",
                               ).bodyMedium(color: Colors.white70),
                               GestureDetector(
-                                onTap: () => context.pop(),
+                                onTap: () =>
+                                    context.go(AppRoutes.signInScreenRoute),
                                 child: const Text("Sign In").bodyMedium(
                                   color: Colors.white,
                                   weight: FontWeight.bold,

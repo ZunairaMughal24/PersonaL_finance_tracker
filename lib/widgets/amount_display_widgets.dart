@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:personal_finance_tracker/core/constants/appColors.dart';
 import 'package:personal_finance_tracker/core/utils/currency_utils.dart';
 import 'package:personal_finance_tracker/core/utils/date_formatter.dart';
+import 'package:personal_finance_tracker/core/constants/appImages.dart';
 import 'package:personal_finance_tracker/widgets/appTextField.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class AmountDisplay extends StatelessWidget {
   final String amount;
@@ -131,10 +133,13 @@ class TransactionDatePicker extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  const Icon(
-                    Icons.calendar_today_rounded,
-                    color: AppColors.primaryColor,
-                    size: 20,
+                  SvgPicture.asset(
+                    AppImages.calendar,
+                    colorFilter: const ColorFilter.mode(
+                      AppColors.primaryColor,
+                      BlendMode.srcIn,
+                    ),
+                    height: 20,
                   ),
                   const SizedBox(width: 12),
                   Text(

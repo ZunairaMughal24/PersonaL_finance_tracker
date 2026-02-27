@@ -11,6 +11,8 @@ import 'package:personal_finance_tracker/screens/onboarding_screen.dart';
 import 'package:personal_finance_tracker/screens/activity_screen.dart';
 import 'package:personal_finance_tracker/screens/sign_in_screen.dart';
 import 'package:personal_finance_tracker/screens/sign_up_screen.dart';
+import 'package:personal_finance_tracker/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
 
 CustomTransitionPage<void> _buildPageWithDefaultTransition<T>({
   required BuildContext context,
@@ -49,6 +51,28 @@ class AppRoutes {
 
 final router = GoRouter(
   initialLocation: AppRoutes.splashScreenRoute,
+  redirect: (context, state) {
+    final authProvider = context.read<AuthProvider>();
+    final isLoggedIn = authProvider.currentUser != null;
+    final isGoingToSplash =
+        state.matchedLocation == AppRoutes.splashScreenRoute;
+    final isGoingToAuth =
+        state.matchedLocation == AppRoutes.signInScreenRoute ||
+        state.matchedLocation == AppRoutes.signUpScreenRoute ||
+        state.matchedLocation == AppRoutes.onboardingScreenRoute;
+
+    if (isGoingToSplash) return null;
+
+    if (!isLoggedIn && !isGoingToAuth) {
+      return AppRoutes.onboardingScreenRoute;
+    }
+
+    if (isLoggedIn && isGoingToAuth) {
+      return AppRoutes.mainNavigationScreenRoute;
+    }
+
+    return null;
+  },
   routes: [
     GoRoute(
       path: AppRoutes.splashScreenRoute,

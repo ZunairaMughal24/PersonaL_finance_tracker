@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:personal_finance_tracker/core/constants/appColors.dart';
+import 'package:personal_finance_tracker/core/constants/appImages.dart';
 import 'package:personal_finance_tracker/core/utils/date_formatter.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomDatePicker extends StatelessWidget {
   final DateTime? selectedDate;
@@ -45,7 +47,17 @@ class CustomDatePicker extends StatelessWidget {
           decoration: InputDecoration(
             hintText: "Select Date",
             hintStyle: TextStyle(color: AppColors.grey),
-            prefixIcon: Icon(Icons.calendar_today),
+            prefixIcon: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: SvgPicture.asset(
+                AppImages.calendar,
+                colorFilter: const ColorFilter.mode(
+                  AppColors.grey,
+                  BlendMode.srcIn,
+                ),
+                height: 20,
+              ),
+            ),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),

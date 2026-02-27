@@ -12,6 +12,8 @@ import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dar
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
 import 'package:personal_finance_tracker/widgets/transaction_type_toggle.dart';
 import 'package:personal_finance_tracker/widgets/custom_app_bar.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:personal_finance_tracker/core/constants/appImages.dart';
 
 class ActivityScreen extends StatefulWidget {
   const ActivityScreen({super.key});
@@ -180,12 +182,15 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 );
                 provider.setDateRange(range);
               },
-              icon: Icon(
-                Icons.calendar_today_rounded,
-                color: provider.selectedDateRange != null
-                    ? AppColors.primaryColor
-                    : Colors.white.withOpacity(0.5),
-                size: 20,
+              icon: SvgPicture.asset(
+                AppImages.calendar,
+                colorFilter: ColorFilter.mode(
+                  provider.selectedDateRange != null
+                      ? AppColors.primaryColor
+                      : Colors.white.withOpacity(0.5),
+                  BlendMode.srcIn,
+                ),
+                height: 20,
               ),
             ),
           ],

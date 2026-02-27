@@ -44,12 +44,17 @@ class HomeHeader extends StatelessWidget {
                 ),
                 child: CircleAvatar(
                   radius: 27,
-                  backgroundColor: AppColors.primaryLight.withOpacity(0.2),
+                  backgroundColor: AppColors.primaryLight.withOpacity(0.15),
                   backgroundImage: profileImagePath != null
                       ? FileImage(File(profileImagePath!)) as ImageProvider
-                      : const NetworkImage(
-                          'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop',
-                        ),
+                      : null,
+                  child: profileImagePath == null
+                      ? const Icon(
+                          Icons.person,
+                          color: AppColors.primaryColor,
+                          size: 24,
+                        )
+                      : null,
                 ),
               ),
               const SizedBox(width: 12),

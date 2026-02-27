@@ -49,10 +49,18 @@ class UserSettingsProvider extends ChangeNotifier {
   Future<void> setProfileImage(String path) => updateProfileImage(path);
   Future<void> setUserEmail(String email) => updateUserEmail(email);
 
-  Future<void> updateProfileImage(String path) async {
+  Future<void> updateProfileImage(String? path) async {
     _profileImagePath = path;
-    await _box.put(_imageKey, path);
+    if (path == null) {
+      await _box.delete(_imageKey);
+    } else {
+      await _box.put(_imageKey, path);
+    }
     notifyListeners();
+  }
+
+  Future<void> removeProfileImage() async {
+    await updateProfileImage(null);
   }
 
   Future<void> pickAndUpdateProfileImage() async {

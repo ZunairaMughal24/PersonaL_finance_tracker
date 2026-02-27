@@ -201,7 +201,7 @@ class _SignInContentState extends State<SignInContent> {
                               ).bodyMedium(color: Colors.white70),
                               GestureDetector(
                                 onTap: () =>
-                                    context.push(AppRoutes.signUpScreenRoute),
+                                    context.go(AppRoutes.signUpScreenRoute),
                                 child: const Text("Sign Up").bodyMedium(
                                   color: Colors.white,
                                   weight: FontWeight.bold,

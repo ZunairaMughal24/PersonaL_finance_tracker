@@ -84,6 +84,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 settings.pickAndUpdateProfileImage();
               },
             ),
+            Divider(color: Colors.white.withOpacity(0.05), height: 1),
+            _buildMenuOption(
+              icon: Icons.delete_outline_rounded,
+              title: "Remove Photo",
+              iconColor: Colors.redAccent,
+              onTap: () {
+                Navigator.pop(context);
+                settings.removeProfileImage();
+              },
+            ),
             30.heightBox,
           ],
         ),
@@ -96,6 +106,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     String? svgAsset,
     required String title,
     required VoidCallback onTap,
+    Color iconColor = Colors.white,
   }) {
     return InkWell(
       onTap: onTap,
@@ -106,14 +117,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             if (svgAsset != null)
               SvgPicture.asset(
                 svgAsset,
-                colorFilter: const ColorFilter.mode(
-                  Colors.white,
-                  BlendMode.srcIn,
-                ),
+                colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
                 height: 24,
               )
             else
-              Icon(icon, color: Colors.white, size: 24),
+              Icon(icon, color: iconColor, size: 24),
             const SizedBox(width: 16),
             Text(title).bodyLarge(color: Colors.white, weight: FontWeight.w500),
             const Spacer(),
@@ -285,13 +293,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   child: CircleAvatar(
                     radius: 32,
-                    backgroundColor: AppColors.primaryColor.withOpacity(0.5),
+                    backgroundColor: AppColors.primaryColor.withOpacity(0.15),
                     backgroundImage: settings.profileImagePath != null
                         ? FileImage(File(settings.profileImagePath!))
                               as ImageProvider
-                        : const NetworkImage(
-                            'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop',
-                          ),
+                        : null,
+                    child: settings.profileImagePath == null
+                        ? const Icon(
+                            Icons.person,
+                            color: AppColors.primaryColor,
+                            size: 32,
+                          )
+                        : null,
                   ),
                 ),
               ],

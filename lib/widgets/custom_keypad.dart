@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:personal_finance_tracker/core/constants/appColors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:personal_finance_tracker/core/constants/appImages.dart';
 
 class CustomKeypad extends StatefulWidget {
   final String amount;
@@ -318,10 +320,13 @@ class _KeypadGrid extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.calendar_today,
-              size: 16,
-              color: isToday ? AppColors.primaryColor : Colors.white,
+            SvgPicture.asset(
+              AppImages.calendar,
+              colorFilter: ColorFilter.mode(
+                isToday ? AppColors.primaryColor : Colors.white,
+                BlendMode.srcIn,
+              ),
+              height: 16,
             ),
             const SizedBox(width: 8),
             Text(
