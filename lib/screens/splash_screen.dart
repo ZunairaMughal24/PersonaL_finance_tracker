@@ -3,95 +3,85 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:personal_finance_tracker/providers/auth_provider.dart';
 import 'package:personal_finance_tracker/config/router.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
 import 'package:personal_finance_tracker/core/constants/appImages.dart';
 
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
-import 'package:personal_finance_tracker/widgets/appButton.dart';
+import 'package:personal_finance_tracker/core/utils/animation_utils.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
 
 import 'package:personal_finance_tracker/widgets/app_background.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _handleNavigation();
+  }
+
+  Future<void> _handleNavigation() async {
+    await Future.delayed(const Duration(milliseconds: 4000));
+    if (!mounted) return;
+
+    final auth = context.read<AuthProvider>();
+    if (auth.currentUser != null) {
+      context.go(AppRoutes.mainNavigationScreenRoute);
+    } else {
+      context.go(AppRoutes.onboardingScreenRoute);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return AppBackground(
       style: BackgroundStyle.glowMesh,
-      child: SafeArea(
+      child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Spacer(flex: 8),
-            GlassContainer(
-              borderRadius: 100,
-              padding: const EdgeInsets.all(24),
-              child: Image.asset(
-                AppImages.lineChartIcon,
-                height: 90,
-                width: 90,
-              ),
-            ),
-            30.heightBox,
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Text(
-                "Smart Finance\nManagement",
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  height: 1.2,
+            FadeScaleTransition(
+              child: GlassContainer(
+                borderRadius: 100,
+                padding: const EdgeInsets.all(32),
+                blur: 40,
+                child: Image.asset(
+                  AppImages.lineChartIcon,
+                  height: 120,
+                  width: 120,
                 ),
               ),
             ),
-            20.heightBox,
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32.0),
-              child: Text(
-                "Take control of your finances. Track spending, manage budgets, and build wealth effortlessly.",
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Colors.white.withOpacity(0.8),
-                  height: 1.5,
-                ),
-              ),
-            ),
-            const Spacer(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            40.heightBox,
+            FadeSlideTransition(
+              interval: const Interval(0.3, 1.0, curve: Curves.easeOut),
               child: Column(
                 children: [
-                  AppButton(
-                    text: "Get Started",
-                    onPressed: () {
-                      final auth = context.read<AuthProvider>();
-                      if (auth.currentUser != null) {
-                        context.go(AppRoutes.mainNavigationScreenRoute);
-                      } else {
-                        context.go(AppRoutes.signInScreenRoute);
-                      }
-                    },
-                    color: AppColors.primaryColor.withOpacity(0.4),
-                    textColor: Colors.white,
-                    width: double.infinity,
+                  Text(
+                    "MONTAGE",
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 4,
+                    ),
                   ),
-                  16.heightBox,
-                  AppButton(
-                    text: "Sign In",
-                    onPressed: () {
-                      context.go(AppRoutes.signInScreenRoute);
-                    },
-                    borderColor: AppColors.white.withOpacity(0.4),
-                    color: Colors.transparent,
-                    textColor: AppColors.white,
-                    width: double.infinity,
+                  8.heightBox,
+                  Text(
+                    "PREMIUM FINANCE TRACKER",
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Colors.white.withOpacity(0.6),
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 2.5,
+                    ),
                   ),
                 ],
               ),
             ),
-            40.heightBox,
           ],
         ),
       ),

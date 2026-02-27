@@ -7,6 +7,7 @@ import 'package:personal_finance_tracker/screens/main_navigation_screen.dart';
 import 'package:personal_finance_tracker/screens/settings_screen.dart';
 import 'package:personal_finance_tracker/screens/transaction_screen.dart';
 import 'package:personal_finance_tracker/screens/splash_screen.dart';
+import 'package:personal_finance_tracker/screens/onboarding_screen.dart';
 import 'package:personal_finance_tracker/screens/activity_screen.dart';
 import 'package:personal_finance_tracker/screens/sign_in_screen.dart';
 import 'package:personal_finance_tracker/screens/sign_up_screen.dart';
@@ -43,6 +44,7 @@ class AppRoutes {
   static const String settingsScreenRoute = '/settingsScreen';
   static const String signInScreenRoute = '/signIn';
   static const String signUpScreenRoute = '/signUp';
+  static const String onboardingScreenRoute = '/onboarding';
 }
 
 final router = GoRouter(
@@ -126,6 +128,14 @@ final router = GoRouter(
         context: context,
         state: state,
         child: const SignUpScreen(),
+      ),
+    ),
+    GoRoute(
+      path: AppRoutes.onboardingScreenRoute,
+      pageBuilder: (context, state) => _buildPageWithDefaultTransition(
+        context: context,
+        state: state,
+        child: const OnboardingScreen(),
       ),
     ),
   ],

@@ -68,7 +68,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ).h4(color: Colors.white, weight: FontWeight.bold),
             20.heightBox,
             _buildMenuOption(
-              icon: Icons.person_outline_rounded,
+              svgAsset: AppImages.user,
               title: "Edit Name",
               onTap: () {
                 Navigator.pop(context);
@@ -92,7 +92,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildMenuOption({
-    required IconData icon,
+    IconData? icon,
+    String? svgAsset,
     required String title,
     required VoidCallback onTap,
   }) {
@@ -102,7 +103,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         child: Row(
           children: [
-            Icon(icon, color: Colors.white, size: 24),
+            if (svgAsset != null)
+              SvgPicture.asset(
+                svgAsset,
+                colorFilter: const ColorFilter.mode(
+                  Colors.white,
+                  BlendMode.srcIn,
+                ),
+                height: 24,
+              )
+            else
+              Icon(icon, color: Colors.white, size: 24),
             const SizedBox(width: 16),
             Text(title).bodyLarge(color: Colors.white, weight: FontWeight.w500),
             const Spacer(),
@@ -281,25 +292,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         : const NetworkImage(
                             'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop',
                           ),
-                  ),
-                ),
-                Positioned(
-                  right: 0,
-                  bottom: 0,
-                  child: GestureDetector(
-                    onTap: () => settings.pickAndUpdateProfileImage(),
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
-                        color: AppColors.primaryColor,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.camera_alt_rounded,
-                        color: Colors.white,
-                        size: 14,
-                      ),
-                    ),
                   ),
                 ),
               ],

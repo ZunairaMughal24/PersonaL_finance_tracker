@@ -29,8 +29,8 @@ class UserSettingsProvider extends ChangeNotifier {
   Future<void> _init() async {
     _box = await Hive.openBox(_settingsBoxName);
     _selectedCurrency = _box.get(_currencyKey, defaultValue: 'USD');
-    _userName = _box.get(_nameKey, defaultValue: 'Zunaira Mughal');
-    _userEmail = _box.get(_emailKey, defaultValue: 'zunaira@example.com');
+    _userName = _box.get(_nameKey, defaultValue: 'User');
+    _userEmail = _box.get(_emailKey, defaultValue: 'user@example.com');
     _profileImagePath = _box.get(_imageKey);
     _notificationsEnabled = _box.get(
       'notifications_enabled',
