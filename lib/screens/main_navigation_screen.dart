@@ -91,7 +91,11 @@ class _MainNavScreenState extends State<MainNavScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _navItem(iconPath: AppImages.home, label: 'Home', index: 0),
+                  _navItem(
+                    iconPath: AppImages.homeAngle,
+                    label: 'Home',
+                    index: 0,
+                  ),
                   _navItem(
                     iconPath: AppImages.chart,
                     label: 'Analytics',
