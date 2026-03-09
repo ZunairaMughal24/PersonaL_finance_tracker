@@ -11,7 +11,7 @@ import 'package:personal_finance_tracker/screens/onboarding_screen.dart';
 import 'package:personal_finance_tracker/screens/activity_screen.dart';
 import 'package:personal_finance_tracker/screens/sign_in_screen.dart';
 import 'package:personal_finance_tracker/screens/sign_up_screen.dart';
-import 'package:personal_finance_tracker/providers/auth_provider.dart';
+import 'package:personal_finance_tracker/config/auth_wrapper.dart';
 
 // ─── Route Constants
 
@@ -27,6 +27,8 @@ class AppRoutes {
   static const String signInScreenRoute = '/signIn';
   static const String signUpScreenRoute = '/signUp';
   static const String onboardingScreenRoute = '/onboarding';
+
+  static const String rootRoute = '/';
 
   static const Set<String> publicRoutes = {
     splashScreenRoute,
@@ -59,36 +61,14 @@ CustomTransitionPage<void> _buildPageWithDefaultTransition<T>({
   );
 }
 
-// ─── Router Factory
-
-GoRouter createRouter(AuthProvider authProvider) {
+GoRouter createRouter() {
   return GoRouter(
-    initialLocation: AppRoutes.splashScreenRoute,
-
-    refreshListenable: authProvider,
-
-    redirect: (context, state) {
-      final isLoggedIn = authProvider.currentUser != null;
-      final currentPath = state.matchedLocation;
-
-      if (currentPath == AppRoutes.splashScreenRoute) return null;
-
-      final isPublicRoute = AppRoutes.publicRoutes.contains(currentPath);
-
-      if (!isLoggedIn && !isPublicRoute) {
-        return AppRoutes.onboardingScreenRoute;
-      }
-
-      if (isLoggedIn &&
-          isPublicRoute &&
-          currentPath != AppRoutes.splashScreenRoute) {
-        return AppRoutes.mainNavigationScreenRoute;
-      }
-
-      return null;
-    },
-
+    initialLocation: AppRoutes.rootRoute,
     routes: [
+      GoRoute(
+        path: AppRoutes.rootRoute,
+        builder: (context, state) => const AuthWrapper(),
+      ),
       // ── Public Routes
       GoRoute(
         path: AppRoutes.splashScreenRoute,

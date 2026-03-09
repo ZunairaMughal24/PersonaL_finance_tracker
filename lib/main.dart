@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:personal_finance_tracker/config/router.dart';
-import 'package:go_router/go_router.dart';
 import 'package:personal_finance_tracker/core/theme/app_theme.dart';
 import 'package:personal_finance_tracker/firebase_options.dart';
 import 'package:personal_finance_tracker/models/transaction_model.dart';
@@ -33,7 +32,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => userSettingsProvider),
         ChangeNotifierProvider.value(value: authProvider),
       ],
-      child: MyApp(authProvider: authProvider),
+      child: const MyApp(),
     ),
   );
 }
@@ -46,15 +45,13 @@ void _setPortraitMode() {
 }
 
 class MyApp extends StatelessWidget {
-  final AuthProvider authProvider;
-  late final GoRouter _router = createRouter(authProvider);
-  MyApp({super.key, required this.authProvider});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      routerConfig: _router,
+      routerConfig: createRouter(),
       title: 'Finance Tracker',
       theme: AppTheme.darkTheme,
     );

@@ -4,6 +4,15 @@ import 'package:personal_finance_tracker/services/auth_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   final AuthService _authService = AuthService();
+  User? _user;
+
+  AuthProvider() {
+    _user = _authService.currentUser;
+    _authService.authStateChanges.listen((User? user) {
+      _user = user;
+      notifyListeners();
+    });
+  }
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -19,11 +28,9 @@ class AuthProvider extends ChangeNotifier {
   bool get isSignUpPasswordVisible => _isSignUpPasswordVisible;
   bool get isConfirmPasswordVisible => _isConfirmPasswordVisible;
 
-  // Sign In / Sign Up
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController usernameController =
-      TextEditingController(); // For Profile Name
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
@@ -97,7 +104,7 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  User? get currentUser => _authService.currentUser;
+  User? get currentUser => _user;
 
   @override
   void dispose() {

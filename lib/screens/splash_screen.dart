@@ -17,18 +17,6 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
-  void initState() {
-    super.initState();
-    _handleNavigation();
-  }
-
-  Future<void> _handleNavigation() async {
-    await Future.delayed(const Duration(milliseconds: 4000));
-    if (!mounted) return;
-    context.go(AppRoutes.mainNavigationScreenRoute);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return AppBackground(
       style: BackgroundStyle.glowMesh,
