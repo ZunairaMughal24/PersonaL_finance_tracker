@@ -86,7 +86,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             Divider(color: Colors.white.withOpacity(0.05), height: 1),
             _buildMenuOption(
-              icon: Icons.delete_outline_rounded,
+              svgAsset: AppImages.trashBin,
               title: "Remove Photo",
               iconColor: Colors.redAccent,
               onTap: () {

@@ -4,6 +4,8 @@ import 'package:personal_finance_tracker/core/constants/appColors.dart';
 import 'package:personal_finance_tracker/core/utils/currency_utils.dart';
 import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:personal_finance_tracker/core/constants/appImages.dart';
 
 class TransactionActionDialog extends StatelessWidget {
   final VoidCallback onEdit;
@@ -113,7 +115,7 @@ class TransactionActionDialog extends StatelessWidget {
               const SizedBox(height: 12),
               _buildActionButton(
                 label: "Delete Transaction",
-                icon: Icons.delete_outline_rounded,
+                iconPath: AppImages.trashBin,
                 color: AppColors.red.withOpacity(0.9),
                 gradientColors: [
                   AppColors.red.withOpacity(0.15),
@@ -149,7 +151,8 @@ class TransactionActionDialog extends StatelessWidget {
 
   Widget _buildActionButton({
     required String label,
-    required IconData icon,
+    IconData? icon,
+    String? iconPath,
     required Color color,
     required List<Color> gradientColors,
     required VoidCallback onPressed,
@@ -178,7 +181,13 @@ class TransactionActionDialog extends StatelessWidget {
                   color: color.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(icon, color: color, size: 20),
+                child: iconPath != null
+                    ? SvgPicture.asset(
+                        iconPath,
+                        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+                        height: 20,
+                      )
+                    : Icon(icon, color: color, size: 20),
               ),
               const SizedBox(width: 16),
               Text(

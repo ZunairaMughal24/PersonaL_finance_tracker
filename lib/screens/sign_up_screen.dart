@@ -14,6 +14,8 @@ import 'package:personal_finance_tracker/widgets/appTextField.dart';
 import 'package:personal_finance_tracker/core/utils/animation_utils.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
 import 'package:personal_finance_tracker/widgets/app_background.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:personal_finance_tracker/core/constants/appImages.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
@@ -106,13 +108,20 @@ class _SignUpContentState extends State<SignUpContent> {
                             suffixChild: IconButton(
                               onPressed:
                                   provider.toggleSignUpPasswordVisibility,
-                              icon: Icon(
-                                provider.isSignUpPasswordVisible
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                color: Colors.white.withOpacity(0.35),
-                                size: 20,
-                              ),
+                              icon: provider.isSignUpPasswordVisible
+                                  ? Icon(
+                                      Icons.visibility,
+                                      color: Colors.white.withOpacity(0.35),
+                                      size: 20,
+                                    )
+                                  : SvgPicture.asset(
+                                      AppImages.eyeClosed,
+                                      colorFilter: ColorFilter.mode(
+                                        Colors.white.withOpacity(0.35),
+                                        BlendMode.srcIn,
+                                      ),
+                                      height: 20,
+                                    ),
                             ),
                           ),
                           12.heightBox,
@@ -134,13 +143,20 @@ class _SignUpContentState extends State<SignUpContent> {
                             suffixChild: IconButton(
                               onPressed:
                                   provider.toggleConfirmPasswordVisibility,
-                              icon: Icon(
-                                provider.isConfirmPasswordVisible
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                color: Colors.white.withOpacity(0.35),
-                                size: 20,
-                              ),
+                              icon: provider.isConfirmPasswordVisible
+                                  ? Icon(
+                                      Icons.visibility,
+                                      color: Colors.white.withOpacity(0.35),
+                                      size: 20,
+                                    )
+                                  : SvgPicture.asset(
+                                      AppImages.eyeClosed,
+                                      colorFilter: ColorFilter.mode(
+                                        Colors.white.withOpacity(0.35),
+                                        BlendMode.srcIn,
+                                      ),
+                                      height: 20,
+                                    ),
                             ),
                           ),
                           30.heightBox,

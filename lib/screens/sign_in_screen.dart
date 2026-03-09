@@ -14,6 +14,8 @@ import 'package:personal_finance_tracker/widgets/appTextField.dart';
 import 'package:personal_finance_tracker/core/utils/animation_utils.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
 import 'package:personal_finance_tracker/widgets/app_background.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:personal_finance_tracker/core/constants/appImages.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
@@ -94,13 +96,20 @@ class _SignInContentState extends State<SignInContent> {
                             suffixChild: IconButton(
                               onPressed:
                                   provider.toggleSignInPasswordVisibility,
-                              icon: Icon(
-                                provider.isSignInPasswordVisible
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                color: Colors.white.withOpacity(0.35),
-                                size: 20,
-                              ),
+                              icon: provider.isSignInPasswordVisible
+                                  ? Icon(
+                                      Icons.visibility,
+                                      color: Colors.white.withOpacity(0.35),
+                                      size: 20,
+                                    )
+                                  : SvgPicture.asset(
+                                      AppImages.eyeClosed,
+                                      colorFilter: ColorFilter.mode(
+                                        Colors.white.withOpacity(0.35),
+                                        BlendMode.srcIn,
+                                      ),
+                                      height: 20,
+                                    ),
                             ),
                           ),
                           10.heightBox,

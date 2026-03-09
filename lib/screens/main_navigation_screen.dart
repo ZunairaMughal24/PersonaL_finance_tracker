@@ -10,6 +10,8 @@ import 'package:personal_finance_tracker/screens/settings_screen.dart';
 import 'package:personal_finance_tracker/screens/activity_screen.dart';
 import 'package:provider/provider.dart';
 import '../providers/transaction_provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:personal_finance_tracker/core/constants/appImages.dart';
 
 class MainNavScreen extends StatefulWidget {
   static final GlobalKey<_MainNavScreenState> navKey =
@@ -89,19 +91,15 @@ class _MainNavScreenState extends State<MainNavScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
+                  _navItem(iconPath: AppImages.home, label: 'Home', index: 0),
                   _navItem(
-                    icon: CupertinoIcons.house_fill,
-                    label: 'Home',
-                    index: 0,
-                  ),
-                  _navItem(
-                    icon: CupertinoIcons.chart_bar_fill,
+                    iconPath: AppImages.chart,
                     label: 'Analytics',
                     index: 1,
                   ),
                   const SizedBox(width: 48),
                   _navItem(
-                    icon: CupertinoIcons.doc_text_fill,
+                    iconPath: AppImages.record,
                     label: 'Activity',
                     index: 2,
                   ),
@@ -120,7 +118,8 @@ class _MainNavScreenState extends State<MainNavScreen> {
   }
 
   Widget _navItem({
-    required IconData icon,
+    IconData? icon,
+    String? iconPath,
     required String label,
     required int index,
   }) {
@@ -145,7 +144,14 @@ class _MainNavScreenState extends State<MainNavScreen> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: color, size: 24),
+              if (iconPath != null)
+                SvgPicture.asset(
+                  iconPath,
+                  colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+                  height: 24,
+                )
+              else if (icon != null)
+                Icon(icon, color: color, size: 24),
               const SizedBox(height: 2),
               Text(
                 label,
