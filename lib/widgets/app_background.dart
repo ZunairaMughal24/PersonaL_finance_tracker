@@ -32,14 +32,21 @@ class AppBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: extendBodyBehindAppBar,
-      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-      appBar: appBar,
-      floatingActionButton: floatingActionButton,
-      floatingActionButtonLocation: floatingActionButtonLocation,
-      body: Stack(children: [_buildBackground(context), child]),
-    );
+    final bodyContent = Stack(children: [_buildBackground(context), child]);
+
+    if (appBar != null || floatingActionButton != null) {
+      return Scaffold(
+        backgroundColor: Colors.transparent,
+        extendBodyBehindAppBar: extendBodyBehindAppBar,
+        resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+        appBar: appBar,
+        floatingActionButton: floatingActionButton,
+        floatingActionButtonLocation: floatingActionButtonLocation,
+        body: bodyContent,
+      );
+    }
+
+    return bodyContent;
   }
 
   Widget _buildBackground(BuildContext context) {
