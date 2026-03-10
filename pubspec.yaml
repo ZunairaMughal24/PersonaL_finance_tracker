@@ -1,5 +1,5 @@
-name: personal_finance_tracker
-description: "A premium, AI-powered personal finance management application built with Flutter, featuring real-time expense tracking, sophisticated analytics, and smart financial insights."
+name: MONTAGE
+description: "Financial discipline, refined — A professional-grade personal finance management application featuring real-time tracking and intelligent wealth insights."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev

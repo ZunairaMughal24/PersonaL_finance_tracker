@@ -1,4 +1,4 @@
-# FinFlow — Personal Finance Tracker
+# FinFlow — Financial Discipline, Refined
 
 **FinFlow** is a premium, AI-powered personal finance management application designed to give you complete control over your financial life. Built with Flutter, it combines a sleek, modern UI with powerful tracking and intelligent insights.
 

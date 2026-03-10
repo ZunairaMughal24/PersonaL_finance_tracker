@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                   8.heightBox,
                   Text(
-                    "PREMIUM FINANCE TRACKER",
+                    "FINANCIAL DISCIPLINE, REFINED",
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Colors.white.withOpacity(0.6),
                       fontWeight: FontWeight.w600,
