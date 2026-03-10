@@ -19,6 +19,12 @@ class CurrencyUtils {
   }
 
   static String formatAmount(double amount, String currency) {
+    // 1 billion if the amount has 10 digits (1,000,000,000)
+    if (amount.abs() >= 1000000000) {
+      final compactFormat = NumberFormat.compact();
+      return "${getCurrencySymbol(currency)} ${compactFormat.format(amount)}";
+    }
+
     final String pattern = amount % 1 == 0 ? "###,###,###" : "###,###,###.00";
     final format = NumberFormat(pattern);
 

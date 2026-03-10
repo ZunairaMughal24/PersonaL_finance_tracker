@@ -107,23 +107,30 @@ class SpendingCategoryBreakdown extends StatelessWidget {
                   ],
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Consumer<UserSettingsProvider>(
-                    builder: (context, settings, _) =>
-                        Text(
-                          CurrencyUtils.formatAmount(
-                            amount,
-                            settings.selectedCurrency,
-                          ),
-                        ).mono(
-                          weight: FontWeight.w700,
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                  ),
-                ],
+              Flexible(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Consumer<UserSettingsProvider>(
+                      builder: (context, settings, _) => FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerRight,
+                        child:
+                            Text(
+                              CurrencyUtils.formatAmount(
+                                amount,
+                                settings.selectedCurrency,
+                              ),
+                            ).mono(
+                              weight: FontWeight.w700,
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

@@ -101,21 +101,22 @@ class TransactionListItem extends StatelessWidget {
                             size: 14,
                           ),
                           const SizedBox(width: 4),
-                          ConstrainedBox(
-                            constraints: BoxConstraints(
-                              maxWidth: MediaQuery.of(context).size.width * 0.3,
-                            ),
-                            child:
-                                Text(
-                                  CurrencyUtils.formatAmount(
-                                    transaction.amount,
-                                    currency,
+                          Flexible(
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.centerRight,
+                              child:
+                                  Text(
+                                    CurrencyUtils.formatAmount(
+                                      transaction.amount,
+                                      currency,
+                                    ),
+                                  ).mono(
+                                    fontSize: 14,
+                                    weight: FontWeight.w600,
+                                    color: statusColor,
                                   ),
-                                ).mono(
-                                  fontSize: 14,
-                                  weight: FontWeight.w600,
-                                  color: statusColor,
-                                ),
+                            ),
                           ),
                         ],
                       ),
