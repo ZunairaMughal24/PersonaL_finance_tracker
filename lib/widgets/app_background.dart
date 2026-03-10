@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
+import 'package:personal_finance_tracker/core/constants/app_colors.dart';
 
 enum BackgroundStyle {
   premiumHybrid, // Home: Iridescent + Splash Hints
@@ -82,9 +82,9 @@ class AppBackground extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black.withOpacity(0.85),
-                  Colors.black.withOpacity(0.6),
-                  Colors.black.withOpacity(0.9),
+                  Colors.black.withValues(alpha: 0.85),
+                  Colors.black.withValues(alpha: 0.6),
+                  Colors.black.withValues(alpha: 0.9),
                 ],
               ),
             ),
@@ -99,10 +99,10 @@ class AppBackground extends StatelessWidget {
             height: 380,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(225),
-              color: AppColors.primaryColor.withOpacity(0.18),
+              color: AppColors.primaryColor.withValues(alpha: 0.18),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primaryColor.withOpacity(0.09),
+                  color: AppColors.primaryColor.withValues(alpha: 0.09),
                   blurRadius: 200,
                   spreadRadius: 80,
                 ),
@@ -183,8 +183,8 @@ class AppBackground extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black.withOpacity(0.4),
-                  Colors.black.withOpacity(0.7),
+                  Colors.black.withValues(alpha: 0.4),
+                  Colors.black.withValues(alpha: 0.7),
                 ],
               ),
             ),
@@ -225,9 +225,9 @@ class AppBackground extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black.withOpacity(0.8),
-                  Colors.black.withOpacity(0.4),
-                  Colors.black.withOpacity(0.9),
+                  Colors.black.withValues(alpha: 0.8),
+                  Colors.black.withValues(alpha: 0.4),
+                  Colors.black.withValues(alpha: 0.9),
                 ],
               ),
             ),
@@ -265,7 +265,7 @@ class AppBackground extends StatelessWidget {
             height: 300,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.primaryColor.withOpacity(0.4),
+              color: AppColors.primaryColor.withValues(alpha: 0.4),
               boxShadow: const [
                 BoxShadow(
                   color: AppColors.primaryColor,
@@ -285,7 +285,7 @@ class AppBackground extends StatelessWidget {
             height: 300,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.accent.withOpacity(0.2),
+              color: AppColors.accent.withValues(alpha: 0.2),
               boxShadow: const [
                 BoxShadow(
                   color: AppColors.accent,
@@ -305,7 +305,7 @@ class AppBackground extends StatelessWidget {
             height: 200,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.primaryDark.withOpacity(0.1),
+              color: AppColors.primaryDark.withValues(alpha: 0.1),
               boxShadow: const [
                 BoxShadow(
                   color: AppColors.primaryDark,
@@ -373,9 +373,9 @@ class AppBackground extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black.withOpacity(0.2),
+                  Colors.black.withValues(alpha: 0.2),
                   Colors.transparent,
-                  Colors.black.withOpacity(0.4),
+                  Colors.black.withValues(alpha: 0.4),
                 ],
               ),
             ),
@@ -408,10 +408,10 @@ class _GlowBlob extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: color.withOpacity(opacity),
+        color: color.withValues(alpha: opacity),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(opacity * 0.5),
+            color: color.withValues(alpha: opacity * 0.5),
             blurRadius: blur,
             spreadRadius: spread,
           ),

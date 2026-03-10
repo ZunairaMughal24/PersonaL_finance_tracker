@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
+import 'package:personal_finance_tracker/core/constants/app_colors.dart';
 import 'package:personal_finance_tracker/providers/transaction_provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -20,7 +20,7 @@ class AIInsightsCard extends StatelessWidget {
             child: Container(
               height: 50,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.02),
+                color: Colors.white.withValues(alpha: 0.02),
                 borderRadius: BorderRadius.circular(24),
               ),
             ).animate(onPlay: (c) => c.repeat()).shimmer(duration: 1.5.seconds),
@@ -28,24 +28,27 @@ class AIInsightsCard extends StatelessWidget {
         }
 
         final insights = snapshot.data ?? txProvider.cachedInsightsValue;
-        if (insights == null || insights.isEmpty)
+        if (insights == null || insights.isEmpty) {
           return const SizedBox.shrink();
+        }
 
         return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.white.withOpacity(0.08)),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.08),
+                  ),
                   gradient: LinearGradient(
                     colors: [
-                      Colors.white.withOpacity(0.08),
-                      Colors.white.withOpacity(0.03),
+                      Colors.white.withValues(alpha: 0.08),
+                      Colors.white.withValues(alpha: 0.03),
                     ],
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primaryColor.withOpacity(0.02),
+                      color: AppColors.primaryColor.withValues(alpha: 0.02),
                       blurRadius: 20,
                       spreadRadius: 2,
                     ),
@@ -63,7 +66,9 @@ class AIInsightsCard extends StatelessWidget {
                           height: 40,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: AppColors.primaryColor.withOpacity(0.05),
+                            color: AppColors.primaryColor.withValues(
+                              alpha: 0.05,
+                            ),
                           ),
                         ),
                       ),
@@ -89,7 +94,7 @@ class AIInsightsCard extends StatelessWidget {
                               child: Text(
                                 insights,
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.95),
+                                  color: Colors.white.withValues(alpha: 0.95),
                                   fontSize: 13,
                                   fontWeight: FontWeight.w500,
                                   height: 1.5,

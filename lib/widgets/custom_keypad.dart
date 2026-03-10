@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
+import 'package:personal_finance_tracker/core/constants/app_colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:personal_finance_tracker/core/constants/appImages.dart';
+import 'package:personal_finance_tracker/core/constants/app_images.dart';
 
 class CustomKeypad extends StatefulWidget {
   final String amount;
@@ -102,7 +102,7 @@ class _CustomKeypadState extends State<CustomKeypad> {
         ),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
-          color: AppColors.primaryLight.withOpacity(0.05),
+          color: AppColors.primaryLight.withValues(alpha: 0.05),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(
@@ -148,12 +148,12 @@ class _KeypadHeader extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.08),
+              color: Colors.white.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Icon(
               Icons.badge_outlined,
-              color: Colors.white.withOpacity(0.4),
+              color: Colors.white.withValues(alpha: 0.4),
               size: 20,
             ),
           ),
@@ -187,7 +187,7 @@ class _KeypadNoteField extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.primaryColor.withOpacity(0.09),
+        color: AppColors.primaryColor.withValues(alpha: 0.09),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -195,7 +195,7 @@ class _KeypadNoteField extends StatelessWidget {
           Text(
             "Note : ",
             style: TextStyle(
-              color: Colors.white.withOpacity(0.3),
+              color: Colors.white.withValues(alpha: 0.3),
               fontSize: 16,
             ),
           ),
@@ -207,7 +207,9 @@ class _KeypadNoteField extends StatelessWidget {
               style: const TextStyle(color: Colors.white, fontSize: 16),
               decoration: InputDecoration(
                 hintText: "Enter a note...",
-                hintStyle: TextStyle(color: Colors.white.withOpacity(0.2)),
+                hintStyle: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.2),
+                ),
                 border: InputBorder.none,
                 isDense: true,
                 contentPadding: const EdgeInsets.symmetric(vertical: 8),
@@ -217,7 +219,7 @@ class _KeypadNoteField extends StatelessWidget {
           const SizedBox(width: 8),
           Icon(
             Icons.camera_alt_outlined,
-            color: Colors.white.withOpacity(0.4),
+            color: Colors.white.withValues(alpha: 0.4),
             size: 22,
           ),
         ],
@@ -360,7 +362,7 @@ class _KeypadGrid extends StatelessWidget {
         icon: Icons.check,
         iconSize: 28,
         onTap: onComplete,
-        backgroundColor: AppColors.primaryColor.withOpacity(0.2),
+        backgroundColor: AppColors.primaryColor.withValues(alpha: 0.2),
       ),
     );
   }
@@ -394,7 +396,7 @@ class _KeypadButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(6),
           boxShadow: [
             BoxShadow(
-              color: AppColors.primaryColor.withOpacity(0.2),
+              color: AppColors.primaryColor.withValues(alpha: 0.2),
               offset: const Offset(0, 2),
               blurRadius: 0,
               spreadRadius: 0,
@@ -402,7 +404,7 @@ class _KeypadButton extends StatelessWidget {
           ],
         ),
         child: Material(
-          color: backgroundColor ?? AppColors.background.withOpacity(0.2),
+          color: backgroundColor ?? AppColors.background.withValues(alpha: 0.2),
           borderRadius: BorderRadius.circular(6),
           child: InkWell(
             onTap: onTap,

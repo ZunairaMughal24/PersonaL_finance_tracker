@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
+import 'package:personal_finance_tracker/core/constants/app_colors.dart';
 
 class CategorySelector extends StatelessWidget {
   final String selectedCategory;
@@ -46,19 +46,19 @@ class CategorySelector extends StatelessWidget {
                   height: 52,
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? activeColor.withOpacity(0.2)
-                        : Colors.white.withOpacity(0.05),
+                        ? activeColor.withValues(alpha: 0.2)
+                        : Colors.white.withValues(alpha: 0.05),
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: isSelected
-                          ? activeColor.withOpacity(0.5)
-                          : Colors.white.withOpacity(0.1),
+                          ? activeColor.withValues(alpha: 0.5)
+                          : Colors.white.withValues(alpha: 0.1),
                       width: 1.5,
                     ),
                     boxShadow: isSelected
                         ? [
                             BoxShadow(
-                              color: activeColor.withOpacity(0.2),
+                              color: activeColor.withValues(alpha: 0.2),
                               blurRadius: 10,
                               spreadRadius: 1,
                             ),
@@ -69,7 +69,7 @@ class CategorySelector extends StatelessWidget {
                     category['icon'] as IconData,
                     color: isSelected
                         ? Colors.white
-                        : Colors.white.withOpacity(0.5),
+                        : Colors.white.withValues(alpha: 0.5),
                     size: 22,
                   ),
                 ),
@@ -82,7 +82,7 @@ class CategorySelector extends StatelessWidget {
                   style: TextStyle(
                     color: isSelected
                         ? Colors.white
-                        : Colors.white.withOpacity(0.5),
+                        : Colors.white.withValues(alpha: 0.5),
                     fontSize: 12,
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                   ),

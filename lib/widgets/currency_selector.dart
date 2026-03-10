@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
+import 'package:personal_finance_tracker/core/constants/app_colors.dart';
 
 class CurrencySelector extends StatelessWidget {
   final String selectedCurrency;
@@ -20,7 +20,9 @@ class CurrencySelector extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.primaryColor.withOpacity(0.3)),
+        border: Border.all(
+          color: AppColors.primaryColor.withValues(alpha: 0.3),
+        ),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(

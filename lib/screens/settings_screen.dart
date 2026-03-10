@@ -2,15 +2,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:personal_finance_tracker/config/router.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
+import 'package:personal_finance_tracker/core/constants/app_colors.dart';
 import 'package:personal_finance_tracker/screens/main_navigation_screen.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
 import 'package:personal_finance_tracker/widgets/app_background.dart';
 import 'package:personal_finance_tracker/widgets/custom_app_bar.dart';
-import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
+import 'package:personal_finance_tracker/core/themes/text_theme_extension.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
 import 'package:personal_finance_tracker/core/utils/padding_extention.dart';
-import 'package:personal_finance_tracker/core/constants/appImages.dart';
+import 'package:personal_finance_tracker/core/constants/app_images.dart';
 import 'package:personal_finance_tracker/providers/user_settings_provider.dart';
 import 'package:personal_finance_tracker/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
@@ -58,7 +58,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -75,7 +75,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 setState(() => _isEditingName = true);
               },
             ),
-            Divider(color: Colors.white.withOpacity(0.05), height: 1),
+            Divider(color: Colors.white.withValues(alpha: 0.05), height: 1),
             _buildMenuOption(
               icon: Icons.photo_library_outlined,
               title: "Change Photo",
@@ -84,7 +84,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 settings.pickAndUpdateProfileImage();
               },
             ),
-            Divider(color: Colors.white.withOpacity(0.05), height: 1),
+            Divider(color: Colors.white.withValues(alpha: 0.05), height: 1),
             _buildMenuOption(
               svgAsset: AppImages.trashBin,
               title: "Remove Photo",
@@ -127,7 +127,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const Spacer(),
             Icon(
               Icons.chevron_right_rounded,
-              color: Colors.white.withOpacity(0.3),
+              color: Colors.white.withValues(alpha: 0.3),
               size: 24,
             ),
           ],
@@ -191,8 +191,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     trailing: Switch.adaptive(
                       value: settings.notificationsEnabled,
                       onChanged: (val) => settings.setNotificationsEnabled(val),
-                      activeColor: AppColors.primaryColor,
-                      activeTrackColor: AppColors.primaryColor.withOpacity(0.3),
+                      activeThumbColor: AppColors.primaryColor,
+                      activeTrackColor: AppColors.primaryColor.withValues(
+                        alpha: 0.3,
+                      ),
                     ),
                     onTap: () {},
                   ),
@@ -207,11 +209,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     children: [
                       Text(
                         "English",
-                      ).bodySmall(color: Colors.white.withOpacity(0.7)),
+                      ).bodySmall(color: Colors.white.withValues(alpha: 0.7)),
                       const SizedBox(width: 4),
                       Icon(
                         Icons.chevron_right_rounded,
-                        color: Colors.white.withOpacity(0.3),
+                        color: Colors.white.withValues(alpha: 0.3),
                         size: 25,
                       ),
                     ],
@@ -248,12 +250,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 _buildSettingsTile(
                   icon: Icons.logout_rounded,
-                  iconColor: Colors.redAccent.withOpacity(0.8),
+                  iconColor: Colors.redAccent.withValues(alpha: 0.8),
                   title: "Sign Out",
                   subtitle: "Exit from your account",
                   onTap: () {
                     context.read<AuthProvider>().signOut().then((_) {
-                      context.go(AppRoutes.signInScreenRoute);
+                      if (context.mounted) {
+                        context.go(AppRoutes.signInScreenRoute);
+                      }
                     });
                   },
                   showChevron: false,
@@ -274,8 +278,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         blur: 35,
         borderOpacity: 0.12,
         gradientColors: [
-          Colors.white.withOpacity(0.08),
-          Colors.white.withOpacity(0.02),
+          Colors.white.withValues(alpha: 0.08),
+          Colors.white.withValues(alpha: 0.02),
         ],
         padding: const EdgeInsets.all(16),
         child: Row(
@@ -287,13 +291,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.5),
+                      color: Colors.white.withValues(alpha: 0.5),
                       width: 1,
                     ),
                   ),
                   child: CircleAvatar(
                     radius: 32,
-                    backgroundColor: AppColors.primaryColor.withOpacity(0.15),
+                    backgroundColor: AppColors.primaryColor.withValues(
+                      alpha: 0.15,
+                    ),
                     backgroundImage: settings.profileImagePath != null
                         ? FileImage(File(settings.profileImagePath!))
                               as ImageProvider
@@ -373,7 +379,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ).h4(color: Colors.white, weight: FontWeight.bold),
                   const SizedBox(height: 2),
                   Text(settings.userEmail).bodyMedium(
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.white.withValues(alpha: 0.7),
                     weight: FontWeight.w500,
                   ),
                 ],
@@ -384,12 +390,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 onPressed: () => _showEditProfileMenu(context, settings),
                 icon: Icon(
                   Icons.edit_outlined,
-                  color: Colors.white.withOpacity(0.8),
+                  color: Colors.white.withValues(alpha: 0.8),
                   size: 20,
                 ),
                 padding: const EdgeInsets.all(8),
                 style: IconButton.styleFrom(
-                  backgroundColor: Colors.white.withOpacity(0.08),
+                  backgroundColor: Colors.white.withValues(alpha: 0.08),
                   shape: const CircleBorder(),
                 ),
               ),
@@ -402,7 +408,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildSectionHeader(String title) {
     return Text(
       title,
-    ).h3(color: Colors.white.withOpacity(0.7), weight: FontWeight.bold);
+    ).h3(color: Colors.white.withValues(alpha: 0.7), weight: FontWeight.bold);
   }
 
   Widget _buildSettingsGroup(List<Widget> tiles) {
@@ -411,8 +417,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       blur: 30,
       borderOpacity: 0.1,
       gradientColors: [
-        Colors.white.withOpacity(0.05),
-        Colors.white.withOpacity(0.02),
+        Colors.white.withValues(alpha: 0.05),
+        Colors.white.withValues(alpha: 0.02),
       ],
       padding: EdgeInsets.zero,
       child: Column(
@@ -424,7 +430,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Divider(
                   height: 1,
                   thickness: 1.4,
-                  color: Colors.white.withOpacity(0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                 ),
             ],
           );
@@ -453,7 +459,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.1),
+                color: iconColor.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: svgAsset != null
@@ -474,7 +480,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ).bodyLarge(color: Colors.white, weight: FontWeight.w600),
                   const SizedBox(height: 2),
                   Text(subtitle).bodySmall(
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.white.withValues(alpha: 0.7),
                     weight: FontWeight.w400,
                   ),
                 ],
@@ -485,7 +491,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             else if (showChevron)
               Icon(
                 Icons.chevron_right_rounded,
-                color: Colors.white.withOpacity(0.3),
+                color: Colors.white.withValues(alpha: 0.3),
                 size: 25,
               ),
           ],
@@ -512,7 +518,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -526,8 +532,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 shrinkWrap: true,
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 itemCount: UserSettingsProvider.availableCurrencies.length,
-                separatorBuilder: (context, index) =>
-                    Divider(color: Colors.white.withOpacity(0.05), height: 1),
+                separatorBuilder: (context, index) => Divider(
+                  color: Colors.white.withValues(alpha: 0.05),
+                  height: 1,
+                ),
                 itemBuilder: (context, index) {
                   final currency =
                       UserSettingsProvider.availableCurrencies[index];

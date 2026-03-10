@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
+import 'package:personal_finance_tracker/core/constants/app_colors.dart';
 import 'package:personal_finance_tracker/core/utils/currency_utils.dart';
 import 'package:personal_finance_tracker/core/utils/category_utils.dart';
 import 'package:personal_finance_tracker/models/transaction_model.dart';
 import 'package:personal_finance_tracker/widgets/transaction/transaction_action_dialog.dart';
-import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
+import 'package:personal_finance_tracker/core/themes/text_theme_extension.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
 
 class TransactionListItem extends StatelessWidget {
@@ -25,12 +25,12 @@ class TransactionListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color fillColor = AppColors.primaryColor.withOpacity(0.15);
-    final Color borderColor = AppColors.primaryColor.withOpacity(0.2);
+    final Color fillColor = AppColors.primaryColor.withValues(alpha: 0.15);
+    final Color borderColor = AppColors.primaryColor.withValues(alpha: 0.2);
 
     final Color statusColor =
-        (transaction.isIncome ? AppColors.green : AppColors.red).withOpacity(
-          0.7,
+        (transaction.isIncome ? AppColors.green : AppColors.red).withValues(
+          alpha: 0.7,
         );
 
     return Padding(
@@ -40,9 +40,9 @@ class TransactionListItem extends StatelessWidget {
         blur: 12,
         padding: EdgeInsets.zero,
         gradientColors: [
-          Colors.white.withOpacity(0.12),
-          AppColors.primaryColor.withOpacity(0.05),
-          Colors.white.withOpacity(0.08),
+          Colors.white.withValues(alpha: 0.12),
+          AppColors.primaryColor.withValues(alpha: 0.05),
+          Colors.white.withValues(alpha: 0.08),
         ],
         child: Material(
           color: Colors.transparent,
@@ -79,9 +79,9 @@ class TransactionListItem extends StatelessWidget {
                         ),
                         if (transaction.title.isNotEmpty) ...[
                           const SizedBox(height: 2),
-                          Text(
-                            transaction.title,
-                          ).bodySmall(color: AppColors.white.withOpacity(0.7)),
+                          Text(transaction.title).bodySmall(
+                            color: AppColors.white.withValues(alpha: 0.7),
+                          ),
                         ],
                       ],
                     ),
@@ -123,7 +123,7 @@ class TransactionListItem extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         transaction.date,
-                      ).caption(color: AppColors.white.withOpacity(0.6)),
+                      ).caption(color: AppColors.white.withValues(alpha: 0.6)),
                     ],
                   ),
                 ],

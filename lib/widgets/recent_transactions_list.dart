@@ -7,7 +7,7 @@ import 'package:personal_finance_tracker/core/utils/toast_utility.dart';
 import 'package:personal_finance_tracker/config/router.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
+import 'package:personal_finance_tracker/core/themes/text_theme_extension.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
 import 'package:personal_finance_tracker/core/utils/padding_extention.dart';
 
@@ -32,12 +32,12 @@ class RecentTransactionsList extends StatelessWidget {
                 Icon(
                   Icons.receipt_long_rounded,
                   size: 40,
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                 ),
                 12.heightBox,
                 Text(
                   "No transactions yet",
-                ).bodySmall(color: Colors.white.withOpacity(0.3)),
+                ).bodySmall(color: Colors.white.withValues(alpha: 0.3)),
               ],
             ),
           ).py(20);

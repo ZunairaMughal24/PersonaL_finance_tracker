@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:personal_finance_tracker/config/router.dart';
 import 'package:personal_finance_tracker/core/theme/app_theme.dart';
@@ -21,16 +20,12 @@ void main() async {
 
   await Hive.openBox<TransactionModel>('transactions');
 
-  final userSettingsProvider = UserSettingsProvider();
-
-  final authProvider = AuthProvider();
-
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => TransactionProvider()),
-        ChangeNotifierProvider(create: (_) => userSettingsProvider),
-        ChangeNotifierProvider.value(value: authProvider),
+        ChangeNotifierProvider(create: (_) => UserSettingsProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
       child: const MyApp(),
     ),

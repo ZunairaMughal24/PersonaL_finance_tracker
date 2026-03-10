@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
-import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
+import 'package:personal_finance_tracker/core/themes/text_theme_extension.dart';
 import 'package:personal_finance_tracker/core/utils/date_formatter.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
@@ -24,7 +23,7 @@ class TotalBalanceCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.withValues(alpha: 0.3),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -49,9 +48,9 @@ class TotalBalanceCard extends StatelessWidget {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        Colors.black.withOpacity(0.7),
-                        Colors.black.withOpacity(0.2),
-                        Colors.black.withOpacity(0.5),
+                        Colors.black.withValues(alpha: 0.7),
+                        Colors.black.withValues(alpha: 0.2),
+                        Colors.black.withValues(alpha: 0.5),
                       ],
                     ),
                   ),
@@ -62,8 +61,8 @@ class TotalBalanceCard extends StatelessWidget {
                   borderRadius: 20,
                   blur: 20,
                   gradientColors: [
-                    Colors.white.withOpacity(0.1),
-                    Colors.white.withOpacity(0.02),
+                    Colors.white.withValues(alpha: 0.1),
+                    Colors.white.withValues(alpha: 0.02),
                   ],
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,
@@ -81,19 +80,19 @@ class TotalBalanceCard extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               const Text('PERSONAL WALLET').labelSmall(
-                                color: Colors.white.withOpacity(0.8),
+                                color: Colors.white.withValues(alpha: 0.8),
                                 weight: FontWeight.w800,
                               ),
                               const SizedBox(height: 2),
-                              Text(
-                                'Smart Finance Companion',
-                              ).caption(color: Colors.white.withOpacity(0.6)),
+                              Text('Smart Finance Companion').caption(
+                                color: Colors.white.withValues(alpha: 0.6),
+                              ),
                             ],
                           ),
                           Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.1),
+                              color: Colors.white.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: const Icon(
@@ -120,7 +119,7 @@ class TotalBalanceCard extends StatelessWidget {
                                 fontSize: 28,
                                 weight: FontWeight.w600,
                                 color: totalBalance < 0
-                                    ? Colors.redAccent.withOpacity(0.9)
+                                    ? Colors.redAccent.withValues(alpha: 0.9)
                                     : Colors.white,
                               ),
                         ),
@@ -135,14 +134,14 @@ class TotalBalanceCard extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               const Text('LAST UPDATED').labelSmall(
-                                color: Colors.white.withOpacity(0.5),
+                                color: Colors.white.withValues(alpha: 0.5),
                                 weight: FontWeight.w700,
                               ),
                               const SizedBox(height: 2),
                               Text(
                                 DateUtilsCustom.formatFullDate(today),
                               ).caption(
-                                color: Colors.white.withOpacity(0.9),
+                                color: Colors.white.withValues(alpha: 0.9),
                                 weight: FontWeight.w500,
                               ),
                             ],
@@ -158,7 +157,9 @@ class TotalBalanceCard extends StatelessWidget {
                                     width: 26,
                                     height: 26,
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.2),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.2,
+                                      ),
                                       shape: BoxShape.circle,
                                     ),
                                   ),
@@ -169,7 +170,9 @@ class TotalBalanceCard extends StatelessWidget {
                                     width: 26,
                                     height: 26,
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.1),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.1,
+                                      ),
                                       shape: BoxShape.circle,
                                     ),
                                   ),

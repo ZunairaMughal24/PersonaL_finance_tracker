@@ -1,11 +1,11 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
+import 'package:personal_finance_tracker/core/constants/app_colors.dart';
 import 'package:personal_finance_tracker/core/utils/currency_utils.dart';
-import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
+import 'package:personal_finance_tracker/core/themes/text_theme_extension.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:personal_finance_tracker/core/constants/appImages.dart';
+import 'package:personal_finance_tracker/core/constants/app_images.dart';
 
 class TransactionActionDialog extends StatelessWidget {
   final VoidCallback onEdit;
@@ -40,7 +40,7 @@ class TransactionActionDialog extends StatelessWidget {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -53,7 +53,7 @@ class TransactionActionDialog extends StatelessWidget {
                     width: 70,
                     height: 70,
                     decoration: BoxDecoration(
-                      color: AppColors.primaryColor.withOpacity(0.1),
+                      color: AppColors.primaryColor.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -63,8 +63,8 @@ class TransactionActionDialog extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          AppColors.primaryColor.withOpacity(0.5),
-                          AppColors.primaryColor.withOpacity(0.2),
+                          AppColors.primaryColor.withValues(alpha: 0.5),
+                          AppColors.primaryColor.withValues(alpha: 0.2),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -72,7 +72,7 @@ class TransactionActionDialog extends StatelessWidget {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.primaryColor.withOpacity(0.2),
+                          color: AppColors.primaryColor.withValues(alpha: 0.2),
                           blurRadius: 15,
                           spreadRadius: 2,
                         ),
@@ -93,7 +93,7 @@ class TransactionActionDialog extends StatelessWidget {
               ).h2(color: Colors.white, weight: FontWeight.bold, fontSize: 22),
               const SizedBox(height: 4),
               Text(CurrencyUtils.formatAmount(amount, "USD")).mono(
-                color: AppColors.white.withOpacity(0.6),
+                color: AppColors.white.withValues(alpha: 0.6),
                 fontSize: 16,
                 weight: FontWeight.w500,
               ),
@@ -104,8 +104,8 @@ class TransactionActionDialog extends StatelessWidget {
                 icon: Icons.edit_rounded,
                 color: Colors.white,
                 gradientColors: [
-                  Colors.white.withOpacity(0.1),
-                  Colors.white.withOpacity(0.05),
+                  Colors.white.withValues(alpha: 0.1),
+                  Colors.white.withValues(alpha: 0.05),
                 ],
                 onPressed: () {
                   Navigator.pop(context);
@@ -116,10 +116,10 @@ class TransactionActionDialog extends StatelessWidget {
               _buildActionButton(
                 label: "Delete Transaction",
                 iconPath: AppImages.trashBin,
-                color: AppColors.red.withOpacity(0.9),
+                color: AppColors.red.withValues(alpha: 0.9),
                 gradientColors: [
-                  AppColors.red.withOpacity(0.15),
-                  AppColors.red.withOpacity(0.05),
+                  AppColors.red.withValues(alpha: 0.15),
+                  AppColors.red.withValues(alpha: 0.05),
                 ],
                 onPressed: () {
                   Navigator.pop(context);
@@ -136,7 +136,7 @@ class TransactionActionDialog extends StatelessWidget {
                     horizontal: 16,
                   ),
                   child: Text("Cancel").h4(
-                    color: AppColors.white.withOpacity(0.4),
+                    color: AppColors.white.withValues(alpha: 0.4),
                     weight: FontWeight.w600,
                     // letterSpacing: 1.2,
                   ),
@@ -171,14 +171,17 @@ class TransactionActionDialog extends StatelessWidget {
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withOpacity(0.08), width: 1),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.08),
+              width: 1,
+            ),
           ),
           child: Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: iconPath != null
@@ -196,7 +199,7 @@ class TransactionActionDialog extends StatelessWidget {
               const Spacer(),
               Icon(
                 Icons.chevron_right_rounded,
-                color: color.withOpacity(0.3),
+                color: color.withValues(alpha: 0.3),
                 size: 24,
               ),
             ],

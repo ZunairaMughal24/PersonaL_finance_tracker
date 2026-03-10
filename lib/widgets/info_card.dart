@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
+import 'package:personal_finance_tracker/core/constants/app_colors.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
-import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
+import 'package:personal_finance_tracker/core/themes/text_theme_extension.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
 
 class InfoBox extends StatelessWidget {
@@ -24,9 +24,9 @@ class InfoBox extends StatelessWidget {
       borderRadius: 15,
       blur: 20,
       gradientColors: [
-        Colors.white.withOpacity(0.08),
-        AppColors.primaryColor.withOpacity(0.02),
-        Colors.white.withOpacity(0.04),
+        Colors.white.withValues(alpha: 0.08),
+        AppColors.primaryColor.withValues(alpha: 0.02),
+        Colors.white.withValues(alpha: 0.04),
       ],
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Column(
@@ -42,7 +42,7 @@ class InfoBox extends StatelessWidget {
                     ? Icons.trending_up_rounded
                     : Icons.trending_down_rounded,
                 size: 18,
-                color: amountColor.withOpacity(0.8),
+                color: amountColor.withValues(alpha: 0.8),
               ),
               const SizedBox(width: 4),
               Flexible(
@@ -51,7 +51,7 @@ class InfoBox extends StatelessWidget {
                       title.trim().toUpperCase(),
                       overflow: TextOverflow.ellipsis,
                     ).bodySmall(
-                      color: Colors.white.withOpacity(0.6),
+                      color: Colors.white.withValues(alpha: 0.6),
                       weight: FontWeight.bold,
                     ),
               ),
@@ -63,7 +63,7 @@ class InfoBox extends StatelessWidget {
             child: Text(amount, textAlign: TextAlign.center).mono(
               fontSize: 18,
               weight: FontWeight.w600,
-              color: amountColor.withOpacity(0.9),
+              color: amountColor.withValues(alpha: 0.9),
             ),
           ),
         ],

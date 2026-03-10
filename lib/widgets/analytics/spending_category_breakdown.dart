@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:personal_finance_tracker/core/utils/category_utils.dart';
 import 'package:personal_finance_tracker/core/utils/currency_utils.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
-import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
+import 'package:personal_finance_tracker/core/themes/text_theme_extension.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
 import 'package:provider/provider.dart';
 import 'package:personal_finance_tracker/providers/user_settings_provider.dart';
@@ -27,7 +27,7 @@ class SpendingCategoryBreakdown extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 4, bottom: 8),
           child: Text("BREAKDOWN").labelLarge(
-            color: Colors.white.withOpacity(0.7),
+            color: Colors.white.withValues(alpha: 0.7),
             weight: FontWeight.w800,
             letterSpacing: 1.5,
           ),
@@ -63,8 +63,8 @@ class SpendingCategoryBreakdown extends StatelessWidget {
       blur: 30,
       borderOpacity: 0.1,
       gradientColors: [
-        Colors.white.withOpacity(0.06),
-        Colors.white.withOpacity(0.02),
+        Colors.white.withValues(alpha: 0.06),
+        Colors.white.withValues(alpha: 0.02),
       ],
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       child: Column(
@@ -74,11 +74,11 @@ class SpendingCategoryBreakdown extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.12),
+                  color: color.withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: color.withOpacity(0.1),
+                      color: color.withValues(alpha: 0.1),
                       blurRadius: 8,
                       spreadRadius: 1,
                     ),
@@ -101,7 +101,7 @@ class SpendingCategoryBreakdown extends StatelessWidget {
                     Text(
                       '${(percentage * 100).toStringAsFixed(1)}% of total',
                     ).labelMedium(
-                      color: Colors.white.withOpacity(0.4),
+                      color: Colors.white.withValues(alpha: 0.4),
                       weight: FontWeight.w500,
                     ),
                   ],
@@ -141,7 +141,7 @@ class SpendingCategoryBreakdown extends StatelessWidget {
                 height: 5,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.05),
+                  color: Colors.white.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
@@ -153,8 +153,8 @@ class SpendingCategoryBreakdown extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      color.withOpacity(0.5),
-                      color.withOpacity(0.9),
+                      color.withValues(alpha: 0.5),
+                      color.withValues(alpha: 0.9),
                       color,
                     ],
                     begin: Alignment.centerLeft,
@@ -163,7 +163,7 @@ class SpendingCategoryBreakdown extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   boxShadow: [
                     BoxShadow(
-                      color: color.withOpacity(0.4),
+                      color: color.withValues(alpha: 0.4),
                       blurRadius: 10,
                       offset: const Offset(0, 2),
                     ),

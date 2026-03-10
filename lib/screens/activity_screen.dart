@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
+import 'package:personal_finance_tracker/core/constants/app_colors.dart';
 import 'package:personal_finance_tracker/providers/transaction_provider.dart';
 import 'package:personal_finance_tracker/widgets/transaction/transaction_list_item.dart';
 import 'package:personal_finance_tracker/providers/user_settings_provider.dart';
@@ -7,13 +7,13 @@ import 'package:personal_finance_tracker/widgets/app_background.dart';
 import 'package:personal_finance_tracker/config/router.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
+import 'package:personal_finance_tracker/core/themes/text_theme_extension.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
 import 'package:personal_finance_tracker/widgets/transaction_type_toggle.dart';
 import 'package:personal_finance_tracker/widgets/custom_app_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:personal_finance_tracker/core/constants/appImages.dart';
+import 'package:personal_finance_tracker/core/constants/app_images.dart';
 
 class ActivityScreen extends StatefulWidget {
   const ActivityScreen({super.key});
@@ -133,9 +133,9 @@ class _ActivityScreenState extends State<ActivityScreen> {
         blur: 12,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
         gradientColors: [
-          Colors.white.withOpacity(0.12),
-          AppColors.primaryColor.withOpacity(0.05),
-          Colors.white.withOpacity(0.08),
+          Colors.white.withValues(alpha: 0.12),
+          AppColors.primaryColor.withValues(alpha: 0.05),
+          Colors.white.withValues(alpha: 0.08),
         ],
         child: Row(
           children: [
@@ -146,10 +146,10 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 style: const TextStyle(color: Colors.white, fontSize: 16),
                 decoration: InputDecoration(
                   hintText: "Search transactions...",
-                  hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
+                  hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
                   prefixIcon: Icon(
                     Icons.search,
-                    color: Colors.white.withOpacity(0.3),
+                    color: Colors.white.withValues(alpha: 0.3),
                   ),
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.symmetric(vertical: 12),
@@ -160,7 +160,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
             Container(
               height: 40,
               width: 1,
-              color: Colors.white.withOpacity(0.1),
+              color: Colors.white.withValues(alpha: 0.1),
             ),
             IconButton(
               onPressed: () async {
@@ -187,7 +187,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 colorFilter: ColorFilter.mode(
                   provider.selectedDateRange != null
                       ? AppColors.primaryColor
-                      : Colors.white.withOpacity(0.5),
+                      : Colors.white.withValues(alpha: 0.5),
                   BlendMode.srcIn,
                 ),
                 height: 20,
@@ -207,12 +207,12 @@ class _ActivityScreenState extends State<ActivityScreen> {
           Icon(
             Icons.search_off_rounded,
             size: 64,
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha: 0.1),
           ),
           16.heightBox,
           Text(
             "No transactions found",
-          ).bodyLarge(color: Colors.white.withOpacity(0.3)),
+          ).bodyLarge(color: Colors.white.withValues(alpha: 0.3)),
         ],
       ),
     );

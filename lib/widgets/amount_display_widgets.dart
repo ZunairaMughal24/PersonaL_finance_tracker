@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
+import 'package:personal_finance_tracker/core/constants/app_colors.dart';
 import 'package:personal_finance_tracker/core/utils/currency_utils.dart';
 import 'package:personal_finance_tracker/core/utils/date_formatter.dart';
-import 'package:personal_finance_tracker/core/constants/appImages.dart';
-import 'package:personal_finance_tracker/widgets/appTextField.dart';
+import 'package:personal_finance_tracker/core/constants/app_images.dart';
+import 'package:personal_finance_tracker/widgets/app_text_field.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AmountDisplay extends StatelessWidget {
@@ -39,7 +39,7 @@ class AmountDisplay extends StatelessWidget {
                 shadows: [
                   BoxShadow(
                     color: (isIncome ? AppColors.green : AppColors.red)
-                        .withOpacity(0.3),
+                        .withValues(alpha: 0.3),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -52,7 +52,7 @@ class AmountDisplay extends StatelessWidget {
               "Tap to edit amount",
               style: TextStyle(
                 fontSize: 13,
-                color: AppColors.white.withOpacity(0.5),
+                color: AppColors.white.withValues(alpha: 0.5),
               ),
             ),
           ],
@@ -84,7 +84,7 @@ class TransactionDatePicker extends StatelessWidget {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w500,
-              color: AppColors.white.withOpacity(0.7),
+              color: AppColors.white.withValues(alpha: 0.7),
             ),
           ),
           const SizedBox(height: 8),
@@ -120,12 +120,12 @@ class TransactionDatePicker extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
+                    color: Colors.black.withValues(alpha: 0.2),
                     offset: const Offset(2, 2),
                     blurRadius: 4,
                   ),
                   BoxShadow(
-                    color: AppColors.white.withOpacity(0.05),
+                    color: AppColors.white.withValues(alpha: 0.05),
                     offset: const Offset(-1, -1),
                     blurRadius: 2,
                   ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:personal_finance_tracker/core/utils/category_utils.dart';
 import 'package:personal_finance_tracker/core/utils/currency_utils.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
-import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
+import 'package:personal_finance_tracker/core/themes/text_theme_extension.dart';
 import 'package:personal_finance_tracker/core/utils/padding_extention.dart';
 
 class AnalyticsBreakdown extends StatelessWidget {
@@ -25,7 +25,7 @@ class AnalyticsBreakdown extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 4, bottom: 12),
           child: Text("BREAKDOWN").labelLarge(
-            color: Colors.white.withOpacity(0.4),
+            color: Colors.white.withValues(alpha: 0.4),
             weight: FontWeight.w800,
             letterSpacing: 1.5,
           ),
@@ -35,8 +35,8 @@ class AnalyticsBreakdown extends StatelessWidget {
           blur: 40,
           borderOpacity: 0.12,
           gradientColors: [
-            Colors.white.withOpacity(0.05),
-            Colors.white.withOpacity(0.02),
+            Colors.white.withValues(alpha: 0.05),
+            Colors.white.withValues(alpha: 0.02),
           ],
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: Column(
@@ -55,7 +55,7 @@ class AnalyticsBreakdown extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Divider(
                         height: 1,
-                        color: Colors.white.withOpacity(0.03),
+                        color: Colors.white.withValues(alpha: 0.03),
                       ),
                     ),
                 ],
@@ -85,9 +85,12 @@ class AnalyticsBreakdown extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: color.withOpacity(0.15), width: 1),
+                  border: Border.all(
+                    color: color.withValues(alpha: 0.15),
+                    width: 1,
+                  ),
                 ),
                 child: Icon(
                   CategoryUtils.getIconForCategory(category),
@@ -107,7 +110,7 @@ class AnalyticsBreakdown extends StatelessWidget {
                     Text(
                       '${(percentage * 100).toStringAsFixed(1)}% of total',
                     ).labelSmall(
-                      color: Colors.white.withOpacity(0.3),
+                      color: Colors.white.withValues(alpha: 0.3),
                       weight: FontWeight.w600,
                     ),
                   ],
@@ -128,7 +131,7 @@ class AnalyticsBreakdown extends StatelessWidget {
                 height: 6,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.04),
+                  color: Colors.white.withValues(alpha: 0.04),
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
@@ -139,12 +142,12 @@ class AnalyticsBreakdown extends StatelessWidget {
                 width: (MediaQuery.of(context).size.width - 80) * percentage,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [color.withOpacity(0.6), color],
+                    colors: [color.withValues(alpha: 0.6), color],
                   ),
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
-                      color: color.withOpacity(0.3),
+                      color: color.withValues(alpha: 0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),

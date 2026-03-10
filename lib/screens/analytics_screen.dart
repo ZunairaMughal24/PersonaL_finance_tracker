@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
+import 'package:personal_finance_tracker/core/constants/app_colors.dart';
 import 'package:personal_finance_tracker/core/utils/category_utils.dart';
 import 'package:personal_finance_tracker/core/utils/currency_utils.dart';
 import 'package:personal_finance_tracker/screens/main_navigation_screen.dart';
@@ -13,7 +13,7 @@ import 'package:personal_finance_tracker/models/trends_model.dart';
 import 'package:provider/provider.dart';
 import '../providers/transaction_provider.dart';
 import 'package:personal_finance_tracker/providers/user_settings_provider.dart';
-import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
+import 'package:personal_finance_tracker/core/themes/text_theme_extension.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
 
 class AnalyticsScreen extends StatefulWidget {
@@ -137,12 +137,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
             color: isSelected
-                ? AppColors.primaryColor.withOpacity(0.4)
+                ? AppColors.primaryColor.withValues(alpha: 0.4)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             border: isSelected
                 ? Border.all(
-                    color: AppColors.primaryColor.withOpacity(0.3),
+                    color: AppColors.primaryColor.withValues(alpha: 0.3),
                     width: 0.9,
                   )
                 : null,
@@ -151,7 +151,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             child: Text(label).labelLarge(
               color: isSelected
                   ? Colors.white
-                  : AppColors.white.withOpacity(0.4),
+                  : AppColors.white.withValues(alpha: 0.4),
               weight: isSelected ? FontWeight.w700 : FontWeight.w600,
             ),
           ),
@@ -168,8 +168,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         blur: 30,
         borderOpacity: 0.1,
         gradientColors: [
-          Colors.white.withOpacity(0.05),
-          Colors.white.withOpacity(0.02),
+          Colors.white.withValues(alpha: 0.05),
+          Colors.white.withValues(alpha: 0.02),
         ],
         child: Stack(
           alignment: Alignment.center,
@@ -220,7 +220,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       final double opacity = isTouched ? 1.0 : 0.85;
 
       return PieChartSectionData(
-        color: color.withOpacity(opacity),
+        color: color.withValues(alpha: opacity),
         value: entry.value,
         radius: radius,
         showTitle: false,
@@ -232,7 +232,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: color.withOpacity(0.3),
+                      color: color.withValues(alpha: 0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -255,12 +255,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       width: 170,
       height: 170,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.03),
+        color: Colors.white.withValues(alpha: 0.03),
         shape: BoxShape.circle,
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 20,
             spreadRadius: -10,
           ),
@@ -271,7 +271,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text("Total Spent").bodyMedium(
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.white.withValues(alpha: 0.5),
               weight: FontWeight.w600,
             ),
             const SizedBox(height: 4),
@@ -297,8 +297,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         borderRadius: 24,
         blur: 30,
         gradientColors: [
-          Colors.white.withOpacity(0.05),
-          Colors.white.withOpacity(0.04),
+          Colors.white.withValues(alpha: 0.05),
+          Colors.white.withValues(alpha: 0.04),
         ],
         padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
         child: AspectRatio(
@@ -310,7 +310,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
               barTouchData: BarTouchData(
                 enabled: true,
                 touchTooltipData: BarTouchTooltipData(
-                  tooltipBgColor: Colors.black.withOpacity(0.9),
+                  tooltipBgColor: Colors.black.withValues(alpha: 0.9),
                   tooltipRoundedRadius: 8,
 
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
@@ -345,7 +345,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                           padding: const EdgeInsets.only(top: 10),
                           child: Text(
                             weeklyData[value.toInt()].label,
-                          ).labelMedium(color: Colors.white.withOpacity(0.5)),
+                          ).labelMedium(color: Colors.white.withValues(alpha: 0.5)),
                         );
                       }
                       return const SizedBox.shrink();
@@ -362,7 +362,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         padding: const EdgeInsets.only(right: 4),
                         child: Text(CurrencyUtils.formatCompactAmount(value))
                             .labelMedium(
-                              color: Colors.white.withOpacity(0.4),
+                              color: Colors.white.withValues(alpha: 0.4),
                               weight: FontWeight.bold,
                             ),
                       );
@@ -382,7 +382,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                 horizontalInterval: (maxVal * 1.2) / 5,
                 getDrawingHorizontalLine: (value) {
                   return FlLine(
-                    color: Colors.white.withOpacity(0.05),
+                    color: Colors.white.withValues(alpha: 0.05),
                     strokeWidth: 1,
                   );
                 },
@@ -399,7 +399,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                   barRods: [
                     BarChartRodData(
                       toY: data.income,
-                      color: AppColors.green.withOpacity(0.8),
+                      color: AppColors.green.withValues(alpha: 0.8),
                       width: 12,
                       borderRadius: BorderRadius.circular(4),
                     ),

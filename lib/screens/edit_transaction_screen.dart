@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
+import 'package:personal_finance_tracker/core/constants/app_colors.dart';
 import 'package:personal_finance_tracker/core/utils/category_utils.dart';
 import 'package:personal_finance_tracker/models/transaction_model.dart';
 import 'package:personal_finance_tracker/providers/transaction_provider.dart';
@@ -82,7 +82,7 @@ class _EditTransactionScreenContentState
                                   fontSize: 12,
                                   fontWeight: FontWeight.w800,
                                   letterSpacing: 2.0,
-                                  color: AppColors.white.withOpacity(0.5),
+                                  color: AppColors.white.withValues(alpha: 0.5),
                                 ),
                               ),
                             ),

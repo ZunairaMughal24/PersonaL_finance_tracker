@@ -58,7 +58,6 @@ class TransactionFormViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
   void setCurrency(String value) {
     _selectedCurrency = value;
     notifyListeners();
@@ -156,8 +155,9 @@ class TransactionFormViewModel extends ChangeNotifier {
   String? validate() {
     if (_selectedCategory.isEmpty) return "Please select a category";
     final amountVal = double.tryParse(_amountResult);
-    if (amountVal == null || amountVal <= 0)
+    if (amountVal == null || amountVal <= 0) {
       return "Please enter a valid amount";
+    }
     return null;
   }
 

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:personal_finance_tracker/config/router.dart';
-import 'package:personal_finance_tracker/core/constants/appImages.dart';
+import 'package:personal_finance_tracker/core/constants/app_images.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
 import 'package:personal_finance_tracker/core/utils/animation_utils.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
@@ -53,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   Text(
                     "FINANCIAL DISCIPLINE, REFINED",
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.white.withOpacity(0.6),
+                      color: Colors.white.withValues(alpha: 0.6),
                       fontWeight: FontWeight.w600,
                       letterSpacing: 2.5,
                     ),

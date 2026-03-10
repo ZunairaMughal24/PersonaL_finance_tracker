@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:personal_finance_tracker/config/router.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
-import 'package:personal_finance_tracker/core/constants/appImages.dart';
+import 'package:personal_finance_tracker/core/constants/app_colors.dart';
+import 'package:personal_finance_tracker/core/constants/app_images.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
-import 'package:personal_finance_tracker/widgets/appButton.dart';
+import 'package:personal_finance_tracker/widgets/app_button.dart';
 import 'package:personal_finance_tracker/core/utils/animation_utils.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
 import 'package:personal_finance_tracker/widgets/app_background.dart';
@@ -57,7 +57,7 @@ class OnboardingScreen extends StatelessWidget {
                   "Take control of your finances. Track spending, manage budgets, and build wealth effortlessly.",
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha: 0.8),
                     height: 1.5,
                   ),
                 ),
@@ -75,7 +75,7 @@ class OnboardingScreen extends StatelessWidget {
                       onPressed: () {
                         context.go(AppRoutes.signUpScreenRoute);
                       },
-                      color: AppColors.primaryColor.withOpacity(0.4),
+                      color: AppColors.primaryColor.withValues(alpha: 0.4),
                       textColor: Colors.white,
                       width: double.infinity,
                     ),
@@ -85,7 +85,7 @@ class OnboardingScreen extends StatelessWidget {
                       onPressed: () {
                         context.go(AppRoutes.signInScreenRoute);
                       },
-                      borderColor: AppColors.white.withOpacity(0.4),
+                      borderColor: AppColors.white.withValues(alpha: 0.4),
                       color: Colors.transparent,
                       textColor: AppColors.white,
                       width: double.infinity,

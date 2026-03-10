@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:personal_finance_tracker/config/router.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
-import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
+import 'package:personal_finance_tracker/core/constants/app_colors.dart';
+import 'package:personal_finance_tracker/core/themes/text_theme_extension.dart';
 import 'package:personal_finance_tracker/core/utils/toast_utility.dart';
 import 'package:personal_finance_tracker/core/utils/validators.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
 import 'package:personal_finance_tracker/providers/auth_provider.dart';
 import 'package:personal_finance_tracker/providers/user_settings_provider.dart';
-import 'package:personal_finance_tracker/widgets/appButton.dart';
-import 'package:personal_finance_tracker/widgets/appTextField.dart';
+import 'package:personal_finance_tracker/widgets/app_button.dart';
+import 'package:personal_finance_tracker/widgets/app_text_field.dart';
 import 'package:personal_finance_tracker/core/utils/animation_utils.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
 import 'package:personal_finance_tracker/widgets/app_background.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:personal_finance_tracker/core/constants/appImages.dart';
+import 'package:personal_finance_tracker/core/constants/app_images.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
@@ -100,13 +100,15 @@ class _SignInContentState extends State<SignInContent> {
                                 icon: provider.isSignInPasswordVisible
                                     ? Icon(
                                         Icons.visibility,
-                                        color: Colors.white.withOpacity(0.35),
+                                        color: Colors.white.withValues(
+                                          alpha: 0.35,
+                                        ),
                                         size: 20,
                                       )
                                     : SvgPicture.asset(
                                         AppImages.eyeClosed,
                                         colorFilter: ColorFilter.mode(
-                                          Colors.white.withOpacity(0.35),
+                                          Colors.white.withValues(alpha: 0.35),
                                           BlendMode.srcIn,
                                         ),
                                         height: 20,
@@ -180,6 +182,7 @@ class _SignInContentState extends State<SignInContent> {
                                 provider
                                     .signIn()
                                     .then((credential) {
+                                      if (!context.mounted) return;
                                       if (credential != null) {
                                         final user = credential.user;
                                         final settings = context
@@ -199,10 +202,14 @@ class _SignInContentState extends State<SignInContent> {
                                       }
                                     })
                                     .catchError((e) {
-                                      ToastUtils.show(context, e.toString());
+                                      if (context.mounted) {
+                                        ToastUtils.show(context, e.toString());
+                                      }
                                     });
                               },
-                              color: AppColors.primaryColor.withOpacity(0.4),
+                              color: AppColors.primaryColor.withValues(
+                                alpha: 0.4,
+                              ),
                               textColor: Colors.white,
                               width: double.infinity,
                             ),

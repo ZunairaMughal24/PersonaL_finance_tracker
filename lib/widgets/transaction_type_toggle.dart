@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
+import 'package:personal_finance_tracker/core/constants/app_colors.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
 
 class TransactionTypeToggle extends StatelessWidget {
@@ -22,8 +22,8 @@ class TransactionTypeToggle extends StatelessWidget {
       borderRadius: 16,
       blur: 10,
       gradientColors: [
-        Colors.white.withOpacity(0.08),
-        Colors.white.withOpacity(0.02),
+        Colors.white.withValues(alpha: 0.08),
+        Colors.white.withValues(alpha: 0.02),
       ],
       padding: EdgeInsets.zero,
       child: Stack(
@@ -37,18 +37,18 @@ class TransactionTypeToggle extends StatelessWidget {
               margin: const EdgeInsets.all(4),
               decoration: BoxDecoration(
                 color: isIncome
-                    ? AppColors.green.withOpacity(0.2)
-                    : AppColors.red.withOpacity(0.2),
+                    ? AppColors.green.withValues(alpha: 0.2)
+                    : AppColors.red.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: (isIncome ? AppColors.green : AppColors.red)
-                      .withOpacity(0.5),
+                      .withValues(alpha: 0.5),
                   width: 1.5,
                 ),
                 boxShadow: [
                   BoxShadow(
                     color: (isIncome ? AppColors.green : AppColors.red)
-                        .withOpacity(0.2),
+                        .withValues(alpha: 0.2),
                     blurRadius: 10,
                     spreadRadius: 1,
                   ),
@@ -74,7 +74,7 @@ class TransactionTypeToggle extends StatelessWidget {
                             size: 18,
                             color: isIncome
                                 ? AppColors.green
-                                : Colors.white.withOpacity(0.4),
+                                : Colors.white.withValues(alpha: 0.4),
                           ),
                           const SizedBox(width: 8),
                           Text(
@@ -82,7 +82,7 @@ class TransactionTypeToggle extends StatelessWidget {
                             style: TextStyle(
                               color: isIncome
                                   ? Colors.white
-                                  : Colors.white.withOpacity(0.4),
+                                  : Colors.white.withValues(alpha: 0.4),
                               fontWeight: isIncome
                                   ? FontWeight.w700
                                   : FontWeight.w500,
@@ -112,7 +112,7 @@ class TransactionTypeToggle extends StatelessWidget {
                             size: 18,
                             color: !isIncome
                                 ? AppColors.red
-                                : Colors.white.withOpacity(0.4),
+                                : Colors.white.withValues(alpha: 0.4),
                           ),
                           const SizedBox(width: 8),
                           Text(
@@ -120,7 +120,7 @@ class TransactionTypeToggle extends StatelessWidget {
                             style: TextStyle(
                               color: !isIncome
                                   ? Colors.white
-                                  : Colors.white.withOpacity(0.4),
+                                  : Colors.white.withValues(alpha: 0.4),
                               fontWeight: !isIncome
                                   ? FontWeight.w700
                                   : FontWeight.w500,

@@ -66,7 +66,7 @@ class AuthProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
       return credential;
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException catch (_) {
       _isLoading = false;
       notifyListeners();
       rethrow;
@@ -89,7 +89,7 @@ class AuthProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
       return credential;
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException catch (_) {
       _isLoading = false;
       notifyListeners();
       rethrow;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
+import 'package:personal_finance_tracker/core/constants/app_colors.dart';
 import 'package:personal_finance_tracker/core/utils/currency_utils.dart';
-import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
+import 'package:personal_finance_tracker/core/themes/text_theme_extension.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
 import 'package:personal_finance_tracker/models/trends_model.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
@@ -31,7 +31,7 @@ class TrendsDailyBreakdown extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 4, bottom: 12),
               child: Text("WEEKLY BREAKDOWN").labelLarge(
-                color: Colors.white.withOpacity(0.7),
+                color: Colors.white.withValues(alpha: 0.7),
                 weight: FontWeight.w800,
                 letterSpacing: 1.5,
               ),
@@ -41,8 +41,8 @@ class TrendsDailyBreakdown extends StatelessWidget {
               blur: 40,
               borderOpacity: 0.12,
               gradientColors: [
-                Colors.white.withOpacity(0.05),
-                Colors.white.withOpacity(0.02),
+                Colors.white.withValues(alpha: 0.05),
+                Colors.white.withValues(alpha: 0.02),
               ],
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: Column(
@@ -61,7 +61,7 @@ class TrendsDailyBreakdown extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Divider(
                             height: 1,
-                            color: Colors.white.withOpacity(0.04),
+                            color: Colors.white.withValues(alpha: 0.04),
                           ),
                         ),
                     ],
@@ -108,10 +108,10 @@ class TrendsDailyBreakdown extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: AppColors.green.withOpacity(0.15),
+                          color: AppColors.green.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: AppColors.green.withOpacity(0.2),
+                            color: AppColors.green.withValues(alpha: 0.2),
                             width: 1,
                           ),
                         ),
@@ -126,7 +126,7 @@ class TrendsDailyBreakdown extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("Income").labelLarge(
-                            color: Colors.white.withOpacity(0.5),
+                            color: Colors.white.withValues(alpha: 0.5),
                             weight: FontWeight.w600,
                           ),
                         ],
@@ -150,10 +150,10 @@ class TrendsDailyBreakdown extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: AppColors.primaryLight.withOpacity(0.15),
+                        color: AppColors.primaryLight.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: AppColors.primaryLight.withOpacity(0.2),
+                          color: AppColors.primaryLight.withValues(alpha: 0.2),
                           width: 1,
                         ),
                       ),
@@ -168,7 +168,7 @@ class TrendsDailyBreakdown extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("Expense").labelLarge(
-                          color: Colors.white.withOpacity(0.5),
+                          color: Colors.white.withValues(alpha: 0.5),
                           weight: FontWeight.w600,
                         ),
                       ],
@@ -184,13 +184,13 @@ class TrendsDailyBreakdown extends StatelessWidget {
             ),
           if (hasIncome && hasExpense) ...[
             8.heightBox,
-            Divider(height: 1, color: Colors.white.withOpacity(0.04)),
+            Divider(height: 1, color: Colors.white.withValues(alpha: 0.04)),
             8.heightBox,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text("Net").labelLarge(
-                  color: Colors.white.withOpacity(0.6),
+                  color: Colors.white.withValues(alpha: 0.6),
                   weight: FontWeight.w700,
                 ),
                 Text(

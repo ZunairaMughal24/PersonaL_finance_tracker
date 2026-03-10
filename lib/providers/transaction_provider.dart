@@ -13,7 +13,7 @@ class TransactionProvider extends ChangeNotifier {
   final DatabaseService db = DatabaseService();
   late final AIService _aiService;
 
-  static const String _geminiApiKey = 'AIzaSyAU1QgBRmnLZmVHxmMlOXFmDlSfVRR5U2M';
+  static const String _geminiApiKey = String.fromEnvironment('GEMINI_API_KEY');
 
   List<TransactionModel> _transactions = [];
   String _searchQuery = '';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
+import 'package:personal_finance_tracker/core/constants/app_colors.dart';
 
 class AppTheme {
   // Spacing Constants
@@ -124,12 +124,12 @@ class AppTheme {
   // Card Decoration with Glassmorphism
   static BoxDecoration glassCard({Color? color, double? borderRadius}) {
     return BoxDecoration(
-      color: color ?? AppColors.surface.withOpacity(0.7),
+      color: color ?? AppColors.surface.withValues(alpha: 0.7),
       borderRadius: BorderRadius.circular(borderRadius ?? radiusMd),
-      border: Border.all(color: Colors.white.withOpacity(0.1), width: 1),
+      border: Border.all(color: Colors.white.withValues(alpha: 0.1), width: 1),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.2),
+          color: Colors.black.withValues(alpha: 0.2),
           blurRadius: 20,
           offset: const Offset(0, 10),
         ),
@@ -147,7 +147,7 @@ class AppTheme {
       borderRadius: BorderRadius.circular(borderRadius ?? radiusMd),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.3),
+          color: Colors.black.withValues(alpha: 0.3),
           blurRadius: 15,
           offset: const Offset(0, 8),
         ),

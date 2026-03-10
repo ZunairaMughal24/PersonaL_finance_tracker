@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:personal_finance_tracker/config/router.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
+import 'package:personal_finance_tracker/core/constants/app_colors.dart';
 import 'package:personal_finance_tracker/screens/analytics_screen.dart';
 import 'package:personal_finance_tracker/screens/home_screen.dart';
 import 'package:personal_finance_tracker/screens/settings_screen.dart';
@@ -11,18 +11,18 @@ import 'package:personal_finance_tracker/screens/activity_screen.dart';
 import 'package:provider/provider.dart';
 import '../providers/transaction_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:personal_finance_tracker/core/constants/appImages.dart';
+import 'package:personal_finance_tracker/core/constants/app_images.dart';
 
 class MainNavScreen extends StatefulWidget {
-  static final GlobalKey<_MainNavScreenState> navKey =
-      GlobalKey<_MainNavScreenState>();
+  static final GlobalKey<MainNavScreenState> navKey =
+      GlobalKey<MainNavScreenState>();
   const MainNavScreen({super.key});
 
   @override
-  State<MainNavScreen> createState() => _MainNavScreenState();
+  State<MainNavScreen> createState() => MainNavScreenState();
 }
 
-class _MainNavScreenState extends State<MainNavScreen> {
+class MainNavScreenState extends State<MainNavScreen> {
   int _currentIndex = 0;
 
   void switchToHome() {
@@ -75,7 +75,7 @@ class _MainNavScreenState extends State<MainNavScreen> {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
           child: BottomAppBar(
-            color: Colors.white.withOpacity(0.08),
+            color: Colors.white.withValues(alpha: 0.08),
             elevation: 0,
             notchMargin: 0,
             padding: EdgeInsets.zero,
@@ -83,7 +83,7 @@ class _MainNavScreenState extends State<MainNavScreen> {
               decoration: BoxDecoration(
                 border: Border(
                   top: BorderSide(
-                    color: Colors.white.withOpacity(0.12),
+                    color: Colors.white.withValues(alpha: 0.12),
                     width: 0.5,
                   ),
                 ),
@@ -130,13 +130,13 @@ class _MainNavScreenState extends State<MainNavScreen> {
     final isSelected = _currentIndex == index;
     final color = isSelected
         ? AppColors.primaryColor
-        : AppColors.white.withOpacity(0.5);
+        : AppColors.white.withValues(alpha: 0.5);
 
     return Material(
       color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        splashColor: AppColors.primaryColor.withOpacity(0.2),
+        splashColor: AppColors.primaryColor.withValues(alpha: 0.2),
         onTap: () {
           setState(() {
             _currentIndex = index;

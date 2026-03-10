@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/appColors.dart';
-import 'package:personal_finance_tracker/core/constants/appImages.dart';
+import 'package:personal_finance_tracker/core/constants/app_colors.dart';
+import 'package:personal_finance_tracker/core/constants/app_images.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
@@ -31,12 +31,12 @@ class HomeHeader extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                     width: 2,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primaryColor.withOpacity(0.3),
+                      color: AppColors.primaryColor.withValues(alpha: 0.3),
                       blurRadius: 15,
                       spreadRadius: 2,
                     ),
@@ -44,7 +44,9 @@ class HomeHeader extends StatelessWidget {
                 ),
                 child: CircleAvatar(
                   radius: 27,
-                  backgroundColor: AppColors.primaryLight.withOpacity(0.15),
+                  backgroundColor: AppColors.primaryLight.withValues(
+                    alpha: 0.15,
+                  ),
                   backgroundImage: profileImagePath != null
                       ? FileImage(File(profileImagePath!)) as ImageProvider
                       : null,
@@ -73,7 +75,7 @@ class HomeHeader extends StatelessWidget {
                   Text(
                     summaryText,
                     style: TextStyle(
-                      color: AppColors.white.withOpacity(0.6),
+                      color: AppColors.white.withValues(alpha: 0.6),
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                     ),
@@ -107,7 +109,7 @@ class HomeHeader extends StatelessWidget {
                       color: AppColors.red,
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.5),
+                        color: Colors.white.withValues(alpha: 0.5),
                         width: 1,
                       ),
                     ),
