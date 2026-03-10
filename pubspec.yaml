@@ -1,4 +1,4 @@
-name: MONTAGE
+name: personal_finance_tracker
 description: "Financial discipline, refined — A professional-grade personal finance management application featuring real-time tracking and intelligent wealth insights."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.

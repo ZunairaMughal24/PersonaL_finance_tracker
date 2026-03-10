@@ -314,8 +314,15 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                   tooltipRoundedRadius: 8,
 
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                    final settings = Provider.of<UserSettingsProvider>(
+                      context,
+                      listen: false,
+                    );
                     return BarTooltipItem(
-                      CurrencyUtils.formatAmount(rod.toY, "USD"),
+                      CurrencyUtils.formatAmount(
+                        rod.toY,
+                        settings.selectedCurrency,
+                      ),
                       TextStyle(
                         color: rodIndex == 0
                             ? Colors.greenAccent

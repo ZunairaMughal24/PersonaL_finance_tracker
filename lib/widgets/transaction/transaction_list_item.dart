@@ -34,7 +34,7 @@ class TransactionListItem extends StatelessWidget {
         );
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: GlassContainer(
         borderRadius: 16,
         blur: 12,
@@ -109,7 +109,7 @@ class TransactionListItem extends StatelessWidget {
                                 Text(
                                   CurrencyUtils.formatAmount(
                                     transaction.amount,
-                                    transaction.currency,
+                                    currency,
                                   ),
                                 ).mono(
                                   fontSize: 14,

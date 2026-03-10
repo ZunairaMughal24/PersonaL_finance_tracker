@@ -4,6 +4,8 @@ import 'package:personal_finance_tracker/core/utils/currency_utils.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
 import 'package:personal_finance_tracker/core/themes/textTheme_extention.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
+import 'package:provider/provider.dart';
+import 'package:personal_finance_tracker/providers/user_settings_provider.dart';
 
 class SpendingCategoryBreakdown extends StatelessWidget {
   final Map<String, double> categoryTotals;
@@ -108,10 +110,18 @@ class SpendingCategoryBreakdown extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(CurrencyUtils.formatAmount(amount, "USD")).mono(
-                    weight: FontWeight.w700,
-                    fontSize: 16,
-                    color: Colors.white,
+                  Consumer<UserSettingsProvider>(
+                    builder: (context, settings, _) =>
+                        Text(
+                          CurrencyUtils.formatAmount(
+                            amount,
+                            settings.selectedCurrency,
+                          ),
+                        ).mono(
+                          weight: FontWeight.w700,
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
                   ),
                 ],
               ),
