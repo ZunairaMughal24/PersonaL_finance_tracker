@@ -66,7 +66,7 @@ class SpendingCategoryBreakdown extends StatelessWidget {
         Colors.white.withValues(alpha: 0.06),
         Colors.white.withValues(alpha: 0.02),
       ],
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      padding: const EdgeInsets.fromLTRB(12, 10, 8, 10),
       child: Column(
         children: [
           Row(
@@ -149,7 +149,8 @@ class SpendingCategoryBreakdown extends StatelessWidget {
                 duration: const Duration(milliseconds: 1200),
                 curve: Curves.easeOutCubic,
                 height: 5,
-                width: (MediaQuery.of(context).size.width - 48) * percentage,
+                width:
+                    (MediaQuery.of(context).size.width - 44) * percentage,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [

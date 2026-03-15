@@ -19,8 +19,7 @@ class CurrencyUtils {
   }
 
   static String formatAmount(double amount, String currency) {
-    // 1 billion if the amount has 10 digits (1,000,000,000)
-    if (amount.abs() >= 1000000000) {
+    if (amount.abs() >= 10000000000) {
       final compactFormat = NumberFormat.compact();
       return "${getCurrencySymbol(currency)} ${compactFormat.format(amount)}";
     }
@@ -31,23 +30,15 @@ class CurrencyUtils {
     return "${getCurrencySymbol(currency)} ${format.format(amount)}";
   }
 
-  static String formatCompactAmount(double amount) {
-    if (amount >= 1000000) {
-      double millions = amount / 1000000;
-      if (millions >= 10) {
-        return "${millions.toStringAsFixed(0)}M";
-      } else {
-        return "${millions.toStringAsFixed(1)}M";
-      }
-    } else if (amount >= 1000) {
-      double thousands = amount / 1000;
-      if (thousands >= 10) {
-        return "${thousands.toStringAsFixed(0)}K";
-      } else {
-        return "${thousands.toStringAsFixed(1)}K";
-      }
-    } else {
-      return amount.toStringAsFixed(0);
+  static String formatAmountCompact(double amount, String currency) {
+    if (amount.abs() >= 1000) {
+      return "${getCurrencySymbol(currency)} ${NumberFormat.compact().format(amount)}";
     }
+    return formatAmount(amount, currency);
+  }
+
+  static String formatCompactAmount(double amount) {
+    if (amount == 0) return '0';
+    return NumberFormat.compact().format(amount);
   }
 }

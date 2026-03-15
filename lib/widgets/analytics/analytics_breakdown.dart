@@ -52,7 +52,7 @@ class AnalyticsBreakdown extends StatelessWidget {
                   ),
                   if (!isLast)
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Divider(
                         height: 1,
                         color: Colors.white.withValues(alpha: 0.03),
@@ -77,7 +77,7 @@ class AnalyticsBreakdown extends StatelessWidget {
     final percentage = (amount / grandTotal);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.fromLTRB(12, 12, 8, 12),
       child: Column(
         children: [
           Row(
@@ -124,7 +124,7 @@ class AnalyticsBreakdown extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          // Premium Progress Pill
+
           Stack(
             children: [
               Container(
@@ -139,7 +139,7 @@ class AnalyticsBreakdown extends StatelessWidget {
                 duration: const Duration(milliseconds: 1200),
                 curve: Curves.easeOutCubic,
                 height: 6,
-                width: (MediaQuery.of(context).size.width - 80) * percentage,
+                width: (MediaQuery.of(context).size.width - 44) * percentage,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [color.withValues(alpha: 0.6), color],

@@ -58,7 +58,7 @@ class TrendsDailyBreakdown extends StatelessWidget {
                       ),
                       if (!isLast)
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
                           child: Divider(
                             height: 1,
                             color: Colors.white.withValues(alpha: 0.04),
@@ -84,7 +84,7 @@ class TrendsDailyBreakdown extends StatelessWidget {
     final hasExpense = data.expense > 0;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       child: Column(
         children: [
           Row(

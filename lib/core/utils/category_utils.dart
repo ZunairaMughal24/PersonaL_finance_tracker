@@ -5,28 +5,28 @@ class CategoryUtils {
     {
       'name': 'Food',
       'icon': Icons.restaurant_rounded,
-      'color': Color.fromARGB(255, 248, 211, 162),
+      'color': Color.fromARGB(255, 247, 248, 181),
     },
     {
       'name': 'Transport',
       'icon': Icons.directions_car_rounded,
-      'color': Color.fromARGB(255, 172, 197, 241),
+      'color': Color.fromARGB(255, 172, 227, 241),
     },
     {
       'name': 'Shopping',
       'icon': Icons.shopping_bag_rounded,
-      'color': Color(0xFF6C5CE7),
+      'color': Color.fromARGB(255, 245, 119, 172),
     },
     {
       'name': 'Bills',
       'icon': Icons.receipt_long_rounded,
-      'color': Color.fromARGB(255, 174, 231, 230),
+      'color': Color.fromARGB(255, 253, 103, 83),
     },
     {'name': 'Home', 'icon': Icons.home_rounded, 'color': Color(0xFFFDCB6E)},
     {
       'name': 'Entertainment',
       'icon': Icons.movie_rounded,
-      'color': Color.fromARGB(255, 201, 209, 131),
+      'color': Color.fromARGB(255, 248, 222, 77),
     },
     {
       'name': 'Health',
@@ -36,7 +36,7 @@ class CategoryUtils {
     {
       'name': 'Education',
       'icon': Icons.school_rounded,
-      'color': Color.fromARGB(255, 152, 172, 237),
+      'color': Color.fromARGB(255, 175, 193, 250),
     },
     {
       'name': 'Fitness',
@@ -56,7 +56,7 @@ class CategoryUtils {
     {
       'name': 'Travel',
       'icon': Icons.flight_rounded,
-      'color': Color.fromARGB(255, 158, 235, 252),
+      'color': Color.fromARGB(255, 255, 181, 239),
     },
     {
       'name': 'Maintenance',
@@ -71,7 +71,7 @@ class CategoryUtils {
     {
       'name': 'Gift',
       'icon': Icons.card_giftcard_rounded,
-      'color': Color(0xFFFDCB6E),
+      'color': Color.fromARGB(255, 253, 255, 158),
     },
     {
       'name': 'Streaming',
@@ -81,17 +81,17 @@ class CategoryUtils {
     {
       'name': 'Coffee',
       'icon': Icons.coffee_rounded,
-      'color': Color.fromARGB(255, 182, 174, 244),
+      'color': Color.fromARGB(255, 151, 94, 29),
     },
     {
       'name': 'Groceries',
       'icon': Icons.local_grocery_store_rounded,
-      'color': Color.fromARGB(220, 171, 235, 204),
+      'color': Color.fromARGB(220, 153, 255, 153),
     },
     {
       'name': 'Laundry',
       'icon': Icons.local_laundry_service_rounded,
-      'color': Color.fromARGB(255, 48, 162, 160),
+      'color': Color.fromARGB(255, 110, 231, 185),
     },
     {'name': 'Pets', 'icon': Icons.pets_rounded, 'color': Color(0xFFFDCB6E)},
     {

@@ -9,8 +9,8 @@ import 'package:personal_finance_tracker/widgets/analytics/trends_daily_breakdow
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
 import 'package:personal_finance_tracker/widgets/app_background.dart';
 import 'package:personal_finance_tracker/widgets/custom_app_bar.dart';
-import 'package:personal_finance_tracker/models/trends_model.dart';
 import 'package:provider/provider.dart';
+import 'package:personal_finance_tracker/widgets/analytics/trends_bar_chart.dart';
 import '../providers/transaction_provider.dart';
 import 'package:personal_finance_tracker/providers/user_settings_provider.dart';
 import 'package:personal_finance_tracker/core/themes/text_theme_extension.dart';
@@ -79,13 +79,13 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         summary.categoryTotals,
                         summary.grandTotal,
                       ),
-                      _buildBarChart(weeklyData),
+                      TrendsBarChart(weeklyData: weeklyData),
                     ],
                   ),
                 ),
                 16.heightBox,
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: _isPieChart
                       ? SpendingCategoryBreakdown(
                           categoryTotals: summary.categoryTotals,
@@ -275,146 +275,16 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
               weight: FontWeight.w600,
             ),
             const SizedBox(height: 4),
-            Text(
-              CurrencyUtils.formatAmount(grandTotal, currency).split('.')[0],
-            ).h2(color: Colors.white, fontSize: 24),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBarChart(List<FinancialPeriodData> weeklyData) {
-    double maxVal = 0;
-    for (var data in weeklyData) {
-      if (data.income > maxVal) maxVal = data.income;
-      if (data.expense > maxVal) maxVal = data.expense;
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 8),
-      child: GlassContainer(
-        borderRadius: 24,
-        blur: 30,
-        gradientColors: [
-          Colors.white.withValues(alpha: 0.05),
-          Colors.white.withValues(alpha: 0.04),
-        ],
-        padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
-        child: AspectRatio(
-          aspectRatio: 1.7,
-          child: BarChart(
-            BarChartData(
-              alignment: BarChartAlignment.spaceAround,
-              maxY: maxVal * 1.2,
-              barTouchData: BarTouchData(
-                enabled: true,
-                touchTooltipData: BarTouchTooltipData(
-                  tooltipBgColor: Colors.black.withValues(alpha: 0.9),
-                  tooltipRoundedRadius: 8,
-
-                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                    final settings = Provider.of<UserSettingsProvider>(
-                      context,
-                      listen: false,
-                    );
-                    return BarTooltipItem(
-                      CurrencyUtils.formatAmount(
-                        rod.toY,
-                        settings.selectedCurrency,
-                      ),
-                      TextStyle(
-                        color: rodIndex == 0
-                            ? Colors.greenAccent
-                            : Colors.redAccent,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    );
-                  },
-                ),
-              ),
-              titlesData: FlTitlesData(
-                show: true,
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    getTitlesWidget: (value, meta) {
-                      if (value.toInt() >= 0 &&
-                          value.toInt() < weeklyData.length) {
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Text(
-                            weeklyData[value.toInt()].label,
-                          ).labelMedium(color: Colors.white.withValues(alpha: 0.5)),
-                        );
-                      }
-                      return const SizedBox.shrink();
-                    },
-                  ),
-                ),
-                leftTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    reservedSize: 42,
-                    getTitlesWidget: (value, meta) {
-                      if (value == 0) return const SizedBox.shrink();
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 4),
-                        child: Text(CurrencyUtils.formatCompactAmount(value))
-                            .labelMedium(
-                              color: Colors.white.withValues(alpha: 0.4),
-                              weight: FontWeight.bold,
-                            ),
-                      );
-                    },
-                  ),
-                ),
-                topTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                rightTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-              ),
-              gridData: FlGridData(
-                show: true,
-                drawVerticalLine: false,
-                horizontalInterval: (maxVal * 1.2) / 5,
-                getDrawingHorizontalLine: (value) {
-                  return FlLine(
-                    color: Colors.white.withValues(alpha: 0.05),
-                    strokeWidth: 1,
-                  );
-                },
-              ),
-              borderData: FlBorderData(show: false),
-
-              barGroups: weeklyData.asMap().entries.map((entry) {
-                int index = entry.key;
-                FinancialPeriodData data = entry.value;
-
-                return BarChartGroupData(
-                  x: index,
-                  barsSpace: 4,
-                  barRods: [
-                    BarChartRodData(
-                      toY: data.income,
-                      color: AppColors.green.withValues(alpha: 0.8),
-                      width: 12,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-
-                    BarChartRodData(
-                      toY: data.expense,
-                      color: AppColors.primaryLight,
-                      width: 12,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ],
-                );
-              }).toList(),
+            Builder(
+              builder: (context) {
+                final amountText =
+                    CurrencyUtils.formatAmount(grandTotal, currency)
+                        .split('.')[0];
+                final fontSize = amountText.length >= 12 ? 19.0 : 25.0;
+                return Text(amountText).h2(color: Colors.white, fontSize: fontSize);
+              },
             ),
-          ),
+          ],
         ),
       ),
     );
