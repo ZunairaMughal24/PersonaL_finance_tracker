@@ -35,7 +35,7 @@ class TransactionDetailSheet extends StatelessWidget {
           ),
           blur: 40,
           showBottomBorder: false,
-          showShadow: false, // Remove shadow that looks like an underline
+          showShadow: false,
           borderOpacity: 0.15,
           padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
           gradientColors: [
@@ -45,7 +45,6 @@ class TransactionDetailSheet extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Handle bar
               Container(
                 width: 40,
                 height: 4,
@@ -56,7 +55,6 @@ class TransactionDetailSheet extends StatelessWidget {
               ),
               20.heightBox,
 
-              // Hero Section: Icon
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -82,7 +80,6 @@ class TransactionDetailSheet extends StatelessWidget {
               ),
               12.heightBox,
 
-              // Category & Type
               Text(
                 transaction.category,
                 textAlign: TextAlign.center,
@@ -96,7 +93,6 @@ class TransactionDetailSheet extends StatelessWidget {
               ),
               8.heightBox,
 
-              // Large Amount centerpiece
               FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
@@ -105,7 +101,6 @@ class TransactionDetailSheet extends StatelessWidget {
               ),
               12.heightBox,
 
-              // Details List
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,

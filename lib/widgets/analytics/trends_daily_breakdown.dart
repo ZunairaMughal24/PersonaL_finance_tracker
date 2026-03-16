@@ -205,7 +205,7 @@ class TrendsDailyBreakdown extends StatelessWidget {
                   fontSize: 14,
                   color: (data.income - data.expense) >= 0
                       ? AppColors.green
-                      : AppColors.primaryLight,
+                      : AppColors.red.withValues(alpha: 0.8),
                 ),
               ],
             ),
