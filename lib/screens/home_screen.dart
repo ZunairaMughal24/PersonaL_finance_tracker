@@ -56,10 +56,13 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                     12.heightBox,
-                    Selector<TransactionProvider, double>(
-                      selector: (_, p) => p.totalBalance,
-                      builder: (context, balance, _) =>
-                          TotalBalanceCard(totalBalance: balance),
+                    Selector<TransactionProvider, (double, bool)>(
+                      selector: (_, p) => (p.totalBalance, p.transactions.isNotEmpty),
+                      builder: (context, data, _) =>
+                          TotalBalanceCard(
+                            totalBalance: data.$1,
+                            hasEntries: data.$2,
+                          ),
                     ),
                     20.heightBox,
                     Consumer2<UserSettingsProvider, TransactionProvider>(

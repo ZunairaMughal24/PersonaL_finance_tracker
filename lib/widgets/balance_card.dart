@@ -9,8 +9,13 @@ import 'package:provider/provider.dart';
 
 class TotalBalanceCard extends StatelessWidget {
   final double totalBalance;
+  final bool hasEntries;
 
-  const TotalBalanceCard({super.key, required this.totalBalance});
+  const TotalBalanceCard({
+    super.key,
+    required this.totalBalance,
+    this.hasEntries = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -133,13 +138,17 @@ class TotalBalanceCard extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Text('LAST UPDATED').labelSmall(
+                              Text(
+                                hasEntries ? 'LAST UPDATED' : 'ACCOUNT STATUS',
+                              ).labelSmall(
                                 color: Colors.white.withValues(alpha: 0.5),
                                 weight: FontWeight.w700,
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                DateUtilsCustom.formatFullDate(today),
+                                hasEntries
+                                    ? DateUtilsCustom.formatFullDate(today)
+                                    : 'Awaiting first entry',
                               ).caption(
                                 color: Colors.white.withValues(alpha: 0.9),
                                 weight: FontWeight.w500,

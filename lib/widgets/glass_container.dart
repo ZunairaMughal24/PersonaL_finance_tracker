@@ -7,7 +7,9 @@ class GlassContainer extends StatelessWidget {
   final double? height;
   final double blur;
   final double borderRadius;
+  final BorderRadiusGeometry? customBorderRadius;
   final List<Color>? gradientColors;
+  final bool showBottomBorder;
   final double borderOpacity;
   final EdgeInsetsGeometry padding;
   final BoxConstraints? constraints;
@@ -19,7 +21,9 @@ class GlassContainer extends StatelessWidget {
     this.height,
     this.blur = 15,
     this.borderRadius = 24,
+    this.customBorderRadius,
     this.gradientColors,
+    this.showBottomBorder = true,
     this.borderOpacity = 0.1,
     this.padding = EdgeInsets.zero,
     this.constraints,
@@ -41,17 +45,23 @@ class GlassContainer extends StatelessWidget {
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(borderRadius),
+        borderRadius: customBorderRadius ?? BorderRadius.circular(borderRadius),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
           child: Container(
             padding: padding,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(borderRadius),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: borderOpacity),
-                width: 1.5,
-              ),
+              borderRadius: customBorderRadius ?? BorderRadius.circular(borderRadius),
+              border: showBottomBorder 
+                  ? Border.all(
+                      color: Colors.white.withValues(alpha: borderOpacity),
+                      width: 1.5,
+                    )
+                  : Border(
+                      top: BorderSide(color: Colors.white.withValues(alpha: borderOpacity), width: 1.5),
+                      left: BorderSide(color: Colors.white.withValues(alpha: borderOpacity), width: 1.5),
+                      right: BorderSide(color: Colors.white.withValues(alpha: borderOpacity), width: 1.5),
+                    ),
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,

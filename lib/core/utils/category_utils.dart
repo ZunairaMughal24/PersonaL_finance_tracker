@@ -41,7 +41,7 @@ class CategoryUtils {
     {
       'name': 'Fitness',
       'icon': Icons.fitness_center_rounded,
-      'color': Color.fromARGB(255, 114, 238, 178),
+      'color': Color.fromARGB(255, 209, 114, 238),
     },
     {
       'name': 'Subscription',
@@ -91,13 +91,13 @@ class CategoryUtils {
     {
       'name': 'Laundry',
       'icon': Icons.local_laundry_service_rounded,
-      'color': Color.fromARGB(255, 110, 231, 185),
+      'color': Color.fromARGB(255, 110, 142, 231),
     },
     {'name': 'Pets', 'icon': Icons.pets_rounded, 'color': Color(0xFFFDCB6E)},
     {
       'name': 'Hobbies',
       'icon': Icons.interests_rounded,
-      'color': Color.fromARGB(255, 122, 107, 238),
+      'color': Color.fromARGB(255, 252, 255, 78),
     },
     {
       'name': 'Charity',

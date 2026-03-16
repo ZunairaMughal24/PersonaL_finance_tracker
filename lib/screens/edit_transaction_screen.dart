@@ -12,6 +12,7 @@ import 'package:personal_finance_tracker/core/utils/toast_utility.dart';
 import 'package:personal_finance_tracker/widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:personal_finance_tracker/widgets/app_background.dart';
+import 'package:personal_finance_tracker/widgets/transaction/custom_category_dialog.dart';
 
 class EditTransactionScreen extends StatelessWidget {
   const EditTransactionScreen({super.key, required this.transaction});
@@ -95,23 +96,36 @@ class _EditTransactionScreenContentState
                                 : CategoryUtils.expenseCategories,
                             isIncome: vm.isIncome,
                             onCategorySelected: (cat) {
-                              vm.setCategory(cat);
-                              vm.toggleKeypad(true);
-                              Future.delayed(
-                                const Duration(milliseconds: 300),
-                                () {
-                                  if (_scrollController.hasClients) {
-                                    double scrollAmount = 140.0;
-                                    _scrollController.animateTo(
-                                      scrollAmount,
-                                      duration: const Duration(
-                                        milliseconds: 500,
+                              if (cat == "Other") {
+                                showDialog(
+                                  context: context,
+                                  builder:
+                                      (context) => CustomCategoryDialog(
+                                        onSubmitted: (customName) {
+                                          vm.setCategory(customName);
+                                          vm.toggleKeypad(true);
+                                        },
                                       ),
-                                      curve: Curves.easeOut,
-                                    );
-                                  }
-                                },
-                              );
+                                );
+                              } else {
+                                vm.setCategory(cat);
+                                vm.toggleKeypad(true);
+                                Future.delayed(
+                                  const Duration(milliseconds: 300),
+                                  () {
+                                    if (_scrollController.hasClients) {
+                                      double scrollAmount = 140.0;
+                                      _scrollController.animateTo(
+                                        scrollAmount,
+                                        duration: const Duration(
+                                          milliseconds: 500,
+                                        ),
+                                        curve: Curves.easeOut,
+                                      );
+                                    }
+                                  },
+                                );
+                              }
                             },
                           ),
                           const SizedBox(height: 20),

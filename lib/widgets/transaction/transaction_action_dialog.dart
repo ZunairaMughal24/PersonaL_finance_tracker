@@ -95,14 +95,14 @@ class TransactionActionDialog extends StatelessWidget {
               Text(
                 category,
                 textAlign: TextAlign.center,
-              ).h3(color: Colors.white, weight: FontWeight.w800),
+              ).h2(color: Colors.white, weight: FontWeight.w700),
               const SizedBox(height: 4),
               Text(
                 CurrencyUtils.formatAmount(amount, currency),
                 textAlign: TextAlign.center,
               ).mono(
                 color: AppColors.white.withValues(alpha: 0.5),
-                fontSize: 15,
+                fontSize: 17,
                 weight: FontWeight.w600,
               ),
               const SizedBox(height: 24),
@@ -149,18 +149,19 @@ class TransactionActionDialog extends StatelessWidget {
                   onDelete();
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
 
               GestureDetector(
                 onTap: () => Navigator.pop(context),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                    vertical: 4,
-                    horizontal: 16,
+                    vertical: 8,
+                    horizontal: 24,
                   ),
-                  child: Text("Cancel").caption(
-                    color: AppColors.white.withValues(alpha: 0.35),
+                  child: Text("Close").labelLarge(
+                    color: AppColors.white.withValues(alpha: 0.4),
                     weight: FontWeight.w600,
+                    fontSize: 17,
                   ),
                 ),
               ),
@@ -183,16 +184,16 @@ class TransactionActionDialog extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onPressed,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(14),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: gradientColors,
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(14),
             border: Border.all(
               color: Colors.white.withValues(alpha: 0.08),
               width: 1,
@@ -217,11 +218,11 @@ class TransactionActionDialog extends StatelessWidget {
               const SizedBox(width: 16),
               Text(
                 label,
-              ).labelLarge(color: color, weight: FontWeight.w600, fontSize: 16),
+              ).labelLarge(color: color, weight: FontWeight.w700, fontSize: 16),
               const Spacer(),
               Icon(
                 Icons.chevron_right_rounded,
-                color: color.withValues(alpha: 0.3),
+                color: color.withValues(alpha: 0.6),
                 size: 24,
               ),
             ],

@@ -277,9 +277,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             const SizedBox(height: 4),
             Builder(
               builder: (context) {
-                final amountText =
-                    CurrencyUtils.formatAmount(grandTotal, currency)
-                        .split('.')[0];
+                final amountRaw = CurrencyUtils.formatAmount(grandTotal, currency);
+                final hasSuffix = amountRaw.contains(RegExp(r'[A-Za-z]'));
+                final amountText = hasSuffix ? amountRaw : amountRaw.split('.')[0];
                 final fontSize = amountText.length >= 12 ? 19.0 : 25.0;
                 return Text(amountText).h2(color: Colors.white, fontSize: fontSize);
               },
