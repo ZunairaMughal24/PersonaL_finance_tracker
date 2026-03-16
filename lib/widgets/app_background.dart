@@ -8,6 +8,7 @@ enum BackgroundStyle {
   abstractDark, // Transactions: Dark Abstract + Gradient
   authVibrant, // Auth: Purple + Teal Glow
   deepFluid, // Transactions: Professional Deep Navy + Violet Glow
+  detailSheet, // Detail Sheets: Fun Iridescent Blobs
 }
 
 class AppBackground extends StatelessWidget {
@@ -32,7 +33,13 @@ class AppBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bodyContent = Stack(children: [_buildBackground(context), child]);
+    final bodyContent = Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        Positioned.fill(child: _buildBackground(context)),
+        child,
+      ],
+    );
 
     if (appBar != null || floatingActionButton != null) {
       return Scaffold(
@@ -63,6 +70,8 @@ class AppBackground extends StatelessWidget {
         return _buildAuthVibrant(context);
       case BackgroundStyle.deepFluid:
         return _buildDeepFluid(context);
+      case BackgroundStyle.detailSheet:
+        return _buildDetailSheet(context);
     }
   }
 
@@ -379,6 +388,44 @@ class AppBackground extends StatelessWidget {
                 ],
               ),
             ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDetailSheet(BuildContext context) {
+    return Stack(
+      children: [
+        Container(color: const Color(0xFF0D1117)),
+        Positioned(
+          top: -100,
+          right: -50,
+          child: _GlowBlob(
+            color: Colors.purple.withValues(alpha: 0.6),
+            opacity: 0.15,
+            blur: 140,
+            size: 400,
+          ),
+        ),
+        Positioned(
+          bottom: -80,
+          left: -60,
+          child: _GlowBlob(
+            color: Colors.blue.withValues(alpha: 0.6),
+            opacity: 0.1,
+            blur: 120,
+            size: 350,
+          ),
+        ),
+        Positioned(
+          top: 150,
+          left: -20,
+          child: _GlowBlob(
+            color: Colors.teal.withValues(alpha: 0.4),
+            opacity: 0.08,
+            blur: 100,
+            size: 250,
           ),
         ),
       ],

@@ -10,6 +10,7 @@ class GlassContainer extends StatelessWidget {
   final BorderRadiusGeometry? customBorderRadius;
   final List<Color>? gradientColors;
   final bool showBottomBorder;
+  final bool showShadow;
   final double borderOpacity;
   final EdgeInsetsGeometry padding;
   final BoxConstraints? constraints;
@@ -24,6 +25,7 @@ class GlassContainer extends StatelessWidget {
     this.customBorderRadius,
     this.gradientColors,
     this.showBottomBorder = true,
+    this.showShadow = true,
     this.borderOpacity = 0.1,
     this.padding = EdgeInsets.zero,
     this.constraints,
@@ -36,13 +38,15 @@ class GlassContainer extends StatelessWidget {
       height: height,
       constraints: constraints,
       decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.15),
-            blurRadius: 30,
-            offset: const Offset(0, 10),
-          ),
-        ],
+        boxShadow: showShadow
+            ? [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.15),
+                  blurRadius: 30,
+                  offset: const Offset(0, 10),
+                ),
+              ]
+            : null,
       ),
       child: ClipRRect(
         borderRadius: customBorderRadius ?? BorderRadius.circular(borderRadius),

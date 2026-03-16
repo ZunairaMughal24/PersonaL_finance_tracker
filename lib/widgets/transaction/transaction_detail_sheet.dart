@@ -6,6 +6,9 @@ import 'package:personal_finance_tracker/core/utils/currency_utils.dart';
 import 'package:personal_finance_tracker/models/transaction_model.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
 import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:personal_finance_tracker/core/constants/app_images.dart';
+import 'package:personal_finance_tracker/widgets/app_background.dart';
 
 class TransactionDetailSheet extends StatelessWidget {
   final TransactionModel transaction;
@@ -22,46 +25,54 @@ class TransactionDetailSheet extends StatelessWidget {
     final statusColor = transaction.isIncome ? AppColors.green : AppColors.red;
     final iconColor = CategoryUtils.getCategoryColor(transaction.category);
 
-    return GlassContainer(
-      borderRadius: 28,
-      blur: 40,
-      borderOpacity: 0.1,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-      gradientColors: [
-        Colors.white.withValues(alpha: 0.12),
-        AppColors.primaryColor.withValues(alpha: 0.04),
-      ],
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 32,
-            height: 4,
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.08),
-              borderRadius: BorderRadius.circular(2),
-            ),
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+      child: AppBackground(
+        style: BackgroundStyle.detailSheet,
+        child: GlassContainer(
+          customBorderRadius: const BorderRadius.vertical(
+            top: Radius.circular(32),
           ),
-          20.heightBox,
-
-          Column(
+          blur: 40,
+          showBottomBorder: false,
+          showShadow: false, // Remove shadow that looks like an underline
+          borderOpacity: 0.15,
+          padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+          gradientColors: [
+            Colors.white.withValues(alpha: 0.1),
+            statusColor.withValues(alpha: 0.05),
+          ],
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
+              // Handle bar
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              20.heightBox,
+
+              // Hero Section: Icon
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      iconColor.withValues(alpha: 0.15),
-                      iconColor.withValues(alpha: 0.04),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  color: iconColor.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: iconColor.withValues(alpha: 0.15),
-                    width: 1.2,
+                    color: iconColor.withValues(alpha: 0.2),
+                    width: 2,
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: iconColor.withValues(alpha: 0.1),
+                      blurRadius: 20,
+                      spreadRadius: 5,
+                    ),
+                  ],
                 ),
                 child: Icon(
                   CategoryUtils.getIconForCategory(transaction.category),
@@ -70,122 +81,169 @@ class TransactionDetailSheet extends StatelessWidget {
                 ),
               ),
               12.heightBox,
+
+              // Category & Type
               Text(
                 transaction.category,
-              ).h3(color: Colors.white, weight: FontWeight.w800),
-            ],
-          ),
-          24.heightBox,
-
-          Column(
-            children: [
-              Text("Total Amount").bodySmall(
-                color: Colors.white.withValues(alpha: 0.35),
-                weight: FontWeight.w700,
+                textAlign: TextAlign.center,
+              ).h2(color: Colors.white, weight: FontWeight.w700),
+              2.heightBox,
+              Text(transaction.isIncome ? "INCOME" : "EXPENSE").labelLarge(
+                color: statusColor.withValues(alpha: 0.7),
+                weight: FontWeight.w900,
+                letterSpacing: 1.5,
+                fontSize: 11,
               ),
-              4.heightBox,
-              Text(
-                CurrencyUtils.formatAmount(transaction.amount, currency),
-              ).h1(color: statusColor, weight: FontWeight.w900, fontSize: 32),
-            ],
-          ),
-          32.heightBox,
+              8.heightBox,
 
-          _buildInfoRow(Icons.calendar_today_rounded, "DATE", transaction.date),
-          _buildDivider(),
-          _buildInfoRow(
-            transaction.isIncome
-                ? Icons.arrow_downward_rounded
-                : Icons.arrow_upward_rounded,
-            "TYPE",
-            transaction.isIncome ? "Income" : "Expense",
-            color: statusColor,
-          ),
+              // Large Amount centerpiece
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  CurrencyUtils.formatAmount(transaction.amount, currency),
+                ).h1(color: statusColor, weight: FontWeight.w900, fontSize: 24),
+              ),
+              12.heightBox,
 
-          if (transaction.title.isNotEmpty) ...[
-            _buildDivider(),
-            _buildInfoRow(
-              Icons.notes_rounded,
-              "NOTE",
-              transaction.title,
-              isLong: true,
-            ),
-          ],
-
-          32.heightBox,
-
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white.withValues(alpha: 0.04),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    side: BorderSide(
-                      color: Colors.white.withValues(alpha: 0.06),
-                    ),
-                    elevation: 0,
+              // Details List
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.04),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.06),
+                    width: 1,
                   ),
-                  child: const Text(
-                    "Dismiss",
-                  ).labelLarge(weight: FontWeight.w700, fontSize: 16),
+                ),
+                child: Column(
+                  children: [
+                    _buildInfoRow(
+                      iconPath: AppImages.calendar,
+                      label: "DATE",
+                      value: transaction.date,
+                    ),
+                    if (transaction.title.isNotEmpty) ...[
+                      Divider(
+                        color: Colors.white.withValues(alpha: 0.06),
+                        height: 20,
+                      ),
+                      _buildInfoRow(
+                        icon: Icons.notes_rounded,
+                        label: "NOTE",
+                        value: transaction.title,
+                        isMultiline: true,
+                      ),
+                    ],
+                  ],
                 ),
               ),
+
+              24.heightBox,
+
+              // Animated Fun Close Button
+              _CloseButton(onTap: () => Navigator.pop(context)),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget _buildInfoRow(
-    IconData icon,
-    String label,
-    String value, {
-    Color? color,
-    bool isLong = false,
+  Widget _buildInfoRow({
+    IconData? icon,
+    String? iconPath,
+    required String label,
+    required String value,
+    bool isMultiline = false,
   }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Row(
-        crossAxisAlignment: isLong
-            ? CrossAxisAlignment.start
-            : CrossAxisAlignment.center,
-        children: [
-          Icon(icon, color: Colors.white.withValues(alpha: 0.3), size: 18),
-          16.widthBox,
-          Text(label).labelSmall(
-            color: Colors.white.withValues(alpha: 0.4),
-            weight: FontWeight.w800,
-          ),
-          const Spacer(),
-          SizedBox(
-            width: 180,
-            child:
-                Text(
-                  value,
-                  textAlign: TextAlign.right,
-                  maxLines: isLong ? 3 : 1,
-                  overflow: TextOverflow.ellipsis,
-                ).bodyLarge(
-                  color: color ?? Colors.white.withValues(alpha: 0.9),
-                  weight: FontWeight.w700,
-                ),
-          ),
-        ],
-      ),
+    return Row(
+      crossAxisAlignment: isMultiline
+          ? CrossAxisAlignment.start
+          : CrossAxisAlignment.center,
+      children: [
+        if (iconPath != null)
+          SvgPicture.asset(
+            iconPath,
+            colorFilter: ColorFilter.mode(
+              Colors.white.withValues(alpha: 0.5),
+              BlendMode.srcIn,
+            ),
+            height: 16,
+          )
+        else
+          Icon(icon, color: Colors.white.withValues(alpha: 0.6), size: 17),
+        10.widthBox,
+        Text(label).labelLarge(
+          color: Colors.white.withValues(alpha: 0.6),
+          weight: FontWeight.w600,
+          letterSpacing: 1.1,
+          fontSize: 12,
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child:
+              Text(
+                value,
+                textAlign: TextAlign.right,
+                maxLines: isMultiline ? null : 1,
+              ).labelLarge(
+                color: Colors.white.withValues(alpha: 0.9),
+                weight: FontWeight.w600,
+                fontSize: label == "DATE" ? 16 : 15,
+              ),
+        ),
+      ],
     );
   }
+}
 
-  Widget _buildDivider() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Divider(color: Colors.white.withValues(alpha: 0.05), thickness: 1),
+class _CloseButton extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _CloseButton({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        gradient: LinearGradient(
+          colors: [
+            AppColors.primaryColor.withValues(alpha: 0.9),
+            AppColors.primaryColor.withValues(alpha: 0.6),
+          ],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primaryColor.withValues(alpha: 0.4),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
+        ],
+        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            child: Center(
+              child: const Text("Close").labelLarge(
+                color: Colors.white,
+                weight: FontWeight.w800,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
