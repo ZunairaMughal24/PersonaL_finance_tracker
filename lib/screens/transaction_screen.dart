@@ -82,7 +82,7 @@ class _TransactionScreenContentState extends State<_TransactionScreenContent> {
                               onChanged: (val) => vm.toggleType(val),
                             ),
                           ),
-                          const SizedBox(height: 24),
+                          const SizedBox(height: 20),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: Align(
@@ -93,7 +93,7 @@ class _TransactionScreenContentState extends State<_TransactionScreenContent> {
                                   fontSize: 12,
                                   fontWeight: FontWeight.w800,
                                   letterSpacing: 2.0,
-                                  color: AppColors.white.withValues(alpha: 0.5),
+                                  color: AppColors.white.withValues(alpha: 0.7),
                                 ),
                               ),
                             ),

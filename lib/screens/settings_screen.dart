@@ -127,7 +127,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const Spacer(),
             Icon(
               Icons.chevron_right_rounded,
-              color: Colors.white.withValues(alpha: 0.3),
+              color: Colors.white.withValues(alpha: 0.5),
               size: 24,
             ),
           ],
@@ -408,7 +408,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildSectionHeader(String title) {
     return Text(
       title,
-    ).h3(color: Colors.white.withValues(alpha: 0.7), weight: FontWeight.bold);
+    ).h4(color: Colors.white.withValues(alpha: 0.7), weight: FontWeight.bold);
   }
 
   Widget _buildSettingsGroup(List<Widget> tiles) {
@@ -479,7 +479,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     title,
                   ).bodyLarge(color: Colors.white, weight: FontWeight.w600),
                   const SizedBox(height: 2),
-                  Text(subtitle).bodySmall(
+                  Text(subtitle).bodyMedium(
                     color: Colors.white.withValues(alpha: 0.7),
                     weight: FontWeight.w400,
                   ),
@@ -491,7 +491,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             else if (showChevron)
               Icon(
                 Icons.chevron_right_rounded,
-                color: Colors.white.withValues(alpha: 0.3),
+                color: Colors.white.withValues(alpha: 0.5),
                 size: 25,
               ),
           ],

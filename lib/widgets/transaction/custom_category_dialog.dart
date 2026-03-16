@@ -44,38 +44,51 @@ class _CustomCategoryDialogState extends State<CustomCategoryDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text("Custom Category").h3(color: Colors.white),
+                const Text("Custom Category").h2(color: Colors.white),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: Icon(Icons.close, color: Colors.white.withValues(alpha: 0.5)),
+                  icon: Icon(
+                    Icons.close,
+                    color: Colors.white.withValues(alpha: 0.5),
+                  ),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                 ),
               ],
             ),
-            16.heightBox,
+
             Text(
               "Enter a name for your custom category",
-            ).bodyMedium(color: Colors.white.withValues(alpha: 0.6)),
-            24.heightBox,
+            ).bodyLarge(color: Colors.white.withValues(alpha: 0.8)),
+            15.heightBox,
             TextField(
               controller: _controller,
               autofocus: true,
-              style: const TextStyle(color: Colors.white, fontSize: 18),
+              style: const TextStyle(color: Colors.white, fontSize: 13),
               decoration: InputDecoration(
                 hintText: "e.g. Shopping, Rent, Gifts",
-                hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.2)),
+                hintStyle: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.2),
+                ),
                 filled: true,
                 fillColor: Colors.white.withValues(alpha: 0.05),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+                  borderSide: BorderSide(
+                    color: Colors.white.withValues(alpha: 0.1),
+                  ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
-                  borderSide: const BorderSide(color: AppColors.primaryColor, width: 1.5),
+                  borderSide: const BorderSide(
+                    color: AppColors.primaryColor,
+                    width: 1.5,
+                  ),
                 ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 16,
+                ),
               ),
               onSubmitted: (value) {
                 if (value.trim().isNotEmpty) {
@@ -103,7 +116,9 @@ class _CustomCategoryDialogState extends State<CustomCategoryDialog> {
                   ),
                   elevation: 0,
                 ),
-                child: const Text("Confirm").labelLarge(weight: FontWeight.bold),
+                child: const Text(
+                  "Confirm",
+                ).titleLarge(weight: FontWeight.bold),
               ),
             ),
           ],

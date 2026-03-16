@@ -70,7 +70,7 @@ class TotalBalanceCard extends StatelessWidget {
                     Colors.white.withValues(alpha: 0.02),
                   ],
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
+                    horizontal: 14,
                     vertical: 20,
                   ),
                   child: Column(
@@ -84,13 +84,13 @@ class TotalBalanceCard extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Text('PERSONAL WALLET').labelSmall(
+                              const Text('PERSONAL WALLET').labelMedium(
                                 color: Colors.white.withValues(alpha: 0.8),
                                 weight: FontWeight.w800,
                               ),
                               const SizedBox(height: 2),
-                              Text('Smart Finance Companion').caption(
-                                color: Colors.white.withValues(alpha: 0.6),
+                              Text('Smart Finance Companion').labelMedium(
+                                color: Colors.white.withValues(alpha: 0.7),
                               ),
                             ],
                           ),
@@ -141,7 +141,7 @@ class TotalBalanceCard extends StatelessWidget {
                               Text(
                                 hasEntries ? 'LAST UPDATED' : 'ACCOUNT STATUS',
                               ).labelSmall(
-                                color: Colors.white.withValues(alpha: 0.5),
+                                color: Colors.white.withValues(alpha: 0.6),
                                 weight: FontWeight.w700,
                               ),
                               const SizedBox(height: 2),

@@ -33,14 +33,14 @@ class TransactionDetailSheet extends StatelessWidget {
           customBorderRadius: const BorderRadius.vertical(
             top: Radius.circular(32),
           ),
-          blur: 40,
+          blur: 20,
           showBottomBorder: false,
           showShadow: false,
-          borderOpacity: 0.15,
+          borderOpacity: 0.2,
           padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
           gradientColors: [
-            Colors.white.withValues(alpha: 0.1),
-            statusColor.withValues(alpha: 0.05),
+            Colors.white.withValues(alpha: 0.12),
+            statusColor.withValues(alpha: 0.1),
           ],
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -66,7 +66,7 @@ class TransactionDetailSheet extends StatelessWidget {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: iconColor.withValues(alpha: 0.1),
+                      color: iconColor.withValues(alpha: 0.2),
                       blurRadius: 20,
                       spreadRadius: 5,
                     ),
@@ -123,7 +123,7 @@ class TransactionDetailSheet extends StatelessWidget {
                     ),
                     if (transaction.title.isNotEmpty) ...[
                       Divider(
-                        color: Colors.white.withValues(alpha: 0.06),
+                        color: Colors.white.withValues(alpha: 0.07),
                         height: 20,
                       ),
                       _buildInfoRow(
@@ -139,7 +139,6 @@ class TransactionDetailSheet extends StatelessWidget {
 
               24.heightBox,
 
-              // Animated Fun Close Button
               _CloseButton(onTap: () => Navigator.pop(context)),
             ],
           ),

@@ -65,12 +65,12 @@ class SpendingCategoryBreakdown extends StatelessWidget {
 
     return Consumer<TransactionProvider>(
       builder: (context, provider, _) {
-        final categoryTransactions =
-            provider.transactions
-                .where((tx) => !tx.isIncome && tx.category == category)
-                .toList();
-        final latestTransaction =
-            categoryTransactions.isNotEmpty ? categoryTransactions.last : null;
+        final categoryTransactions = provider.transactions
+            .where((tx) => !tx.isIncome && tx.category == category)
+            .toList();
+        final latestTransaction = categoryTransactions.isNotEmpty
+            ? categoryTransactions.last
+            : null;
 
         return GlassContainer(
           borderRadius: 16,
@@ -90,14 +90,12 @@ class SpendingCategoryBreakdown extends StatelessWidget {
                     context: context,
                     backgroundColor: Colors.transparent,
                     isScrollControlled: true,
-                    builder:
-                        (context) => TransactionDetailSheet(
-                          transaction: latestTransaction,
-                          currency:
-                              context
-                                  .read<UserSettingsProvider>()
-                                  .selectedCurrency,
-                        ),
+                    builder: (context) => TransactionDetailSheet(
+                      transaction: latestTransaction,
+                      currency: context
+                          .read<UserSettingsProvider>()
+                          .selectedCurrency,
+                    ),
                   );
                 }
               },
@@ -167,11 +165,11 @@ class SpendingCategoryBreakdown extends StatelessWidget {
                                 ),
                                 const SizedBox(width: 4),
                                 Consumer<UserSettingsProvider>(
-                                  builder:
-                                      (context, settings, _) => FittedBox(
-                                        fit: BoxFit.scaleDown,
-                                        alignment: Alignment.centerRight,
-                                        child: Text(
+                                  builder: (context, settings, _) => FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    alignment: Alignment.centerRight,
+                                    child:
+                                        Text(
                                           CurrencyUtils.formatAmount(
                                             amount,
                                             settings.selectedCurrency,
@@ -180,18 +178,18 @@ class SpendingCategoryBreakdown extends StatelessWidget {
                                           fontSize: 14,
                                           weight: FontWeight.w600,
                                           color: AppColors.red.withValues(
-                                            alpha: 0.7,
+                                            alpha: 0.8,
                                           ),
                                         ),
-                                      ),
+                                  ),
                                 ),
                               ],
                             ),
                             const SizedBox(height: 4),
                             Text(
                               '${(percentage * 100).toStringAsFixed(1)}% of total',
-                            ).caption(
-                              color: AppColors.white.withValues(alpha: 0.6),
+                            ).labelMedium(
+                              color: AppColors.white.withValues(alpha: 0.8),
                             ),
                           ],
                         ),

@@ -30,7 +30,7 @@ class TransactionListItem extends StatelessWidget {
 
     final Color statusColor =
         (transaction.isIncome ? AppColors.green : AppColors.red).withValues(
-          alpha: 0.7,
+          alpha: 0.8,
         );
 
     return Padding(
@@ -88,7 +88,7 @@ class TransactionListItem extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ).bodySmall(
-                            color: AppColors.white.withValues(alpha: 0.7),
+                            color: AppColors.white.withValues(alpha: 0.8),
                           ),
                         ],
                       ],
@@ -129,9 +129,9 @@ class TransactionListItem extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 4),
-                      Text(
-                        transaction.date,
-                      ).caption(color: AppColors.white.withValues(alpha: 0.6)),
+                      Text(transaction.date).labelMedium(
+                        color: AppColors.white.withValues(alpha: 0.7),
+                      ),
                     ],
                   ),
                 ],
@@ -148,10 +148,8 @@ class TransactionListItem extends StatelessWidget {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (context) => TransactionDetailSheet(
-        transaction: transaction,
-        currency: currency,
-      ),
+      builder: (context) =>
+          TransactionDetailSheet(transaction: transaction, currency: currency),
     );
   }
 

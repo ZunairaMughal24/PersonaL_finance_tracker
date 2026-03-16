@@ -69,7 +69,7 @@ class CategorySelector extends StatelessWidget {
                     category['icon'] as IconData,
                     color: isSelected
                         ? Colors.white
-                        : Colors.white.withValues(alpha: 0.5),
+                        : Colors.white.withValues(alpha: 0.7),
                     size: 22,
                   ),
                 ),
@@ -82,9 +82,9 @@ class CategorySelector extends StatelessWidget {
                   style: TextStyle(
                     color: isSelected
                         ? Colors.white
-                        : Colors.white.withValues(alpha: 0.5),
-                    fontSize: 12,
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                        : Colors.white.withValues(alpha: 0.7),
+                    fontSize: 13,
+                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                   ),
                 ),
               ],

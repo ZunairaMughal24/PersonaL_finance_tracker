@@ -51,7 +51,7 @@ class InfoBox extends StatelessWidget {
                       title.trim().toUpperCase(),
                       overflow: TextOverflow.ellipsis,
                     ).bodySmall(
-                      color: Colors.white.withValues(alpha: 0.6),
+                      color: Colors.white.withValues(alpha: 0.8),
                       weight: FontWeight.bold,
                     ),
               ),

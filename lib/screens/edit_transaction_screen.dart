@@ -72,7 +72,7 @@ class _EditTransactionScreenContentState
                               onChanged: (val) => vm.toggleType(val),
                             ),
                           ),
-                          const SizedBox(height: 24),
+                          const SizedBox(height: 20),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: Align(
@@ -83,7 +83,7 @@ class _EditTransactionScreenContentState
                                   fontSize: 12,
                                   fontWeight: FontWeight.w800,
                                   letterSpacing: 2.0,
-                                  color: AppColors.white.withValues(alpha: 0.5),
+                                  color: AppColors.white.withValues(alpha: 0.7),
                                 ),
                               ),
                             ),
@@ -99,13 +99,12 @@ class _EditTransactionScreenContentState
                               if (cat == "Other") {
                                 showDialog(
                                   context: context,
-                                  builder:
-                                      (context) => CustomCategoryDialog(
-                                        onSubmitted: (customName) {
-                                          vm.setCategory(customName);
-                                          vm.toggleKeypad(true);
-                                        },
-                                      ),
+                                  builder: (context) => CustomCategoryDialog(
+                                    onSubmitted: (customName) {
+                                      vm.setCategory(customName);
+                                      vm.toggleKeypad(true);
+                                    },
+                                  ),
                                 );
                               } else {
                                 vm.setCategory(cat);
