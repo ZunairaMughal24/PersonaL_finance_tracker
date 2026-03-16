@@ -37,9 +37,9 @@ class HomeScreen extends StatelessWidget {
                   summaryText: "Your financial dashboard",
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.only(left: 20, right: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -50,19 +50,19 @@ class HomeScreen extends StatelessWidget {
                           'Overview',
                         ).h2(color: Colors.white, weight: FontWeight.bold),
                         Text('Your current financial status').bodyMedium(
-                          color: Colors.white.withValues(alpha: 0.7),
+                          color: Colors.white.withValues(alpha: 0.8),
                           weight: FontWeight.w500,
                         ),
                       ],
                     ),
                     12.heightBox,
                     Selector<TransactionProvider, (double, bool)>(
-                      selector: (_, p) => (p.totalBalance, p.transactions.isNotEmpty),
-                      builder: (context, data, _) =>
-                          TotalBalanceCard(
-                            totalBalance: data.$1,
-                            hasEntries: data.$2,
-                          ),
+                      selector: (_, p) =>
+                          (p.totalBalance, p.transactions.isNotEmpty),
+                      builder: (context, data, _) => TotalBalanceCard(
+                        totalBalance: data.$1,
+                        hasEntries: data.$2,
+                      ),
                     ),
                     20.heightBox,
                     Consumer2<UserSettingsProvider, TransactionProvider>(
@@ -92,7 +92,7 @@ class HomeScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    6.heightBox,
+                    4.heightBox,
                     Consumer<TransactionProvider>(
                       builder: (context, tx, _) =>
                           AIInsightsCard(txProvider: tx),
@@ -120,7 +120,7 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                   ],
-                ),
+                ).pOnly(bottom: 2),
               ),
               RecentTransactionsList().px16(),
               const SizedBox(height: 100),

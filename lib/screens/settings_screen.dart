@@ -48,7 +48,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (context) => GlassContainer(
-        borderRadius: 24,
+        customBorderRadius: const BorderRadius.vertical(
+          top: Radius.circular(32),
+        ),
         blur: 40,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -68,7 +70,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ).h4(color: Colors.white, weight: FontWeight.bold),
             20.heightBox,
             _buildMenuOption(
-              svgAsset: AppImages.user,
+              icon: Icons.person,
               title: "Edit Name",
               onTap: () {
                 Navigator.pop(context);
@@ -508,7 +510,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (context) => GlassContainer(
-        borderRadius: 24,
+        customBorderRadius: const BorderRadius.vertical(
+          top: Radius.circular(32),
+        ),
         blur: 40,
         child: Column(
           mainAxisSize: MainAxisSize.min,

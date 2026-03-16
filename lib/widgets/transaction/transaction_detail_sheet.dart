@@ -26,7 +26,7 @@ class TransactionDetailSheet extends StatelessWidget {
     final iconColor = CategoryUtils.getCategoryColor(transaction.category);
 
     return ClipRRect(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(38)),
       child: AppBackground(
         style: BackgroundStyle.detailSheet,
         child: GlassContainer(
@@ -36,11 +36,12 @@ class TransactionDetailSheet extends StatelessWidget {
           blur: 20,
           showBottomBorder: false,
           showShadow: false,
-          borderOpacity: 0.2,
+          borderOpacity: 0.12,
           padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
           gradientColors: [
-            Colors.white.withValues(alpha: 0.12),
-            statusColor.withValues(alpha: 0.1),
+            const Color.fromARGB(255, 155, 20, 20).withValues(alpha: 0.4),
+            const Color(0xFF1A1F3A).withValues(alpha: 0.4),
+            const Color.fromARGB(255, 73, 4, 70).withValues(alpha: 0.2),
           ],
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -219,7 +220,7 @@ class _CloseButton extends StatelessWidget {
             offset: const Offset(0, 5),
           ),
         ],
-        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
       child: Material(
         color: Colors.transparent,

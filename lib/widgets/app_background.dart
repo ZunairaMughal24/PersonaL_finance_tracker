@@ -397,34 +397,51 @@ class AppBackground extends StatelessWidget {
   Widget _buildDetailSheet(BuildContext context) {
     return Stack(
       children: [
-        Container(color: const Color(0xFF0D1117)),
-        Positioned(
-          top: -100,
-          right: -50,
-          child: _GlowBlob(
-            color: Colors.purple.withValues(alpha: 0.6),
-            opacity: 0.15,
-            blur: 140,
-            size: 400,
+        Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              stops: [0.0, 0.4, 0.7, 1.0],
+              colors: [
+                Color(0xFF1E0B3C),
+                Color(0xFF15133A),
+                Color(0xFF0C1B35),
+                Color(0xFF091428),
+              ],
+            ),
           ),
         ),
+
         Positioned(
-          bottom: -80,
-          left: -60,
+          top: -90,
+          right: -40,
           child: _GlowBlob(
-            color: Colors.blue.withValues(alpha: 0.6),
+            color: const Color(0xFF9B59F0),
             opacity: 0.1,
-            blur: 120,
+            blur: 140,
             size: 350,
           ),
         ),
+
         Positioned(
-          top: 150,
-          left: -20,
+          bottom: -70,
+          right: -30,
           child: _GlowBlob(
-            color: Colors.teal.withValues(alpha: 0.4),
-            opacity: 0.08,
-            blur: 100,
+            color: const Color(0xFFFF2D78),
+            opacity: 0.06,
+            blur: 130,
+            size: 280,
+          ),
+        ),
+
+        Positioned(
+          top: 140,
+          left: -50,
+          child: _GlowBlob(
+            color: const Color(0xFF00E5C8),
+            opacity: 0.05,
+            blur: 120,
             size: 250,
           ),
         ),
