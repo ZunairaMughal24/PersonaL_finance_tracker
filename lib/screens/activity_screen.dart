@@ -67,58 +67,68 @@ class _ActivityScreenState extends State<ActivityScreen> {
       body: AppBackground(
         style: BackgroundStyle.premiumHybrid,
         child: SafeArea(
-          child: Column(
-            children: [
-              if (_isSearchVisible) ...[
-                16.heightBox,
-                _buildSearchArea(context, transaction),
+          child: GestureDetector(
+            onHorizontalDragEnd: (details) {
+              if (details.primaryVelocity == null) return;
+              if (details.primaryVelocity! < -200) {
+                transaction.setIsIncomeFilter(false);
+              } else if (details.primaryVelocity! > 200) {
+                transaction.setIsIncomeFilter(true);
+              }
+            },
+            child: Column(
+              children: [
+                if (_isSearchVisible) ...[
+                  16.heightBox,
+                  _buildSearchArea(context, transaction),
+                ],
+                20.heightBox,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: TransactionTypeToggle(
+                    isIncome: transaction.isIncomeFilter ?? false,
+                    onChanged: (val) => transaction.setIsIncomeFilter(val),
+                  ),
+                ),
+                20.heightBox,
+                Expanded(
+                  child: Consumer<UserSettingsProvider>(
+                    builder: (context, settings, _) {
+                      final filteredTransactions =
+                          transaction.filteredTransactions;
+                      if (filteredTransactions.isEmpty) {
+                        return _buildEmptyState();
+                      }
+                      return ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        itemCount: filteredTransactions.length,
+                        itemBuilder: (context, index) {
+                          final tx = filteredTransactions[index];
+                          return TransactionListItem(
+                            transaction: tx,
+                            currency: settings.selectedCurrency,
+                            onDelete: () {
+                              final originalIndex = transaction.transactions
+                                  .indexOf(tx);
+                              transaction.deleteTransaction(
+                                tx.key as int,
+                                originalIndex,
+                              );
+                            },
+                            onEdit: () {
+                              context.push(
+                                AppRoutes.editTransactionScreenRoute,
+                                extra: tx,
+                              );
+                            },
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
               ],
-              20.heightBox,
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: TransactionTypeToggle(
-                  isIncome: transaction.isIncomeFilter ?? false,
-                  onChanged: (val) => transaction.setIsIncomeFilter(val),
-                ),
-              ),
-              20.heightBox,
-              Expanded(
-                child: Consumer<UserSettingsProvider>(
-                  builder: (context, settings, _) {
-                    final filteredTransactions =
-                        transaction.filteredTransactions;
-                    if (filteredTransactions.isEmpty) {
-                      return _buildEmptyState();
-                    }
-                    return ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: filteredTransactions.length,
-                      itemBuilder: (context, index) {
-                        final tx = filteredTransactions[index];
-                        return TransactionListItem(
-                          transaction: tx,
-                          currency: settings.selectedCurrency,
-                          onDelete: () {
-                            final originalIndex = transaction.transactions
-                                .indexOf(tx);
-                            transaction.deleteTransaction(
-                              tx.key as int,
-                              originalIndex,
-                            );
-                          },
-                          onEdit: () {
-                            context.push(
-                              AppRoutes.editTransactionScreenRoute,
-                              extra: tx,
-                            );
-                          },
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -146,7 +156,9 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 style: const TextStyle(color: Colors.white, fontSize: 16),
                 decoration: InputDecoration(
                   hintText: "Search transactions...",
-                  hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
+                  hintStyle: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.3),
+                  ),
                   prefixIcon: Icon(
                     Icons.search,
                     color: Colors.white.withValues(alpha: 0.3),

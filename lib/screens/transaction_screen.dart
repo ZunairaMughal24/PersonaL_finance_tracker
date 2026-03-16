@@ -67,100 +67,114 @@ class _TransactionScreenContentState extends State<_TransactionScreenContent> {
             style: BackgroundStyle.deepFluid,
             appBar: const CustomAppBar(title: "Edit Transaction"),
             child: SafeArea(
-              child: Column(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      controller: _scrollController,
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 10),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                            child: TransactionTypeToggle(
-                              isIncome: vm.isIncome,
-                              onChanged: (val) => vm.toggleType(val),
+              child: GestureDetector(
+                onHorizontalDragEnd: (details) {
+                  if (details.primaryVelocity == null) return;
+                  if (details.primaryVelocity! < -200) {
+                    vm.toggleType(false);
+                  } else if (details.primaryVelocity! > 200) {
+                    vm.toggleType(true);
+                  }
+                },
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        controller: _scrollController,
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 10),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                              child: TransactionTypeToggle(
+                                isIncome: vm.isIncome,
+                                onChanged: (val) => vm.toggleType(val),
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 20),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "SELECT CATEGORY",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w800,
-                                  letterSpacing: 2.0,
-                                  color: AppColors.white.withValues(alpha: 0.7),
+                            const SizedBox(height: 20),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "SELECT CATEGORY",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: 2.0,
+                                    color: AppColors.white.withValues(
+                                      alpha: 0.7,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 16),
-                          CategorySelector(
-                            selectedCategory: vm.selectedCategory,
-                            categories: vm.isIncome
-                                ? CategoryUtils.incomeCategories
-                                : CategoryUtils.expenseCategories,
-                            isIncome: vm.isIncome,
-                            onCategorySelected: (cat) {
-                              if (cat == "Other") {
-                                showDialog(
-                                  context: context,
-                                  barrierColor: Colors.black54,
-                                  builder: (context) => CustomCategoryDialog(
-                                    onSubmitted: (customName) {
-                                      vm.setCategory(customName);
-                                    },
-                                  ),
+                            const SizedBox(height: 16),
+                            CategorySelector(
+                              selectedCategory: vm.selectedCategory,
+                              categories: vm.isIncome
+                                  ? CategoryUtils.incomeCategories
+                                  : CategoryUtils.expenseCategories,
+                              isIncome: vm.isIncome,
+                              onCategorySelected: (cat) {
+                                if (cat == "Other") {
+                                  showDialog(
+                                    context: context,
+                                    barrierColor: Colors.black54,
+                                    builder: (context) => CustomCategoryDialog(
+                                      onSubmitted: (customName) {
+                                        vm.setCategory(customName);
+                                      },
+                                    ),
+                                  );
+                                } else {
+                                  vm.setCategory(cat);
+                                }
+                                vm.toggleKeypad(true);
+                                Future.delayed(
+                                  const Duration(milliseconds: 300),
+                                  () {
+                                    if (_scrollController.hasClients) {
+                                      double scrollAmount = 140.0;
+                                      _scrollController.animateTo(
+                                        scrollAmount,
+                                        duration: const Duration(
+                                          milliseconds: 500,
+                                        ),
+                                        curve: Curves.easeOut,
+                                      );
+                                    }
+                                  },
                                 );
-                              } else {
-                                vm.setCategory(cat);
-                              }
-                              vm.toggleKeypad(true);
-                              Future.delayed(
-                                const Duration(milliseconds: 300),
-                                () {
-                                  if (_scrollController.hasClients) {
-                                    double scrollAmount = 140.0;
-                                    _scrollController.animateTo(
-                                      scrollAmount,
-                                      duration: const Duration(
-                                        milliseconds: 500,
-                                      ),
-                                      curve: Curves.easeOut,
-                                    );
-                                  }
-                                },
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 20),
-                        ],
+                              },
+                            ),
+                            const SizedBox(height: 20),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  if (vm.showKeypad)
-                    CustomKeypad(
-                      amount: vm.amountExpression,
-                      note: vm.title,
-                      selectedDate: vm.selectedDate,
-                      currency: vm.selectedCurrency,
-                      isIncome: vm.isIncome,
-                      onKeyPressed: vm.onKeyPressed,
-                      onBackPressed: vm.onBackspace,
-                      onClear: vm.onClear,
-                      onComplete: () => vm.saveTransaction(
-                        provider: context.read<TransactionProvider>(),
-                        onSuccess: () => context.pop(),
-                        onError: (error) => ToastUtils.show(context, error),
+                    if (vm.showKeypad)
+                      CustomKeypad(
+                        amount: vm.amountExpression,
+                        note: vm.title,
+                        selectedDate: vm.selectedDate,
+                        currency: vm.selectedCurrency,
+                        isIncome: vm.isIncome,
+                        onKeyPressed: vm.onKeyPressed,
+                        onBackPressed: vm.onBackspace,
+                        onClear: vm.onClear,
+                        onComplete: () => vm.saveTransaction(
+                          provider: context.read<TransactionProvider>(),
+                          onSuccess: () => context.pop(),
+                          onError: (error) => ToastUtils.show(context, error),
+                        ),
+                        onNoteChanged: (val) => vm.setTitle(val),
+                        onDateChanged: (val) => vm.setDate(val),
                       ),
-                      onNoteChanged: (val) => vm.setTitle(val),
-                      onDateChanged: (val) => vm.setDate(val),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

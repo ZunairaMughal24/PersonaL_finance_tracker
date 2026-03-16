@@ -57,45 +57,63 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             return _buildEmptyState();
           }
 
-          return SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                12.heightBox,
-                _buildToggle(),
-                8.heightBox,
-                SizedBox(
-                  height: 310,
-                  child: PageView(
-                    controller: _pageController,
-                    onPageChanged: (index) {
-                      setState(() {
-                        _isPieChart = index == 0;
-                      });
-                    },
-                    children: [
-                      _buildPieChart(
-                        summary.categoryTotals,
-                        summary.grandTotal,
-                      ),
-                      TrendsBarChart(weeklyData: weeklyData),
-                    ],
+          return GestureDetector(
+            onHorizontalDragEnd: (details) {
+              if (details.primaryVelocity == null) return;
+              if (details.primaryVelocity! < -200 && _isPieChart) {
+                _pageController.animateToPage(
+                  1,
+                  duration: const Duration(milliseconds: 600),
+                  curve: Curves.easeInOutCubic,
+                );
+              } else if (details.primaryVelocity! > 200 && !_isPieChart) {
+                _pageController.animateToPage(
+                  0,
+                  duration: const Duration(milliseconds: 600),
+                  curve: Curves.easeInOutCubic,
+                );
+              }
+            },
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  12.heightBox,
+                  _buildToggle(),
+                  8.heightBox,
+                  SizedBox(
+                    height: 310,
+                    child: PageView(
+                      controller: _pageController,
+                      onPageChanged: (index) {
+                        setState(() {
+                          _isPieChart = index == 0;
+                        });
+                      },
+                      children: [
+                        _buildPieChart(
+                          summary.categoryTotals,
+                          summary.grandTotal,
+                        ),
+                        TrendsBarChart(weeklyData: weeklyData),
+                      ],
+                    ),
                   ),
-                ),
-                16.heightBox,
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: _isPieChart
-                      ? SpendingCategoryBreakdown(
-                          categoryTotals: summary.categoryTotals,
-                          sortedCategories: summary.sortedCategories,
-                          grandTotal: summary.grandTotal,
-                        )
-                      : TrendsDailyBreakdown(weeklyData: weeklyData),
-                ),
-                80.heightBox,
-              ],
+                  16.heightBox,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: _isPieChart
+                        ? SpendingCategoryBreakdown(
+                            categoryTotals: summary.categoryTotals,
+                            sortedCategories: summary.sortedCategories,
+                            grandTotal: summary.grandTotal,
+                          )
+                        : TrendsDailyBreakdown(weeklyData: weeklyData),
+                  ),
+                  80.heightBox,
+                ],
+              ),
             ),
           ).safeArea();
         },
@@ -128,8 +146,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         onTap: () {
           _pageController.animateToPage(
             page,
-            duration: const Duration(milliseconds: 400),
-            curve: Curves.fastOutSlowIn,
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.easeInOutCubic,
           );
         },
         child: AnimatedContainer(
