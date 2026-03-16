@@ -11,6 +11,7 @@ import 'package:personal_finance_tracker/core/utils/toast_utility.dart';
 import 'package:personal_finance_tracker/widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:personal_finance_tracker/widgets/app_background.dart';
+import 'package:personal_finance_tracker/widgets/transaction/custom_category_dialog.dart';
 
 class TransactionScreen extends StatelessWidget {
   const TransactionScreen({super.key});
@@ -105,7 +106,19 @@ class _TransactionScreenContentState extends State<_TransactionScreenContent> {
                                 : CategoryUtils.expenseCategories,
                             isIncome: vm.isIncome,
                             onCategorySelected: (cat) {
-                              vm.setCategory(cat);
+                              if (cat == "Other") {
+                                showDialog(
+                                  context: context,
+                                  barrierColor: Colors.black54,
+                                  builder: (context) => CustomCategoryDialog(
+                                    onSubmitted: (customName) {
+                                      vm.setCategory(customName);
+                                    },
+                                  ),
+                                );
+                              } else {
+                                vm.setCategory(cat);
+                              }
                               vm.toggleKeypad(true);
                               Future.delayed(
                                 const Duration(milliseconds: 300),

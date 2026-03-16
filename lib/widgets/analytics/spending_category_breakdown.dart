@@ -97,6 +97,8 @@ class SpendingCategoryBreakdown extends StatelessWidget {
                   children: [
                     Text(
                       category,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ).bodyLarge(color: Colors.white, weight: FontWeight.w600),
                     Text(
                       '${(percentage * 100).toStringAsFixed(1)}% of total',

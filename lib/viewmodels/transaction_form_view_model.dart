@@ -163,7 +163,7 @@ class TransactionFormViewModel extends ChangeNotifier {
 
   TransactionModel getTransactionModel() {
     return TransactionModel(
-      title: _title.isEmpty ? "Note" : _title.trim(),
+      title: _title.trim(),
       amount: double.tryParse(_amountResult) ?? 0.0,
       isIncome: _isIncome,
       date: DateUtilsCustom.formatDate(_selectedDate),

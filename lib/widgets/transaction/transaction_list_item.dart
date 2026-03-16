@@ -7,12 +7,13 @@ import 'package:personal_finance_tracker/widgets/transaction/transaction_action_
 import 'package:personal_finance_tracker/core/themes/text_theme_extension.dart';
 import 'package:personal_finance_tracker/widgets/glass_container.dart';
 
+import 'package:personal_finance_tracker/widgets/transaction/transaction_detail_sheet.dart';
+
 class TransactionListItem extends StatelessWidget {
   final TransactionModel transaction;
   final String currency;
   final VoidCallback? onDelete;
   final VoidCallback? onEdit;
-  final VoidCallback? onDetail;
 
   const TransactionListItem({
     super.key,
@@ -20,7 +21,6 @@ class TransactionListItem extends StatelessWidget {
     required this.currency,
     this.onDelete,
     this.onEdit,
-    this.onDetail,
   });
 
   @override
@@ -47,8 +47,8 @@ class TransactionListItem extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: onDetail,
-            onLongPress: () => _showDialog(context),
+            onTap: () => _showDetailSheet(context),
+            onLongPress: () => _showActionDialog(context),
             borderRadius: BorderRadius.circular(16),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -73,13 +73,21 @@ class TransactionListItem extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(transaction.category).titleMedium(
+                        Text(
+                          transaction.category,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ).titleMedium(
                           color: AppColors.white,
                           weight: FontWeight.w600,
                         ),
                         if (transaction.title.isNotEmpty) ...[
                           const SizedBox(height: 2),
-                          Text(transaction.title).bodySmall(
+                          Text(
+                            transaction.title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ).bodySmall(
                             color: AppColors.white.withValues(alpha: 0.7),
                           ),
                         ],
@@ -135,7 +143,19 @@ class TransactionListItem extends StatelessWidget {
     );
   }
 
-  void _showDialog(BuildContext context) {
+  void _showDetailSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => TransactionDetailSheet(
+        transaction: transaction,
+        currency: currency,
+      ),
+    );
+  }
+
+  void _showActionDialog(BuildContext context) {
     showDialog(
       context: context,
       barrierColor: Colors.black45,
@@ -144,6 +164,8 @@ class TransactionListItem extends StatelessWidget {
         amount: transaction.amount,
         onEdit: () => onEdit?.call(),
         onDelete: () => onDelete?.call(),
+        onDetail: () => _showDetailSheet(context),
+        currency: currency,
       ),
     );
   }

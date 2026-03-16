@@ -92,6 +92,8 @@ class TrendsDailyBreakdown extends StatelessWidget {
             children: [
               Text(
                 data.label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ).titleLarge(color: Colors.white, weight: FontWeight.w700),
             ],
           ),

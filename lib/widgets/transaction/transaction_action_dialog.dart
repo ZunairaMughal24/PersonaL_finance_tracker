@@ -10,15 +10,19 @@ import 'package:personal_finance_tracker/core/constants/app_images.dart';
 class TransactionActionDialog extends StatelessWidget {
   final VoidCallback onEdit;
   final VoidCallback onDelete;
+  final VoidCallback onDetail;
   final String category;
   final double amount;
+  final String currency;
 
   const TransactionActionDialog({
     super.key,
     required this.onEdit,
     required this.onDelete,
+    required this.onDetail,
     required this.category,
     required this.amount,
+    required this.currency,
   });
 
   @override
@@ -29,42 +33,42 @@ class TransactionActionDialog extends StatelessWidget {
         backgroundColor: Colors.transparent,
         insetPadding: const EdgeInsets.symmetric(horizontal: 24),
         child: GlassContainer(
-          borderRadius: 32,
+          borderRadius: 28,
           blur: 25,
           borderOpacity: 0.1,
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 40,
+                width: 32,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.1),
+                  color: Colors.white.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
               Stack(
                 alignment: Alignment.center,
                 children: [
                   Container(
-                    width: 70,
-                    height: 70,
+                    width: 60,
+                    height: 60,
                     decoration: BoxDecoration(
-                      color: AppColors.primaryColor.withValues(alpha: 0.1),
+                      color: AppColors.primaryColor.withValues(alpha: 0.08),
                       shape: BoxShape.circle,
                     ),
                   ),
                   Container(
-                    width: 54,
-                    height: 54,
+                    width: 46,
+                    height: 46,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          AppColors.primaryColor.withValues(alpha: 0.5),
-                          AppColors.primaryColor.withValues(alpha: 0.2),
+                          AppColors.primaryColor.withValues(alpha: 0.4),
+                          AppColors.primaryColor.withValues(alpha: 0.15),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -72,73 +76,91 @@ class TransactionActionDialog extends StatelessWidget {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.primaryColor.withValues(alpha: 0.2),
-                          blurRadius: 15,
-                          spreadRadius: 2,
+                          color: AppColors.primaryColor.withValues(alpha: 0.15),
+                          blurRadius: 10,
+                          spreadRadius: 1,
                         ),
                       ],
                     ),
                     child: const Icon(
                       Icons.settings_suggest_rounded,
                       color: Colors.white,
-                      size: 28,
+                      size: 24,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
 
               Text(
                 category,
-              ).h2(color: Colors.white, weight: FontWeight.bold, fontSize: 22),
+                textAlign: TextAlign.center,
+              ).h3(color: Colors.white, weight: FontWeight.w800),
               const SizedBox(height: 4),
-              Text(CurrencyUtils.formatAmount(amount, "USD")).mono(
-                color: AppColors.white.withValues(alpha: 0.6),
-                fontSize: 16,
-                weight: FontWeight.w500,
+              Text(
+                CurrencyUtils.formatAmount(amount, currency),
+                textAlign: TextAlign.center,
+              ).mono(
+                color: AppColors.white.withValues(alpha: 0.5),
+                fontSize: 15,
+                weight: FontWeight.w600,
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 24),
+
+              _buildActionButton(
+                label: "View Details",
+                icon: Icons.info_outline_rounded,
+                color: AppColors.primaryColor,
+                gradientColors: [
+                  AppColors.primaryColor.withValues(alpha: 0.12),
+                  AppColors.primaryColor.withValues(alpha: 0.04),
+                ],
+                onPressed: () {
+                  Navigator.pop(context);
+                  onDetail();
+                },
+              ),
+              const SizedBox(height: 10),
 
               _buildActionButton(
                 label: "Edit Transaction",
                 icon: Icons.edit_rounded,
-                color: Colors.white,
+                color: Colors.white.withValues(alpha: 0.9),
                 gradientColors: [
-                  Colors.white.withValues(alpha: 0.1),
-                  Colors.white.withValues(alpha: 0.05),
+                  Colors.white.withValues(alpha: 0.08),
+                  Colors.white.withValues(alpha: 0.03),
                 ],
                 onPressed: () {
                   Navigator.pop(context);
                   onEdit();
                 },
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 10),
               _buildActionButton(
                 label: "Delete Transaction",
                 iconPath: AppImages.trashBin,
-                color: AppColors.red.withValues(alpha: 0.9),
+                color: AppColors.red.withValues(alpha: 0.85),
                 gradientColors: [
-                  AppColors.red.withValues(alpha: 0.15),
-                  AppColors.red.withValues(alpha: 0.05),
+                  AppColors.red.withValues(alpha: 0.12),
+                  AppColors.red.withValues(alpha: 0.04),
                 ],
                 onPressed: () {
                   Navigator.pop(context);
                   onDelete();
                 },
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
 
               GestureDetector(
                 onTap: () => Navigator.pop(context),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                    vertical: 8,
+                    vertical: 4,
                     horizontal: 16,
                   ),
-                  child: Text("Cancel").h4(
-                    color: AppColors.white.withValues(alpha: 0.4),
+                  child: Text("Cancel").caption(
+                    color: AppColors.white.withValues(alpha: 0.35),
                     weight: FontWeight.w600,
-                    // letterSpacing: 1.2,
                   ),
                 ),
               ),
