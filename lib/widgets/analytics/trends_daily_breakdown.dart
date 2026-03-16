@@ -58,7 +58,7 @@ class TrendsDailyBreakdown extends StatelessWidget {
                       ),
                       if (!isLast)
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Divider(
                             height: 1,
                             color: Colors.white.withValues(alpha: 0.04),
@@ -84,14 +84,14 @@ class TrendsDailyBreakdown extends StatelessWidget {
     final hasExpense = data.expense > 0;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      padding: const EdgeInsets.only(left: 20, right: 16, top: 10, bottom: 10),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                data.label,
+                _getFullDayName(data.label),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ).titleLarge(color: Colors.white, weight: FontWeight.w700),
@@ -130,6 +130,7 @@ class TrendsDailyBreakdown extends StatelessWidget {
                           Text("Income").labelLarge(
                             color: Colors.white.withValues(alpha: 0.5),
                             weight: FontWeight.w600,
+                            fontSize: 14,
                           ),
                         ],
                       ),
@@ -172,6 +173,7 @@ class TrendsDailyBreakdown extends StatelessWidget {
                         Text("Expense").labelLarge(
                           color: Colors.white.withValues(alpha: 0.5),
                           weight: FontWeight.w600,
+                          fontSize: 14,
                         ),
                       ],
                     ),
@@ -213,5 +215,26 @@ class TrendsDailyBreakdown extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _getFullDayName(String shortName) {
+    switch (shortName) {
+      case 'Mon':
+        return 'Monday';
+      case 'Tue':
+        return 'Tuesday';
+      case 'Wed':
+        return 'Wednesday';
+      case 'Thu':
+        return 'Thursday';
+      case 'Fri':
+        return 'Friday';
+      case 'Sat':
+        return 'Saturday';
+      case 'Sun':
+        return 'Sunday';
+      default:
+        return shortName;
+    }
   }
 }

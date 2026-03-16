@@ -21,7 +21,7 @@ class HomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
+      padding: const EdgeInsets.only(left: 20, right: 16, top: 10, bottom: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -75,7 +75,7 @@ class HomeHeader extends StatelessWidget {
                   Text(
                     summaryText,
                     style: TextStyle(
-                      color: AppColors.white.withValues(alpha: 0.8),
+                      color: AppColors.white.withValues(alpha: 0.9),
                       fontSize: 13,
                       fontWeight: FontWeight.w400,
                     ),

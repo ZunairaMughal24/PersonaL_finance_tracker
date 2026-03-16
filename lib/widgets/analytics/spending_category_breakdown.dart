@@ -101,7 +101,7 @@ class SpendingCategoryBreakdown extends StatelessWidget {
               },
               borderRadius: BorderRadius.circular(16),
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(12, 10, 8, 10),
+                padding: const EdgeInsets.fromLTRB(12, 10, 14, 10),
                 child: Column(
                   children: [
                     Row(

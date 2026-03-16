@@ -45,7 +45,7 @@ class RecentTransactionsList extends StatelessWidget {
 
         return Consumer<UserSettingsProvider>(
           builder: (context, settings, _) => ListView.separated(
-            padding: const EdgeInsets.symmetric(vertical: 4),
+            padding: const EdgeInsets.only(bottom: 4),
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: items.length > 5 ? 5 : items.length,
