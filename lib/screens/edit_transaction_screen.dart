@@ -109,6 +109,7 @@ class _EditTransactionScreenContentState
                                   showDialog(
                                     context: context,
                                     builder: (context) => CustomCategoryDialog(
+                                      initialCategory: vm.selectedCategory,
                                       onSubmitted: (customName) {
                                         vm.setCategory(customName);
                                         vm.toggleKeypad(true);

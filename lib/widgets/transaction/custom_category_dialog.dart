@@ -6,15 +6,26 @@ import 'package:montage/core/utils/widget_utility_extention.dart';
 
 class CustomCategoryDialog extends StatefulWidget {
   final Function(String) onSubmitted;
+  final String? initialCategory;
 
-  const CustomCategoryDialog({super.key, required this.onSubmitted});
+  const CustomCategoryDialog({
+    super.key,
+    required this.onSubmitted,
+    this.initialCategory,
+  });
 
   @override
   State<CustomCategoryDialog> createState() => _CustomCategoryDialogState();
 }
 
 class _CustomCategoryDialogState extends State<CustomCategoryDialog> {
-  final TextEditingController _controller = TextEditingController();
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialCategory);
+  }
 
   @override
   void dispose() {
