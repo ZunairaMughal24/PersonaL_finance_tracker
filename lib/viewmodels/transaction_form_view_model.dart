@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/utils/date_formatter.dart';
-import 'package:personal_finance_tracker/models/transaction_model.dart';
+import 'package:montage/core/utils/date_formatter.dart';
+import 'package:montage/models/transaction_model.dart';
 
 class TransactionFormViewModel extends ChangeNotifier {
   bool _isIncome = true;

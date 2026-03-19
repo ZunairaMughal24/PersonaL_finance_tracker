@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:personal_finance_tracker/core/constants/app_colors.dart';
+import 'package:montage/core/constants/app_colors.dart';
 
 class AppTheme {
   // Spacing Constants

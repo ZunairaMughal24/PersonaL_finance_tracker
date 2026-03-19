@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:personal_finance_tracker/providers/auth_provider.dart';
-import 'package:personal_finance_tracker/screens/main_navigation_screen.dart';
-import 'package:personal_finance_tracker/screens/onboarding_screen.dart';
-import 'package:personal_finance_tracker/screens/splash_screen.dart';
+import 'package:montage/providers/auth_provider.dart';
+import 'package:montage/screens/main_navigation_screen.dart';
+import 'package:montage/screens/onboarding_screen.dart';
+import 'package:montage/screens/splash_screen.dart';
 
 class AuthWrapper extends StatefulWidget {
   const AuthWrapper({super.key});

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/app_images.dart';
-import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
-import 'package:personal_finance_tracker/core/utils/animation_utils.dart';
-import 'package:personal_finance_tracker/widgets/glass_container.dart';
+import 'package:montage/core/constants/app_images.dart';
+import 'package:montage/core/utils/widget_utility_extention.dart';
+import 'package:montage/core/utils/animation_utils.dart';
+import 'package:montage/widgets/glass_container.dart';
 
-import 'package:personal_finance_tracker/widgets/app_background.dart';
+import 'package:montage/widgets/app_background.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/app_colors.dart';
+import 'package:montage/core/constants/app_colors.dart';
 
 class CurrencySelector extends StatelessWidget {
   final String selectedCurrency;

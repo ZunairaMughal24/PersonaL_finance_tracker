@@ -1,11 +1,11 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/app_colors.dart';
-import 'package:personal_finance_tracker/core/utils/currency_utils.dart';
-import 'package:personal_finance_tracker/core/themes/text_theme_extension.dart';
-import 'package:personal_finance_tracker/widgets/glass_container.dart';
+import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/utils/currency_utils.dart';
+import 'package:montage/core/themes/text_theme_extension.dart';
+import 'package:montage/widgets/glass_container.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:personal_finance_tracker/core/constants/app_images.dart';
+import 'package:montage/core/constants/app_images.dart';
 
 class TransactionActionDialog extends StatelessWidget {
   final VoidCallback onEdit;

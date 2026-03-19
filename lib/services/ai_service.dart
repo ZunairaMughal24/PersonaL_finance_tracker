@@ -1,5 +1,5 @@
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'package:personal_finance_tracker/models/transaction_model.dart';
+import 'package:montage/models/transaction_model.dart';
 
 class AIService {
   final String apiKey;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:personal_finance_tracker/core/constants/app_colors.dart';
+import 'package:montage/core/constants/app_colors.dart';
 
 class AppTheme {
   static Color get primaryLight => AppColors.primaryColor;

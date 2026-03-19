@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/app_colors.dart';
-import 'package:personal_finance_tracker/core/constants/app_images.dart';
+import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/constants/app_images.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:personal_finance_tracker/widgets/glass_container.dart';
+import 'package:montage/widgets/glass_container.dart';
 
 class HomeHeader extends StatelessWidget {
   final String userName;

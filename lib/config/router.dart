@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:personal_finance_tracker/screens/analytics_screen.dart';
-import 'package:personal_finance_tracker/screens/edit_transaction_screen.dart';
-import 'package:personal_finance_tracker/screens/home_screen.dart';
-import 'package:personal_finance_tracker/screens/main_navigation_screen.dart';
-import 'package:personal_finance_tracker/screens/settings_screen.dart';
-import 'package:personal_finance_tracker/screens/transaction_screen.dart';
-import 'package:personal_finance_tracker/screens/splash_screen.dart';
-import 'package:personal_finance_tracker/screens/onboarding_screen.dart';
-import 'package:personal_finance_tracker/screens/activity_screen.dart';
-import 'package:personal_finance_tracker/screens/sign_in_screen.dart';
-import 'package:personal_finance_tracker/screens/sign_up_screen.dart';
-import 'package:personal_finance_tracker/config/auth_wrapper.dart';
+import 'package:montage/screens/analytics_screen.dart';
+import 'package:montage/screens/edit_transaction_screen.dart';
+import 'package:montage/screens/home_screen.dart';
+import 'package:montage/screens/main_navigation_screen.dart';
+import 'package:montage/screens/settings_screen.dart';
+import 'package:montage/screens/transaction_screen.dart';
+import 'package:montage/screens/splash_screen.dart';
+import 'package:montage/screens/onboarding_screen.dart';
+import 'package:montage/screens/activity_screen.dart';
+import 'package:montage/screens/sign_in_screen.dart';
+import 'package:montage/screens/sign_up_screen.dart';
+import 'package:montage/config/auth_wrapper.dart';
 
 // ─── Route Constants
 

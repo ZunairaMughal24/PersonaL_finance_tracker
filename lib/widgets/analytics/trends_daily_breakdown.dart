@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/app_colors.dart';
-import 'package:personal_finance_tracker/core/utils/currency_utils.dart';
-import 'package:personal_finance_tracker/core/themes/text_theme_extension.dart';
-import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
-import 'package:personal_finance_tracker/models/trends_model.dart';
-import 'package:personal_finance_tracker/widgets/glass_container.dart';
-import 'package:personal_finance_tracker/providers/user_settings_provider.dart';
+import 'package:montage/core/utils/date_formatter.dart';
+import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/utils/currency_utils.dart';
+import 'package:montage/core/themes/text_theme_extension.dart';
+import 'package:montage/core/utils/widget_utility_extention.dart';
+import 'package:montage/models/trends_model.dart';
+import 'package:montage/widgets/glass_container.dart';
+import 'package:montage/providers/user_settings_provider.dart';
 import 'package:provider/provider.dart';
 
 class TrendsDailyBreakdown extends StatelessWidget {
@@ -91,7 +92,7 @@ class TrendsDailyBreakdown extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                _getFullDayName(data.label),
+                DateUtilsCustom.getFullDayName(data.date),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ).titleLarge(color: Colors.white, weight: FontWeight.w700),
@@ -216,25 +217,5 @@ class TrendsDailyBreakdown extends StatelessWidget {
       ),
     );
   }
-
-  String _getFullDayName(String shortName) {
-    switch (shortName) {
-      case 'Mon':
-        return 'Monday';
-      case 'Tue':
-        return 'Tuesday';
-      case 'Wed':
-        return 'Wednesday';
-      case 'Thu':
-        return 'Thursday';
-      case 'Fri':
-        return 'Friday';
-      case 'Sat':
-        return 'Saturday';
-      case 'Sun':
-        return 'Sunday';
-      default:
-        return shortName;
-    }
-  }
 }
+

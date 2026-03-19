@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/app_colors.dart';
-import 'package:personal_finance_tracker/core/utils/currency_utils.dart';
-import 'package:personal_finance_tracker/core/utils/category_utils.dart';
-import 'package:personal_finance_tracker/models/transaction_model.dart';
-import 'package:personal_finance_tracker/widgets/transaction/transaction_action_dialog.dart';
-import 'package:personal_finance_tracker/core/themes/text_theme_extension.dart';
-import 'package:personal_finance_tracker/widgets/glass_container.dart';
+import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/utils/currency_utils.dart';
+import 'package:montage/core/utils/category_utils.dart';
+import 'package:montage/models/transaction_model.dart';
+import 'package:montage/widgets/transaction/transaction_action_dialog.dart';
+import 'package:montage/core/themes/text_theme_extension.dart';
+import 'package:montage/widgets/glass_container.dart';
 
-import 'package:personal_finance_tracker/widgets/transaction/transaction_detail_sheet.dart';
+import 'package:montage/widgets/transaction/transaction_detail_sheet.dart';
 
 class TransactionListItem extends StatelessWidget {
   final TransactionModel transaction;

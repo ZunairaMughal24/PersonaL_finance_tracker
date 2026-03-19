@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/app_colors.dart';
-import 'package:personal_finance_tracker/widgets/glass_container.dart';
+import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/widgets/glass_container.dart';
 
 class TransactionTypeToggle extends StatelessWidget {
   final bool isIncome;

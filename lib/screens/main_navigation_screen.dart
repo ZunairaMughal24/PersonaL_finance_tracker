@@ -2,16 +2,16 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:personal_finance_tracker/config/router.dart';
-import 'package:personal_finance_tracker/core/constants/app_colors.dart';
-import 'package:personal_finance_tracker/screens/analytics_screen.dart';
-import 'package:personal_finance_tracker/screens/home_screen.dart';
-import 'package:personal_finance_tracker/screens/settings_screen.dart';
-import 'package:personal_finance_tracker/screens/activity_screen.dart';
+import 'package:montage/config/router.dart';
+import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/screens/analytics_screen.dart';
+import 'package:montage/screens/home_screen.dart';
+import 'package:montage/screens/settings_screen.dart';
+import 'package:montage/screens/activity_screen.dart';
 import 'package:provider/provider.dart';
 import '../providers/transaction_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:personal_finance_tracker/core/constants/app_images.dart';
+import 'package:montage/core/constants/app_images.dart';
 
 class MainNavScreen extends StatefulWidget {
   static final GlobalKey<MainNavScreenState> navKey =

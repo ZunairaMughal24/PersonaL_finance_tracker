@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/themes/app_text_theme.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
 
 extension TextThemeExtension on Text {
   Text h1({

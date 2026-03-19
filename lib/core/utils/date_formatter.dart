@@ -16,4 +16,9 @@ class DateUtilsCustom {
   static String formatFullDate(DateTime date) {
     return DateFormat('MMMM dd, yyyy').format(date);
   }
+
+  static String getFullDayName(DateTime? date) {
+    if (date == null) return "";
+    return DateFormat('EEEE').format(date);
+  }
 }

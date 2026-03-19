@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:personal_finance_tracker/core/constants/app_colors.dart';
-import 'package:personal_finance_tracker/core/utils/category_utils.dart';
-import 'package:personal_finance_tracker/models/transaction_model.dart';
-import 'package:personal_finance_tracker/providers/transaction_provider.dart';
-import 'package:personal_finance_tracker/viewmodels/transaction_form_view_model.dart';
-import 'package:personal_finance_tracker/widgets/transaction_type_toggle.dart';
-import 'package:personal_finance_tracker/widgets/category_selector.dart';
-import 'package:personal_finance_tracker/widgets/custom_keypad.dart';
-import 'package:personal_finance_tracker/core/utils/toast_utility.dart';
-import 'package:personal_finance_tracker/widgets/custom_app_bar.dart';
+import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/utils/category_utils.dart';
+import 'package:montage/models/transaction_model.dart';
+import 'package:montage/providers/transaction_provider.dart';
+import 'package:montage/viewmodels/transaction_form_view_model.dart';
+import 'package:montage/widgets/transaction_type_toggle.dart';
+import 'package:montage/widgets/category_selector.dart';
+import 'package:montage/widgets/custom_keypad.dart';
+import 'package:montage/core/utils/toast_utility.dart';
+import 'package:montage/widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
-import 'package:personal_finance_tracker/widgets/app_background.dart';
-import 'package:personal_finance_tracker/widgets/transaction/custom_category_dialog.dart';
+import 'package:montage/widgets/app_background.dart';
+import 'package:montage/widgets/transaction/custom_category_dialog.dart';
 
 class EditTransactionScreen extends StatelessWidget {
   const EditTransactionScreen({super.key, required this.transaction});

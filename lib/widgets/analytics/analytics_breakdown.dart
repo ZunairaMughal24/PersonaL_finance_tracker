@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/utils/category_utils.dart';
-import 'package:personal_finance_tracker/core/utils/currency_utils.dart';
-import 'package:personal_finance_tracker/widgets/glass_container.dart';
-import 'package:personal_finance_tracker/core/themes/text_theme_extension.dart';
-import 'package:personal_finance_tracker/core/utils/padding_extention.dart';
+import 'package:montage/core/utils/category_utils.dart';
+import 'package:montage/core/utils/currency_utils.dart';
+import 'package:montage/widgets/glass_container.dart';
+import 'package:montage/core/themes/text_theme_extension.dart';
+import 'package:montage/core/utils/padding_extention.dart';
 
 class AnalyticsBreakdown extends StatelessWidget {
   final Map<String, double> categoryTotals;

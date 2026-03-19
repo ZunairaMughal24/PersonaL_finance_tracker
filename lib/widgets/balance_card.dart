@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/themes/text_theme_extension.dart';
-import 'package:personal_finance_tracker/core/utils/date_formatter.dart';
-import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
-import 'package:personal_finance_tracker/widgets/glass_container.dart';
-import 'package:personal_finance_tracker/core/utils/currency_utils.dart';
-import 'package:personal_finance_tracker/providers/user_settings_provider.dart';
+import 'package:montage/core/themes/text_theme_extension.dart';
+import 'package:montage/core/utils/date_formatter.dart';
+import 'package:montage/core/utils/widget_utility_extention.dart';
+import 'package:montage/widgets/glass_container.dart';
+import 'package:montage/core/utils/currency_utils.dart';
+import 'package:montage/providers/user_settings_provider.dart';
 import 'package:provider/provider.dart';
 
 class TotalBalanceCard extends StatelessWidget {

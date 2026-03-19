@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/app_colors.dart';
-import 'package:personal_finance_tracker/providers/transaction_provider.dart';
+import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/providers/transaction_provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class AIInsightsCard extends StatelessWidget {

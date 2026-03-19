@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/app_colors.dart';
-import 'package:personal_finance_tracker/providers/transaction_provider.dart';
-import 'package:personal_finance_tracker/widgets/transaction/transaction_list_item.dart';
-import 'package:personal_finance_tracker/providers/user_settings_provider.dart';
-import 'package:personal_finance_tracker/widgets/app_background.dart';
-import 'package:personal_finance_tracker/config/router.dart';
+import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/providers/transaction_provider.dart';
+import 'package:montage/widgets/transaction/transaction_list_item.dart';
+import 'package:montage/providers/user_settings_provider.dart';
+import 'package:montage/widgets/app_background.dart';
+import 'package:montage/config/router.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:personal_finance_tracker/core/themes/text_theme_extension.dart';
-import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
-import 'package:personal_finance_tracker/widgets/glass_container.dart';
-import 'package:personal_finance_tracker/widgets/transaction_type_toggle.dart';
-import 'package:personal_finance_tracker/widgets/custom_app_bar.dart';
+import 'package:montage/core/themes/text_theme_extension.dart';
+import 'package:montage/core/utils/widget_utility_extention.dart';
+import 'package:montage/widgets/glass_container.dart';
+import 'package:montage/widgets/transaction_type_toggle.dart';
+import 'package:montage/widgets/custom_app_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:personal_finance_tracker/core/constants/app_images.dart';
+import 'package:montage/core/constants/app_images.dart';
 
 class ActivityScreen extends StatefulWidget {
   const ActivityScreen({super.key});
