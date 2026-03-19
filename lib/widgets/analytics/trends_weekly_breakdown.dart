@@ -218,3 +218,4 @@ class TrendsDailyBreakdown extends StatelessWidget {
     );
   }
 }
+
