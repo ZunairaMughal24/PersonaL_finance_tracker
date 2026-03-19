@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:personal_finance_tracker/core/utils/date_formatter.dart';
-import 'package:personal_finance_tracker/models/transaction_model.dart';
-import 'package:personal_finance_tracker/models/spending_summary.dart';
-import 'package:personal_finance_tracker/models/trends_model.dart';
-import 'package:personal_finance_tracker/services/database_services.dart';
-import 'package:personal_finance_tracker/services/finance_service.dart';
-import 'package:personal_finance_tracker/services/ai_service.dart';
+import 'package:montage/core/utils/date_formatter.dart';
+import 'package:montage/models/transaction_model.dart';
+import 'package:montage/models/spending_summary.dart';
+import 'package:montage/models/trends_model.dart';
+import 'package:montage/services/database_services.dart';
+import 'package:montage/services/finance_service.dart';
+import 'package:montage/services/ai_service.dart';
 
 class TransactionProvider extends ChangeNotifier {
   final DatabaseService db = DatabaseService();
@@ -170,13 +170,13 @@ class TransactionProvider extends ChangeNotifier {
 
   List<FinancialPeriodData> get weeklyFinancialSummary {
     final Map<String, FinancialPeriodData> dayMap = {
-      'Mon': FinancialPeriodData(label: 'Mon', income: 0, expense: 0),
-      'Tue': FinancialPeriodData(label: 'Tue', income: 0, expense: 0),
-      'Wed': FinancialPeriodData(label: 'Wed', income: 0, expense: 0),
-      'Thu': FinancialPeriodData(label: 'Thu', income: 0, expense: 0),
-      'Fri': FinancialPeriodData(label: 'Fri', income: 0, expense: 0),
-      'Sat': FinancialPeriodData(label: 'Sat', income: 0, expense: 0),
-      'Sun': FinancialPeriodData(label: 'Sun', income: 0, expense: 0),
+      'Mon': FinancialPeriodData(label: 'Mon', date: _getThisWeekDay(DateTime.monday), income: 0, expense: 0),
+      'Tue': FinancialPeriodData(label: 'Tue', date: _getThisWeekDay(DateTime.tuesday), income: 0, expense: 0),
+      'Wed': FinancialPeriodData(label: 'Wed', date: _getThisWeekDay(DateTime.wednesday), income: 0, expense: 0),
+      'Thu': FinancialPeriodData(label: 'Thu', date: _getThisWeekDay(DateTime.thursday), income: 0, expense: 0),
+      'Fri': FinancialPeriodData(label: 'Fri', date: _getThisWeekDay(DateTime.friday), income: 0, expense: 0),
+      'Sat': FinancialPeriodData(label: 'Sat', date: _getThisWeekDay(DateTime.saturday), income: 0, expense: 0),
+      'Sun': FinancialPeriodData(label: 'Sun', date: _getThisWeekDay(DateTime.sunday), income: 0, expense: 0),
     };
 
     for (var tx in _transactions) {
@@ -184,20 +184,20 @@ class TransactionProvider extends ChangeNotifier {
       String day = DateFormat('E').format(parsedDate);
       if (dayMap.containsKey(day)) {
         if (tx.isIncome) {
-          dayMap[day] = FinancialPeriodData(
-            label: day,
+          dayMap[day] = dayMap[day]!.copyWith(
             income: dayMap[day]!.income + tx.amount,
-            expense: dayMap[day]!.expense,
           );
         } else {
-          dayMap[day] = FinancialPeriodData(
-            label: day,
-            income: dayMap[day]!.income,
+          dayMap[day] = dayMap[day]!.copyWith(
             expense: dayMap[day]!.expense + tx.amount,
           );
         }
       }
     }
     return dayMap.values.toList();
+  }
+  DateTime _getThisWeekDay(int dayOfWeek) {
+    final now = DateTime.now();
+    return now.subtract(Duration(days: now.weekday - dayOfWeek));
   }
 }

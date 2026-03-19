@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/providers/transaction_provider.dart';
-import 'package:personal_finance_tracker/providers/user_settings_provider.dart';
-import 'package:personal_finance_tracker/services/database_services.dart';
-import 'package:personal_finance_tracker/widgets/transaction/transaction_list_item.dart';
-import 'package:personal_finance_tracker/core/utils/toast_utility.dart';
-import 'package:personal_finance_tracker/config/router.dart';
+import 'package:montage/providers/transaction_provider.dart';
+import 'package:montage/providers/user_settings_provider.dart';
+import 'package:montage/services/database_services.dart';
+import 'package:montage/widgets/transaction/transaction_list_item.dart';
+import 'package:montage/core/utils/toast_utility.dart';
+import 'package:montage/config/router.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:personal_finance_tracker/core/themes/text_theme_extension.dart';
-import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
-import 'package:personal_finance_tracker/core/utils/padding_extention.dart';
+import 'package:montage/core/themes/text_theme_extension.dart';
+import 'package:montage/core/utils/widget_utility_extention.dart';
+import 'package:montage/core/utils/padding_extention.dart';
 
 class RecentTransactionsList extends StatelessWidget {
   RecentTransactionsList({super.key});

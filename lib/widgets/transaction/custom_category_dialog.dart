@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/app_colors.dart';
-import 'package:personal_finance_tracker/core/themes/text_theme_extension.dart';
-import 'package:personal_finance_tracker/widgets/glass_container.dart';
-import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
+import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/themes/text_theme_extension.dart';
+import 'package:montage/widgets/glass_container.dart';
+import 'package:montage/core/utils/widget_utility_extention.dart';
 
 class CustomCategoryDialog extends StatefulWidget {
   final Function(String) onSubmitted;

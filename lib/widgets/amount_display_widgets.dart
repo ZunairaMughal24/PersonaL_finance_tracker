@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/app_colors.dart';
-import 'package:personal_finance_tracker/core/utils/currency_utils.dart';
-import 'package:personal_finance_tracker/core/utils/date_formatter.dart';
-import 'package:personal_finance_tracker/core/constants/app_images.dart';
-import 'package:personal_finance_tracker/widgets/app_text_field.dart';
+import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/utils/currency_utils.dart';
+import 'package:montage/core/utils/date_formatter.dart';
+import 'package:montage/core/constants/app_images.dart';
+import 'package:montage/widgets/app_text_field.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AmountDisplay extends StatelessWidget {

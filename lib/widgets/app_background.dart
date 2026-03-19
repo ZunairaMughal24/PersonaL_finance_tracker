@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/app_colors.dart';
+import 'package:montage/core/constants/app_colors.dart';
 
 enum BackgroundStyle {
   premiumHybrid, // Home: Iridescent + Splash Hints
@@ -19,6 +19,8 @@ class AppBackground extends StatelessWidget {
   final FloatingActionButtonLocation? floatingActionButtonLocation;
   final bool extendBodyBehindAppBar;
   final bool resizeToAvoidBottomInset;
+  final bool expand;
+  final Alignment alignment;
 
   const AppBackground({
     super.key,
@@ -29,17 +31,23 @@ class AppBackground extends StatelessWidget {
     this.floatingActionButtonLocation,
     this.extendBodyBehindAppBar = true,
     this.resizeToAvoidBottomInset = false,
+    this.expand = true,
+    this.alignment = Alignment.topCenter,
   });
 
   @override
   Widget build(BuildContext context) {
     final bodyContent = Stack(
-      alignment: Alignment.bottomCenter,
+      alignment: alignment,
       children: [
         Positioned.fill(child: _buildBackground(context)),
         child,
       ],
     );
+
+    final effectiveContent = expand
+        ? SizedBox.expand(child: bodyContent)
+        : bodyContent;
 
     if (appBar != null || floatingActionButton != null) {
       return Scaffold(
@@ -49,11 +57,11 @@ class AppBackground extends StatelessWidget {
         appBar: appBar,
         floatingActionButton: floatingActionButton,
         floatingActionButtonLocation: floatingActionButtonLocation,
-        body: bodyContent,
+        body: effectiveContent,
       );
     }
 
-    return bodyContent;
+    return effectiveContent;
   }
 
   Widget _buildBackground(BuildContext context) {

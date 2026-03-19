@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance_tracker/core/constants/app_colors.dart';
-import 'package:personal_finance_tracker/core/utils/widget_utility_extention.dart';
+import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/utils/widget_utility_extention.dart';
 
 class AppButton extends StatelessWidget {
   const AppButton({

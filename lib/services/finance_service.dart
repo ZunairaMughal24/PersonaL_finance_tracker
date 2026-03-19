@@ -1,5 +1,5 @@
-import 'package:personal_finance_tracker/models/transaction_model.dart';
-import 'package:personal_finance_tracker/models/spending_summary.dart';
+import 'package:montage/models/transaction_model.dart';
+import 'package:montage/models/spending_summary.dart';
 
 class FinanceService {
   static double calculateTotalIncome(List<TransactionModel> transactions) {

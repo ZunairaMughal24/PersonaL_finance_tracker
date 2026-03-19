@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:personal_finance_tracker/core/constants/app_colors.dart';
+import 'package:montage/core/constants/app_colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:personal_finance_tracker/core/constants/app_images.dart';
+import 'package:montage/core/constants/app_images.dart';
 
 class CustomKeypad extends StatefulWidget {
   final String amount;

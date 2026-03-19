@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import 'package:hive_flutter/adapters.dart';
-import 'package:personal_finance_tracker/models/transaction_model.dart';
+import 'package:montage/models/transaction_model.dart';
 
 class DatabaseService {
   //accessing box
