@@ -64,7 +64,7 @@ class HomeHeader extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Hello, $userName!',
+                    'Hello, ${userName.split(' ')[0]}!',
                     style: const TextStyle(
                       color: AppColors.white,
                       fontSize: 18,

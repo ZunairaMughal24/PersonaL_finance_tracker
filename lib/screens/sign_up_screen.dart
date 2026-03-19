@@ -8,7 +8,6 @@ import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/core/utils/validators.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/providers/auth_provider.dart';
-import 'package:montage/providers/user_settings_provider.dart';
 import 'package:montage/widgets/app_button.dart';
 import 'package:montage/widgets/app_text_field.dart';
 import 'package:montage/core/utils/animation_utils.dart';
@@ -208,16 +207,6 @@ class _SignUpContentState extends State<SignUpContent> {
                                     .then((credential) {
                                       if (!context.mounted) return;
                                       if (credential != null) {
-                                        final user = credential.user;
-                                        final settings = context
-                                            .read<UserSettingsProvider>();
-                                        settings.setUserEmail(
-                                          user?.email ?? "",
-                                        );
-                                        settings.setUserName(
-                                          provider.usernameController.text
-                                              .trim(),
-                                        );
                                         context.go(
                                           AppRoutes.mainNavigationScreenRoute,
                                         );

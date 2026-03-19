@@ -8,7 +8,6 @@ import 'package:montage/core/utils/toast_utility.dart';
 import 'package:montage/core/utils/validators.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/providers/auth_provider.dart';
-import 'package:montage/providers/user_settings_provider.dart';
 import 'package:montage/widgets/app_button.dart';
 import 'package:montage/widgets/app_text_field.dart';
 import 'package:montage/core/utils/animation_utils.dart';
@@ -184,18 +183,6 @@ class _SignInContentState extends State<SignInContent> {
                                     .then((credential) {
                                       if (!context.mounted) return;
                                       if (credential != null) {
-                                        final user = credential.user;
-                                        final settings = context
-                                            .read<UserSettingsProvider>();
-                                        settings.setUserEmail(
-                                          user?.email ?? "",
-                                        );
-                                        if (user?.displayName != null &&
-                                            user!.displayName!.isNotEmpty) {
-                                          settings.setUserName(
-                                            user.displayName!,
-                                          );
-                                        }
                                         context.go(
                                           AppRoutes.mainNavigationScreenRoute,
                                         );

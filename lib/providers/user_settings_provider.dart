@@ -3,7 +3,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UserSettingsProvider extends ChangeNotifier {
-  static const String _settingsBoxBaseName = 'settings';
   static const String _currencyKey = 'selected_currency';
   static const String _nameKey = 'user_name';
   static const String _imageKey = 'profile_image_path';
@@ -25,33 +24,58 @@ class UserSettingsProvider extends ChangeNotifier {
 
   UserSettingsProvider();
 
-  Future<void> updateUser(String? userId) async {
-    if (_userId == userId) return;
-    
-    _userId = userId;
-    if (userId == null) {
-      _userName = 'User';
-      _userEmail = '';
-      _profileImagePath = null;
-      _box = null;
-      notifyListeners();
+  Future<void> updateUser(
+    String? userId, {
+    String? displayName,
+    String? email,
+  }) async {
+    if (userId == _userId) {
+      if (_box != null &&
+          (_userName == 'User' || _userEmail == 'user@example.com')) {
+        await _loadSettings(displayName: displayName, email: email);
+      }
       return;
     }
 
-    _box = await Hive.openBox('${_settingsBoxBaseName}_$userId');
-    _loadSettings();
+    _userId = userId;
+    if (_box != null) {
+      await _box!.close();
+      _box = null;
+    }
+
+    if (userId != null) {
+      await _loadSettings(displayName: displayName, email: email);
+    } else {
+      _userName = 'User';
+      _userEmail = 'user@example.com';
+      _profileImagePath = null;
+      _notificationsEnabled = true;
+      _selectedCurrency = 'USD';
+      notifyListeners();
+    }
   }
 
-  void _loadSettings() {
-    if (_box == null) return;
-    _selectedCurrency = _box!.get(_currencyKey, defaultValue: 'USD');
-    _userName = _box!.get(_nameKey, defaultValue: 'User');
-    _userEmail = _box!.get(_emailKey, defaultValue: 'user@example.com');
+  Future<void> _loadSettings({String? displayName, String? email}) async {
+    if (_userId == null) return;
+
+    _box = await Hive.openBox<dynamic>('settings_$_userId');
+
+    _userName = _box!.get(_nameKey) ?? displayName ?? 'User';
+    _userEmail = _box!.get(_emailKey) ?? email ?? 'user@example.com';
     _profileImagePath = _box!.get(_imageKey);
     _notificationsEnabled = _box!.get(
       'notifications_enabled',
       defaultValue: true,
     );
+    _selectedCurrency = _box!.get(_currencyKey, defaultValue: 'USD');
+
+    if (!_box!.containsKey(_nameKey) && displayName != null) {
+      await _box!.put(_nameKey, displayName);
+    }
+    if (!_box!.containsKey(_emailKey) && email != null) {
+      await _box!.put(_emailKey, email);
+    }
+
     notifyListeners();
   }
 

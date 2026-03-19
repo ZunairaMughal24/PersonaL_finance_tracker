@@ -28,8 +28,12 @@ void main() async {
         ),
         ChangeNotifierProxyProvider<AuthProvider, UserSettingsProvider>(
           create: (_) => UserSettingsProvider(),
-          update: (_, auth, settings) =>
-              settings!..updateUser(auth.currentUser?.uid),
+          update: (_, auth, settings) => settings!
+            ..updateUser(
+              auth.currentUser?.uid,
+              displayName: auth.currentUser?.displayName,
+              email: auth.currentUser?.email,
+            ),
         ),
       ],
       child: const MyApp(),
