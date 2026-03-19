@@ -1,11 +1,13 @@
 import 'package:flutter/foundation.dart';
 
 import 'package:hive_flutter/adapters.dart';
-import 'package:personal_finance_tracker/models/transaction_model.dart';
+import 'package:montage/models/transaction_model.dart';
 
 class DatabaseService {
-  //accessing box
-  final box = Hive.box<TransactionModel>('transactions');
+  final Box<TransactionModel> box;
+
+  DatabaseService(this.box);
+
   // Method to add a transaction
   Future<void> addTransaction(TransactionModel tx) async {
     await box.add(tx);

@@ -2,13 +2,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:personal_finance_tracker/config/router.dart';
-import 'package:personal_finance_tracker/core/theme/app_theme.dart';
-import 'package:personal_finance_tracker/firebase_options.dart';
-import 'package:personal_finance_tracker/models/transaction_model.dart';
-import 'package:personal_finance_tracker/providers/transaction_provider.dart';
-import 'package:personal_finance_tracker/providers/user_settings_provider.dart';
-import 'package:personal_finance_tracker/providers/auth_provider.dart';
+import 'package:montage/config/router.dart';
+import 'package:montage/core/theme/app_theme.dart';
+import 'package:montage/firebase_options.dart';
+import 'package:montage/models/transaction_model.dart';
+import 'package:montage/providers/transaction_provider.dart';
+import 'package:montage/providers/user_settings_provider.dart';
+import 'package:montage/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -18,14 +18,19 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(TransactionModelAdapter());
 
-  await Hive.openBox<TransactionModel>('transactions');
-
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => TransactionProvider()),
-        ChangeNotifierProvider(create: (_) => UserSettingsProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProxyProvider<AuthProvider, TransactionProvider>(
+          create: (_) => TransactionProvider(),
+          update: (_, auth, tx) => tx!..updateUser(auth.currentUser?.uid),
+        ),
+        ChangeNotifierProxyProvider<AuthProvider, UserSettingsProvider>(
+          create: (_) => UserSettingsProvider(),
+          update: (_, auth, settings) =>
+              settings!..updateUser(auth.currentUser?.uid),
+        ),
       ],
       child: const MyApp(),
     ),
@@ -47,7 +52,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       routerConfig: createRouter(),
-      title: 'Finance Tracker',
+      title: 'MONTAGE',
       theme: AppTheme.darkTheme,
     );
   }
