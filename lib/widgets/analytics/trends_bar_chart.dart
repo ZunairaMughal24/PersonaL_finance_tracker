@@ -96,7 +96,7 @@ class TrendsBarChart extends StatelessWidget {
                       if (value == 0) return const SizedBox.shrink();
                       return SideTitleWidget(
                         axisSide: meta.axisSide,
-                        space: 15,
+                        space: 10,
                         child: Text(CurrencyUtils.formatCompactAmount(value))
                             .labelMedium(
                               color: Colors.white.withValues(alpha: 0.4),
