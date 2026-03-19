@@ -129,7 +129,7 @@ class TrendsDailyBreakdown extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("Income").labelLarge(
-                            color: Colors.white.withValues(alpha: 0.5),
+                            color: Colors.white.withValues(alpha: 0.6),
                             weight: FontWeight.w600,
                             fontSize: 14,
                           ),
@@ -172,7 +172,7 @@ class TrendsDailyBreakdown extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("Expense").labelLarge(
-                          color: Colors.white.withValues(alpha: 0.5),
+                          color: Colors.white.withValues(alpha: 0.6),
                           weight: FontWeight.w600,
                           fontSize: 14,
                         ),
@@ -218,4 +218,3 @@ class TrendsDailyBreakdown extends StatelessWidget {
     );
   }
 }
-

@@ -130,7 +130,7 @@ class TransactionListItem extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(transaction.date).labelMedium(
-                        color: AppColors.white.withValues(alpha: 0.7),
+                        color: AppColors.white.withValues(alpha: 0.8),
                       ),
                     ],
                   ),

@@ -5,7 +5,7 @@ import 'package:montage/core/utils/category_utils.dart';
 import 'package:montage/core/utils/currency_utils.dart';
 import 'package:montage/screens/main_navigation_screen.dart';
 import 'package:montage/widgets/analytics/spending_category_breakdown.dart';
-import 'package:montage/widgets/analytics/trends_daily_breakdown.dart';
+import 'package:montage/widgets/analytics/trends_weekly_breakdown.dart';
 import 'package:montage/widgets/glass_container.dart';
 import 'package:montage/widgets/app_background.dart';
 import 'package:montage/widgets/custom_app_bar.dart';

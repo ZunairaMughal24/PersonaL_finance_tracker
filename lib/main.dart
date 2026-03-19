@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:montage/config/router.dart';
-import 'package:montage/core/theme/app_theme.dart';
+import 'package:montage/core/themes/app_theme.dart';
 import 'package:montage/firebase_options.dart';
 import 'package:montage/models/transaction_model.dart';
 import 'package:montage/providers/transaction_provider.dart';
