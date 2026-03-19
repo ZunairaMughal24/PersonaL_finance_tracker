@@ -9,10 +9,10 @@ import 'package:montage/widgets/glass_container.dart';
 import 'package:montage/providers/user_settings_provider.dart';
 import 'package:provider/provider.dart';
 
-class TrendsDailyBreakdown extends StatelessWidget {
+class TrendsWeeklyBreakdown extends StatelessWidget {
   final List<FinancialPeriodData> weeklyData;
 
-  const TrendsDailyBreakdown({super.key, required this.weeklyData});
+  const TrendsWeeklyBreakdown({super.key, required this.weeklyData});
 
   @override
   Widget build(BuildContext context) {

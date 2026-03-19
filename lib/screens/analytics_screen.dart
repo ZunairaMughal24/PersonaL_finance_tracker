@@ -109,7 +109,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                             sortedCategories: summary.sortedCategories,
                             grandTotal: summary.grandTotal,
                           )
-                        : TrendsDailyBreakdown(weeklyData: weeklyData),
+                        : TrendsWeeklyBreakdown(weeklyData: weeklyData),
                   ),
                   80.heightBox,
                 ],
