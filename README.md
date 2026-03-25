@@ -1,67 +1,132 @@
-# MONTAGE — Premium Personal Finance Tracker
+# Montage
 
-MONTAGE is a sophisticated, glassmorphic personal finance management application built with Flutter. It combines a premium dark-themed UI with powerful tracking features and real-time data synchronization to provide a seamless financial management experience.
+**Financial discipline, refined.**
 
-## ✨ Features
-
-- **Premium Glassmorphic UI**: High-end dark mode interface with subtle blurs, gradients, and micro-animations.
-- **Real-Time Profile Sync**: Immediate synchronization of user profile data (name, email, photo) across all screens.
-- **Smart Analytics**: 
-  - **Spending Categories**: Interactive pie chart breakdown of your expenses.
-  - **Financial Trends**: Weekly income vs. expense bar charts and daily breakdown lists.
-- **Secure Authentication**: Built-in sign-in and sign-up flows powered by Firebase.
-- **Data Isolation**: Multi-account support with separate storage boxes for each user ensuring data privacy.
-- **Advanced Transaction Editing**: Quick edit dialogs with category pre-filling and custom category support.
-- **Multi-Currency Support**: Flexible currency settings for international use.
-
-## 🛠️ Tech Stack
-
-- **Framework**: [Flutter](https://flutter.dev/)
-- **State Management**: [Provider](https://pub.dev/packages/provider)
-- **Local Database**: [Hive](https://pub.dev/packages/hive) (for high-performance local storage)
-- **Backend**: [Firebase Auth](https://firebase.google.com/docs/auth)
-- **Charts**: [FL Chart](https://pub.dev/packages/fl_chart)
-- **Typography**: [Google Fonts (Nunito)](https://fonts.google.com/specimen/Nunito)
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Flutter SDK (Latest Stable)
-- Android Studio or VS Code
-- Firebase Project (Configured for Flutter)
-
-### Installation
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/ZunairaMughal24/PersonaL_finance_tracker.git
-   ```
-
-2. **Install dependencies**:
-   ```bash
-   flutter pub get
-   ```
-
-3. **Configure Firebase**:
-   Follow the [FlutterFire](https://firebase.google.com/docs/flutter/setup) guide to set up your `firebase_options.dart`.
-
-4. **Run the app**:
-   ```bash
-   flutter run
-   ```
-
-## 📂 Project Structure
-
-- `lib/core`: Global constants, theme data (consolidated in `themes/`), and utility classes.
-- `lib/models`: Hive-compatible data models.
-- `lib/providers`: State management logic for transactions, auth, and user settings.
-- `lib/screens`: Primary application views (Home, Analytics, Settings, Auth).
-- `lib/widgets`: Reusable UI components from specialized chart widgets to glassmorphic containers.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Montage is a personal finance management application built with Flutter. It helps users track income and expenses, visualize spending patterns, attach receipts to transactions, and manage their financial goals — all wrapped in a polished, dark-themed glassmorphic interface.
 
 ---
-*Built with ❤️ by Zunaira Mughal*
+
+## Features
+
+### Transaction Management
+- Add, edit, and delete income and expense transactions.
+- Choose from predefined categories or create custom ones.
+- Toggle between income and expense views with swipe gestures.
+- Attach photos (camera or gallery) as receipts or proof of purchase.
+- View attached images in a full-screen viewer with pinch-to-zoom.
+- Save attached images directly to the device gallery.
+
+### Dashboard
+- At-a-glance balance summary showing total income, total expenses, and net balance.
+- Recent transactions list with category icons and amount formatting.
+- AI-powered spending insights card using Google Generative AI.
+- Greeting header with the user's first name and profile photo.
+
+### Analytics
+- **Category Breakdown**: Interactive pie chart showing expense distribution by category.
+- **Weekly Trends**: Bar chart comparing income vs. expenses over the past week.
+- **Daily Breakdown**: Itemized daily spending list for the selected period.
+
+### Profile & Settings
+- Edit display name inline with instant sync across all screens.
+- Change or remove profile photo via the device camera or gallery.
+- Toggle notification preferences.
+- Switch between supported currencies (PKR, USD, EUR, GBP, etc.).
+- Sign out with full session cleanup.
+
+### Authentication
+- Email/password sign-in and sign-up powered by Firebase Authentication.
+- Onboarding screen for first-time users.
+- Per-user data isolation — each account has its own private Hive storage box.
+
+### Navigation & UX
+- Bottom navigation with four tabs: Home, Analytics, Activity, and Settings.
+- Intelligent back-button handling: pressing back from any tab returns to Home first.
+- Consistent bottom-sheet interactions for all secondary actions (transaction details, editing, media picking, profile options).
+- Haptic feedback on key interactions.
+- Smooth page transitions and micro-animations throughout the app.
+
+---
+
+## Tech Stack
+
+| Layer              | Technology                                                                 |
+|--------------------|---------------------------------------------------------------------------|
+| Framework          | [Flutter](https://flutter.dev/) (Dart)                                    |
+| State Management   | [Provider](https://pub.dev/packages/provider)                             |
+| Local Storage      | [Hive](https://pub.dev/packages/hive)                                     |
+| Authentication     | [Firebase Auth](https://firebase.google.com/docs/auth)                    |
+| AI Insights        | [Google Generative AI](https://pub.dev/packages/google_generative_ai)     |
+| Charts             | [FL Chart](https://pub.dev/packages/fl_chart)                             |
+| Routing            | [GoRouter](https://pub.dev/packages/go_router)                            |
+| Image Handling     | [image_picker](https://pub.dev/packages/image_picker), [gal](https://pub.dev/packages/gal) |
+| Typography         | [Google Fonts](https://pub.dev/packages/google_fonts) (Nunito)            |
+| Animations         | [flutter_animate](https://pub.dev/packages/flutter_animate)               |
+| SVG Rendering      | [flutter_svg](https://pub.dev/packages/flutter_svg)                       |
+
+---
+
+## Project Structure
+
+```
+lib/
+├── config/              # App router configuration
+├── core/
+│   ├── constants/       # Colors, image asset paths
+│   ├── themes/          # App theme, text styles, extensions
+│   └── utils/           # Formatters, validators, category utils, animation helpers
+├── models/              # Hive data models (Transaction, SpendingSummary, Trends)
+├── providers/           # State management (Auth, Transactions, UserSettings)
+├── screens/             # All app screens (12 total)
+├── services/            # Business logic (Auth, Database, Finance, AI)
+├── viewmodels/          # Presentation logic (TransactionForm, ImageView)
+└── widgets/             # Reusable UI components (25+)
+    ├── analytics/       # Chart widgets
+    └── transaction/     # Transaction-specific sheets and list items
+```
+
+---
+
+## Getting Started
+
+### Prerequisites
+- Flutter SDK (stable channel, Dart ≥ 3.8.1)
+- Android Studio or VS Code
+- A configured Firebase project
+
+### Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/ZunairaMughal24/PersonaL_finance_tracker.git
+
+# Install dependencies
+flutter pub get
+
+# Generate Hive adapters
+dart run build_runner build --delete-conflicting-outputs
+
+# Run the app
+flutter run
+```
+
+### Firebase Configuration
+Place your `google-services.json` (Android) and `GoogleService-Info.plist` (iOS) in the appropriate platform directories. Refer to the [FlutterFire setup guide](https://firebase.google.com/docs/flutter/setup) for details.
+
+---
+
+## Design Philosophy
+
+Montage follows a **glassmorphic dark theme** with frosted glass containers, subtle gradients, and refined border treatments. All interactive surfaces share a unified visual language — the same bottom-sheet patterns used in the profile menu are reused across transaction actions, media picking, and currency selection for a consistent user experience.
+
+Business logic is strictly separated from UI. Screens are kept as thin as possible, delegating work to Providers, ViewModels, and Services.
+
+---
+
+## License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+
+---
+
+*Built by Zunaira Mughal*

@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-03-26
+
+### Added
+- **Transaction Media Attachments**: Enabled attaching high-resolution images/snapshots to financial records for better tracking.
+- **Native Gallery Integration**: Implemented a robust image download system using the `gal` package for direct persistence to the device's photo gallery.
+- **Premium Action Sheets**: Refactored transaction management into unified, glass-morphic bottom sheets, exactly mirroring the high-end profile menu aesthetic.
+
+### Improved
+- **Architectural Logic Separation**: Decoupled business logic from UI views in `ImageViewScreen` and `TransactionActionSheet` using dedicated ViewModels.
+- **Navigation Intelligence**: Implemented a "Pop-to-Home" navigation pattern, ensuring the back button always returns to the primary dashboard for a more intuitive flow.
+- **UI Consistency**: Refined the custom keypad and transaction list items with enhanced visual states and standardized iconography.
+
+### Fixed
+- **Sheet Layout Overflows**: Corrected layout constraints in action sheets to ensure perfect rendering across all devices, including those with notches.
+- **State Management Synchronization**: Fixed intermittent lag in image badge refreshing on the transaction dashboard.
+
 ## [1.1.0] - 2026-03-20
 
 ### Added
