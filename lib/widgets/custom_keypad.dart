@@ -12,11 +12,13 @@ class CustomKeypad extends StatefulWidget {
   final String currency;
   final bool isIncome;
   final bool hasActiveExpression;
+  final bool hasImage;
   final Function(String) onKeyPressed;
   final VoidCallback onBackPressed;
   final VoidCallback onClear;
   final VoidCallback onComplete;
   final VoidCallback onEqualPressed;
+  final VoidCallback onCameraTap;
   final Function(String) onNoteChanged;
   final Function(DateTime) onDateChanged;
 
@@ -29,11 +31,13 @@ class CustomKeypad extends StatefulWidget {
     required this.currency,
     required this.isIncome,
     required this.hasActiveExpression,
+    this.hasImage = false,
     required this.onKeyPressed,
     required this.onBackPressed,
     required this.onClear,
     required this.onComplete,
     required this.onEqualPressed,
+    required this.onCameraTap,
     required this.onNoteChanged,
     required this.onDateChanged,
   });
@@ -122,6 +126,8 @@ class _CustomKeypadState extends State<CustomKeypad> {
               controller: _noteController,
               onChanged: widget.onNoteChanged,
               focusNode: _noteFocusNode,
+              onCameraTap: widget.onCameraTap,
+              hasImage: widget.hasImage,
             ),
             if (!_isNoteFocused)
               _KeypadGrid(
@@ -223,10 +229,14 @@ class _KeypadNoteField extends StatelessWidget {
   final TextEditingController controller;
   final Function(String) onChanged;
   final FocusNode? focusNode;
+  final VoidCallback onCameraTap;
+  final bool hasImage;
   const _KeypadNoteField({
     required this.controller,
     required this.onChanged,
     this.focusNode,
+    required this.onCameraTap,
+    this.hasImage = false,
   });
 
   @override
@@ -265,10 +275,31 @@ class _KeypadNoteField extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          Icon(
-            Icons.camera_alt_outlined,
-            color: Colors.white.withValues(alpha: 0.4),
-            size: 22,
+          GestureDetector(
+            onTap: onCameraTap,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Icon(
+                  Icons.camera_alt_outlined,
+                  color: Colors.white.withValues(alpha: 0.4),
+                  size: 22,
+                ),
+                if (hasImage)
+                  Positioned(
+                    top: -2,
+                    right: -2,
+                    child: Container(
+                      width: 8,
+                      height: 8,
+                      decoration: const BoxDecoration(
+                        color: AppColors.green,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ],
       ),
@@ -377,17 +408,17 @@ class _KeypadGrid extends StatelessWidget {
             SvgPicture.asset(
               AppImages.calendar,
               colorFilter: ColorFilter.mode(
-                isToday ? AppColors.primaryColor : Colors.white,
+                isToday ? AppColors.primaryLight : Colors.white,
                 BlendMode.srcIn,
               ),
-              height: 16,
+              height: 19,
             ),
             const SizedBox(width: 8),
             Text(
               isToday ? "Today" : DateFormat('dd MMM').format(selectedDate),
               style: TextStyle(
-                color: isToday ? AppColors.primaryColor : Colors.white,
-                fontWeight: FontWeight.w500,
+                color: isToday ? AppColors.primaryLight : Colors.white,
+                fontWeight: FontWeight.w600,
                 fontSize: 15,
               ),
             ),

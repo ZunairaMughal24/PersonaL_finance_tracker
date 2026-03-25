@@ -12,6 +12,7 @@ import 'package:montage/screens/activity_screen.dart';
 import 'package:montage/screens/sign_in_screen.dart';
 import 'package:montage/screens/sign_up_screen.dart';
 import 'package:montage/config/auth_wrapper.dart';
+import 'package:montage/screens/image_view_screen.dart';
 
 // ─── Route Constants
 
@@ -27,6 +28,7 @@ class AppRoutes {
   static const String signInScreenRoute = '/signIn';
   static const String signUpScreenRoute = '/signUp';
   static const String onboardingScreenRoute = '/onboarding';
+  static const String imageViewScreenRoute = '/imageView';
 
   static const String rootRoute = '/';
 
@@ -158,6 +160,14 @@ GoRouter createRouter() {
           context: context,
           state: state,
           child: const SettingsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.imageViewScreenRoute,
+        pageBuilder: (context, state) => _buildPageWithDefaultTransition(
+          context: context,
+          state: state,
+          child: ImageViewScreen(imagePath: state.extra as String),
         ),
       ),
     ],

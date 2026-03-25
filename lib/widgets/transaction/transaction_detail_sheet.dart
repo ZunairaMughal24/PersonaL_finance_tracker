@@ -1,4 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:montage/config/router.dart';
 import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/core/utils/category_utils.dart';
@@ -134,6 +137,56 @@ class TransactionDetailSheet extends StatelessWidget {
                         label: "NOTE",
                         value: transaction.title,
                         isMultiline: true,
+                      ),
+                    ],
+                    if (transaction.imagePath != null) ...[
+                      Divider(
+                        color: Colors.white.withValues(alpha: 0.07),
+                        height: 20,
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.image_outlined,
+                            color: Colors.white.withValues(alpha: 0.6),
+                            size: 17,
+                          ),
+                          10.widthBox,
+                          Text("MEDIA").labelLarge(
+                            color: Colors.white.withValues(alpha: 0.6),
+                            weight: FontWeight.w600,
+                            letterSpacing: 1.1,
+                            fontSize: 12,
+                          ),
+                          const Spacer(),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                              context.push(
+                                AppRoutes.imageViewScreenRoute,
+                                extra: transaction.imagePath!,
+                              );
+                            },
+                            child: Container(
+                              height: 60,
+                              width: 60,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.1),
+                                  width: 1,
+                                ),
+                                image: DecorationImage(
+                                  image: FileImage(
+                                    File(transaction.imagePath!),
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ],

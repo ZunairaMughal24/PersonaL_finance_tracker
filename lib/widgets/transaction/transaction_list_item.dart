@@ -3,7 +3,7 @@ import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/utils/currency_utils.dart';
 import 'package:montage/core/utils/category_utils.dart';
 import 'package:montage/models/transaction_model.dart';
-import 'package:montage/widgets/transaction/transaction_action_dialog.dart';
+import 'package:montage/widgets/transaction/transaction_action_sheet.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/widgets/glass_container.dart';
 
@@ -54,18 +54,40 @@ class TransactionListItem extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               child: Row(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: fillColor,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: borderColor, width: 1.5),
-                    ),
-                    child: Icon(
-                      CategoryUtils.getIconForCategory(transaction.category),
-                      color: statusColor,
-                      size: 20,
-                    ),
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: fillColor,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: borderColor, width: 1.5),
+                        ),
+                        child: Icon(
+                          CategoryUtils.getIconForCategory(transaction.category),
+                          color: statusColor,
+                          size: 20,
+                        ),
+                      ),
+                      if (transaction.imagePath != null)
+                        Positioned(
+                          bottom: -2,
+                          right: -2,
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(
+                              color: AppColors.primaryColor,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.image_outlined,
+                              color: Colors.white,
+                              size: 10,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                   const SizedBox(width: 12),
 
@@ -154,16 +176,14 @@ class TransactionListItem extends StatelessWidget {
   }
 
   void _showActionDialog(BuildContext context) {
-    showDialog(
+    showModalBottomSheet(
       context: context,
-      barrierColor: Colors.black45,
-      builder: (context) => TransactionActionDialog(
-        category: transaction.category,
-        amount: transaction.amount,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => TransactionActionSheet(
         onEdit: () => onEdit?.call(),
         onDelete: () => onDelete?.call(),
         onDetail: () => _showDetailSheet(context),
-        currency: currency,
       ),
     );
   }

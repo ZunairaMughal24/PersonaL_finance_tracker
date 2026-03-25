@@ -1,6 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:montage/core/utils/date_formatter.dart';
 import 'package:montage/models/transaction_model.dart';
+import 'package:montage/widgets/image_source_sheet.dart';
 import 'package:expressions/expressions.dart';
 
 class TransactionFormViewModel extends ChangeNotifier {
@@ -12,6 +16,7 @@ class TransactionFormViewModel extends ChangeNotifier {
   String _title = "";
   String _selectedCurrency = 'USD';
   bool _showKeypad = false;
+  String? _imagePath;
 
   bool get isIncome => _isIncome;
   DateTime get selectedDate => _selectedDate;
@@ -21,6 +26,7 @@ class TransactionFormViewModel extends ChangeNotifier {
   String get title => _title;
   String get selectedCurrency => _selectedCurrency;
   bool get showKeypad => _showKeypad;
+  String? get imagePath => _imagePath;
 
   /// True when the expression contains arithmetic operators (pending calculation).
   bool get hasActiveExpression =>
@@ -45,6 +51,7 @@ class TransactionFormViewModel extends ChangeNotifier {
     _amountExpression = _amountResult;
     _selectedCategory = tx.category;
     _selectedCurrency = tx.currency;
+    _imagePath = tx.imagePath;
 
     _selectedDate = DateTime.now();
     try {
@@ -88,6 +95,40 @@ class TransactionFormViewModel extends ChangeNotifier {
   void toggleKeypad(bool show) {
     _showKeypad = show;
     notifyListeners();
+  }
+
+  void setImagePath(String? path) {
+    _imagePath = path;
+    notifyListeners();
+  }
+
+  bool _isPickingImage = false;
+
+  Future<void> pickImage(BuildContext context) async {
+    if (_isPickingImage) return;
+
+    final ImageSource? source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const ImageSourceSheet(),
+    );
+
+    if (source != null) {
+      _isPickingImage = true;
+      try {
+        final ImagePicker picker = ImagePicker();
+        final XFile? image = await picker.pickImage(source: source);
+        if (image != null) {
+          final directory = await getApplicationDocumentsDirectory();
+          final String name = image.name; 
+          final File file = File(image.path);
+          final File newImage = await file.copy('${directory.path}/$name');
+          setImagePath(newImage.path);
+        }
+      } finally {
+        _isPickingImage = false;
+      }
+    }
   }
 
   void onKeyPressed(String value) {
@@ -219,6 +260,7 @@ class TransactionFormViewModel extends ChangeNotifier {
       date: DateUtilsCustom.formatDate(_selectedDate),
       category: _selectedCategory,
       currency: _selectedCurrency,
+      imagePath: _imagePath,
     );
   }
 

@@ -22,6 +22,9 @@ class TransactionModel extends HiveObject {
   @HiveField(5, defaultValue: 'USD')
   String currency;
 
+  @HiveField(6, defaultValue: null)
+  String? imagePath;
+
   TransactionModel({
     required this.title,
     required this.amount,
@@ -29,6 +32,7 @@ class TransactionModel extends HiveObject {
     required this.date,
     required this.category,
     this.currency = 'USD',
+    this.imagePath,
   });
 
   Map<String, dynamic> toMap() {
@@ -39,6 +43,7 @@ class TransactionModel extends HiveObject {
       'date': date,
       'category': category,
       'currency': currency,
+      'imagePath': imagePath,
     };
   }
 
@@ -50,6 +55,7 @@ class TransactionModel extends HiveObject {
       date: map['date'],
       category: map['category'] ?? '',
       currency: map['currency'] ?? 'USD',
+      imagePath: map['imagePath'],
     );
   }
 }

@@ -51,68 +51,76 @@ class MainNavScreenState extends State<MainNavScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBody: true,
-      resizeToAvoidBottomInset: false,
-      body: IndexedStack(index: _currentIndex, children: _screens),
+    return PopScope(
+      canPop: _currentIndex == 0,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop && _currentIndex != 0) {
+          switchToHome();
+        }
+      },
+      child: Scaffold(
+        extendBody: true,
+        resizeToAvoidBottomInset: false,
+        body: IndexedStack(index: _currentIndex, children: _screens),
 
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.primaryColor,
-        elevation: 6,
-        shape: const CircleBorder(),
-        onPressed: () {
-          context.push(AppRoutes.transactionScreenRoute);
-        },
-        child: const Icon(Icons.add, size: 28, color: Colors.white),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-
-      bottomNavigationBar: ClipRRect(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: AppColors.primaryColor,
+          elevation: 6,
+          shape: const CircleBorder(),
+          onPressed: () {
+            context.push(AppRoutes.transactionScreenRoute);
+          },
+          child: const Icon(Icons.add, size: 28, color: Colors.white),
         ),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-          child: BottomAppBar(
-            color: Colors.white.withValues(alpha: 0.08),
-            elevation: 0,
-            notchMargin: 0,
-            padding: EdgeInsets.zero,
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(
-                    color: Colors.white.withValues(alpha: 0.12),
-                    width: 0.5,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
+        bottomNavigationBar: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+            child: BottomAppBar(
+              color: Colors.white.withValues(alpha: 0.08),
+              elevation: 0,
+              notchMargin: 0,
+              padding: EdgeInsets.zero,
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      color: Colors.white.withValues(alpha: 0.12),
+                      width: 0.5,
+                    ),
                   ),
                 ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _navItem(
-                    iconPath: AppImages.homeAngle,
-                    label: 'Home',
-                    index: 0,
-                  ),
-                  _navItem(
-                    iconPath: AppImages.chart,
-                    label: 'Analytics',
-                    index: 1,
-                  ),
-                  const SizedBox(width: 48),
-                  _navItem(
-                    iconPath: AppImages.record,
-                    label: 'Activity',
-                    index: 2,
-                  ),
-                  _navItem(
-                    icon: CupertinoIcons.person_fill,
-                    label: 'Settings',
-                    index: 3,
-                  ),
-                ],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _navItem(
+                      iconPath: AppImages.homeAngle,
+                      label: 'Home',
+                      index: 0,
+                    ),
+                    _navItem(
+                      iconPath: AppImages.chart,
+                      label: 'Analytics',
+                      index: 1,
+                    ),
+                    const SizedBox(width: 48),
+                    _navItem(
+                      iconPath: AppImages.record,
+                      label: 'Activity',
+                      index: 2,
+                    ),
+                    _navItem(
+                      icon: CupertinoIcons.person_fill,
+                      label: 'Settings',
+                      index: 3,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
