@@ -79,7 +79,7 @@ class TrendsBarChart extends StatelessWidget {
                           padding: const EdgeInsets.only(top: 10),
                           child: Text(weeklyData[value.toInt()].label)
                               .labelMedium(
-                                color: Colors.white.withValues(alpha: 0.5),
+                                color: Colors.white.withValues(alpha: 0.6),
                               ),
                         );
                       }
@@ -99,7 +99,7 @@ class TrendsBarChart extends StatelessWidget {
                         space: 10,
                         child: Text(CurrencyUtils.formatCompactAmount(value))
                             .labelMedium(
-                              color: Colors.white.withValues(alpha: 0.4),
+                              color: Colors.white.withValues(alpha: 0.6),
                               weight: FontWeight.bold,
                             ),
                       );

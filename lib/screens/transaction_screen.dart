@@ -158,10 +158,12 @@ class _TransactionScreenContentState extends State<_TransactionScreenContent> {
                     if (vm.showKeypad)
                       CustomKeypad(
                         amount: vm.amountExpression,
+                        amountResult: vm.amountResult,
                         note: vm.title,
                         selectedDate: vm.selectedDate,
                         currency: vm.selectedCurrency,
                         isIncome: vm.isIncome,
+                        hasActiveExpression: vm.hasActiveExpression,
                         onKeyPressed: vm.onKeyPressed,
                         onBackPressed: vm.onBackspace,
                         onClear: vm.onClear,
@@ -170,6 +172,7 @@ class _TransactionScreenContentState extends State<_TransactionScreenContent> {
                           onSuccess: () => context.pop(),
                           onError: (error) => ToastUtils.show(context, error),
                         ),
+                        onEqualPressed: vm.onEqualPressed,
                         onNoteChanged: (val) => vm.setTitle(val),
                         onDateChanged: (val) => vm.setDate(val),
                       ),

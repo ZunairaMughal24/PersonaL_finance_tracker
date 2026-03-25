@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/utils/date_formatter.dart';
 import 'package:montage/models/transaction_model.dart';
+import 'package:expressions/expressions.dart';
 
 class TransactionFormViewModel extends ChangeNotifier {
   bool _isIncome = true;
@@ -20,6 +21,11 @@ class TransactionFormViewModel extends ChangeNotifier {
   String get title => _title;
   String get selectedCurrency => _selectedCurrency;
   bool get showKeypad => _showKeypad;
+
+  /// True when the expression contains arithmetic operators (pending calculation).
+  bool get hasActiveExpression =>
+      RegExp(r'[+\-*/]').hasMatch(_amountExpression) &&
+      _amountExpression != '-';
 
   TransactionFormViewModel({TransactionModel? transaction}) {
     if (transaction != null) {
@@ -93,20 +99,25 @@ class TransactionFormViewModel extends ChangeNotifier {
           _amountExpression = value;
         }
       } else {
-        if (value == "." && _amountExpression.endsWith(".")) return;
-
-        final int digitCount = _amountExpression
-            .replaceAll(RegExp(r'[^0-9]'), '')
-            .length;
-        if (digitCount >= 10 && RegExp(r'[0-9]').hasMatch(value)) return;
+        if (value == "." && _amountExpression.contains(".")) {
+          // Check if the last number already has a dot
+          final parts = _amountExpression.split(RegExp(r'[+\-*/]'));
+          if (parts.isNotEmpty && parts.last.contains(".")) return;
+        }
 
         _amountExpression += value;
       }
     } else if (RegExp(r'[+\-*/]').hasMatch(value)) {
       if (_amountExpression == "0" && value == "-") {
         _amountExpression = "-";
-      } else if (!RegExp(r'[+\-*/]$').hasMatch(_amountExpression)) {
+      } else if (_amountExpression != "-" &&
+          !RegExp(r'[+\-*/]$').hasMatch(_amountExpression)) {
         _amountExpression += value;
+      } else if (RegExp(r'[+\-*/]$').hasMatch(_amountExpression)) {
+        // Replace last operator
+        _amountExpression =
+            _amountExpression.substring(0, _amountExpression.length - 1) +
+            value;
       }
     }
 
@@ -117,19 +128,51 @@ class TransactionFormViewModel extends ChangeNotifier {
   void _evaluateExpression() {
     try {
       _amountResult = _calculate(_amountExpression);
-    } catch (_) {}
+    } catch (_) {
+      // Keep previous result if error
+    }
   }
 
   String _calculate(String expression) {
+    if (expression.isEmpty || expression == "0" || expression == "-") {
+      return "0";
+    }
+
     try {
-      String exp = expression;
-      if (RegExp(r'[+\-*/]$').hasMatch(exp)) {
-        exp = exp.substring(0, exp.length - 1);
+      String expStr = expression;
+      // Remove trailing operator for calculation
+      if (RegExp(r'[+\-*/]$').hasMatch(expStr)) {
+        expStr = expStr.substring(0, expStr.length - 1);
       }
 
-      return exp;
-    } catch (_) {
-      return "0";
+      // Replace symbols for expressions package if necessary
+      final Expression parsedExpression = Expression.parse(expStr);
+      final evaluator = const ExpressionEvaluator();
+      final result = evaluator.eval(parsedExpression, {});
+
+      if (result == null) return "0";
+
+      String resultStr = result.toString();
+
+      if (result is double) {
+        if (result.isInfinite || result.isNaN) return "0";
+        if (resultStr.endsWith(".0")) {
+          resultStr = resultStr.substring(0, resultStr.length - 2);
+        } else {
+          // Limit to 2 decimal places for financial data
+          resultStr = result.toStringAsFixed(2);
+          if (resultStr.endsWith(".00")) {
+            resultStr = resultStr.substring(0, resultStr.length - 3);
+          } else if (resultStr.endsWith("0") && resultStr.contains(".")) {
+            resultStr = resultStr.substring(0, resultStr.length - 1);
+          }
+        }
+      }
+
+      return resultStr;
+    } catch (e) {
+      debugPrint("Calculation error: $e");
+      return _amountResult;
     }
   }
 
@@ -149,6 +192,13 @@ class TransactionFormViewModel extends ChangeNotifier {
   void onClear() {
     _amountExpression = "0";
     _amountResult = "0";
+    notifyListeners();
+  }
+
+  /// Evaluates the current expression and collapses it to the result.
+  void onEqualPressed() {
+    _evaluateExpression();
+    _amountExpression = _amountResult;
     notifyListeners();
   }
 

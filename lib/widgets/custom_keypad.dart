@@ -6,28 +6,34 @@ import 'package:montage/core/constants/app_images.dart';
 
 class CustomKeypad extends StatefulWidget {
   final String amount;
+  final String amountResult;
   final String note;
   final DateTime selectedDate;
   final String currency;
   final bool isIncome;
+  final bool hasActiveExpression;
   final Function(String) onKeyPressed;
   final VoidCallback onBackPressed;
   final VoidCallback onClear;
   final VoidCallback onComplete;
+  final VoidCallback onEqualPressed;
   final Function(String) onNoteChanged;
   final Function(DateTime) onDateChanged;
 
   const CustomKeypad({
     super.key,
     required this.amount,
+    required this.amountResult,
     required this.note,
     required this.selectedDate,
     required this.currency,
     required this.isIncome,
+    required this.hasActiveExpression,
     required this.onKeyPressed,
     required this.onBackPressed,
     required this.onClear,
     required this.onComplete,
+    required this.onEqualPressed,
     required this.onNoteChanged,
     required this.onDateChanged,
   });
@@ -108,7 +114,10 @@ class _CustomKeypadState extends State<CustomKeypad> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _KeypadHeader(amount: widget.amount),
+            _KeypadHeader(
+              amount: widget.amount,
+              amountResult: widget.amountResult,
+            ),
             _KeypadNoteField(
               controller: _noteController,
               onChanged: widget.onNoteChanged,
@@ -117,9 +126,11 @@ class _CustomKeypadState extends State<CustomKeypad> {
             if (!_isNoteFocused)
               _KeypadGrid(
                 selectedDate: widget.selectedDate,
+                hasActiveExpression: widget.hasActiveExpression,
                 onKeyPressed: widget.onKeyPressed,
                 onBackPressed: widget.onBackPressed,
                 onComplete: widget.onComplete,
+                onEqualPressed: widget.onEqualPressed,
                 onDateSelect: () => _selectDate(context),
               ),
           ],
@@ -131,14 +142,27 @@ class _CustomKeypadState extends State<CustomKeypad> {
 
 class _KeypadHeader extends StatelessWidget {
   final String amount;
-  const _KeypadHeader({required this.amount});
+  final String amountResult;
+  const _KeypadHeader({required this.amount, required this.amountResult});
 
   @override
   Widget build(BuildContext context) {
-    String formattedAmount = amount.replaceAllMapped(
-      RegExp(r'\d+'),
-      (Match m) => NumberFormat("#,###").format(int.parse(m[0]!)),
-    );
+    bool hasOperators = RegExp(r'[+\-*/]').hasMatch(amount);
+
+    String formatNumber(String s) {
+      if (s == "-") return "-";
+      try {
+        return s.replaceAllMapped(
+          RegExp(r'\d+'),
+          (Match m) => NumberFormat("#,###").format(int.parse(m[0]!)),
+        );
+      } catch (_) {
+        return s;
+      }
+    }
+
+    String formattedAmount = formatNumber(amount);
+    String formattedResult = formatNumber(amountResult);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -157,12 +181,36 @@ class _KeypadHeader extends StatelessWidget {
               size: 20,
             ),
           ),
-          Text(
-            amount == "0" ? "0" : formattedAmount,
-            style: const TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                if (hasOperators)
+                  Text(
+                    formattedResult,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white.withValues(alpha: 0.5),
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    amount == "0" ? "0" : formattedAmount,
+                    style: const TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                    maxLines: 1,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -230,16 +278,20 @@ class _KeypadNoteField extends StatelessWidget {
 
 class _KeypadGrid extends StatelessWidget {
   final DateTime selectedDate;
+  final bool hasActiveExpression;
   final Function(String) onKeyPressed;
   final VoidCallback onBackPressed;
   final VoidCallback onComplete;
+  final VoidCallback onEqualPressed;
   final VoidCallback onDateSelect;
 
   const _KeypadGrid({
     required this.selectedDate,
+    required this.hasActiveExpression,
     required this.onKeyPressed,
     required this.onBackPressed,
     required this.onComplete,
+    required this.onEqualPressed,
     required this.onDateSelect,
   });
 
@@ -282,7 +334,7 @@ class _KeypadGrid extends StatelessWidget {
               icon: Icons.backspace_outlined,
               onTap: onBackPressed,
             ),
-            _buildCompleteKey(),
+            _buildDynamicCompleteKey(),
           ],
         ),
       ],
@@ -355,14 +407,23 @@ class _KeypadGrid extends StatelessWidget {
     );
   }
 
-  Widget _buildCompleteKey() {
+  Widget _buildDynamicCompleteKey() {
+    final bool showEqual = hasActiveExpression;
     return Expanded(
       flex: 2,
       child: _KeypadButton(
-        icon: Icons.check,
+        icon: showEqual ? null : Icons.check,
+        label: showEqual ? '=' : null,
         iconSize: 28,
-        onTap: onComplete,
+        onTap: showEqual ? onEqualPressed : onComplete,
         backgroundColor: AppColors.primaryColor.withValues(alpha: 0.2),
+        labelStyle: showEqual
+            ? const TextStyle(
+                fontSize: 28,
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              )
+            : null,
       ),
     );
   }
