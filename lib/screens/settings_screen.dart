@@ -15,6 +15,10 @@ import 'package:montage/providers/user_settings_provider.dart';
 import 'package:montage/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:montage/services/export_service.dart';
+import 'package:montage/providers/transaction_provider.dart';
+import 'package:montage/core/utils/toast_utility.dart';
+import 'package:montage/widgets/settings_components.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -26,6 +30,11 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _isEditingName = false;
   late TextEditingController _nameController;
+
+  void _showWorkInProgress(BuildContext context) {
+    ToastUtils.show(context, "Implementation is in progress", isError: false);
+  }
+
 
   @override
   void initState() {
@@ -40,105 +49,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     super.dispose();
   }
 
-  void _showEditProfileMenu(
-    BuildContext context,
-    UserSettingsProvider settings,
-  ) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) => GlassContainer(
-        customBorderRadius: const BorderRadius.vertical(
-          top: Radius.circular(32),
-        ),
-        blur: 40,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            12.heightBox,
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            20.heightBox,
-            Text(
-              "Edit Profile",
-            ).h4(color: Colors.white, weight: FontWeight.bold),
-            20.heightBox,
-            _buildMenuOption(
-              icon: Icons.person,
-              title: "Edit Name",
-              onTap: () {
-                Navigator.pop(context);
-                setState(() => _isEditingName = true);
-              },
-            ),
-            Divider(color: Colors.white.withValues(alpha: 0.05), height: 1),
-            _buildMenuOption(
-              icon: Icons.photo_library_outlined,
-              title: settings.profileImagePath != null ? "Change Photo" : "Add Photo",
-              onTap: () {
-                Navigator.pop(context);
-                settings.pickAndUpdateProfileImage();
-              },
-            ),
-            if (settings.profileImagePath != null) ...[
-              Divider(color: Colors.white.withValues(alpha: 0.05), height: 1),
-              _buildMenuOption(
-                svgAsset: AppImages.trashBin,
-                title: "Remove Photo",
-                iconColor: Colors.redAccent,
-                onTap: () {
-                  Navigator.pop(context);
-                  settings.removeProfileImage();
-                },
-              ),
-            ],
-            30.heightBox,
-          ],
-        ),
-      ),
-    );
-  }
 
-  Widget _buildMenuOption({
-    IconData? icon,
-    String? svgAsset,
-    required String title,
-    required VoidCallback onTap,
-    Color iconColor = Colors.white,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-        child: Row(
-          children: [
-            if (svgAsset != null)
-              SvgPicture.asset(
-                svgAsset,
-                colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
-                height: 24,
-              )
-            else
-              Icon(icon, color: iconColor, size: 24),
-            const SizedBox(width: 16),
-            Text(title).bodyLarge(color: Colors.white, weight: FontWeight.w500),
-            const Spacer(),
-            Icon(
-              Icons.chevron_right_rounded,
-              color: Colors.white.withValues(alpha: 0.5),
-              size: 24,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -157,121 +68,242 @@ class _SettingsScreenState extends State<SettingsScreen> {
               16.heightBox,
               _buildProfileCard(),
               18.heightBox,
-              _buildSectionHeader("Account"),
-              16.heightBox,
-              _buildSettingsGroup([
-                _buildSettingsTile(
-                  svgAsset: AppImages.user,
-                  iconColor: Colors.blueAccent,
-                  title: "Personal Information",
-                  subtitle: "Name, email",
-                  onTap: () => context.push(AppRoutes.personalInformationScreenRoute),
-                ),
-                _buildSettingsTile(
-                  svgAsset: AppImages.lock,
-                  iconColor: Colors.redAccent,
-                  title: "Password",
-                  subtitle: "Change password",
-                  onTap: () {},
-                ),
-                _buildSettingsTile(
-                  icon: Icons.account_balance_wallet_outlined,
-                  iconColor: Colors.greenAccent,
-                  title: "Financial Wallets",
-                  subtitle: "Manage your accounts and cards",
-                  onTap: () {},
-                ),
-              ]),
+              _buildAccountSection(context),
               18.heightBox,
-              _buildSectionHeader("Preferences"),
-              16.heightBox,
-              _buildSettingsGroup([
-                Consumer<UserSettingsProvider>(
-                  builder: (context, settings, _) => _buildSettingsTile(
-                    svgAsset: AppImages.bell,
-                    iconColor: Colors.orangeAccent,
-                    title: "Notifications",
-                    subtitle: "Manage notification settings",
-                    trailing: Switch.adaptive(
-                      value: settings.notificationsEnabled,
-                      onChanged: (val) => settings.setNotificationsEnabled(val),
-                      activeThumbColor: AppColors.primaryColor,
-                      activeTrackColor: AppColors.primaryColor.withValues(
-                        alpha: 0.3,
-                      ),
-                    ),
-                    onTap: () {},
-                  ),
-                ),
-                _buildSettingsTile(
-                  icon: Icons.language_rounded,
-                  iconColor: Colors.tealAccent,
-                  title: "Language",
-                  subtitle: "Change app language",
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "English",
-                      ).bodySmall(color: Colors.white.withValues(alpha: 0.7)),
-                      const SizedBox(width: 4),
-                      Icon(
-                        Icons.chevron_right_rounded,
-                        color: Colors.white.withValues(alpha: 0.3),
-                        size: 25,
-                      ),
-                    ],
-                  ),
-                  onTap: () {},
-                ),
-                Consumer<UserSettingsProvider>(
-                  builder: (context, settings, _) => _buildSettingsTile(
-                    icon: Icons.monetization_on_outlined,
-                    iconColor: Colors.amberAccent,
-                    title: "Currency",
-                    subtitle: "Default currency: ${settings.selectedCurrency}",
-                    onTap: () => _showCurrencyPicker(context, settings),
-                  ),
-                ),
-              ]),
+              _buildPreferencesSection(context),
               18.heightBox,
-              _buildSectionHeader("Support"),
-              16.heightBox,
-              _buildSettingsGroup([
-                _buildSettingsTile(
-                  icon: Icons.help_outline_rounded,
-                  iconColor: Colors.indigoAccent,
-                  title: "Help Center",
-                  subtitle: "FAQs and help center",
-                  onTap: () {},
-                ),
-                _buildSettingsTile(
-                  icon: Icons.info_outline_rounded,
-                  iconColor: Colors.cyanAccent,
-                  title: "About",
-                  subtitle: "Version 1.0.0",
-                  onTap: () {},
-                ),
-                _buildSettingsTile(
-                  icon: Icons.logout_rounded,
-                  iconColor: Colors.redAccent.withValues(alpha: 0.8),
-                  title: "Sign Out",
-                  subtitle: "Exit from your account",
-                  onTap: () {
-                    context.read<AuthProvider>().signOut().then((_) {
-                      if (context.mounted) {
-                        context.go(AppRoutes.signInScreenRoute);
-                      }
-                    });
-                  },
-                  showChevron: false,
-                ),
-              ]),
+              _buildExportSection(context),
+              18.heightBox,
+              _buildSecuritySection(context),
+              18.heightBox,
+              _buildSupportSection(context),
               100.heightBox,
             ],
           ).px16(),
         ),
       ),
+    );
+  }
+
+  Widget _buildAccountSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SettingsSectionHeader(title: "Account"),
+        16.heightBox,
+        SettingsGroup(tiles: [
+          SettingsTile(
+            svgAsset: AppImages.user,
+            iconColor: Colors.blueAccent,
+            title: "Personal Information",
+            subtitle: "Name, email",
+            onTap: () => context.push(AppRoutes.personalInformationScreenRoute),
+          ),
+          SettingsTile(
+            svgAsset: AppImages.lock,
+            iconColor: Colors.redAccent,
+            title: "Password",
+            subtitle: "Change password",
+            onTap: () => _showWorkInProgress(context),
+          ),
+          SettingsTile(
+            icon: Icons.account_balance_wallet_outlined,
+            iconColor: Colors.greenAccent,
+            title: "Financial Wallets",
+            subtitle: "Manage your accounts and cards",
+            onTap: () => _showWorkInProgress(context),
+          ),
+        ]),
+      ],
+    );
+  }
+
+  Widget _buildSecuritySection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SettingsSectionHeader(title: "Security"),
+        16.heightBox,
+        SettingsGroup(tiles: [
+          Consumer<UserSettingsProvider>(
+            builder: (context, settings, _) => SettingsTile(
+              icon: Icons.fingerprint_rounded,
+              iconColor: Colors.blueAccent,
+              title: "Biometric Lock",
+              subtitle: "Secure app with fingerprint/FaceID",
+              trailing: Transform.scale(
+                scale: 0.8,
+                child: Switch.adaptive(
+                  value: settings.biometricEnabled,
+                  onChanged: (val) {
+                    settings.setBiometricEnabled(val);
+                    _showWorkInProgress(context);
+                  },
+                  activeThumbColor: AppColors.primaryColor,
+                  activeTrackColor: AppColors.primaryColor.withValues(
+                    alpha: 0.3,
+                  ),
+                  inactiveThumbColor: Colors.grey.shade400,
+                  inactiveTrackColor: Colors.grey.shade800,
+                ),
+              ),
+              onTap: () => _showWorkInProgress(context),
+            ),
+          ),
+          SettingsTile(
+            svgAsset: AppImages.lock,
+            iconColor: Colors.redAccent,
+            title: "Privacy Policy",
+            subtitle: "Read our privacy terms",
+            onTap: () => _showWorkInProgress(context),
+          ),
+        ]),
+      ],
+    );
+  }
+
+  Widget _buildPreferencesSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SettingsSectionHeader(title: "Preferences"),
+        16.heightBox,
+        SettingsGroup(tiles: [
+          Consumer<UserSettingsProvider>(
+            builder: (context, settings, _) => SettingsTile(
+              svgAsset: AppImages.bell,
+              iconColor: Colors.orangeAccent,
+              title: "Notifications",
+              subtitle: "Manage notification settings",
+              trailing: Transform.scale(
+                scale: 0.8,
+                child: Switch.adaptive(
+                  value: settings.notificationsEnabled,
+                  onChanged: (val) {
+                    settings.setNotificationsEnabled(val);
+                    _showWorkInProgress(context);
+                  },
+                  activeThumbColor: AppColors.primaryColor,
+                  activeTrackColor: AppColors.primaryColor.withValues(
+                    alpha: 0.3,
+                  ),
+                  inactiveThumbColor: Colors.grey.shade400,
+                  inactiveTrackColor: Colors.grey.shade800,
+                ),
+              ),
+              onTap: () => _showWorkInProgress(context),
+            ),
+          ),
+          SettingsTile(
+            icon: Icons.language_rounded,
+            iconColor: Colors.tealAccent,
+            title: "Language",
+            subtitle: "Change app language",
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "English",
+                ).bodySmall(color: Colors.white.withValues(alpha: 0.7)),
+                const SizedBox(width: 4),
+                Icon(
+                  Icons.chevron_right_rounded,
+                  color: Colors.white.withValues(alpha: 0.3),
+                  size: 25,
+                ),
+              ],
+            ),
+            onTap: () => _showWorkInProgress(context),
+          ),
+          Consumer<UserSettingsProvider>(
+            builder: (context, settings, _) => SettingsTile(
+              icon: Icons.monetization_on_outlined,
+              iconColor: Colors.amberAccent,
+              title: "Currency",
+              subtitle: "Default currency: ${settings.selectedCurrency}",
+              onTap: () => SettingsModals.showCurrencyPicker(context, settings),
+            ),
+          ),
+        ]),
+      ],
+    );
+  }
+
+  Widget _buildExportSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SettingsSectionHeader(title: "Data Management"),
+        16.heightBox,
+        SettingsGroup(tiles: [
+          SettingsTile(
+            icon: Icons.file_download_outlined,
+            iconColor: Colors.greenAccent,
+            title: "Export as CSV",
+            subtitle: "Download all transactions in CSV format",
+            onTap: () {
+              final txProvider = context.read<TransactionProvider>();
+              final settings = context.read<UserSettingsProvider>();
+              ExportService.exportToCSV(txProvider.transactions, settings.userName);
+            },
+          ),
+          SettingsTile(
+            icon: Icons.picture_as_pdf_outlined,
+            iconColor: Colors.redAccent,
+            title: "Export as PDF",
+            subtitle: "Generate a professional PDF report",
+            onTap: () {
+              final txProvider = context.read<TransactionProvider>();
+              final settings = context.read<UserSettingsProvider>();
+              ExportService.exportToPDF(
+                txProvider.transactions,
+                settings.selectedCurrency,
+                settings.userName,
+              );
+            },
+          ),
+        ]),
+      ],
+    );
+  }
+
+  Widget _buildSupportSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SettingsSectionHeader(title: "Support"),
+        16.heightBox,
+        SettingsGroup(tiles: [
+          SettingsTile(
+            icon: Icons.help_outline_rounded,
+            iconColor: Colors.indigoAccent,
+            title: "Help Center",
+            subtitle: "FAQs and help center",
+            onTap: () => _showWorkInProgress(context),
+          ),
+          SettingsTile(
+            icon: Icons.info_outline_rounded,
+            iconColor: Colors.cyanAccent,
+            title: "About",
+            subtitle: "Version 1.4.0",
+            onTap: () => _showWorkInProgress(context),
+          ),
+          SettingsTile(
+            icon: Icons.logout_rounded,
+            iconColor: Colors.redAccent.withValues(alpha: 0.8),
+            title: "Sign Out",
+            subtitle: "Exit from your account",
+            onTap: () {
+              context.read<AuthProvider>().signOut().then((_) {
+                if (context.mounted) {
+                  context.go(AppRoutes.signInScreenRoute);
+                }
+              });
+            },
+            showChevron: false,
+          ),
+        ]),
+      ],
     );
   }
 
@@ -300,7 +332,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ),
                   child: CircleAvatar(
-                    radius: 32,
+                    radius: 28,
                     backgroundColor: AppColors.primaryColor.withValues(
                       alpha: 0.15,
                     ),
@@ -312,7 +344,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ? const Icon(
                             Icons.person,
                             color: AppColors.primaryColor,
-                            size: 32,
+                            size: 28,
                           )
                         : null,
                   ),
@@ -395,7 +427,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             if (!_isEditingName)
               IconButton(
-                onPressed: () => _showEditProfileMenu(context, settings),
+                onPressed: () => SettingsModals.showEditProfileMenu(
+                  context: context,
+                  settings: settings,
+                  onEditNameTap: () => setState(() => _isEditingName = true),
+                ),
                 icon: Icon(
                   Icons.edit_outlined,
                   color: Colors.white.withValues(alpha: 0.8),
@@ -412,178 +448,5 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
-
-  Widget _buildSectionHeader(String title) {
-    return Text(
-      title,
-    ).h4(color: Colors.white.withValues(alpha: 0.7), weight: FontWeight.bold);
-  }
-
-  Widget _buildSettingsGroup(List<Widget> tiles) {
-    return GlassContainer(
-      borderRadius: 20,
-      blur: 30,
-      borderOpacity: 0.1,
-      gradientColors: [
-        Colors.white.withValues(alpha: 0.05),
-        Colors.white.withValues(alpha: 0.02),
-      ],
-      padding: EdgeInsets.zero,
-      child: Column(
-        children: List.generate(tiles.length, (index) {
-          return Column(
-            children: [
-              tiles[index],
-              if (index != tiles.length - 1)
-                Divider(
-                  height: 1,
-                  thickness: 1.4,
-                  color: Colors.white.withValues(alpha: 0.1),
-                ),
-            ],
-          );
-        }),
-      ),
-    );
-  }
-
-  Widget _buildSettingsTile({
-    IconData? icon,
-    String? svgAsset,
-    required Color iconColor,
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-    Widget? trailing,
-    bool showChevron = true,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: iconColor.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-              child: svgAsset != null
-                  ? SvgPicture.asset(
-                      svgAsset,
-                      colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
-                      height: 22,
-                    )
-                  : Icon(icon, color: iconColor, size: 22),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                  ).bodyLarge(color: Colors.white, weight: FontWeight.w600),
-                  const SizedBox(height: 2),
-                  Text(subtitle).bodyMedium(
-                    color: Colors.white.withValues(alpha: 0.7),
-                    weight: FontWeight.w400,
-                  ),
-                ],
-              ),
-            ),
-            if (trailing != null)
-              trailing
-            else if (showChevron)
-              Icon(
-                Icons.chevron_right_rounded,
-                color: Colors.white.withValues(alpha: 0.5),
-                size: 25,
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showCurrencyPicker(
-    BuildContext context,
-    UserSettingsProvider settings,
-  ) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) => GlassContainer(
-        customBorderRadius: const BorderRadius.vertical(
-          top: Radius.circular(32),
-        ),
-        blur: 40,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            12.heightBox,
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            20.heightBox,
-            Text(
-              "Select Currency",
-            ).h4(color: Colors.white, weight: FontWeight.bold),
-            20.heightBox,
-            Flexible(
-              child: ListView.separated(
-                shrinkWrap: true,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                itemCount: UserSettingsProvider.availableCurrencies.length,
-                separatorBuilder: (context, index) => Divider(
-                  color: Colors.white.withValues(alpha: 0.05),
-                  height: 1,
-                ),
-                itemBuilder: (context, index) {
-                  final currency =
-                      UserSettingsProvider.availableCurrencies[index];
-                  final isSelected = settings.selectedCurrency == currency;
-
-                  return InkWell(
-                    onTap: () {
-                      settings.setCurrency(currency);
-                      Navigator.pop(context);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(currency).bodyLarge(
-                            color: isSelected ? Colors.white : Colors.white60,
-                            weight: isSelected
-                                ? FontWeight.bold
-                                : FontWeight.w500,
-                          ),
-                          if (isSelected)
-                            const Icon(
-                              Icons.check_circle_rounded,
-                              color: AppColors.primaryColor,
-                              size: 24,
-                            ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            30.heightBox,
-          ],
-        ),
-      ),
-    );
-  }
 }
+

@@ -7,6 +7,7 @@ import 'package:montage/core/themes/app_theme.dart';
 import 'package:montage/firebase_options.dart';
 import 'package:montage/models/transaction_model.dart';
 import 'package:montage/providers/transaction_provider.dart';
+import 'package:montage/providers/transaction_filter_provider.dart';
 import 'package:montage/providers/user_settings_provider.dart';
 import 'package:montage/providers/auth_provider.dart';
 import 'package:montage/viewmodels/speech_view_model.dart';
@@ -36,6 +37,7 @@ void main() async {
               email: auth.currentUser?.email,
             ),
         ),
+        ChangeNotifierProvider(create: (_) => TransactionFilterProvider()),
         ChangeNotifierProvider(create: (_) => SpeechViewModel()),
       ],
       child: const MyApp(),

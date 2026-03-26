@@ -30,13 +30,13 @@ class _AuthWrapperState extends State<AuthWrapper> {
   Future<void> _waitForReadiness() async {
     final auth = context.read<AuthProvider>();
 
-    // 1. Wait until Auth Service emits ITS FIRST EVENT (initialized)
+    // 1. Wait until Auth Service emits ITS FIRST EVENT
     while (!auth.isInitialized) {
       await Future.delayed(const Duration(milliseconds: 100));
       if (!mounted) return;
     }
 
-    // 2. If user is null, wait longer to be ABSOLUTELY SURE (Double Check)
+    // 2. If user is null, wait longer to be ABSOLUTELY SURE
 
     if (auth.currentUser == null) {
       await Future.delayed(const Duration(milliseconds: 1500));
@@ -53,9 +53,11 @@ class _AuthWrapperState extends State<AuthWrapper> {
         await Future.delayed(const Duration(milliseconds: 100));
         if (!mounted) return;
       }
+
+      // 4. Biometric Lock (If enabled)
+      if (settings.biometricEnabled) {}
     }
 
-    // 4. Ensure minimum splash time (3s)
     await _ensureMinSplash();
 
     if (mounted) {

@@ -98,6 +98,10 @@ class HomeHeader extends StatelessWidget {
                     BlendMode.srcIn,
                   ),
                   height: 22,
+                  placeholderBuilder: (BuildContext context) => const SizedBox(
+                    height: 22,
+                    width: 22,
+                  ),
                 ),
                 Positioned(
                   right: 2,

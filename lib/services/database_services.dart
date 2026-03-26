@@ -10,8 +10,12 @@ class DatabaseService {
 
   // Method to add a transaction
   Future<void> addTransaction(TransactionModel tx) async {
-    await box.add(tx);
-    //tx is the object of model
+    try {
+      await box.add(tx);
+    } catch (e) {
+      debugPrint('DatabaseService: Error adding transaction: $e');
+      rethrow;
+    }
   }
 
   List<TransactionModel> getAllTransaction() {
@@ -19,14 +23,24 @@ class DatabaseService {
   }
 
   Future<void> deleteTransaction(int key) async {
-    await box.delete(key);
+    try {
+      await box.delete(key);
+    } catch (e) {
+      debugPrint('DatabaseService: Error deleting transaction: $e');
+      rethrow;
+    }
   }
 
   Future<void> updateTransaction(int key, TransactionModel updatedTx) async {
-    await box.put(key, updatedTx);
+    try {
+      await box.put(key, updatedTx);
+    } catch (e) {
+      debugPrint('DatabaseService: Error updating transaction: $e');
+      rethrow;
+    }
   }
 
   ValueListenable<Box<TransactionModel>> listenToBox() {
-    return Hive.box<TransactionModel>('transactions').listenable();
+    return box.listenable();
   }
 }

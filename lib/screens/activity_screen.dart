@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/providers/transaction_provider.dart';
+import 'package:montage/providers/transaction_filter_provider.dart';
 import 'package:montage/widgets/transaction/transaction_list_item.dart';
 import 'package:montage/providers/user_settings_provider.dart';
 import 'package:montage/widgets/app_background.dart';
@@ -35,6 +36,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
   @override
   Widget build(BuildContext context) {
     final transaction = Provider.of<TransactionProvider>(context);
+    final filter = Provider.of<TransactionFilterProvider>(context);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -51,7 +53,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                   if (_isSearchVisible) {
                     _searchFocusNode.requestFocus();
                   } else {
-                    transaction.setSearchQuery('');
+                    filter.setSearchQuery('');
                     _searchFocusNode.unfocus();
                   }
                 });
@@ -71,35 +73,36 @@ class _ActivityScreenState extends State<ActivityScreen> {
             onHorizontalDragEnd: (details) {
               if (details.primaryVelocity == null) return;
               if (details.primaryVelocity! < -200) {
-                transaction.setIsIncomeFilter(false);
+                filter.setIsIncomeFilter(false);
               } else if (details.primaryVelocity! > 200) {
-                transaction.setIsIncomeFilter(true);
+                filter.setIsIncomeFilter(true);
               }
             },
             child: Column(
               children: [
                 if (_isSearchVisible) ...[
                   16.heightBox,
-                  _buildSearchArea(context, transaction),
+                  _buildSearchArea(context, filter),
                 ],
                 20.heightBox,
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: TransactionTypeToggle(
-                    isIncome: transaction.isIncomeFilter ?? false,
-                    onChanged: (val) => transaction.setIsIncomeFilter(val),
+                    isIncome: filter.isIncomeFilter ?? false,
+                    onChanged: (val) => filter.setIsIncomeFilter(val),
                   ),
                 ),
                 20.heightBox,
                 Expanded(
                   child: Consumer<UserSettingsProvider>(
                     builder: (context, settings, _) {
-                      final filteredTransactions =
-                          transaction.filteredTransactions;
+                      final filteredTransactions = filter.filterTransactions(transaction.transactions);
+
                       if (filteredTransactions.isEmpty) {
                         return _buildEmptyState();
                       }
                       return ListView.builder(
+                        physics: const BouncingScrollPhysics(),
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         itemCount: filteredTransactions.length,
                         itemBuilder: (context, index) {
@@ -135,7 +138,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
     );
   }
 
-  Widget _buildSearchArea(BuildContext context, TransactionProvider provider) {
+  Widget _buildSearchArea(BuildContext context, TransactionFilterProvider filter) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: GlassContainer(
@@ -152,7 +155,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
             Expanded(
               child: TextField(
                 focusNode: _searchFocusNode,
-                onChanged: (val) => provider.setSearchQuery(val),
+                onChanged: (val) => filter.setSearchQuery(val),
                 style: const TextStyle(color: Colors.white, fontSize: 16),
                 decoration: InputDecoration(
                   hintText: "Search transactions...",
@@ -192,12 +195,12 @@ class _ActivityScreenState extends State<ActivityScreen> {
                     child: child!,
                   ),
                 );
-                provider.setDateRange(range);
+                filter.setDateRange(range);
               },
               icon: SvgPicture.asset(
                 AppImages.calendar,
                 colorFilter: ColorFilter.mode(
-                  provider.selectedDateRange != null
+                  filter.selectedDateRange != null
                       ? AppColors.primaryColor
                       : Colors.white.withValues(alpha: 0.5),
                   BlendMode.srcIn,

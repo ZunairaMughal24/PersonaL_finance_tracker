@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-03-26
+
+### Added
+- **Data Exporting**: Introduced fully formatted PDF and CSV financial reports with dynamic date ranges, robust column layouts, and user identity headers.
+- **Skeleton Architecture**: Built a generic `SkeletonLoader` UI infrastructure to handle smooth, flicker-free data initialization across dashboards.
+- **Settings Componentization**: Refactored the massive settings view into modular `SettingsComponents` for drastic size reduction and improved maintainability.
+
+### Improved
+- **Decoupled Filtering Logic**: Extracted heavy transaction search, category, and date filtering logic out of the `ActivityScreen` UI into a dedicated `TransactionFilterProvider`, strictly adhering to MVVM principles.
+- **Visual Feedback**: Re-enabled physical toggle animations for Biometric and Notification settings while gracefully displaying "Work in progress" placeholders.
+- **Chart Typography**: Optimized FL Chart Y-axis spacing on the Analytics dashboard to prevent long currency values from abruptly line-wrapping.
+- **Native OS Exporting**: Removed artificial in-app success toasts for CSV/PDF exports, deferring gracefully to the native system Share Sheet for a true professional feel.
+
+### Fixed
+- **Build Stabilizations**: Resolved Gradle daemon compilation failures related to multi-drive caching.
+- **Layout Overflows**: Fixed a persistent bottom-overflow crash on the Home screen during slow loading states by introducing flexible scrolling.
+
 ## [1.3.0] - 2026-03-26
 
 ### Added

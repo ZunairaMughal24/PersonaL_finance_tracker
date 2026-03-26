@@ -22,6 +22,7 @@ Montage is a personal finance management application built with Flutter. It help
 - Recent transactions list with category icons and amount formatting.
 - AI-powered spending insights card using Google Generative AI.
 - Greeting header with the user's first name and profile photo.
+- **Skeleton Loading States**: Smooth, flicker-free placeholder animations during initial network fetches or database loads.
 
 ### Analytics
 - **Category Breakdown**: Interactive pie chart showing expense distribution by category.
@@ -33,6 +34,7 @@ Montage is a personal finance management application built with Flutter. It help
 - Change or remove profile photo via the device camera or gallery.
 - Toggle notification preferences.
 - Switch between supported currencies (PKR, USD, EUR, GBP, etc.).
+- **Financial Exports**: Generate and download beautifully formatted PDF reports and CSV spreadsheets of all your transaction history.
 - Sign out with full session cleanup.
 
 ### Authentication

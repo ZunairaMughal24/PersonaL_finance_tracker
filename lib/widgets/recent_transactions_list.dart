@@ -16,9 +16,9 @@ class RecentTransactionsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final transactionProvider = context.watch<TransactionProvider>();
-    final items = transactionProvider.transactions.reversed.toList();
+    final transactions = transactionProvider.transactions;
 
-    if (items.isEmpty) {
+    if (transactions.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -37,20 +37,25 @@ class RecentTransactionsList extends StatelessWidget {
       ).py(20);
     }
 
+    final itemCount = transactions.length > 5 ? 5 : transactions.length;
+
     return Consumer<UserSettingsProvider>(
       builder: (context, settings, _) => ListView.separated(
         padding: const EdgeInsets.only(bottom: 4),
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: items.length > 5 ? 5 : items.length,
+        itemCount: itemCount,
         separatorBuilder: (context, index) => const SizedBox(height: 4),
         itemBuilder: (context, index) {
-          final tx = items[index];
+          // Efficiently access the latest transactions without reversing the whole list
+          final tx = transactions[transactions.length - 1 - index];
           return TransactionListItem(
             transaction: tx,
             currency: settings.selectedCurrency,
             onDelete: () {
-              transactionProvider.deleteTransaction(tx.key as int, index);
+              // Get the actual index in the original list for deletion
+              final actualIndex = transactions.length - 1 - index;
+              transactionProvider.deleteTransaction(tx.key as int, actualIndex);
               ToastUtils.show(
                 context,
                 'Transaction deleted',

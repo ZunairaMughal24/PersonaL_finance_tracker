@@ -55,6 +55,9 @@ dependencies:
   expressions: ^0.2.5+3
   gal: ^2.3.2
   speech_to_text: ^7.3.0
+  csv: ^6.0.0
+  pdf: ^3.11.1
+  share_plus: ^10.1.4
 
 
 dev_dependencies:

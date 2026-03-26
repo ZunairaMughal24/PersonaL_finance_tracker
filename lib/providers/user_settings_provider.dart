@@ -7,6 +7,7 @@ class UserSettingsProvider extends ChangeNotifier {
   static const String _nameKey = 'user_name';
   static const String _imageKey = 'profile_image_path';
   static const String _emailKey = 'user_email';
+  static const String _biometricKey = 'biometric_enabled';
 
   Box? _box;
   String? _userId;
@@ -15,6 +16,7 @@ class UserSettingsProvider extends ChangeNotifier {
   String _userEmail = '';
   String? _profileImagePath;
   bool _notificationsEnabled = true;
+  bool _biometricEnabled = false;
   bool _isReady = false;
 
   String get selectedCurrency => _selectedCurrency;
@@ -22,6 +24,7 @@ class UserSettingsProvider extends ChangeNotifier {
   String get userEmail => _userEmail;
   String? get profileImagePath => _profileImagePath;
   bool get notificationsEnabled => _notificationsEnabled;
+  bool get biometricEnabled => _biometricEnabled;
   bool get isReady => _isReady;
 
   UserSettingsProvider();
@@ -53,6 +56,7 @@ class UserSettingsProvider extends ChangeNotifier {
       _userEmail = 'user@example.com';
       _profileImagePath = null;
       _notificationsEnabled = true;
+      _biometricEnabled = false;
       _selectedCurrency = 'USD';
       _isReady = true;
       notifyListeners();
@@ -71,6 +75,7 @@ class UserSettingsProvider extends ChangeNotifier {
       'notifications_enabled',
       defaultValue: true,
     );
+    _biometricEnabled = _box!.get(_biometricKey, defaultValue: false);
     _selectedCurrency = _box!.get(_currencyKey, defaultValue: 'USD');
 
     if (!_box!.containsKey(_nameKey) && displayName != null) {
@@ -143,6 +148,14 @@ class UserSettingsProvider extends ChangeNotifier {
     _notificationsEnabled = enabled;
     if (_box != null) {
       await _box!.put('notifications_enabled', enabled);
+    }
+    notifyListeners();
+  }
+
+  Future<void> setBiometricEnabled(bool enabled) async {
+    _biometricEnabled = enabled;
+    if (_box != null) {
+      await _box!.put(_biometricKey, enabled);
     }
     notifyListeners();
   }
