@@ -255,8 +255,16 @@ class SecuritySection extends StatelessWidget {
                   activeTrackColor: AppColors.primaryColor.withValues(
                     alpha: 0.3,
                   ),
-                  inactiveThumbColor: Colors.grey.shade400,
-                  inactiveTrackColor: Colors.grey.shade800,
+                  inactiveThumbColor: Colors.white,
+                  inactiveTrackColor: Colors.transparent,
+                  trackOutlineColor: WidgetStateProperty.resolveWith<Color?>(
+                    (Set<WidgetState> states) {
+                      if (states.contains(WidgetState.selected)) {
+                        return Colors.transparent;
+                      }
+                      return Colors.white.withValues(alpha: 0.3);
+                    },
+                  ),
                 ),
               ),
               onTap: () => _showWorkInProgress(context),
@@ -304,8 +312,16 @@ class PreferencesSection extends StatelessWidget {
                   activeTrackColor: AppColors.primaryColor.withValues(
                     alpha: 0.3,
                   ),
-                  inactiveThumbColor: Colors.grey.shade400,
-                  inactiveTrackColor: Colors.grey.shade800,
+                  inactiveThumbColor: Colors.white,
+                  inactiveTrackColor: Colors.transparent,
+                  trackOutlineColor: WidgetStateProperty.resolveWith<Color?>(
+                    (Set<WidgetState> states) {
+                      if (states.contains(WidgetState.selected)) {
+                        return Colors.transparent;
+                      }
+                      return Colors.white.withValues(alpha: 0.3);
+                    },
+                  ),
                 ),
               ),
               onTap: () => _showWorkInProgress(context),
