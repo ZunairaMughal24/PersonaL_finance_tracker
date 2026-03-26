@@ -13,14 +13,19 @@ import 'package:montage/widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:montage/widgets/app_background.dart';
 import 'package:montage/widgets/transaction/custom_category_dialog.dart';
+import 'package:montage/viewmodels/speech_view_model.dart';
 
 class EditTransactionScreen extends StatelessWidget {
   const EditTransactionScreen({super.key, required this.transaction});
   final TransactionModel transaction;
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => TransactionFormViewModel(transaction: transaction),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => TransactionFormViewModel(transaction: transaction),
+        ),
+      ],
       child: _EditTransactionScreenContent(
         transactionKey: transaction.key as int,
       ),
@@ -143,28 +148,36 @@ class _EditTransactionScreenContentState
                       ),
                     ),
                     if (vm.showKeypad)
-                      CustomKeypad(
-                        amount: vm.amountExpression,
-                        amountResult: vm.amountResult,
-                        note: vm.title,
-                        selectedDate: vm.selectedDate,
-                        currency: vm.selectedCurrency,
-                        isIncome: vm.isIncome,
-                        hasActiveExpression: vm.hasActiveExpression,
-                        hasImage: vm.imagePath != null,
-                        onKeyPressed: vm.onKeyPressed,
-                        onBackPressed: vm.onBackspace,
-                        onClear: vm.onClear,
-                        onComplete: () => vm.updateTransaction(
-                          provider: context.read<TransactionProvider>(),
-                          key: widget.transactionKey,
-                          onSuccess: () => context.pop(),
-                          onError: (error) => ToastUtils.show(context, error),
+                      Consumer<SpeechViewModel>(
+                        builder: (context, speechVm, _) => CustomKeypad(
+                          amount: vm.amountExpression,
+                          amountResult: vm.amountResult,
+                          note: vm.title,
+                          selectedDate: vm.selectedDate,
+                          currency: vm.selectedCurrency,
+                          isIncome: vm.isIncome,
+                          hasActiveExpression: vm.hasActiveExpression,
+                          hasImage: vm.imagePath != null,
+                          isListening: speechVm.isListening,
+                          currentLocale: speechVm.currentLocale,
+                          onKeyPressed: vm.onKeyPressed,
+                          onBackPressed: vm.onBackspace,
+                          onClear: vm.onClear,
+                          onComplete: () => vm.updateTransaction(
+                            provider: context.read<TransactionProvider>(),
+                            key: widget.transactionKey,
+                            onSuccess: () => context.pop(),
+                            onError: (error) => ToastUtils.show(context, error),
+                          ),
+                          onEqualPressed: vm.onEqualPressed,
+                          onCameraTap: () => vm.pickImage(context),
+                          onNoteChanged: (val) => vm.setTitle(val),
+                          onDateChanged: (val) => vm.setDate(val),
+                          onMicTap: () => speechVm.toggleListening((result) {
+                            vm.setTitle(result);
+                          }),
+                          onToggleLocale: () => speechVm.toggleLocale(),
                         ),
-                        onEqualPressed: vm.onEqualPressed,
-                        onCameraTap: () => vm.pickImage(context),
-                        onNoteChanged: (val) => vm.setTitle(val),
-                        onDateChanged: (val) => vm.setDate(val),
                       ),
                   ],
                 ),

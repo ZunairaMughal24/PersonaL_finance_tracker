@@ -17,6 +17,7 @@ class TransactionProvider extends ChangeNotifier {
 
   static const String _geminiApiKey = String.fromEnvironment('GEMINI_API_KEY');
 
+  bool _isReady = false;
   List<TransactionModel> _transactions = [];
   String _searchQuery = '';
   DateTimeRange? _selectedDateRange;
@@ -25,31 +26,36 @@ class TransactionProvider extends ChangeNotifier {
   String? _cachedInsights;
   Future<String?>? _insightsFuture;
 
+  bool get isReady => _isReady;
   List<TransactionModel> get transactions => _transactions;
   Future<String?>? get insightsFuture => _insightsFuture;
   String? get cachedInsightsValue => _cachedInsights;
-  
+
   TransactionProvider() {
     _aiService = AIService(_geminiApiKey);
   }
 
   void updateUser(String? userId) async {
     if (_userId == userId) return;
-    
+
+    _isReady = false;
     _userId = userId;
     if (userId == null) {
       _transactions = [];
       _cachedInsights = null;
       db = null;
+      _isReady = true;
       notifyListeners();
       return;
     }
 
-    // Open user-specific box
+    /// Opens user-specific box
     final boxName = 'transactions_$userId';
     final box = await Hive.openBox<TransactionModel>(boxName);
     db = DatabaseService(box);
     _loadTransactions();
+    _isReady = true;
+    notifyListeners();
   }
 
   void refreshInsights() {
@@ -195,13 +201,48 @@ class TransactionProvider extends ChangeNotifier {
 
   List<FinancialPeriodData> get weeklyFinancialSummary {
     final Map<String, FinancialPeriodData> dayMap = {
-      'Mon': FinancialPeriodData(label: 'Mon', date: _getThisWeekDay(DateTime.monday), income: 0, expense: 0),
-      'Tue': FinancialPeriodData(label: 'Tue', date: _getThisWeekDay(DateTime.tuesday), income: 0, expense: 0),
-      'Wed': FinancialPeriodData(label: 'Wed', date: _getThisWeekDay(DateTime.wednesday), income: 0, expense: 0),
-      'Thu': FinancialPeriodData(label: 'Thu', date: _getThisWeekDay(DateTime.thursday), income: 0, expense: 0),
-      'Fri': FinancialPeriodData(label: 'Fri', date: _getThisWeekDay(DateTime.friday), income: 0, expense: 0),
-      'Sat': FinancialPeriodData(label: 'Sat', date: _getThisWeekDay(DateTime.saturday), income: 0, expense: 0),
-      'Sun': FinancialPeriodData(label: 'Sun', date: _getThisWeekDay(DateTime.sunday), income: 0, expense: 0),
+      'Mon': FinancialPeriodData(
+        label: 'Mon',
+        date: _getThisWeekDay(DateTime.monday),
+        income: 0,
+        expense: 0,
+      ),
+      'Tue': FinancialPeriodData(
+        label: 'Tue',
+        date: _getThisWeekDay(DateTime.tuesday),
+        income: 0,
+        expense: 0,
+      ),
+      'Wed': FinancialPeriodData(
+        label: 'Wed',
+        date: _getThisWeekDay(DateTime.wednesday),
+        income: 0,
+        expense: 0,
+      ),
+      'Thu': FinancialPeriodData(
+        label: 'Thu',
+        date: _getThisWeekDay(DateTime.thursday),
+        income: 0,
+        expense: 0,
+      ),
+      'Fri': FinancialPeriodData(
+        label: 'Fri',
+        date: _getThisWeekDay(DateTime.friday),
+        income: 0,
+        expense: 0,
+      ),
+      'Sat': FinancialPeriodData(
+        label: 'Sat',
+        date: _getThisWeekDay(DateTime.saturday),
+        income: 0,
+        expense: 0,
+      ),
+      'Sun': FinancialPeriodData(
+        label: 'Sun',
+        date: _getThisWeekDay(DateTime.sunday),
+        income: 0,
+        expense: 0,
+      ),
     };
 
     for (var tx in _transactions) {
@@ -221,6 +262,7 @@ class TransactionProvider extends ChangeNotifier {
     }
     return dayMap.values.toList();
   }
+
   DateTime _getThisWeekDay(int dayOfWeek) {
     final now = DateTime.now();
     return now.subtract(Duration(days: now.weekday - dayOfWeek));

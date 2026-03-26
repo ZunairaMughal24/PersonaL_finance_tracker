@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:montage/core/constants/app_colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:montage/core/constants/app_images.dart';
+import 'package:montage/widgets/pulse_effect.dart';
 
 class CustomKeypad extends StatefulWidget {
   final String amount;
@@ -21,6 +22,10 @@ class CustomKeypad extends StatefulWidget {
   final VoidCallback onCameraTap;
   final Function(String) onNoteChanged;
   final Function(DateTime) onDateChanged;
+  final bool isListening;
+  final VoidCallback? onMicTap;
+  final VoidCallback? onToggleLocale;
+  final String currentLocale;
 
   const CustomKeypad({
     super.key,
@@ -40,6 +45,10 @@ class CustomKeypad extends StatefulWidget {
     required this.onCameraTap,
     required this.onNoteChanged,
     required this.onDateChanged,
+    this.isListening = false,
+    this.onMicTap,
+    this.onToggleLocale,
+    this.currentLocale = 'en_US',
   });
 
   @override
@@ -128,6 +137,10 @@ class _CustomKeypadState extends State<CustomKeypad> {
               focusNode: _noteFocusNode,
               onCameraTap: widget.onCameraTap,
               hasImage: widget.hasImage,
+              isListening: widget.isListening,
+              onMicTap: widget.onMicTap,
+              onToggleLocale: widget.onToggleLocale,
+              currentLocale: widget.currentLocale,
             ),
             if (!_isNoteFocused)
               _KeypadGrid(
@@ -231,12 +244,21 @@ class _KeypadNoteField extends StatelessWidget {
   final FocusNode? focusNode;
   final VoidCallback onCameraTap;
   final bool hasImage;
+  final bool isListening;
+  final VoidCallback? onMicTap;
+  final VoidCallback? onToggleLocale;
+  final String currentLocale;
+
   const _KeypadNoteField({
     required this.controller,
     required this.onChanged,
     this.focusNode,
     required this.onCameraTap,
     this.hasImage = false,
+    this.isListening = false,
+    this.onMicTap,
+    this.onToggleLocale,
+    this.currentLocale = 'en_US',
   });
 
   @override
@@ -275,6 +297,43 @@ class _KeypadNoteField extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
+          if (onMicTap != null)
+            GestureDetector(
+              onTap: onMicTap,
+              onLongPress: onToggleLocale,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  if (isListening)
+                    PulseEffect(
+                      child: Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          color: AppColors.green.withValues(alpha: 0.2),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: isListening 
+                          ? AppColors.green.withValues(alpha: 0.2)
+                          : Colors.white.withValues(alpha: 0.05),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      isListening ? Icons.mic : Icons.mic_none_rounded,
+                      color: isListening ? AppColors.green : Colors.white.withValues(alpha: 0.4),
+                      size: 20,
+                    ),
+                  ),
+
+                ],
+              ),
+            ),
+          const SizedBox(width: 12),
           GestureDetector(
             onTap: onCameraTap,
             child: Stack(
@@ -525,3 +584,6 @@ class _KeypadButton extends StatelessWidget {
     );
   }
 }
+
+
+

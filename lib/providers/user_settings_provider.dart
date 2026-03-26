@@ -15,12 +15,14 @@ class UserSettingsProvider extends ChangeNotifier {
   String _userEmail = '';
   String? _profileImagePath;
   bool _notificationsEnabled = true;
+  bool _isReady = false;
 
   String get selectedCurrency => _selectedCurrency;
   String get userName => _userName;
   String get userEmail => _userEmail;
   String? get profileImagePath => _profileImagePath;
   bool get notificationsEnabled => _notificationsEnabled;
+  bool get isReady => _isReady;
 
   UserSettingsProvider();
 
@@ -38,6 +40,7 @@ class UserSettingsProvider extends ChangeNotifier {
     }
 
     _userId = userId;
+    _isReady = false;
     if (_box != null) {
       await _box!.close();
       _box = null;
@@ -51,6 +54,7 @@ class UserSettingsProvider extends ChangeNotifier {
       _profileImagePath = null;
       _notificationsEnabled = true;
       _selectedCurrency = 'USD';
+      _isReady = true;
       notifyListeners();
     }
   }
@@ -75,7 +79,7 @@ class UserSettingsProvider extends ChangeNotifier {
     if (!_box!.containsKey(_emailKey) && email != null) {
       await _box!.put(_emailKey, email);
     }
-
+    _isReady = true;
     notifyListeners();
   }
 

@@ -9,6 +9,7 @@ import 'package:montage/models/transaction_model.dart';
 import 'package:montage/providers/transaction_provider.dart';
 import 'package:montage/providers/user_settings_provider.dart';
 import 'package:montage/providers/auth_provider.dart';
+import 'package:montage/viewmodels/speech_view_model.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -35,6 +36,7 @@ void main() async {
               email: auth.currentUser?.email,
             ),
         ),
+        ChangeNotifierProvider(create: (_) => SpeechViewModel()),
       ],
       child: const MyApp(),
     ),

@@ -12,6 +12,7 @@ Montage is a personal finance management application built with Flutter. It help
 - Add, edit, and delete income and expense transactions.
 - Choose from predefined categories or create custom ones.
 - Toggle between income and expense views with swipe gestures.
+- **Smart Dictation**: Multi-lingual speech-to-text (English & Urdu) for transaction notes, titles, and **custom category creation**.
 - Attach photos (camera or gallery) as receipts or proof of purchase.
 - View attached images in a full-screen viewer with pinch-to-zoom.
 - Save attached images directly to the device gallery.
@@ -43,6 +44,7 @@ Montage is a personal finance management application built with Flutter. It help
 - Bottom navigation with four tabs: Home, Analytics, Activity, and Settings.
 - Intelligent back-button handling: pressing back from any tab returns to Home first.
 - Consistent bottom-sheet interactions for all secondary actions (transaction details, editing, media picking, profile options).
+- **Data-Ready Startup**: A "Bulletproof" splash screen that polls for both authentication status and database readiness, ensuring a flicker-free transition once the home screen appears.
 - Haptic feedback on key interactions.
 - Smooth page transitions and micro-animations throughout the app.
 
@@ -61,6 +63,7 @@ Montage is a personal finance management application built with Flutter. It help
 | Routing            | [GoRouter](https://pub.dev/packages/go_router)                            |
 | Image Handling     | [image_picker](https://pub.dev/packages/image_picker), [gal](https://pub.dev/packages/gal) |
 | Typography         | [Google Fonts](https://pub.dev/packages/google_fonts) (Nunito)            |
+| Speech Recognition | [speech_to_text](https://pub.dev/packages/speech_to_text)                 |
 | Animations         | [flutter_animate](https://pub.dev/packages/flutter_animate)               |
 | SVG Rendering      | [flutter_svg](https://pub.dev/packages/flutter_svg)                       |
 

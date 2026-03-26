@@ -80,22 +80,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Divider(color: Colors.white.withValues(alpha: 0.05), height: 1),
             _buildMenuOption(
               icon: Icons.photo_library_outlined,
-              title: "Change Photo",
+              title: settings.profileImagePath != null ? "Change Photo" : "Add Photo",
               onTap: () {
                 Navigator.pop(context);
                 settings.pickAndUpdateProfileImage();
               },
             ),
-            Divider(color: Colors.white.withValues(alpha: 0.05), height: 1),
-            _buildMenuOption(
-              svgAsset: AppImages.trashBin,
-              title: "Remove Photo",
-              iconColor: Colors.redAccent,
-              onTap: () {
-                Navigator.pop(context);
-                settings.removeProfileImage();
-              },
-            ),
+            if (settings.profileImagePath != null) ...[
+              Divider(color: Colors.white.withValues(alpha: 0.05), height: 1),
+              _buildMenuOption(
+                svgAsset: AppImages.trashBin,
+                title: "Remove Photo",
+                iconColor: Colors.redAccent,
+                onTap: () {
+                  Navigator.pop(context);
+                  settings.removeProfileImage();
+                },
+              ),
+            ],
             30.heightBox,
           ],
         ),
@@ -163,7 +165,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   iconColor: Colors.blueAccent,
                   title: "Personal Information",
                   subtitle: "Name, email",
-                  onTap: () {},
+                  onTap: () => context.push(AppRoutes.personalInformationScreenRoute),
                 ),
                 _buildSettingsTile(
                   svgAsset: AppImages.lock,
@@ -380,7 +382,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           settings.userName,
                         ).h4(color: Colors.white, weight: FontWeight.bold),
                   const SizedBox(height: 2),
-                  Text(settings.userEmail).bodyMedium(
+                  Text(
+                    settings.userEmail,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ).bodyMedium(
                     color: Colors.white.withValues(alpha: 0.7),
                     weight: FontWeight.w500,
                   ),
