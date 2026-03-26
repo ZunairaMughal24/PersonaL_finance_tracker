@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:montage/services/firestore_sync_service.dart';
 
 class UserSettingsProvider extends ChangeNotifier {
   static const String _currencyKey = 'selected_currency';
@@ -11,6 +12,7 @@ class UserSettingsProvider extends ChangeNotifier {
 
   Box? _box;
   String? _userId;
+  final FirestoreSyncService _syncService = FirestoreSyncService();
   String _selectedCurrency = 'USD';
   String _userName = 'User';
   String _userEmail = '';
@@ -68,6 +70,17 @@ class UserSettingsProvider extends ChangeNotifier {
 
     _box = await Hive.openBox<dynamic>('settings_$_userId');
 
+    // ── Cloud Sync: Restore settings if local box is empty
+    if (_box!.isEmpty) {
+      final cloudSettings = await _syncService.pullSettings(_userId!);
+      if (cloudSettings != null) {
+        for (final entry in cloudSettings.entries) {
+          await _box!.put(entry.key, entry.value);
+        }
+        debugPrint('CloudSync: Restored settings from Firestore.');
+      }
+    }
+
     _userName = _box!.get(_nameKey) ?? displayName ?? 'User';
     _userEmail = _box!.get(_emailKey) ?? email ?? 'user@example.com';
     _profileImagePath = _box!.get(_imageKey);
@@ -93,6 +106,7 @@ class UserSettingsProvider extends ChangeNotifier {
     if (_box != null) {
       await _box!.put(_currencyKey, currency);
     }
+    _pushSettingsToCloud();
     notifyListeners();
   }
 
@@ -130,6 +144,7 @@ class UserSettingsProvider extends ChangeNotifier {
       if (_box != null) {
         await _box!.put(_nameKey, _userName);
       }
+      _pushSettingsToCloud();
       notifyListeners();
     }
   }
@@ -157,7 +172,20 @@ class UserSettingsProvider extends ChangeNotifier {
     if (_box != null) {
       await _box!.put(_biometricKey, enabled);
     }
+    _pushSettingsToCloud();
     notifyListeners();
+  }
+
+  /// Pushes current settings snapshot to Firestore in the background.
+  void _pushSettingsToCloud() {
+    if (_userId == null) return;
+    _syncService.pushSettings(_userId!, {
+      _currencyKey: _selectedCurrency,
+      _nameKey: _userName,
+      _emailKey: _userEmail,
+      _biometricKey: _biometricEnabled,
+      'notifications_enabled': _notificationsEnabled,
+    });
   }
 
   static List<String> get availableCurrencies => [

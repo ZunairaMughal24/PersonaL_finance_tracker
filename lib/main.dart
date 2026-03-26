@@ -10,6 +10,7 @@ import 'package:montage/providers/transaction_provider.dart';
 import 'package:montage/providers/transaction_filter_provider.dart';
 import 'package:montage/providers/user_settings_provider.dart';
 import 'package:montage/providers/auth_provider.dart';
+import 'package:montage/providers/category_provider.dart';
 import 'package:montage/viewmodels/speech_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -36,6 +37,10 @@ void main() async {
               displayName: auth.currentUser?.displayName,
               email: auth.currentUser?.email,
             ),
+        ),
+        ChangeNotifierProxyProvider<AuthProvider, CategoryProvider>(
+          create: (_) => CategoryProvider(),
+          update: (_, auth, cat) => cat!..updateUser(auth.currentUser?.uid),
         ),
         ChangeNotifierProvider(create: (_) => TransactionFilterProvider()),
         ChangeNotifierProvider(create: (_) => SpeechViewModel()),

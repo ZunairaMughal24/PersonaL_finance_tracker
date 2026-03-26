@@ -6,6 +6,8 @@ import 'package:montage/core/utils/date_formatter.dart';
 import 'package:montage/models/transaction_model.dart';
 import 'package:montage/widgets/image_source_sheet.dart';
 import 'package:expressions/expressions.dart';
+import 'package:montage/widgets/transaction/category_action_sheet.dart';
+import 'package:montage/widgets/transaction/category_editor_dialog.dart';
 
 class TransactionFormViewModel extends ChangeNotifier {
   bool _isIncome = true;
@@ -120,7 +122,7 @@ class TransactionFormViewModel extends ChangeNotifier {
         final XFile? image = await picker.pickImage(source: source);
         if (image != null) {
           final directory = await getApplicationDocumentsDirectory();
-          final String name = image.name; 
+          final String name = image.name;
           final File file = File(image.path);
           final File newImage = await file.copy('${directory.path}/$name');
           setImagePath(newImage.path);
@@ -293,5 +295,50 @@ class TransactionFormViewModel extends ChangeNotifier {
 
     await provider.updateTransaction(key, getTransactionModel());
     onSuccess();
+  }
+
+  // ── CATEGORY MANAGEMENT LOGIC
+  void handleCategoryAction({
+    required BuildContext context,
+    required String catName,
+    required dynamic catProvider,
+  }) {
+    final customCat = catProvider.getCategoryByName(catName, _isIncome);
+    if (customCat == null) return;
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => CategoryActionSheet(
+        categoryName: catName,
+        onEdit: () {
+          showDialog(
+            context: context,
+            barrierColor: Colors.black54,
+            builder: (context) => CategoryEditorDialog(
+              isIncome: _isIncome,
+              initialCategory: customCat,
+              onSubmitted: (newName, newIcon) {
+                catProvider.updateCustomCategory(
+                  catName,
+                  newName,
+                  newIcon,
+                  _isIncome,
+                );
+                if (_selectedCategory == catName) {
+                  setCategory(newName);
+                }
+              },
+            ),
+          );
+        },
+        onDelete: () {
+          catProvider.deleteCustomCategory(catName, _isIncome);
+          if (_selectedCategory == catName) {
+            setCategory("Other");
+          }
+        },
+      ),
+    );
   }
 }

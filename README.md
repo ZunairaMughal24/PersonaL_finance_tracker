@@ -9,9 +9,12 @@ Montage is a personal finance management application built with Flutter. It help
 ## Features
 
 ### Transaction Management
-- Add, edit, and delete income and expense transactions.
-- Choose from predefined categories or create custom ones.
-- Toggle between income and expense views with swipe gestures.
+- Choose from predefined categories or create and manage **custom ones**.
+- **Category CRUD**: Full Create, Read, Update, and Delete support for user-defined categories.
+- **Icon Customization**: Select from a curated list of icons for personalized category tracking.
+- **Cloud Sync**: Automatic background synchronization between local Hive storage and Firebase Firestore.
+- **Predictive Selection**: Intelligently updates transaction category references when custom categories are edited or deleted (auto-fallback to 'Other').
+- Toggle between income and expense views with optimized **swipe gestures**.
 - **Smart Dictation**: Multi-lingual speech-to-text (English & Urdu) for transaction notes, titles, and **custom category creation**.
 - Attach photos (camera or gallery) as receipts or proof of purchase.
 - View attached images in a full-screen viewer with pinch-to-zoom.
@@ -59,6 +62,7 @@ Montage is a personal finance management application built with Flutter. It help
 | Framework          | [Flutter](https://flutter.dev/) (Dart)                                    |
 | State Management   | [Provider](https://pub.dev/packages/provider)                             |
 | Local Storage      | [Hive](https://pub.dev/packages/hive)                                     |
+| Cloud Database    | [Cloud Firestore](https://firebase.google.com/docs/firestore)             |
 | Authentication     | [Firebase Auth](https://firebase.google.com/docs/auth)                    |
 | AI Insights        | [Google Generative AI](https://pub.dev/packages/google_generative_ai)     |
 | Charts             | [FL Chart](https://pub.dev/packages/fl_chart)                             |

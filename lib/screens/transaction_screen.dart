@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:montage/core/constants/app_colors.dart';
-import 'package:montage/core/utils/category_utils.dart';
+import 'package:montage/providers/category_provider.dart';
 import 'package:montage/providers/transaction_provider.dart';
 import 'package:montage/viewmodels/transaction_form_view_model.dart';
 import 'package:montage/widgets/transaction_type_toggle.dart';
@@ -12,6 +12,7 @@ import 'package:montage/widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:montage/widgets/app_background.dart';
 import 'package:montage/widgets/transaction/custom_category_dialog.dart';
+import 'package:montage/widgets/transaction/category_editor_dialog.dart';
 import 'package:montage/viewmodels/speech_view_model.dart';
 
 class TransactionScreen extends StatelessWidget {
@@ -37,28 +38,15 @@ class _TransactionScreenContent extends StatefulWidget {
 }
 
 class _TransactionScreenContentState extends State<_TransactionScreenContent> {
-  late TextEditingController _titleController;
   final ScrollController _scrollController = ScrollController();
 
   @override
-  void initState() {
-    super.initState();
-    _titleController = TextEditingController();
-
-    _titleController.addListener(() {
-      Provider.of<TransactionFormViewModel>(
-        context,
-        listen: false,
-      ).setTitle(_titleController.text);
-    });
-  }
-
-  @override
   void dispose() {
-    _titleController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +56,7 @@ class _TransactionScreenContentState extends State<_TransactionScreenContent> {
           onTap: () => vm.toggleKeypad(false),
           child: AppBackground(
             style: BackgroundStyle.deepFluid,
-            appBar: const CustomAppBar(title: "Edit Transaction"),
+            appBar: const CustomAppBar(title: "Add Transaction"),
             child: SafeArea(
               child: GestureDetector(
                 onHorizontalDragEnd: (details) {
@@ -84,6 +72,7 @@ class _TransactionScreenContentState extends State<_TransactionScreenContent> {
                     Expanded(
                       child: SingleChildScrollView(
                         controller: _scrollController,
+                        physics: const BouncingScrollPhysics(),
                         child: Column(
                           children: [
                             const SizedBox(height: 10),
@@ -96,9 +85,7 @@ class _TransactionScreenContentState extends State<_TransactionScreenContent> {
                             ),
                             const SizedBox(height: 20),
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                              ),
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
@@ -107,9 +94,7 @@ class _TransactionScreenContentState extends State<_TransactionScreenContent> {
                                     fontSize: 12,
                                     fontWeight: FontWeight.w800,
                                     letterSpacing: 2.0,
-                                    color: AppColors.white.withValues(
-                                      alpha: 0.7,
-                                    ),
+                                    color: AppColors.white.withValues(alpha: 0.7),
                                   ),
                                 ),
                               ),
@@ -117,10 +102,30 @@ class _TransactionScreenContentState extends State<_TransactionScreenContent> {
                             const SizedBox(height: 16),
                             CategorySelector(
                               selectedCategory: vm.selectedCategory,
-                              categories: vm.isIncome
-                                  ? CategoryUtils.incomeCategories
-                                  : CategoryUtils.expenseCategories,
+                              categories: context
+                                  .watch<CategoryProvider>()
+                                  .getMergedCategories(vm.isIncome),
                               isIncome: vm.isIncome,
+                              onAddCategory: () {
+                                final catProvider = context.read<CategoryProvider>();
+                                showDialog(
+                                  context: context,
+                                  barrierColor: Colors.black54,
+                                  builder: (context) => CategoryEditorDialog(
+                                    isIncome: vm.isIncome,
+                                    onSubmitted: (customName, customIcon) {
+                                      catProvider.addCustomCategory(customName, customIcon, vm.isIncome);
+                                      vm.setCategory(customName);
+                                      vm.toggleKeypad(true);
+                                    },
+                                  ),
+                                );
+                              },
+                              onCategoryLongPress: (catName) => vm.handleCategoryAction(
+                                context: context, 
+                                catName: catName, 
+                                catProvider: context.read<CategoryProvider>()
+                              ),
                               onCategorySelected: (cat) {
                                 if (cat == "Other") {
                                   showDialog(
@@ -129,13 +134,14 @@ class _TransactionScreenContentState extends State<_TransactionScreenContent> {
                                     builder: (context) => CustomCategoryDialog(
                                       onSubmitted: (customName) {
                                         vm.setCategory(customName);
+                                        vm.toggleKeypad(true);
                                       },
                                     ),
                                   );
                                 } else {
                                   vm.setCategory(cat);
+                                  vm.toggleKeypad(true);
                                 }
-                                vm.toggleKeypad(true);
                                 Future.delayed(
                                   const Duration(milliseconds: 300),
                                   () {
@@ -143,9 +149,7 @@ class _TransactionScreenContentState extends State<_TransactionScreenContent> {
                                       double scrollAmount = 140.0;
                                       _scrollController.animateTo(
                                         scrollAmount,
-                                        duration: const Duration(
-                                          milliseconds: 500,
-                                        ),
+                                        duration: const Duration(milliseconds: 500),
                                         curve: Curves.easeOut,
                                       );
                                     }

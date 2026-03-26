@@ -1,33 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
+import 'package:montage/providers/category_provider.dart';
 import 'package:montage/widgets/glass_container.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:provider/provider.dart';
 import 'package:montage/viewmodels/speech_view_model.dart';
 import 'package:montage/widgets/pulse_effect.dart';
 
-class CustomCategoryDialog extends StatefulWidget {
-  final Function(String) onSubmitted;
-  final String? initialCategory;
+class AddNewCategoryDialog extends StatefulWidget {
+  final Function(String, IconData) onSubmitted;
+  final bool isIncome;
 
-  const CustomCategoryDialog({
+  const AddNewCategoryDialog({
     super.key,
     required this.onSubmitted,
-    this.initialCategory,
+    required this.isIncome,
   });
 
   @override
-  State<CustomCategoryDialog> createState() => _CustomCategoryDialogState();
+  State<AddNewCategoryDialog> createState() => _AddNewCategoryDialogState();
 }
 
-class _CustomCategoryDialogState extends State<CustomCategoryDialog> {
+class _AddNewCategoryDialogState extends State<AddNewCategoryDialog> {
   late final TextEditingController _controller;
+  String? _errorText;
+  IconData _selectedIcon = CategoryProvider.selectableIcons[0];
 
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: widget.initialCategory);
+    _controller = TextEditingController();
   }
 
   @override
@@ -38,10 +41,17 @@ class _CustomCategoryDialogState extends State<CustomCategoryDialog> {
 
   void _submit() {
     final value = _controller.text.trim();
-    if (value.isNotEmpty) {
-      widget.onSubmitted(value);
-      Navigator.pop(context);
+    if (value.isEmpty) return;
+
+    final provider = context.read<CategoryProvider>();
+    final error = provider.validateCategory(value, widget.isIncome);
+    if (error != null) {
+      setState(() => _errorText = error);
+      return;
     }
+
+    widget.onSubmitted(value, _selectedIcon);
+    Navigator.pop(context);
   }
 
   @override
@@ -67,7 +77,7 @@ class _CustomCategoryDialogState extends State<CustomCategoryDialog> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("Custom Category").h2(color: Colors.white),
+                  const Text("Add Category").h2(color: Colors.white),
                   IconButton(
                     onPressed: () => Navigator.pop(context),
                     icon: Icon(
@@ -80,12 +90,11 @@ class _CustomCategoryDialogState extends State<CustomCategoryDialog> {
                 ],
               ),
               Text(
-                "Enter a name for your custom category",
-              ).bodyLarge(
-                color: Colors.white.withValues(alpha: 0.8),
-                weight: FontWeight.w600,
-              ),
-              15.heightBox,
+                "Set a name and icon for your new category",
+              ).bodyLarge(color: Colors.white.withValues(alpha: 0.8)),
+              20.heightBox,
+              
+              // ── NAME INPUT ──
               Consumer<SpeechViewModel>(
                 builder: (context, speechVm, _) {
                   return TextField(
@@ -96,11 +105,21 @@ class _CustomCategoryDialogState extends State<CustomCategoryDialog> {
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
+                    onChanged: (_) {
+                      if (_errorText != null) {
+                        setState(() => _errorText = null);
+                      }
+                    },
                     decoration: InputDecoration(
-                      hintText: "e.g. Shopping, Rent, Gifts",
+                      hintText: "Category Name",
                       hintStyle: TextStyle(
                         color: Colors.white.withValues(alpha: 0.3),
                         fontWeight: FontWeight.w500,
+                      ),
+                      errorText: _errorText,
+                      errorStyle: const TextStyle(
+                        color: AppColors.red,
+                        fontSize: 12,
                       ),
                       filled: true,
                       fillColor: Colors.white.withValues(alpha: 0.05),
@@ -170,7 +189,50 @@ class _CustomCategoryDialogState extends State<CustomCategoryDialog> {
                   );
                 },
               ),
-              24.heightBox,
+              20.heightBox,
+
+              // ── ICON PICKER ──
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  mainAxisSpacing: 12,
+                  crossAxisSpacing: 12,
+                ),
+                itemCount: CategoryProvider.selectableIcons.length,
+                itemBuilder: (context, index) {
+                  final icon = CategoryProvider.selectableIcons[index];
+                  final isSelected = _selectedIcon == icon;
+                  return GestureDetector(
+                    onTap: () => setState(() => _selectedIcon = icon),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? AppColors.primaryColor.withValues(alpha: 0.2)
+                            : Colors.white.withValues(alpha: 0.05),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: isSelected
+                              ? AppColors.primaryColor
+                              : Colors.white.withValues(alpha: 0.1),
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Icon(
+                        icon,
+                        color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.5),
+                        size: 20,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              
+              30.heightBox,
+
+              // ── CONFIRM BUTTON ──
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(

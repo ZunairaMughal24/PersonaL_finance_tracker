@@ -68,16 +68,17 @@ class _ActivityScreenState extends State<ActivityScreen> {
       ),
       body: AppBackground(
         style: BackgroundStyle.premiumHybrid,
-        child: SafeArea(
-          child: GestureDetector(
-            onHorizontalDragEnd: (details) {
-              if (details.primaryVelocity == null) return;
-              if (details.primaryVelocity! < -200) {
-                filter.setIsIncomeFilter(false);
-              } else if (details.primaryVelocity! > 200) {
-                filter.setIsIncomeFilter(true);
-              }
-            },
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onHorizontalDragEnd: (details) {
+            if (details.primaryVelocity == null) return;
+            if (details.primaryVelocity! < -200) {
+              filter.setIsIncomeFilter(false);
+            } else if (details.primaryVelocity! > 200) {
+              filter.setIsIncomeFilter(true);
+            }
+          },
+          child: SafeArea(
             child: Column(
               children: [
                 if (_isSearchVisible) ...[
@@ -96,7 +97,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 Expanded(
                   child: Consumer<UserSettingsProvider>(
                     builder: (context, settings, _) {
-                      final filteredTransactions = filter.filterTransactions(transaction.transactions);
+                      final filteredTransactions =
+                          filter.filterTransactions(transaction.transactions);
 
                       if (filteredTransactions.isEmpty) {
                         return _buildEmptyState();
@@ -111,8 +113,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
                             transaction: tx,
                             currency: settings.selectedCurrency,
                             onDelete: () {
-                              final originalIndex = transaction.transactions
-                                  .indexOf(tx);
+                              final originalIndex =
+                                  transaction.transactions.indexOf(tx);
                               transaction.deleteTransaction(
                                 tx.key as int,
                                 originalIndex,

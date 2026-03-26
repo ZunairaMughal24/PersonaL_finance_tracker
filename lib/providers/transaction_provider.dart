@@ -8,11 +8,13 @@ import 'package:montage/models/spending_summary.dart';
 import 'package:montage/models/trends_model.dart';
 import 'package:montage/services/database_services.dart';
 import 'package:montage/services/finance_service.dart';
+import 'package:montage/services/firestore_sync_service.dart';
 import 'package:montage/services/ai_service.dart';
 
 class TransactionProvider extends ChangeNotifier {
   DatabaseService? db;
   late final AIService _aiService;
+  final FirestoreSyncService _syncService = FirestoreSyncService();
   String? _userId;
 
   static const String _geminiApiKey = String.fromEnvironment('GEMINI_API_KEY');
@@ -49,6 +51,28 @@ class TransactionProvider extends ChangeNotifier {
     final boxName = 'transactions_$userId';
     final box = await Hive.openBox<TransactionModel>(boxName);
     db = DatabaseService(box);
+
+    // ── Cloud Sync: Restore or Push
+    final localIsEmpty = box.isEmpty;
+    final cloudHasData = await _syncService.hasCloudData(userId);
+
+    if (localIsEmpty && cloudHasData) {
+      // Fresh install / reinstall → pull cloud data into local Hive
+      final cloudTransactions = await _syncService.pullAllTransactions(userId);
+      for (final tx in cloudTransactions) {
+        await box.add(tx);
+      }
+      debugPrint(
+        'CloudSync: Restored ${cloudTransactions.length} transactions from Firestore.',
+      );
+    } else if (!localIsEmpty && !cloudHasData) {
+      // Local data exists but cloud is empty → push local data to cloud
+      await _syncService.pushAllTransactions(userId, box.toMap());
+      debugPrint(
+        'CloudSync: Pushed ${box.length} local transactions to Firestore.',
+      );
+    }
+
     _loadTransactions();
     _isReady = true;
     notifyListeners();
@@ -96,6 +120,11 @@ class TransactionProvider extends ChangeNotifier {
     await db!.addTransaction(tx);
     _loadTransactions();
     _checkBalanceAndTriggerHaptic();
+
+    // Cloud sync: push the new transaction
+    if (_userId != null && tx.key != null) {
+      _syncService.pushTransaction(_userId!, tx.key as int, tx);
+    }
   }
 
   Future<void> deleteTransaction(int key, int index) async {
@@ -103,6 +132,11 @@ class TransactionProvider extends ChangeNotifier {
     await db!.deleteTransaction(key);
     _loadTransactions();
     _checkBalanceAndTriggerHaptic();
+
+    // Cloud sync: delete the transaction
+    if (_userId != null) {
+      _syncService.deleteTransaction(_userId!, key);
+    }
   }
 
   Future<void> updateTransaction(int key, TransactionModel updatedTx) async {
@@ -110,6 +144,11 @@ class TransactionProvider extends ChangeNotifier {
     await db!.updateTransaction(key, updatedTx);
     _loadTransactions();
     _checkBalanceAndTriggerHaptic();
+
+    // Cloud sync: update the transaction
+    if (_userId != null) {
+      _syncService.updateTransaction(_userId!, key, updatedTx);
+    }
   }
 
   double get totalIncome => FinanceService.calculateTotalIncome(_transactions);
@@ -178,7 +217,9 @@ class TransactionProvider extends ChangeNotifier {
 
     for (var tx in _transactions) {
       DateTime? parsedDate = DateUtilsCustom.parseDate(tx.date);
-      if (parsedDate == null) continue; // Skip malformed dates instead of corrupting data
+      if (parsedDate == null) {
+        continue;
+      }
       String day = DateFormat('E').format(parsedDate);
       if (dayMap.containsKey(day)) {
         if (tx.isIncome) {
@@ -192,7 +233,7 @@ class TransactionProvider extends ChangeNotifier {
         }
       }
     }
-    return dayMap.values.toList();
+    return dayMap.values.toList().cast<FinancialPeriodData>();
   }
 
   DateTime _getThisWeekDay(int dayOfWeek) {

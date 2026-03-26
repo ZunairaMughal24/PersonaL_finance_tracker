@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:montage/core/constants/app_colors.dart';
-import 'package:montage/core/utils/category_utils.dart';
 import 'package:montage/models/transaction_model.dart';
+import 'package:montage/providers/category_provider.dart';
 import 'package:montage/providers/transaction_provider.dart';
 import 'package:montage/viewmodels/transaction_form_view_model.dart';
 import 'package:montage/widgets/transaction_type_toggle.dart';
@@ -13,6 +13,7 @@ import 'package:montage/widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:montage/widgets/app_background.dart';
 import 'package:montage/widgets/transaction/custom_category_dialog.dart';
+import 'package:montage/widgets/transaction/category_editor_dialog.dart';
 import 'package:montage/viewmodels/speech_view_model.dart';
 
 class EditTransactionScreen extends StatelessWidget {
@@ -52,6 +53,8 @@ class _EditTransactionScreenContentState
     super.dispose();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Consumer<TransactionFormViewModel>(
@@ -60,7 +63,7 @@ class _EditTransactionScreenContentState
           onTap: () => vm.toggleKeypad(false),
           child: AppBackground(
             style: BackgroundStyle.deepFluid,
-            appBar: CustomAppBar(title: "Edit Transaction"),
+            appBar: const CustomAppBar(title: "Edit Transaction"),
             child: SafeArea(
               child: GestureDetector(
                 onHorizontalDragEnd: (details) {
@@ -76,6 +79,7 @@ class _EditTransactionScreenContentState
                     Expanded(
                       child: SingleChildScrollView(
                         controller: _scrollController,
+                        physics: const BouncingScrollPhysics(),
                         child: Column(
                           children: [
                             const SizedBox(height: 10),
@@ -105,10 +109,29 @@ class _EditTransactionScreenContentState
                             const SizedBox(height: 16),
                             CategorySelector(
                               selectedCategory: vm.selectedCategory,
-                              categories: vm.isIncome
-                                  ? CategoryUtils.incomeCategories
-                                  : CategoryUtils.expenseCategories,
+                              categories: context.watch<CategoryProvider>()
+                                  .getMergedCategories(vm.isIncome),
                               isIncome: vm.isIncome,
+                              onAddCategory: () {
+                                final catProvider = context.read<CategoryProvider>();
+                                showDialog(
+                                  context: context,
+                                  barrierColor: Colors.black54,
+                                  builder: (context) => CategoryEditorDialog(
+                                    isIncome: vm.isIncome,
+                                    onSubmitted: (customName, customIcon) {
+                                      catProvider.addCustomCategory(customName, customIcon, vm.isIncome);
+                                      vm.setCategory(customName);
+                                      vm.toggleKeypad(true);
+                                    },
+                                  ),
+                                );
+                              },
+                              onCategoryLongPress: (catName) => vm.handleCategoryAction(
+                                context: context, 
+                                catName: catName, 
+                                catProvider: context.read<CategoryProvider>()
+                              ),
                               onCategorySelected: (cat) {
                                 if (cat == "Other") {
                                   showDialog(
@@ -124,22 +147,22 @@ class _EditTransactionScreenContentState
                                 } else {
                                   vm.setCategory(cat);
                                   vm.toggleKeypad(true);
-                                  Future.delayed(
-                                    const Duration(milliseconds: 300),
-                                    () {
-                                      if (_scrollController.hasClients) {
-                                        double scrollAmount = 140.0;
-                                        _scrollController.animateTo(
-                                          scrollAmount,
-                                          duration: const Duration(
-                                            milliseconds: 500,
-                                          ),
-                                          curve: Curves.easeOut,
-                                        );
-                                      }
-                                    },
-                                  );
                                 }
+                                Future.delayed(
+                                  const Duration(milliseconds: 300),
+                                  () {
+                                    if (_scrollController.hasClients) {
+                                      double scrollAmount = 140.0;
+                                      _scrollController.animateTo(
+                                        scrollAmount,
+                                        duration: const Duration(
+                                          milliseconds: 500,
+                                        ),
+                                        curve: Curves.easeOut,
+                                      );
+                                    }
+                                  },
+                                );
                               },
                             ),
                             const SizedBox(height: 20),

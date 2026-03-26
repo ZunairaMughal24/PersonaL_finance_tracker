@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-03-27
+
+### Added
+- **Persistent Custom Categories**: Implemented a comprehensive category management system allowing users to Create, Read, Update, and Delete (CRUD) their own income and expense categories.
+- **Firestore Cloud Sync**: Integrated real-time background synchronization to Cloud Firestore, ensuring custom categories are backed up and consistent across devices.
+- **Category Action Sheet**: Designed a premium, minimalist bottom sheet for category actions, exactly matching the home screen's visual language.
+- **Unified Category Editor**: Created a reusable `CategoryEditorDialog` supporting both "Add" and "Edit" modes with premium typography and icon selection.
+
+### Improved
+- **Architectural Refinement**: Moved all category management logic into the `TransactionFormViewModel`, strictly decoupling UI from business logic according to MVVM standards.
+- **Scrolling Experience**: Added `BouncingScrollPhysics` to all transaction-related screens for a more elastic, high-end feel.
+- **Gesture Reliability**: Fixed horizontal swipe gestures on the `ActivityScreen` by optimizing `GestureDetector` placement and behavior.
+- **State Safety**: Implemented automatic fallback to the "Other" category when a currently selected custom category is deleted.
+
+### Fixed
+- **UI Labeling**: Corrected AppBar title inconsistencies on the Add Transaction screen.
+- **Provider Errors**: Resolved static reference issues in `CategoryProvider` and cleaned up redundant imports.
+
 ## [1.4.0] - 2026-03-26
 
 ### Added
