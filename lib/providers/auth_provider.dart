@@ -8,19 +8,11 @@ class AuthProvider extends ChangeNotifier {
 
   AuthProvider() {
     _user = _authService.currentUser;
-    // Fast path: if user is already there, we are initialized.
-    if (_user != null) {
-      _isInitialized = true;
-    }
     _authService.authStateChanges.listen((User? user) {
       _user = user;
-      _isInitialized = true;
       notifyListeners();
     });
   }
-
-  bool _isInitialized = false;
-  bool get isInitialized => _isInitialized;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
