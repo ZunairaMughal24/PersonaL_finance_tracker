@@ -1,6 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:montage/providers/auth_provider.dart';
 import 'package:montage/screens/main_navigation_screen.dart';
 import 'package:montage/screens/onboarding_screen.dart';
 import 'package:montage/screens/splash_screen.dart';
@@ -13,34 +12,41 @@ class AuthWrapper extends StatefulWidget {
 }
 
 class _AuthWrapperState extends State<AuthWrapper> {
-  bool _showSplash = true;
+  bool _minSplashOver = false;
+  late final Stream<User?> _authStateStream;
 
   @override
   void initState() {
     super.initState();
-    _takeToApp();
-  }
-
-  void _takeToApp() async {
-    await Future.delayed(const Duration(seconds: 5));
-    if (mounted) {
-      setState(() {
-        _showSplash = false;
-      });
-    }
+    _authStateStream = FirebaseAuth.instance.authStateChanges();
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) {
+        setState(() {
+          _minSplashOver = true;
+        });
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_showSplash) {
-      return const SplashScreen();
-    }
+    return StreamBuilder<User?>(
+      stream: _authStateStream,
+      builder: (context, snapshot) {
+        debugPrint(
+          'AuthWrapper State: ${snapshot.connectionState}, Data UID: ${snapshot.data?.uid}, Show Splash: ${!_minSplashOver}',
+        );
 
-    return Consumer<AuthProvider>(
-      builder: (context, auth, _) {
-        if (auth.currentUser != null) {
+        // Show splash screen while waiting for Firebase
+        if (snapshot.connectionState == ConnectionState.waiting ||
+            !_minSplashOver) {
+          return const SplashScreen();
+        }
+
+        if (snapshot.hasData && snapshot.data != null) {
           return const MainNavScreen();
         }
+
         return const OnboardingScreen();
       },
     );

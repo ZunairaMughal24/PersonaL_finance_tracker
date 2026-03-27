@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -16,7 +17,14 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  try {
+    debugPrint('Initializing Firebase...');
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    debugPrint('Firebase initialized. Current User ID: ${FirebaseAuth.instance.currentUser?.uid}');
+  } catch (e) {
+    debugPrint('Firebase init error: $e');
+  }
+
   _setPortraitMode();
   await Hive.initFlutter();
   Hive.registerAdapter(TransactionModelAdapter());
