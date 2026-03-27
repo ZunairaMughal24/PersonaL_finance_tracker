@@ -168,7 +168,12 @@ class _ProfileCardState extends State<ProfileCard> {
                 onPressed: () => SettingsModals.showEditProfileMenu(
                   context: context,
                   settings: settings,
-                  onEditNameTap: () => setState(() => _isEditingName = true),
+                  onEditNameTap: () {
+                    setState(() {
+                      _nameController.text = settings.userName;
+                      _isEditingName = true;
+                    });
+                  },
                 ),
                 icon: Icon(
                   Icons.edit_outlined,

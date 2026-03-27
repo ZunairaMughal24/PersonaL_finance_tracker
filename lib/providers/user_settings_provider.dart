@@ -70,17 +70,25 @@ class UserSettingsProvider extends ChangeNotifier {
 
     _box = await Hive.openBox<dynamic>('settings_$_userId');
 
-    // ── Cloud Sync: Restore settings if local box is empty
-    if (_box!.isEmpty) {
-      final cloudSettings = await _syncService.pullSettings(_userId!);
-      if (cloudSettings != null) {
-        for (final entry in cloudSettings.entries) {
-          await _box!.put(entry.key, entry.value);
-        }
-        debugPrint('CloudSync: Restored settings from Firestore.');
-      }
+    // 1. Adaptive Loading Logic
+    if (_box!.isNotEmpty) {
+      _applyLocalSettings(displayName, email);
+      _isReady = true;
+      notifyListeners();
+    } else {
+      // Fresh Install: Wait for Cloud Restore
+      await _restoreSettingsFromCloud();
+      _applyLocalSettings(displayName, email);
+      _isReady = true;
+      notifyListeners();
     }
 
+    // 3. Background Sync for Username Restoration
+    _performCloudSyncBackground();
+  }
+
+  void _applyLocalSettings(String? displayName, String? email) {
+    if (_box == null) return;
     _userName = _box!.get(_nameKey) ?? displayName ?? 'User';
     _userEmail = _box!.get(_emailKey) ?? email ?? 'user@example.com';
     _profileImagePath = _box!.get(_imageKey);
@@ -91,14 +99,56 @@ class UserSettingsProvider extends ChangeNotifier {
     _biometricEnabled = _box!.get(_biometricKey, defaultValue: false);
     _selectedCurrency = _box!.get(_currencyKey, defaultValue: 'USD');
 
+    // Initial local save if missing
     if (!_box!.containsKey(_nameKey) && displayName != null) {
-      await _box!.put(_nameKey, displayName);
+      _box!.put(_nameKey, displayName);
     }
     if (!_box!.containsKey(_emailKey) && email != null) {
-      await _box!.put(_emailKey, email);
+      _box!.put(_emailKey, email);
     }
-    _isReady = true;
-    notifyListeners();
+  }
+
+  Future<void> _restoreSettingsFromCloud() async {
+    if (_userId == null || _box == null) return;
+    try {
+      final cloudSettings = await _syncService.pullSettings(_userId!);
+      if (cloudSettings != null) {
+        for (final entry in cloudSettings.entries) {
+          await _box!.put(entry.key, entry.value);
+        }
+        debugPrint('CloudSync: Settings restored from Firestore.');
+      }
+    } catch (e) {
+      debugPrint('CloudSync restore settings error: $e');
+    }
+  }
+
+  Future<void> _performCloudSyncBackground() async {
+    if (_userId == null || _box == null) return;
+
+    try {
+      // Restore settings if local box is empty
+      if (_box!.isEmpty) {
+        final cloudSettings = await _syncService.pullSettings(_userId!);
+        if (cloudSettings != null) {
+          for (final entry in cloudSettings.entries) {
+            await _box!.put(entry.key, entry.value);
+          }
+          debugPrint('CloudSync: Settings restored from Firestore.');
+
+          // Refresh local state from restored data
+          _userName = _box!.get(_nameKey) ?? _userName;
+          _userEmail = _box!.get(_emailKey) ?? _userEmail;
+          _selectedCurrency = _box!.get(
+            _currencyKey,
+            defaultValue: _selectedCurrency,
+          );
+          notifyListeners();
+        }
+      }
+    } catch (e) {
+      debugPrint('CloudSync background settings error: $e');
+    }
   }
 
   Future<void> setCurrency(String currency) async {

@@ -59,6 +59,8 @@ dependencies:
   csv: ^6.0.0
   pdf: ^3.11.1
   share_plus: ^10.1.4
+  firebase_storage: ^12.4.10
+  cached_network_image: ^3.4.1
 
 
 dev_dependencies:

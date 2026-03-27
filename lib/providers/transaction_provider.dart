@@ -47,35 +47,57 @@ class TransactionProvider extends ChangeNotifier {
       return;
     }
 
-    /// Opens user-specific box
+    /// 1. Open Hive Box
     final boxName = 'transactions_$userId';
     final box = await Hive.openBox<TransactionModel>(boxName);
     db = DatabaseService(box);
 
-    // ── Cloud Sync: Restore or Push
-    final localIsEmpty = box.isEmpty;
-    final cloudHasData = await _syncService.hasCloudData(userId);
-
-    if (localIsEmpty && cloudHasData) {
-      // Fresh install / reinstall → pull cloud data into local Hive
-      final cloudTransactions = await _syncService.pullAllTransactions(userId);
-      for (final tx in cloudTransactions) {
-        await box.add(tx);
-      }
-      debugPrint(
-        'CloudSync: Restored ${cloudTransactions.length} transactions from Firestore.',
-      );
-    } else if (!localIsEmpty && !cloudHasData) {
-      // Local data exists but cloud is empty → push local data to cloud
-      await _syncService.pushAllTransactions(userId, box.toMap());
-      debugPrint(
-        'CloudSync: Pushed ${box.length} local transactions to Firestore.',
-      );
+    // 2. Adaptive Loading Logic
+    if (box.isNotEmpty) {
+      // Repeat User: Load Local Immediately (Instant-First)
+      _loadTransactions();
+      _isReady = true;
+      notifyListeners();
+      
+      // Perform background sync to stay up to date
+      _performCloudSyncBackground(userId, box);
+    } else {
+      // Fresh Install: Wait for Cloud Sync (Skeleton-Wait)
+      await _restoreTransactionsFromCloud(userId, box);
+      _loadTransactions();
+      _isReady = true;
+      notifyListeners();
     }
+  }
 
-    _loadTransactions();
-    _isReady = true;
-    notifyListeners();
+  Future<void> _restoreTransactionsFromCloud(String userId, Box<TransactionModel> box) async {
+    try {
+      final cloudHasData = await _syncService.hasCloudData(userId);
+      if (cloudHasData) {
+        final cloudTransactions = await _syncService.pullAllTransactions(userId);
+        for (final tx in cloudTransactions) {
+          await box.add(tx);
+        }
+        debugPrint('CloudSync: Restored transactions from Firestore.');
+      }
+    } catch (e) {
+      debugPrint('CloudSync restore error: $e');
+    }
+  }
+
+  Future<void> _performCloudSyncBackground(String userId, Box<TransactionModel> box) async {
+    try {
+      final cloudHasData = await _syncService.hasCloudData(userId);
+      if (!cloudHasData && box.isNotEmpty) {
+        // Local exists but cloud empty -> initial push
+        await _syncService.pushAllTransactions(userId, box.toMap());
+        debugPrint('CloudSync: Pushed local transactions to Firestore.');
+      } else if (cloudHasData) {
+        // Background update logic could go here if needed
+      }
+    } catch (e) {
+      debugPrint('CloudSync background error: $e');
+    }
   }
 
   void refreshInsights() {
