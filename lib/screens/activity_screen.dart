@@ -89,7 +89,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: TransactionTypeToggle(
-                    isIncome: filter.isIncomeFilter ?? false,
+                    isIncome: filter.isIncomeFilter,
                     onChanged: (val) => filter.setIsIncomeFilter(val),
                   ),
                 ),

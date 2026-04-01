@@ -5,12 +5,12 @@ class TransactionFilterProvider extends ChangeNotifier {
   String _searchQuery = '';
   DateTimeRange? _selectedDateRange;
   String? _selectedCategory;
-  bool? _isIncomeFilter;
+  bool _isIncomeFilter = false;
 
   String get searchQuery => _searchQuery;
   DateTimeRange? get selectedDateRange => _selectedDateRange;
   String? get selectedCategory => _selectedCategory;
-  bool? get isIncomeFilter => _isIncomeFilter;
+  bool get isIncomeFilter => _isIncomeFilter;
 
   void setSearchQuery(String query) {
     if (_searchQuery == query) return;
@@ -30,7 +30,7 @@ class TransactionFilterProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setIsIncomeFilter(bool? value) {
+  void setIsIncomeFilter(bool value) {
     if (_isIncomeFilter == value) return;
     _isIncomeFilter = value;
     notifyListeners();
@@ -40,7 +40,7 @@ class TransactionFilterProvider extends ChangeNotifier {
     _searchQuery = '';
     _selectedDateRange = null;
     _selectedCategory = null;
-    _isIncomeFilter = null;
+    _isIncomeFilter = false;
     notifyListeners();
   }
 
@@ -65,10 +65,7 @@ class TransactionFilterProvider extends ChangeNotifier {
         matchesCategory = tx.category == _selectedCategory;
       }
 
-      bool matchesType = true;
-      if (_isIncomeFilter != null) {
-        matchesType = tx.isIncome == _isIncomeFilter;
-      }
+      final matchesType = tx.isIncome == _isIncomeFilter;
 
       return matchesSearch && matchesDate && matchesCategory && matchesType;
     }).toList();
