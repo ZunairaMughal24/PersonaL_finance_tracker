@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:montage/screens/main_navigation_screen.dart';
 import 'package:montage/widgets/app_background.dart';
 import 'package:montage/widgets/custom_app_bar.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
@@ -18,9 +17,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return AppBackground(
       style: BackgroundStyle.silkDark,
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         title: "Settings",
-        onLeadingTap: () => MainNavScreen.navKey.currentState?.switchToHome(),
       ),
       child: SafeArea(
         child: SingleChildScrollView(

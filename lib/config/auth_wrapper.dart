@@ -37,7 +37,6 @@ class _AuthWrapperState extends State<AuthWrapper> {
           'AuthWrapper State: ${snapshot.connectionState}, Data UID: ${snapshot.data?.uid}, Show Splash: ${!_minSplashOver}',
         );
 
-        // Show splash screen while waiting for Firebase
         if (snapshot.connectionState == ConnectionState.waiting ||
             !_minSplashOver) {
           return const SplashScreen();

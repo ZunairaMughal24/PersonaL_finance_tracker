@@ -38,9 +38,8 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
   Widget build(BuildContext context) {
     return AppBackground(
       style: BackgroundStyle.silkDark,
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         title: "Personal Information",
-        onLeadingTap: () => Navigator.pop(context),
       ),
       child: SafeArea(
         child: Consumer<UserSettingsProvider>(

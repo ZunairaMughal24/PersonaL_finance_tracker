@@ -3,7 +3,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/utils/category_utils.dart';
 import 'package:montage/core/utils/currency_utils.dart';
-import 'package:montage/screens/main_navigation_screen.dart';
 import 'package:montage/widgets/analytics/spending_category_breakdown.dart';
 import 'package:montage/widgets/analytics/trends_weekly_breakdown.dart';
 import 'package:montage/widgets/glass_container.dart';
@@ -44,10 +43,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   Widget build(BuildContext context) {
     return AppBackground(
       style: BackgroundStyle.abstractDark,
-      appBar: CustomAppBar(
-        title: "Spending Analytics",
-        onLeadingTap: () => MainNavScreen.navKey.currentState?.switchToHome(),
-      ),
+      appBar: const CustomAppBar(title: "Spending Analytics"),
       child: Consumer<TransactionProvider>(
         builder: (context, provider, child) {
           final summary = provider.spendingSummary;
@@ -244,13 +240,17 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         showTitle: false,
         badgeWidget: isTouched
             ? Container(
-                padding: const EdgeInsets.all(6),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Colors.grey.withValues(alpha: 0.25),
                   shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.15),
+                    width: 1,
+                  ),
                   boxShadow: [
                     BoxShadow(
-                      color: color.withValues(alpha: 0.3),
+                      color: Colors.black.withValues(alpha: 0.2),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -258,7 +258,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                 ),
                 child: Icon(
                   CategoryUtils.getIconForCategory(entry.key),
-                  color: color,
+                  color: Colors.white,
                   size: 16,
                 ),
               )
@@ -295,11 +295,18 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             const SizedBox(height: 4),
             Builder(
               builder: (context) {
-                final amountRaw = CurrencyUtils.formatAmount(grandTotal, currency);
+                final amountRaw = CurrencyUtils.formatAmount(
+                  grandTotal,
+                  currency,
+                );
                 final hasSuffix = amountRaw.contains(RegExp(r'[A-Za-z]'));
-                final amountText = hasSuffix ? amountRaw : amountRaw.split('.')[0];
+                final amountText = hasSuffix
+                    ? amountRaw
+                    : amountRaw.split('.')[0];
                 final fontSize = amountText.length >= 12 ? 19.0 : 25.0;
-                return Text(amountText).h2(color: Colors.white, fontSize: fontSize);
+                return Text(
+                  amountText,
+                ).h2(color: Colors.white, fontSize: fontSize);
               },
             ),
           ],

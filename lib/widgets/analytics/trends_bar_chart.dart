@@ -23,7 +23,8 @@ class TrendsBarChart extends StatelessWidget {
     }
 
     final axisConfig = ChartUtils.getNiceAxisConfig(maxVal);
-    final maxY = axisConfig.maxY;
+
+    final maxY = axisConfig.maxY * 1.15;
     final interval = axisConfig.interval;
 
     return Padding(
@@ -45,8 +46,18 @@ class TrendsBarChart extends StatelessWidget {
               barTouchData: BarTouchData(
                 enabled: true,
                 touchTooltipData: BarTouchTooltipData(
-                  tooltipBgColor: Colors.black.withValues(alpha: 0.9),
-                  tooltipRoundedRadius: 8,
+                  tooltipBgColor: Colors.grey.withValues(alpha: 0.2),
+                  tooltipRoundedRadius: 12,
+                  tooltipPadding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  tooltipBorder: BorderSide(
+                    color: Colors.white.withValues(alpha: 0.1),
+                    width: 1,
+                  ),
+                  fitInsideVertically: true,
+                  fitInsideHorizontally: true,
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
                     final settings = Provider.of<UserSettingsProvider>(
                       context,
@@ -58,10 +69,9 @@ class TrendsBarChart extends StatelessWidget {
                         settings.selectedCurrency,
                       ),
                       TextStyle(
-                        color: rodIndex == 0
-                            ? Colors.greenAccent
-                            : Colors.redAccent,
+                        color: rodIndex == 0 ? AppColors.green : AppColors.red,
                         fontWeight: FontWeight.bold,
+                        fontSize: 14,
                       ),
                     );
                   },

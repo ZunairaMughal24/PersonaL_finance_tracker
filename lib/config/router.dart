@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:montage/screens/main_navigation_screen.dart';
 import 'package:montage/screens/analytics_screen.dart';
 import 'package:montage/screens/edit_transaction_screen.dart';
 import 'package:montage/screens/home_screen.dart';
-import 'package:montage/screens/main_navigation_screen.dart';
 import 'package:montage/screens/settings_screen.dart';
 import 'package:montage/screens/transaction_screen.dart';
 import 'package:montage/screens/splash_screen.dart';
@@ -42,7 +42,7 @@ class AppRoutes {
   };
 }
 
-// ─── Page Transition
+//Page Transition
 
 CustomTransitionPage<void> _buildPageWithDefaultTransition<T>({
   required BuildContext context,
@@ -73,7 +73,7 @@ GoRouter createRouter() {
         path: AppRoutes.rootRoute,
         builder: (context, state) => const AuthWrapper(),
       ),
-      // ── Public Routes
+
       GoRoute(
         path: AppRoutes.splashScreenRoute,
         pageBuilder: (context, state) => _buildPageWithDefaultTransition(
@@ -107,7 +107,6 @@ GoRouter createRouter() {
         ),
       ),
 
-      // ── Protected Routes
       GoRoute(
         path: AppRoutes.mainNavigationScreenRoute,
         pageBuilder: (context, state) => _buildPageWithDefaultTransition(
@@ -116,6 +115,8 @@ GoRouter createRouter() {
           child: const MainNavScreen(),
         ),
       ),
+
+      // ── Protected Routes
       GoRoute(
         path: AppRoutes.homeScreenRoute,
         pageBuilder: (context, state) => _buildPageWithDefaultTransition(

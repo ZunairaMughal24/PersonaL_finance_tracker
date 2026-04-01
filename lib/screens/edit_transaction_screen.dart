@@ -63,7 +63,9 @@ class _EditTransactionScreenContentState
           onTap: () => vm.toggleKeypad(false),
           child: AppBackground(
             style: BackgroundStyle.deepFluid,
-            appBar: const CustomAppBar(title: "Edit Transaction"),
+            appBar: const CustomAppBar(
+              title: "Edit Transaction",
+            ),
             child: SafeArea(
               child: GestureDetector(
                 onHorizontalDragEnd: (details) {

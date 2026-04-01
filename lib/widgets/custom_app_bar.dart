@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:montage/config/router.dart';
+import 'package:montage/screens/main_navigation_screen.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -29,7 +30,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   icon: const Icon(Icons.arrow_back, color: Colors.white),
                   onPressed:
                       onLeadingTap ??
-                      () => context.go(AppRoutes.mainNavigationScreenRoute),
+                      () async {
+                        final didPop = await Navigator.of(context).maybePop();
+                        if (!didPop && context.mounted) {
+                          final state = context
+                              .findAncestorStateOfType<MainNavScreenState>();
+                          if (state != null) {
+                            state.switchToHome();
+                          } else {
+                            context.go(AppRoutes.mainNavigationScreenRoute);
+                          }
+                        }
+                      },
                 )
               : null),
       title: Text(

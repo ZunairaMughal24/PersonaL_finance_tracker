@@ -5,8 +5,6 @@ import 'package:montage/providers/transaction_filter_provider.dart';
 import 'package:montage/widgets/transaction/transaction_list_item.dart';
 import 'package:montage/providers/user_settings_provider.dart';
 import 'package:montage/widgets/app_background.dart';
-import 'package:montage/config/router.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
@@ -15,6 +13,8 @@ import 'package:montage/widgets/transaction_type_toggle.dart';
 import 'package:montage/widgets/custom_app_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:montage/core/constants/app_images.dart';
+import 'package:go_router/go_router.dart';
+import 'package:montage/config/router.dart';
 
 class ActivityScreen extends StatefulWidget {
   const ActivityScreen({super.key});

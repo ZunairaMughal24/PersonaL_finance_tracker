@@ -56,7 +56,9 @@ class _TransactionScreenContentState extends State<_TransactionScreenContent> {
           onTap: () => vm.toggleKeypad(false),
           child: AppBackground(
             style: BackgroundStyle.deepFluid,
-            appBar: const CustomAppBar(title: "Add Transaction"),
+            appBar: const CustomAppBar(
+              title: "Add Transaction",
+            ),
             child: SafeArea(
               child: GestureDetector(
                 onHorizontalDragEnd: (details) {
