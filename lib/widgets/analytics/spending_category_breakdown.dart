@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
-import 'package:montage/core/utils/category_utils.dart';
+import 'package:montage/providers/category_provider.dart';
 import 'package:montage/core/utils/currency_utils.dart';
 import 'package:montage/providers/transaction_provider.dart';
 import 'package:montage/widgets/glass_container.dart';
@@ -58,7 +58,8 @@ class SpendingCategoryBreakdown extends StatelessWidget {
     double amount,
     double grandTotal,
   ) {
-    final color = CategoryUtils.getCategoryColor(category);
+    final catProvider = context.watch<CategoryProvider>();
+    final color = catProvider.getCategoryColor(category);
     final percentage = (amount / grandTotal);
 
     return Consumer<TransactionProvider>(
@@ -118,7 +119,7 @@ class SpendingCategoryBreakdown extends StatelessWidget {
                             ],
                           ),
                           child: Icon(
-                            CategoryUtils.getIconForCategory(category),
+                            catProvider.getIconForCategory(category),
                             color: color,
                             size: 18,
                           ),

@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:montage/config/router.dart';
 import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
-import 'package:montage/core/utils/category_utils.dart';
+import 'package:montage/providers/category_provider.dart';
 import 'package:montage/core/utils/currency_utils.dart';
 import 'package:montage/models/transaction_model.dart';
 import 'package:montage/widgets/glass_container.dart';
@@ -12,6 +12,7 @@ import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:montage/core/constants/app_images.dart';
 import 'package:montage/widgets/app_background.dart';
+import 'package:provider/provider.dart';
 
 class TransactionDetailSheet extends StatelessWidget {
   final TransactionModel transaction;
@@ -26,7 +27,8 @@ class TransactionDetailSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final statusColor = transaction.isIncome ? AppColors.green : AppColors.red;
-    final iconColor = CategoryUtils.getCategoryColor(transaction.category);
+    final catProvider = context.watch<CategoryProvider>();
+    final iconColor = catProvider.getCategoryColor(transaction.category);
 
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(38)),
@@ -79,7 +81,7 @@ class TransactionDetailSheet extends StatelessWidget {
                   ],
                 ),
                 child: Icon(
-                  CategoryUtils.getIconForCategory(transaction.category),
+                  catProvider.getIconForCategory(transaction.category),
                   color: iconColor,
                   size: 32,
                 ),

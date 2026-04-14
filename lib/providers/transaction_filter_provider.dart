@@ -45,7 +45,7 @@ class TransactionFilterProvider extends ChangeNotifier {
   }
 
   List<TransactionModel> filterTransactions(List<TransactionModel> transactions) {
-    return transactions.where((tx) {
+    final filtered = transactions.where((tx) {
       final matchesSearch = tx.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
           tx.category.toLowerCase().contains(_searchQuery.toLowerCase());
 
@@ -69,5 +69,13 @@ class TransactionFilterProvider extends ChangeNotifier {
 
       return matchesSearch && matchesDate && matchesCategory && matchesType;
     }).toList();
+
+    filtered.sort((a, b) {
+      final dateA = DateUtilsCustom.parseDate(a.date) ?? DateTime.fromMillisecondsSinceEpoch(0);
+      final dateB = DateUtilsCustom.parseDate(b.date) ?? DateTime.fromMillisecondsSinceEpoch(0);
+      return dateB.compareTo(dateA);
+    });
+
+    return filtered;
   }
 }

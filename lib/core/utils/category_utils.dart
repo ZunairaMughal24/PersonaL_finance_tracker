@@ -220,4 +220,93 @@ class CategoryUtils {
     );
     return match['color'] as Color;
   }
+
+  /// Business-friendly, selectableicons
+  static const List<IconData> selectableIcons = [
+    // Money & Payments
+    Icons.account_balance_wallet_rounded,
+    Icons.payments_rounded,
+    Icons.monetization_on_rounded,
+    Icons.currency_exchange_rounded,
+    Icons.savings_rounded,
+    Icons.account_balance_rounded,
+
+    // Business & Work
+    Icons.business_center_rounded,
+    Icons.store_rounded,
+
+    Icons.work_rounded,
+    Icons.handshake_rounded,
+    Icons.receipt_long_rounded,
+
+    // Transfer & Movement
+    Icons.swap_horiz_rounded,
+    Icons.send_rounded,
+    Icons.call_received_rounded,
+    Icons.sync_alt_rounded,
+    Icons.arrow_circle_up_rounded,
+    Icons.arrow_circle_down_rounded,
+
+    // People & Social
+    Icons.person_rounded,
+    Icons.people_rounded,
+    Icons.groups_rounded,
+    Icons.family_restroom_rounded,
+
+    // Shopping & Lifestyle
+    Icons.shopping_cart_rounded,
+    Icons.shopping_bag_rounded,
+    Icons.local_mall_rounded,
+    Icons.card_giftcard_rounded,
+
+    // Transport
+    Icons.directions_car_rounded,
+    Icons.local_taxi_rounded,
+    Icons.flight_rounded,
+
+    // Food & Drink
+    Icons.restaurant_rounded,
+    Icons.coffee_rounded,
+    Icons.local_grocery_store_rounded,
+
+    // Home & Living
+    Icons.home_rounded,
+    Icons.apartment_rounded,
+    Icons.build_rounded,
+
+    // Health & Education
+    Icons.medical_services_rounded,
+    Icons.school_rounded,
+    Icons.fitness_center_rounded,
+
+    // Tech & Entertainment
+    Icons.devices_rounded,
+    Icons.movie_rounded,
+    Icons.subscriptions_rounded,
+    Icons.wifi_rounded,
+    Icons.phone_android_rounded,
+
+    // Misc Common
+    Icons.trending_up_rounded,
+    Icons.pie_chart_rounded,
+    Icons.star_rounded,
+    Icons.favorite_rounded,
+    Icons.security_rounded,
+    Icons.category_rounded,
+    Icons.label_rounded,
+    Icons.local_offer_rounded,
+  ];
+
+  /// Curated color palette for custom categories
+  static const List<Color> selectableColors = [
+    Color(0xFFEF5350),
+
+    Color.fromARGB(255, 61, 169, 241),
+    Color.fromARGB(255, 114, 227, 235),
+    Color.fromARGB(255, 250, 170, 65),
+    Color(0xFF66BB6A),
+    Color.fromARGB(255, 255, 40, 208),
+    Color(0xFFFFCA28),
+    Color(0xFF78909C),
+  ];
 }

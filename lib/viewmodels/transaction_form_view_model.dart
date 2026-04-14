@@ -318,12 +318,13 @@ class TransactionFormViewModel extends ChangeNotifier {
             builder: (context) => CategoryEditorDialog(
               isIncome: _isIncome,
               initialCategory: customCat,
-              onSubmitted: (newName, newIcon) {
+              onSubmitted: (newName, newIcon, {Color? color}) {
                 catProvider.updateCustomCategory(
                   catName,
                   newName,
                   newIcon,
                   _isIncome,
+                  color: color,
                 );
                 if (_selectedCategory == catName) {
                   setCategory(newName);

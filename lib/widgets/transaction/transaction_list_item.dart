@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/utils/currency_utils.dart';
-import 'package:montage/core/utils/category_utils.dart';
+import 'package:montage/providers/category_provider.dart';
 import 'package:montage/models/transaction_model.dart';
 import 'package:montage/widgets/transaction/transaction_action_sheet.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/widgets/glass_container.dart';
-
+import 'package:provider/provider.dart';
 import 'package:montage/widgets/transaction/transaction_detail_sheet.dart';
 
 class TransactionListItem extends StatelessWidget {
@@ -65,7 +65,7 @@ class TransactionListItem extends StatelessWidget {
                           border: Border.all(color: borderColor, width: 1.5),
                         ),
                         child: Icon(
-                          CategoryUtils.getIconForCategory(transaction.category),
+                          context.watch<CategoryProvider>().getIconForCategory(transaction.category),
                           color: statusColor,
                           size: 20,
                         ),

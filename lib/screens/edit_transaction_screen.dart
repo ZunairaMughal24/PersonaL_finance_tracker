@@ -121,8 +121,8 @@ class _EditTransactionScreenContentState
                                   barrierColor: Colors.black54,
                                   builder: (context) => CategoryEditorDialog(
                                     isIncome: vm.isIncome,
-                                    onSubmitted: (customName, customIcon) {
-                                      catProvider.addCustomCategory(customName, customIcon, vm.isIncome);
+                                    onSubmitted: (customName, customIcon, {Color? color}) {
+                                      catProvider.addCustomCategory(customName, customIcon, vm.isIncome, color: color);
                                       vm.setCategory(customName);
                                       vm.toggleKeypad(true);
                                     },

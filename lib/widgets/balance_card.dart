@@ -115,7 +115,7 @@ class TotalBalanceCard extends StatelessWidget {
                           child:
                               Text(
                                 totalBalance < 0
-                                    ? "(${CurrencyUtils.formatAmount(totalBalance.abs(), settings.selectedCurrency)})"
+                                    ? "${CurrencyUtils.formatAmount(totalBalance.abs(), settings.selectedCurrency)}"
                                     : CurrencyUtils.formatAmount(
                                         totalBalance,
                                         settings.selectedCurrency,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:montage/core/constants/app_colors.dart';
-import 'package:montage/core/utils/category_utils.dart';
+import 'package:montage/providers/category_provider.dart';
 import 'package:montage/core/utils/currency_utils.dart';
 import 'package:montage/widgets/analytics/spending_category_breakdown.dart';
 import 'package:montage/widgets/analytics/trends_weekly_breakdown.dart';
@@ -229,7 +229,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     return categoryTotals.entries.map((entry) {
       final isTouched = i == _touchedIndex;
       i++;
-      final color = CategoryUtils.getCategoryColor(entry.key);
+      final color = context.read<CategoryProvider>().getCategoryColor(entry.key);
       final radius = isTouched ? 32.0 : 24.0;
       final double opacity = isTouched ? 1.0 : 0.85;
 
@@ -257,7 +257,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                   ],
                 ),
                 child: Icon(
-                  CategoryUtils.getIconForCategory(entry.key),
+                  context.read<CategoryProvider>().getIconForCategory(entry.key),
                   color: Colors.white,
                   size: 16,
                 ),

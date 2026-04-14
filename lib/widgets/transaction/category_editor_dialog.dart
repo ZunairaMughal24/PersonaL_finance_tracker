@@ -8,11 +8,13 @@ import 'package:provider/provider.dart';
 import 'package:montage/viewmodels/speech_view_model.dart';
 import 'package:montage/widgets/pulse_effect.dart';
 import 'package:montage/models/category_model.dart';
+import 'package:montage/core/utils/category_utils.dart';
+import 'package:montage/viewmodels/category_editor_view_model.dart';
 
-class CategoryEditorDialog extends StatefulWidget {
-  final Function(String, IconData) onSubmitted;
+class CategoryEditorDialog extends StatelessWidget {
+  final Function(String, IconData, {Color? color}) onSubmitted;
   final bool isIncome;
-  final CustomCategory? initialCategory; // Null means Add mode
+  final CustomCategory? initialCategory;
 
   const CategoryEditorDialog({
     super.key,
@@ -22,56 +24,44 @@ class CategoryEditorDialog extends StatefulWidget {
   });
 
   @override
-  State<CategoryEditorDialog> createState() => _CategoryEditorDialogState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => CategoryEditorViewModel(
+        isIncome: isIncome,
+        initialCategory: initialCategory,
+      ),
+      child: _CategoryEditorDialogView(
+        onSubmitted: onSubmitted,
+      ),
+    );
+  }
 }
 
-class _CategoryEditorDialogState extends State<CategoryEditorDialog> {
-  late final TextEditingController _controller;
-  String? _errorText;
-  late IconData _selectedIcon;
-  bool get isEditMode => widget.initialCategory != null;
+class _CategoryEditorDialogView extends StatelessWidget {
+  final Function(String, IconData, {Color? color}) onSubmitted;
 
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(text: widget.initialCategory?.name);
-    _selectedIcon = widget.initialCategory != null
-        ? IconData(widget.initialCategory!.iconCodePoint, fontFamily: 'MaterialIcons')
-        : CategoryProvider.selectableIcons[0];
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _submit() {
-    final value = _controller.text.trim();
-    if (value.isEmpty) return;
-
-    final provider = context.read<CategoryProvider>();
-    final error = provider.validateCategory(
-      value, 
-      widget.isIncome, 
-      excludeName: widget.initialCategory?.name,
-    );
-    
-    if (error != null) {
-      setState(() => _errorText = error);
-      return;
-    }
-
-    widget.onSubmitted(value, _selectedIcon);
-    Navigator.pop(context);
-  }
+  const _CategoryEditorDialogView({required this.onSubmitted});
 
   @override
   Widget build(BuildContext context) {
+    final vm = context.watch<CategoryEditorViewModel>();
+    final provider = context.read<CategoryProvider>();
+
+    void submit() {
+      if (vm.submit(provider)) {
+        onSubmitted(
+          vm.controller.text.trim(),
+          vm.selectedIcon,
+          color: vm.selectedColor,
+        );
+        Navigator.pop(context);
+      }
+    }
+
     return Dialog(
       backgroundColor: Colors.transparent,
       elevation: 0,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 17),
       child: GlassContainer(
         borderRadius: 24,
         blur: 40,
@@ -83,13 +73,14 @@ class _CategoryEditorDialogState extends State<CategoryEditorDialog> {
         ],
         child: SingleChildScrollView(
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(isEditMode ? "Edit Category" : "Add Category").h2(color: Colors.white),
+                  Text(
+                    vm.isEditMode ? "Edit Category" : "Add Category",
+                  ).h2(color: Colors.white),
                   IconButton(
                     onPressed: () => Navigator.pop(context),
                     icon: Icon(
@@ -102,37 +93,32 @@ class _CategoryEditorDialogState extends State<CategoryEditorDialog> {
                 ],
               ),
               Text(
-                isEditMode 
-                  ? "Update your category details" 
-                  : "Set a name and icon for your new category",
+                vm.isEditMode
+                    ? "Update your category details"
+                    : "Set a name, icon & color for your new category",
               ).bodyLarge(
                 color: Colors.white.withValues(alpha: 0.8),
                 weight: FontWeight.w600,
               ),
               20.heightBox,
-              
+
               Consumer<SpeechViewModel>(
                 builder: (context, speechVm, _) {
                   return TextField(
-                    controller: _controller,
+                    controller: vm.controller,
                     autofocus: true,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
-                    onChanged: (_) {
-                      if (_errorText != null) {
-                        setState(() => _errorText = null);
-                      }
-                    },
                     decoration: InputDecoration(
                       hintText: "Category Name",
                       hintStyle: TextStyle(
                         color: Colors.white.withValues(alpha: 0.3),
                         fontWeight: FontWeight.w500,
                       ),
-                      errorText: _errorText,
+                      errorText: vm.errorText,
                       errorStyle: const TextStyle(
                         color: AppColors.red,
                         fontSize: 12,
@@ -141,9 +127,11 @@ class _CategoryEditorDialogState extends State<CategoryEditorDialog> {
                       fillColor: Colors.white.withValues(alpha: 0.05),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide(
-                          color: Colors.white.withValues(alpha: 0.1),
-                        ),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide.none,
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
@@ -160,7 +148,7 @@ class _CategoryEditorDialogState extends State<CategoryEditorDialog> {
                         padding: const EdgeInsets.only(right: 8),
                         child: GestureDetector(
                           onTap: () => speechVm.toggleListening((result) {
-                            _controller.text = result;
+                            vm.updateNameFromSpeech(result);
                           }),
                           onLongPress: () => speechVm.toggleLocale(),
                           child: Stack(
@@ -172,8 +160,9 @@ class _CategoryEditorDialogState extends State<CategoryEditorDialog> {
                                     width: 32,
                                     height: 32,
                                     decoration: BoxDecoration(
-                                      color:
-                                          AppColors.green.withValues(alpha: 0.2),
+                                      color: AppColors.green.withValues(
+                                        alpha: 0.2,
+                                      ),
                                       shape: BoxShape.circle,
                                     ),
                                   ),
@@ -201,56 +190,125 @@ class _CategoryEditorDialogState extends State<CategoryEditorDialog> {
                         ),
                       ),
                     ),
-                    onSubmitted: (_) => _submit(),
+                    onSubmitted: (_) => submit(),
                   );
                 },
               ),
               20.heightBox,
 
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                ),
-                itemCount: CategoryProvider.selectableIcons.length,
-                itemBuilder: (context, index) {
-                  final icon = CategoryProvider.selectableIcons[index];
-                  final isSelected = _selectedIcon.codePoint == icon.codePoint;
-                  return GestureDetector(
-                    onTap: () => setState(() => _selectedIcon = icon),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? AppColors.primaryColor.withValues(alpha: 0.2)
-                            : Colors.white.withValues(alpha: 0.05),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
+              // ICON PICKER
+              Text("SELECT ICON").labelLarge(
+                color: Colors.white.withValues(alpha: 0.5),
+                weight: FontWeight.w700,
+                letterSpacing: 1.2,
+              ),
+              10.heightBox,
+
+              SizedBox(
+                height: 140,
+                child: GridView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 6,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
+                  ),
+                  itemCount: CategoryUtils.selectableIcons.length,
+                  itemBuilder: (context, index) {
+                    final icon = CategoryUtils.selectableIcons[index];
+                    final isSelected =
+                        vm.selectedIcon.codePoint == icon.codePoint;
+                    return GestureDetector(
+                      onTap: () => vm.setIcon(icon),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        decoration: BoxDecoration(
                           color: isSelected
-                              ? AppColors.primaryColor
-                              : Colors.white.withValues(alpha: 0.1),
-                          width: 1.5,
+                              ? vm.selectedColor.withValues(alpha: 0.25)
+                              : Colors.white.withValues(alpha: 0.05),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: isSelected
+                                ? vm.selectedColor
+                                : Colors.white.withValues(alpha: 0.1),
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Icon(
+                          icon,
+                          color: isSelected
+                              ? Colors.white
+                              : Colors.white.withValues(alpha: 0.5),
+                          size: 20,
                         ),
                       ),
-                      child: Icon(
-                        icon,
-                        color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.5),
-                        size: 20,
-                      ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-              
-              30.heightBox,
+
+              16.heightBox,
+
+              // COLOR PICKER
+              Text("SELECT COLOR").labelLarge(
+                color: Colors.white.withValues(alpha: 0.5),
+                weight: FontWeight.w700,
+                letterSpacing: 1.2,
+              ),
+              10.heightBox,
+
+              Center(
+                child: Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: CategoryUtils.selectableColors.map((color) {
+                    final isSelected =
+                        vm.selectedColor.toARGB32() == color.toARGB32();
+                    return GestureDetector(
+                      onTap: () => vm.setColor(color),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        width: 24,
+                        height: 24,
+                        decoration: BoxDecoration(
+                          color: color,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: isSelected
+                                ? Colors.white
+                                : Colors.transparent,
+                            width: 2.5,
+                          ),
+                          boxShadow: isSelected
+                              ? [
+                                  BoxShadow(
+                                    color: color.withValues(alpha: 0.5),
+                                    blurRadius: 10,
+                                    spreadRadius: 2,
+                                  ),
+                                ]
+                              : null,
+                        ),
+                        child: isSelected
+                            ? const Icon(
+                                Icons.check_rounded,
+                                color: Colors.white,
+                                size: 18,
+                              )
+                            : null,
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+
+              24.heightBox,
 
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _submit,
+                  onPressed: submit,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryColor,
                     foregroundColor: Colors.white,
@@ -261,7 +319,7 @@ class _CategoryEditorDialogState extends State<CategoryEditorDialog> {
                     elevation: 0,
                   ),
                   child: Text(
-                    isEditMode ? "Update" : "Confirm",
+                    vm.isEditMode ? "Update" : "Confirm",
                   ).titleLarge(weight: FontWeight.bold),
                 ),
               ),

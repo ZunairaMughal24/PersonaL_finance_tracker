@@ -37,6 +37,19 @@ class UserSettingsProvider extends ChangeNotifier {
     String? email,
   }) async {
     if (userId == _userId) {
+      // Even on duplicate calls, immediately apply displayName if we're still showing 'User'
+      if (_userName == 'User' &&
+          displayName != null &&
+          displayName.isNotEmpty) {
+        _userName = displayName;
+        notifyListeners();
+      }
+      if (_userEmail == 'user@example.com' &&
+          email != null &&
+          email.isNotEmpty) {
+        _userEmail = email;
+        notifyListeners();
+      }
       if (_box != null &&
           (_userName == 'User' || _userEmail == 'user@example.com')) {
         await _loadSettings(displayName: displayName, email: email);
@@ -52,6 +65,17 @@ class UserSettingsProvider extends ChangeNotifier {
     }
 
     if (userId != null) {
+      // Immediately apply Firebase Auth display name so the UI never shows 'User'
+      if (displayName != null && displayName.isNotEmpty) {
+        _userName = displayName;
+      }
+      if (email != null && email.isNotEmpty) {
+        _userEmail = email;
+      }
+      // Mark ready early so the home screen renders immediately with the auth name
+      _isReady = true;
+      notifyListeners();
+
       await _loadSettings(displayName: displayName, email: email);
     } else {
       _userName = 'User';
@@ -70,7 +94,7 @@ class UserSettingsProvider extends ChangeNotifier {
 
     _box = await Hive.openBox<dynamic>('settings_$_userId');
 
-    // 1. Adaptive Loading Logic
+    // Adaptive Loading Logic
     if (_box!.isNotEmpty) {
       _applyLocalSettings(displayName, email);
       _isReady = true;
@@ -83,7 +107,7 @@ class UserSettingsProvider extends ChangeNotifier {
       notifyListeners();
     }
 
-    // 3. Background Sync for Username Restoration
+    // Background Sync for Username Restoration
     _performCloudSyncBackground();
   }
 
