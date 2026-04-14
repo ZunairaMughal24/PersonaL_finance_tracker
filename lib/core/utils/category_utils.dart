@@ -301,11 +301,11 @@ class CategoryUtils {
   static const List<Color> selectableColors = [
     Color(0xFFEF5350),
 
-    Color.fromARGB(255, 61, 169, 241),
+    Color.fromARGB(255, 6, 108, 167),
     Color.fromARGB(255, 114, 227, 235),
-    Color.fromARGB(255, 250, 170, 65),
+    Color.fromARGB(255, 137, 41, 182),
     Color(0xFF66BB6A),
-    Color.fromARGB(255, 255, 40, 208),
+    Color.fromARGB(255, 209, 17, 167),
     Color(0xFFFFCA28),
     Color(0xFF78909C),
   ];

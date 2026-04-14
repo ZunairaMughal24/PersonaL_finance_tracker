@@ -205,7 +205,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                   },
                 ),
                 sectionsSpace: 6,
-                centerSpaceRadius: 100,
+                centerSpaceRadius: 105,
                 sections: _buildPieChartSections(categoryTotals),
                 startDegreeOffset: 270,
               ),
@@ -229,8 +229,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     return categoryTotals.entries.map((entry) {
       final isTouched = i == _touchedIndex;
       i++;
-      final color = context.read<CategoryProvider>().getCategoryColor(entry.key);
-      final radius = isTouched ? 32.0 : 24.0;
+      final color = context.read<CategoryProvider>().getCategoryColor(
+        entry.key,
+      );
+      final radius = isTouched ? 26.0 : 22.0;
       final double opacity = isTouched ? 1.0 : 0.85;
 
       return PieChartSectionData(
@@ -257,7 +259,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                   ],
                 ),
                 child: Icon(
-                  context.read<CategoryProvider>().getIconForCategory(entry.key),
+                  context.read<CategoryProvider>().getIconForCategory(
+                    entry.key,
+                  ),
                   color: Colors.white,
                   size: 16,
                 ),
