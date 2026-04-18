@@ -5,6 +5,7 @@ import 'package:montage/core/constants/app_images.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/providers/user_settings_provider.dart';
+import 'package:montage/widgets/app_button.dart';
 import 'package:montage/widgets/glass_container.dart';
 
 class SettingsSectionHeader extends StatelessWidget {
@@ -304,6 +305,59 @@ class SettingsModals {
               ),
             ],
             30.heightBox,
+          ],
+        ),
+      ),
+    );
+  }
+  static void showLogoutConfirmation({
+    required BuildContext context,
+    required VoidCallback onConfirm,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => GlassContainer(
+        customBorderRadius: const BorderRadius.vertical(
+          top: Radius.circular(32),
+        ),
+        blur: 40,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            24.heightBox,
+            const Text("Sign Out").titleLarge(color: Colors.white),
+            12.heightBox,
+            Text(
+              "Are you sure you want to sign out? You'll need to enter your credentials to log back in to your account.",
+              textAlign: TextAlign.center,
+            ).bodyLarge(color: Colors.white.withValues(alpha: 0.7)),
+            32.heightBox,
+            AppButton(
+              text: "Sign Out",
+              color: Colors.redAccent.withValues(alpha: 0.8),
+              onPressed: () {
+                Navigator.pop(context);
+                onConfirm();
+              },
+            ),
+            12.heightBox,
+            AppButton(
+              text: "Cancel",
+              color: Colors.transparent,
+              borderColor: Colors.white.withValues(alpha: 0.1),
+              onPressed: () => Navigator.pop(context),
+            ),
+            20.heightBox,
           ],
         ),
       ),

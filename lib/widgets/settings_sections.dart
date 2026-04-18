@@ -442,11 +442,16 @@ class SupportSection extends StatelessWidget {
             title: "Sign Out",
             subtitle: "Exit from your account",
             onTap: () {
-              context.read<AuthProvider>().signOut().then((_) {
-                if (context.mounted) {
-                  context.go(AppRoutes.signInScreenRoute);
-                }
-              });
+              SettingsModals.showLogoutConfirmation(
+                context: context,
+                onConfirm: () {
+                  context.read<AuthProvider>().signOut().then((_) {
+                    if (context.mounted) {
+                      context.go(AppRoutes.signInScreenRoute);
+                    }
+                  });
+                },
+              );
             },
             showChevron: false,
           ),
