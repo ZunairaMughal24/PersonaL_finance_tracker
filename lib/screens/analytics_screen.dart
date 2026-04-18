@@ -42,7 +42,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   @override
   Widget build(BuildContext context) {
     return AppBackground(
-      style: BackgroundStyle.abstractDark,
+      style: BackgroundStyle.silkDark,
       appBar: const CustomAppBar(title: "Spending Analytics"),
       child: Consumer<TransactionProvider>(
         builder: (context, provider, child) {
