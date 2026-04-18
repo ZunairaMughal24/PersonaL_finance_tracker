@@ -29,10 +29,15 @@ class AuthProvider extends ChangeNotifier {
   bool get isSignUpPasswordVisible => _isSignUpPasswordVisible;
   bool get isConfirmPasswordVisible => _isConfirmPasswordVisible;
 
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController confirmPasswordController =
+  // Sign In Controllers
+  final TextEditingController signInEmailController = TextEditingController();
+  final TextEditingController signInPasswordController = TextEditingController();
+
+  // Sign Up Controllers
+  final TextEditingController signUpEmailController = TextEditingController();
+  final TextEditingController signUpPasswordController = TextEditingController();
+  final TextEditingController signUpUsernameController = TextEditingController();
+  final TextEditingController signUpConfirmPasswordController =
       TextEditingController();
 
   // Field-level error states
@@ -57,6 +62,17 @@ class AuthProvider extends ChangeNotifier {
       _generalError = null;
     }
     notifyListeners();
+  }
+
+  /// Resets all controllers and errors
+  void resetAuthForm() {
+    signInEmailController.clear();
+    signInPasswordController.clear();
+    signUpEmailController.clear();
+    signUpPasswordController.clear();
+    signUpUsernameController.clear();
+    signUpConfirmPasswordController.clear();
+    clearErrors();
   }
 
   void toggleRememberMe(bool? value) {
@@ -86,8 +102,8 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
     try {
       final credential = await _authService.signInWithEmailAndPassword(
-        emailController.text.trim(),
-        passwordController.text.trim(),
+        signInEmailController.text.trim(),
+        signInPasswordController.text.trim(),
       );
       _isLoading = false;
       notifyListeners();
@@ -95,7 +111,7 @@ class AuthProvider extends ChangeNotifier {
     } on FirebaseAuthException catch (e) {
       _isLoading = false;
       final failure = AuthErrorHandler.handle(e);
-      
+
       // Map to specific fields if code is provided
       if (failure.code == 'email') {
         _emailError = failure.message;
@@ -104,7 +120,7 @@ class AuthProvider extends ChangeNotifier {
       } else {
         _generalError = failure.message;
       }
-      
+
       notifyListeners();
       return null;
     } catch (e) {
@@ -121,12 +137,12 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
     try {
       final credential = await _authService.createUserWithEmailAndPassword(
-        emailController.text.trim(),
-        passwordController.text.trim(),
+        signUpEmailController.text.trim(),
+        signUpPasswordController.text.trim(),
       );
 
-      if (usernameController.text.isNotEmpty) {
-        await _authService.updateDisplayName(usernameController.text.trim());
+      if (signUpUsernameController.text.isNotEmpty) {
+        await _authService.updateDisplayName(signUpUsernameController.text.trim());
       }
 
       _isLoading = false;
@@ -135,7 +151,7 @@ class AuthProvider extends ChangeNotifier {
     } on FirebaseAuthException catch (e) {
       _isLoading = false;
       final failure = AuthErrorHandler.handle(e);
-      
+
       if (failure.code == 'email') {
         _emailError = failure.message;
       } else if (failure.code == 'password') {
@@ -143,7 +159,7 @@ class AuthProvider extends ChangeNotifier {
       } else {
         _generalError = failure.message;
       }
-      
+
       notifyListeners();
       return null;
     } catch (e) {
@@ -166,10 +182,12 @@ class AuthProvider extends ChangeNotifier {
 
   @override
   void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    usernameController.dispose();
-    confirmPasswordController.dispose();
+    signInEmailController.dispose();
+    signInPasswordController.dispose();
+    signUpEmailController.dispose();
+    signUpPasswordController.dispose();
+    signUpUsernameController.dispose();
+    signUpConfirmPasswordController.dispose();
     super.dispose();
   }
 }

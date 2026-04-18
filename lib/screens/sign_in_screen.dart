@@ -73,7 +73,7 @@ class _SignInContentState extends State<SignInContent> {
                             AppTextField(
                               title: "Email Address",
                               hint: "Enter your email",
-                              controller: provider.emailController,
+                              controller: provider.signInEmailController,
                               validator: Validators.emailValidator,
                               errorText: provider.emailError,
                               onChanged: (_) => provider.clearErrors(),
@@ -86,7 +86,7 @@ class _SignInContentState extends State<SignInContent> {
                             AppTextField(
                               title: "Password",
                               hint: "Enter your password",
-                              controller: provider.passwordController,
+                              controller: provider.signInPasswordController,
                               obscureText: !provider.isSignInPasswordVisible,
                               validator: Validators.passwordValidator,
                               errorText: provider.passwordError,
@@ -196,8 +196,9 @@ class _SignInContentState extends State<SignInContent> {
                                   "Don't have an account? ",
                                 ).bodyMedium(color: Colors.white70),
                                 GestureDetector(
-                                  onTap: () =>
-                                      context.go(AppRoutes.signUpScreenRoute),
+                                  onTap: () {
+                                    context.go(AppRoutes.signUpScreenRoute);
+                                  },
                                   child: const Text("Sign Up").bodyMedium(
                                     color: Colors.white,
                                     weight: FontWeight.bold,

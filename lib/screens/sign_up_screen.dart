@@ -73,7 +73,7 @@ class _SignUpContentState extends State<SignUpContent> {
                             AppTextField(
                               title: "Username",
                               hint: "Enter your username",
-                              controller: provider.usernameController,
+                              controller: provider.signUpUsernameController,
                               validator: Validators.usernameValidator,
                               errorText: provider.usernameError,
                               onChanged: (_) => provider.clearErrors(),
@@ -86,7 +86,7 @@ class _SignUpContentState extends State<SignUpContent> {
                             AppTextField(
                               title: "Email Address",
                               hint: "Enter your email",
-                              controller: provider.emailController,
+                              controller: provider.signUpEmailController,
                               validator: Validators.emailValidator,
                               errorText: provider.emailError,
                               onChanged: (_) => provider.clearErrors(),
@@ -99,7 +99,7 @@ class _SignUpContentState extends State<SignUpContent> {
                             AppTextField(
                               title: "Password",
                               hint: "Create a password",
-                              controller: provider.passwordController,
+                              controller: provider.signUpPasswordController,
                               obscureText: !provider.isSignUpPasswordVisible,
                               validator: Validators.passwordValidator,
                               errorText: provider.passwordError,
@@ -133,12 +133,12 @@ class _SignUpContentState extends State<SignUpContent> {
                             AppTextField(
                               title: "Confirm Password",
                               hint: "Re-enter your password",
-                              controller: provider.confirmPasswordController,
+                              controller: provider.signUpConfirmPasswordController,
                               obscureText: !provider.isConfirmPasswordVisible,
                               validator: (val) =>
                                   Validators.confirmPasswordValidator(
                                     val,
-                                    provider.passwordController.text,
+                                    provider.signUpPasswordController.text,
                                   ),
                               prefixChild: const Icon(
                                 Icons.lock_rounded,
@@ -201,8 +201,9 @@ class _SignUpContentState extends State<SignUpContent> {
                                   "Already have an account? ",
                                 ).bodyMedium(color: Colors.white70),
                                 GestureDetector(
-                                  onTap: () =>
-                                      context.go(AppRoutes.signInScreenRoute),
+                                  onTap: () {
+                                    context.go(AppRoutes.signInScreenRoute);
+                                  },
                                   child: const Text("Sign In").bodyMedium(
                                     color: Colors.white,
                                     weight: FontWeight.bold,
