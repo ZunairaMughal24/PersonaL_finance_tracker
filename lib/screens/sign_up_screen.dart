@@ -75,31 +75,35 @@ class _SignUpContentState extends State<SignUpContent> {
                               hint: "Enter your username",
                               controller: provider.usernameController,
                               validator: Validators.usernameValidator,
+                              errorText: provider.usernameError,
+                              onChanged: (_) => provider.clearErrors(),
                               prefixChild: const Icon(
                                 Icons.person_rounded,
                                 color: Colors.white70,
                                 size: 20,
                               ),
                             ),
-                            12.heightBox,
                             AppTextField(
                               title: "Email Address",
                               hint: "Enter your email",
                               controller: provider.emailController,
                               validator: Validators.emailValidator,
+                              errorText: provider.emailError,
+                              onChanged: (_) => provider.clearErrors(),
                               prefixChild: const Icon(
                                 Icons.email_rounded,
                                 color: Colors.white70,
                                 size: 20,
                               ),
                             ),
-                            12.heightBox,
                             AppTextField(
                               title: "Password",
                               hint: "Create a password",
                               controller: provider.passwordController,
                               obscureText: !provider.isSignUpPasswordVisible,
                               validator: Validators.passwordValidator,
+                              errorText: provider.passwordError,
+                              onChanged: (_) => provider.clearErrors(),
                               prefixChild: const Icon(
                                 Icons.lock_rounded,
                                 color: Colors.white70,
@@ -126,7 +130,6 @@ class _SignUpContentState extends State<SignUpContent> {
                                       ),
                               ),
                             ),
-                            12.heightBox,
                             AppTextField(
                               title: "Confirm Password",
                               hint: "Re-enter your password",
@@ -163,60 +166,26 @@ class _SignUpContentState extends State<SignUpContent> {
                                       ),
                               ),
                             ),
-                            30.heightBox,
+                            18.heightBox,
                             AppButton(
                               text: "Sign Up",
                               isLoading: provider.isLoading,
                               onPressed: () {
-                                final usernameError =
-                                    Validators.usernameValidator(
-                                      provider.usernameController.text,
-                                    );
-                                final emailError = Validators.emailValidator(
-                                  provider.emailController.text,
-                                );
-                                final passwordError =
-                                    Validators.passwordValidator(
-                                      provider.passwordController.text,
-                                    );
-                                final confirmError =
-                                    Validators.confirmPasswordValidator(
-                                      provider.confirmPasswordController.text,
-                                      provider.passwordController.text,
-                                    );
-
-                                if (usernameError != null) {
-                                  ToastUtils.show(context, usernameError);
-                                  return;
+                                if (_formKey.currentState?.validate() ?? false) {
+                                  provider.signUp().then((credential) {
+                                    if (!context.mounted) return;
+                                    if (credential != null) {
+                                      context.go(
+                                        AppRoutes.mainNavigationScreenRoute,
+                                      );
+                                    } else if (provider.generalError != null) {
+                                      ToastUtils.show(
+                                        context,
+                                        provider.generalError!,
+                                      );
+                                    }
+                                  });
                                 }
-                                if (emailError != null) {
-                                  ToastUtils.show(context, emailError);
-                                  return;
-                                }
-                                if (passwordError != null) {
-                                  ToastUtils.show(context, passwordError);
-                                  return;
-                                }
-                                if (confirmError != null) {
-                                  ToastUtils.show(context, confirmError);
-                                  return;
-                                }
-
-                                provider
-                                    .signUp()
-                                    .then((credential) {
-                                      if (!context.mounted) return;
-                                      if (credential != null) {
-                                        context.go(
-                                          AppRoutes.mainNavigationScreenRoute,
-                                        );
-                                      }
-                                    })
-                                    .catchError((e) {
-                                      if (context.mounted) {
-                                        ToastUtils.show(context, e.toString());
-                                      }
-                                    });
                               },
                               color: AppColors.primaryColor.withValues(
                                 alpha: 0.4,

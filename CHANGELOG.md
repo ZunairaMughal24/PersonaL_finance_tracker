@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-04-16
+
+### Added
+- **Reliable Auth Error Handling**: Implemented a robust error-handling system using a custom `Failure` class, mapping Firebase exceptions to human-readable field-level validation messages.
+- **Modern 3D UI Foundation**: Introduced `AppContainer` with subtle 3D shadows and refined borders, replacing the legacy Neumorphic design for a cleaner, more premium aesthetic.
+- **Animated Navigation Indicators**: Added sleek, animated line indicators for page transitions and tab selections.
+- **Font Awesome Integration**: Standardized all app iconography using Font Awesome for a unified, professional appearance.
+
+### Improved
+- **Newest-First Transaction Sorting**: Reordered transaction lists to display the most recent activities at the top for better accessibility.
+- **Category Editor Architecture**: Refactored `CategoryEditorDialog` into a `StatelessWidget` powered by a dedicated `CategoryEditorViewModel`, improving state isolation and testability.
+- **Dynamic Feedback**: Restored real-time Recognition feedback in the Speech-to-Text UI for better user engagement during dictation.
+- **Full-Bleed Visuals**: Implemented high-impact background imagery with readability gradients for promotional banners.
+
+### Fixed
+- **Auth UX**: Replaced intrusive snackbar alerts with inline field-level errors for a smoother, non-disruptive authentication flow.
+- **Category UI Redundancies**: Optimized the category editor by removing redundant preview cards and centering the color selection grid.
+
 ## [1.5.0] - 2026-03-27
 
 ### Added

@@ -42,6 +42,7 @@ Montage is a personal finance management application built with Flutter. It help
 
 ### Authentication
 - Email/password sign-in and sign-up powered by Firebase Authentication.
+- **Reliable Error Handling**: Real-time, field-level validation with custom error mapping for authenticating Firebase responses into human-readable messages.
 - Onboarding screen for first-time users.
 - Per-user data isolation — each account has its own private Hive storage box.
 
@@ -51,7 +52,8 @@ Montage is a personal finance management application built with Flutter. It help
 - Consistent bottom-sheet interactions for all secondary actions (transaction details, editing, media picking, profile options).
 - **Data-Ready Startup**: A "Bulletproof" splash screen that polls for both authentication status and database readiness, ensuring a flicker-free transition once the home screen appears.
 - Haptic feedback on key interactions.
-- Smooth page transitions and micro-animations throughout the app.
+- **Interactive Animations**: Smooth page transitions, micro-animations, and animated line indicators for enhanced navigation feedback.
+- **Iconography**: Unified, professional iconography powered by **Font Awesome**.
 
 ---
 
@@ -72,6 +74,7 @@ Montage is a personal finance management application built with Flutter. It help
 | Speech Recognition | [speech_to_text](https://pub.dev/packages/speech_to_text)                 |
 | Animations         | [flutter_animate](https://pub.dev/packages/flutter_animate)               |
 | SVG Rendering      | [flutter_svg](https://pub.dev/packages/flutter_svg)                       |
+| Icons              | [font_awesome_flutter](https://pub.dev/packages/font_awesome_flutter)     |
 
 ---
 
@@ -126,9 +129,9 @@ Place your `google-services.json` (Android) and `GoogleService-Info.plist` (iOS)
 
 ## Design Philosophy
 
-Montage follows a **glassmorphic dark theme** with frosted glass containers, subtle gradients, and refined border treatments. All interactive surfaces share a unified visual language — the same bottom-sheet patterns used in the profile menu are reused across transaction actions, media picking, and currency selection for a consistent user experience.
+Montage follows a **refined 3D container aesthetic** with subtle shadows, frosted glass effects, and elegant border treatments. Moving beyond traditional Neumorphism, the app now utilizes a custom `AppContainer` system that provides depth and hierarchy through soft, layered shadows and curated gradients. 
 
-Business logic is strictly separated from UI. Screens are kept as thin as possible, delegating work to Providers, ViewModels, and Services.
+All interactive surfaces share a unified visual language — from the professional Font Awesome iconography to the animated line indicators. Business logic is strictly separated from UI, ensuring that screens remain thin while delegating complex state management to Providers, ViewModels, and Services.
 
 ---
 

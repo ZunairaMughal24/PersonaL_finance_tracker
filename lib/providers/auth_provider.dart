@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:montage/services/auth_service.dart';
+import 'package:montage/core/utils/auth_error_handler.dart';
 
 class AuthProvider extends ChangeNotifier {
   final AuthService _authService = AuthService();
@@ -34,6 +35,30 @@ class AuthProvider extends ChangeNotifier {
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
+  // Field-level error states
+  String? _usernameError;
+  String? _emailError;
+  String? _passwordError;
+  String? _generalError;
+
+  String? get usernameError => _usernameError;
+  String? get emailError => _emailError;
+  String? get passwordError => _passwordError;
+  String? get generalError => _generalError;
+
+  /// Clears validation errors for a specific field or all fields.
+  void clearErrors({bool onlyGeneral = false}) {
+    if (onlyGeneral) {
+      _generalError = null;
+    } else {
+      _usernameError = null;
+      _emailError = null;
+      _passwordError = null;
+      _generalError = null;
+    }
+    notifyListeners();
+  }
+
   void toggleRememberMe(bool? value) {
     _rememberMe = value ?? false;
     notifyListeners();
@@ -57,6 +82,7 @@ class AuthProvider extends ChangeNotifier {
   // Firebase Authentication
   Future<UserCredential?> signIn() async {
     _isLoading = true;
+    clearErrors();
     notifyListeners();
     try {
       final credential = await _authService.signInWithEmailAndPassword(
@@ -66,15 +92,32 @@ class AuthProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
       return credential;
-    } on FirebaseAuthException catch (_) {
+    } on FirebaseAuthException catch (e) {
       _isLoading = false;
+      final failure = AuthErrorHandler.handle(e);
+      
+      // Map to specific fields if code is provided
+      if (failure.code == 'email') {
+        _emailError = failure.message;
+      } else if (failure.code == 'password') {
+        _passwordError = failure.message;
+      } else {
+        _generalError = failure.message;
+      }
+      
       notifyListeners();
-      rethrow;
+      return null;
+    } catch (e) {
+      _isLoading = false;
+      _generalError = 'An unexpected error occurred.';
+      notifyListeners();
+      return null;
     }
   }
 
   Future<UserCredential?> signUp() async {
     _isLoading = true;
+    clearErrors();
     notifyListeners();
     try {
       final credential = await _authService.createUserWithEmailAndPassword(
@@ -89,10 +132,25 @@ class AuthProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
       return credential;
-    } on FirebaseAuthException catch (_) {
+    } on FirebaseAuthException catch (e) {
       _isLoading = false;
+      final failure = AuthErrorHandler.handle(e);
+      
+      if (failure.code == 'email') {
+        _emailError = failure.message;
+      } else if (failure.code == 'password') {
+        _passwordError = failure.message;
+      } else {
+        _generalError = failure.message;
+      }
+      
       notifyListeners();
-      rethrow;
+      return null;
+    } catch (e) {
+      _isLoading = false;
+      _generalError = 'Could not create account. Please try again.';
+      notifyListeners();
+      return null;
     }
   }
 

@@ -75,19 +75,22 @@ class _SignInContentState extends State<SignInContent> {
                               hint: "Enter your email",
                               controller: provider.emailController,
                               validator: Validators.emailValidator,
+                              errorText: provider.emailError,
+                              onChanged: (_) => provider.clearErrors(),
                               prefixChild: const Icon(
                                 Icons.email_rounded,
                                 color: Colors.white70,
                                 size: 20,
                               ),
                             ),
-                            12.heightBox,
                             AppTextField(
                               title: "Password",
                               hint: "Enter your password",
                               controller: provider.passwordController,
                               obscureText: !provider.isSignInPasswordVisible,
                               validator: Validators.passwordValidator,
+                              errorText: provider.passwordError,
+                              onChanged: (_) => provider.clearErrors(),
                               prefixChild: const Icon(
                                 Icons.lock_rounded,
                                 color: Colors.white70,
@@ -114,7 +117,7 @@ class _SignInContentState extends State<SignInContent> {
                                       ),
                               ),
                             ),
-                            10.heightBox,
+
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -157,42 +160,27 @@ class _SignInContentState extends State<SignInContent> {
                                 ),
                               ],
                             ),
-                            30.heightBox,
+                            18.heightBox,
                             AppButton(
                               text: "Login",
                               isLoading: provider.isLoading,
                               onPressed: () {
-                                final emailError = Validators.emailValidator(
-                                  provider.emailController.text,
-                                );
-                                final passwordError =
-                                    Validators.passwordValidator(
-                                      provider.passwordController.text,
-                                    );
-                                if (emailError != null) {
-                                  ToastUtils.show(context, emailError);
-                                  return;
+                                if (_formKey.currentState?.validate() ??
+                                    false) {
+                                  provider.signIn().then((credential) {
+                                    if (!context.mounted) return;
+                                    if (credential != null) {
+                                      context.go(
+                                        AppRoutes.mainNavigationScreenRoute,
+                                      );
+                                    } else if (provider.generalError != null) {
+                                      ToastUtils.show(
+                                        context,
+                                        provider.generalError!,
+                                      );
+                                    }
+                                  });
                                 }
-                                if (passwordError != null) {
-                                  ToastUtils.show(context, passwordError);
-                                  return;
-                                }
-
-                                provider
-                                    .signIn()
-                                    .then((credential) {
-                                      if (!context.mounted) return;
-                                      if (credential != null) {
-                                        context.go(
-                                          AppRoutes.mainNavigationScreenRoute,
-                                        );
-                                      }
-                                    })
-                                    .catchError((e) {
-                                      if (context.mounted) {
-                                        ToastUtils.show(context, e.toString());
-                                      }
-                                    });
                               },
                               color: AppColors.primaryColor.withValues(
                                 alpha: 0.4,
@@ -217,6 +205,7 @@ class _SignInContentState extends State<SignInContent> {
                                 ),
                               ],
                             ),
+                            5.heightBox,
                           ],
                         ),
                       ),
