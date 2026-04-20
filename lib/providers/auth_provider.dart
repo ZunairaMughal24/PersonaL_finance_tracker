@@ -40,25 +40,39 @@ class AuthProvider extends ChangeNotifier {
   final TextEditingController signUpConfirmPasswordController =
       TextEditingController();
 
-  // Field-level error states
-  String? _usernameError;
-  String? _emailError;
-  String? _passwordError;
+  // Sign In Errors
+  String? _signInEmailError;
+  String? _signInPasswordError;
+
+  // Sign Up Errors
+  String? _signUpUsernameError;
+  String? _signUpEmailError;
+  String? _signUpPasswordError;
   String? _generalError;
 
-  String? get usernameError => _usernameError;
-  String? get emailError => _emailError;
-  String? get passwordError => _passwordError;
+  String? get signInEmailError => _signInEmailError;
+  String? get signInPasswordError => _signInPasswordError;
+  String? get signUpUsernameError => _signUpUsernameError;
+  String? get signUpEmailError => _signUpEmailError;
+  String? get signUpPasswordError => _signUpPasswordError;
   String? get generalError => _generalError;
 
   /// Clears validation errors for a specific field or all fields.
-  void clearErrors({bool onlyGeneral = false}) {
+  void clearErrors({bool onlyGeneral = false, String? field}) {
     if (onlyGeneral) {
       _generalError = null;
+    } else if (field != null) {
+      if (field == 'signInEmail') _signInEmailError = null;
+      if (field == 'signInPassword') _signInPasswordError = null;
+      if (field == 'signUpUsername') _signUpUsernameError = null;
+      if (field == 'signUpEmail') _signUpEmailError = null;
+      if (field == 'signUpPassword') _signUpPasswordError = null;
     } else {
-      _usernameError = null;
-      _emailError = null;
-      _passwordError = null;
+      _signInEmailError = null;
+      _signInPasswordError = null;
+      _signUpUsernameError = null;
+      _signUpEmailError = null;
+      _signUpPasswordError = null;
       _generalError = null;
     }
     notifyListeners();
@@ -114,9 +128,9 @@ class AuthProvider extends ChangeNotifier {
 
       // Map to specific fields if code is provided
       if (failure.code == 'email') {
-        _emailError = failure.message;
+        _signInEmailError = failure.message;
       } else if (failure.code == 'password') {
-        _passwordError = failure.message;
+        _signInPasswordError = failure.message;
       } else {
         _generalError = failure.message;
       }
@@ -153,9 +167,9 @@ class AuthProvider extends ChangeNotifier {
       final failure = AuthErrorHandler.handle(e);
 
       if (failure.code == 'email') {
-        _emailError = failure.message;
+        _signUpEmailError = failure.message;
       } else if (failure.code == 'password') {
-        _passwordError = failure.message;
+        _signUpPasswordError = failure.message;
       } else {
         _generalError = failure.message;
       }

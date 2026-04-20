@@ -75,35 +75,45 @@ class _SignUpContentState extends State<SignUpContent> {
                               hint: "Enter your username",
                               controller: provider.signUpUsernameController,
                               validator: Validators.usernameValidator,
-                              errorText: provider.usernameError,
-                              onChanged: (_) => provider.clearErrors(),
+                              errorText: provider.signUpUsernameError,
+                              onChanged: (_) =>
+                                  provider.clearErrors(field: 'signUpUsername'),
+                              textInputAction: TextInputAction.next,
                               prefixChild: const Icon(
                                 Icons.person_rounded,
                                 color: Colors.white70,
                                 size: 20,
                               ),
                             ),
+                            12.heightBox,
+
                             AppTextField(
                               title: "Email Address",
                               hint: "Enter your email",
                               controller: provider.signUpEmailController,
                               validator: Validators.emailValidator,
-                              errorText: provider.emailError,
-                              onChanged: (_) => provider.clearErrors(),
+                              errorText: provider.signUpEmailError,
+                              onChanged: (_) =>
+                                  provider.clearErrors(field: 'signUpEmail'),
+                              textInputAction: TextInputAction.next,
                               prefixChild: const Icon(
                                 Icons.email_rounded,
                                 color: Colors.white70,
                                 size: 20,
                               ),
                             ),
+                            12.heightBox,
+
                             AppTextField(
                               title: "Password",
                               hint: "Create a password",
                               controller: provider.signUpPasswordController,
                               obscureText: !provider.isSignUpPasswordVisible,
                               validator: Validators.passwordValidator,
-                              errorText: provider.passwordError,
-                              onChanged: (_) => provider.clearErrors(),
+                              errorText: provider.signUpPasswordError,
+                              onChanged: (_) =>
+                                  provider.clearErrors(field: 'signUpPassword'),
+                              textInputAction: TextInputAction.next,
                               prefixChild: const Icon(
                                 Icons.lock_rounded,
                                 color: Colors.white70,
@@ -130,10 +140,13 @@ class _SignUpContentState extends State<SignUpContent> {
                                       ),
                               ),
                             ),
+                            12.heightBox,
+
                             AppTextField(
                               title: "Confirm Password",
                               hint: "Re-enter your password",
-                              controller: provider.signUpConfirmPasswordController,
+                              controller:
+                                  provider.signUpConfirmPasswordController,
                               obscureText: !provider.isConfirmPasswordVisible,
                               validator: (val) =>
                                   Validators.confirmPasswordValidator(
@@ -166,12 +179,13 @@ class _SignUpContentState extends State<SignUpContent> {
                                       ),
                               ),
                             ),
-                            18.heightBox,
+                            30.heightBox,
                             AppButton(
                               text: "Sign Up",
                               isLoading: provider.isLoading,
                               onPressed: () {
-                                if (_formKey.currentState?.validate() ?? false) {
+                                if (_formKey.currentState?.validate() ??
+                                    false) {
                                   provider.signUp().then((credential) {
                                     if (!context.mounted) return;
                                     if (credential != null) {

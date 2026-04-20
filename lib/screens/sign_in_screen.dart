@@ -75,22 +75,26 @@ class _SignInContentState extends State<SignInContent> {
                               hint: "Enter your email",
                               controller: provider.signInEmailController,
                               validator: Validators.emailValidator,
-                              errorText: provider.emailError,
-                              onChanged: (_) => provider.clearErrors(),
+                              errorText: provider.signInEmailError,
+                              onChanged: (_) => provider.clearErrors(field: 'signInEmail'),
+                              textInputAction: TextInputAction.next,
                               prefixChild: const Icon(
                                 Icons.email_rounded,
                                 color: Colors.white70,
                                 size: 20,
                               ),
                             ),
+                            12.heightBox,
+
                             AppTextField(
                               title: "Password",
                               hint: "Enter your password",
                               controller: provider.signInPasswordController,
                               obscureText: !provider.isSignInPasswordVisible,
                               validator: Validators.passwordValidator,
-                              errorText: provider.passwordError,
-                              onChanged: (_) => provider.clearErrors(),
+                              errorText: provider.signInPasswordError,
+                              onChanged: (_) => provider.clearErrors(field: 'signInPassword'),
+                              textInputAction: TextInputAction.done,
                               prefixChild: const Icon(
                                 Icons.lock_rounded,
                                 color: Colors.white70,
@@ -117,7 +121,7 @@ class _SignInContentState extends State<SignInContent> {
                                       ),
                               ),
                             ),
-
+                            10.heightBox,
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -160,7 +164,7 @@ class _SignInContentState extends State<SignInContent> {
                                 ),
                               ],
                             ),
-                            18.heightBox,
+                            30.heightBox,
                             AppButton(
                               text: "Login",
                               isLoading: provider.isLoading,

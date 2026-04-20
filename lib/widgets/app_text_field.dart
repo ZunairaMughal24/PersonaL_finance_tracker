@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/utils/animation_utils.dart';
 
-class AppTextField extends StatelessWidget {
+class AppTextField extends StatefulWidget {
   const AppTextField({
     super.key,
     required this.hint,
@@ -16,6 +17,7 @@ class AppTextField extends StatelessWidget {
     this.validator,
     this.errorText,
     this.onChanged,
+    this.textInputAction,
   });
 
   final String title;
@@ -27,24 +29,29 @@ class AppTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final String? errorText;
   final void Function(String)? onChanged;
+  final TextInputAction? textInputAction;
   final bool showDropdown;
   final Widget? suffixChild;
   final Widget? prefixChild;
 
   @override
+  State<AppTextField> createState() => _AppTextFieldState();
+}
+
+class _AppTextFieldState extends State<AppTextField> {
+  @override
   Widget build(BuildContext context) {
     return FormField<String>(
-      validator: validator,
-      initialValue: controller?.text,
+      validator: widget.validator,
+      initialValue: widget.controller?.text,
       builder: (FormFieldState<String> field) {
-        // Use either the manually passed errorText or the validator's errorText
-        final String? displayError = errorText ?? field.errorText;
+        final String? displayError = widget.errorText ?? field.errorText;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              title,
+              widget.title,
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
@@ -52,72 +59,84 @@ class AppTextField extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.05),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: displayError != null
-                      ? Colors.red.withValues(alpha: 0.5)
-                      : Colors.white.withValues(alpha: 0.1),
-                  width: 1,
-                ),
-              ),
-              child: TextField(
-                controller: controller,
-                obscureText: obscureText,
-                keyboardType: keyboardType,
-                readOnly: showDropdown,
-                onChanged: (value) {
-                  field.didChange(value);
-                  if (onChanged != null) onChanged!(value);
-                },
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
-                decoration: InputDecoration(
-                  hintText: hint,
-                  labelText: label,
-                  hintStyle: TextStyle(
-                    color: AppColors.white.withValues(alpha: 0.4),
+            ShakeTransition(
+              shake: displayError != null,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.05),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: displayError != null
+                        ? Colors.redAccent.withValues(alpha: 0.6)
+                        : Colors.white.withValues(alpha: 0.1),
+                    width: 1.2,
                   ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 12,
+                ),
+                child: TextField(
+                  controller: widget.controller,
+                  obscureText: widget.obscureText,
+                  keyboardType: widget.keyboardType,
+                  readOnly: widget.showDropdown,
+                  onChanged: (value) {
+                    field.didChange(value);
+                    if (widget.onChanged != null) widget.onChanged!(value);
+                  },
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
                   ),
-                  prefixIcon: prefixChild,
-                  suffixIcon:
-                      suffixChild ??
-                      (showDropdown
-                          ? const Icon(
-                              Icons.arrow_drop_down,
-                              color: Colors.white,
-                            )
-                          : null),
-                  border: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  errorBorder: InputBorder.none,
-                  focusedErrorBorder: InputBorder.none,
+                  decoration: InputDecoration(
+                    hintText: widget.hint,
+                    labelText: widget.label,
+                    hintStyle: TextStyle(
+                      color: AppColors.white.withValues(alpha: 0.4),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
+                    prefixIcon: widget.prefixChild,
+                    suffixIcon: displayError != null
+                        ? const Icon(
+                            Icons.error_outline_rounded,
+                            color: Colors.redAccent,
+                            size: 20,
+                          )
+                        : (widget.suffixChild ??
+                              (widget.showDropdown
+                                  ? const Icon(
+                                      Icons.arrow_drop_down,
+                                      color: Colors.white,
+                                    )
+                                  : null)),
+                    border: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                  ),
+                  textInputAction: widget.textInputAction,
                 ),
               ),
             ),
-            SizedBox(
-              height: 18, // Reserve enough height for the error text
-              child: displayError != null
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 4, left: 4),
-                      child: Text(
-                        displayError,
-                        style: const TextStyle(
-                          color: Colors.redAccent,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
+            AnimatedSize(
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeInOut,
+              child: displayError == null
+                  ? const SizedBox(width: double.infinity)
+                  : FadeSlideTransition(
+                      duration: const Duration(milliseconds: 200),
+                      offset: const Offset(0, -5),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 2, left: 4),
+                        child: Text(
+                          displayError,
+                          style: const TextStyle(
+                            color: Colors.redAccent,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ),
-                    )
-                  : const SizedBox.shrink(),
+                    ),
             ),
           ],
         );
