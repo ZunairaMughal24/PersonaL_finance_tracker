@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-04-18
+
+### Added
+- **State-Persistent Auth Forms**: Decoupled input controllers in `AuthProvider` allowing Sign In and Sign Up screens to maintain their own independent data, preventing cross-screen data leakage.
+- **Logout Confirmation**: Replaced immediate sign-out with a modern, glassmorphic confirmation Bottom Sheet, aligning with high-end fintech industry standards for destructive actions.
+
+### Improved
+- **Analytics UI Consistency**: Updated the `AnalyticsScreen` background to utilize the `silkDark` style, creating a unified and more professional visual experience alongside the Settings dashboard.
+
+### Fixed
+- **Stable TextField Layouts**: Refactored `AppTextField` to use a custom `FormField` wrapper with fixed-height error rendering. This eliminates screen "jumping" or layout shifts when validation errors appear or disappear.
+- **Auth Error Mapping**: Enhanced `AuthFailure` to correctly map the latest Firebase error codes (like `invalid-credential`), ensuring users receive precise feedback instead of generic error messages.
+
+
 ## [1.6.0] - 2026-04-16
 
 ### Added

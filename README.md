@@ -38,11 +38,13 @@ Montage is a personal finance management application built with Flutter. It help
 - Toggle notification preferences.
 - Switch between supported currencies (PKR, USD, EUR, GBP, etc.).
 - **Financial Exports**: Generate and download beautifully formatted PDF reports and CSV spreadsheets of all your transaction history.
-- Sign out with full session cleanup.
+- **logout Confirmation Flows**: Professional, glassmorphic confirmation sheets for critical actions like signing out.
+- Sign out with full session cleanup and confirmation.
 
 ### Authentication
 - Email/password sign-in and sign-up powered by Firebase Authentication.
 - **Reliable Error Handling**: Real-time, field-level validation with custom error mapping for authenticating Firebase responses into human-readable messages.
+- **Independent Form State**: Separate data persistence for Sign In and Sign Up screens, allowing users to switch between authentication modes without losing their typed progress.
 - Onboarding screen for first-time users.
 - Per-user data isolation — each account has its own private Hive storage box.
 
@@ -53,6 +55,7 @@ Montage is a personal finance management application built with Flutter. It help
 - **Data-Ready Startup**: A "Bulletproof" splash screen that polls for both authentication status and database readiness, ensuring a flicker-free transition once the home screen appears.
 - Haptic feedback on key interactions.
 - **Interactive Animations**: Smooth page transitions, micro-animations, and animated line indicators for enhanced navigation feedback.
+- **Stable UI Engineering**: Fixed-height input validation area prevents screen layout shifts or "jumping" when errors are displayed.
 - **Iconography**: Unified, professional iconography powered by **Font Awesome**.
 
 ---
