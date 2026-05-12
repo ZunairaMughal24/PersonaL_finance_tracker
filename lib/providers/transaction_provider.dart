@@ -10,6 +10,7 @@ import 'package:montage/services/database_services.dart';
 import 'package:montage/services/finance_service.dart';
 import 'package:montage/services/firestore_sync_service.dart';
 import 'package:montage/services/ai_service.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class TransactionProvider extends ChangeNotifier {
   DatabaseService? db;
@@ -17,7 +18,7 @@ class TransactionProvider extends ChangeNotifier {
   final FirestoreSyncService _syncService = FirestoreSyncService();
   String? _userId;
 
-  static const String _geminiApiKey = String.fromEnvironment('GEMINI_API_KEY');
+  static final String _geminiApiKey = dotenv.get('GEMINI_API_KEY', fallback: '');
 
   bool _isReady = false;
   List<TransactionModel> _transactions = [];

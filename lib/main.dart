@@ -14,9 +14,11 @@ import 'package:montage/providers/auth_provider.dart';
 import 'package:montage/providers/category_provider.dart';
 import 'package:montage/viewmodels/speech_view_model.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   try {
     debugPrint('Initializing Firebase...');
     await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
