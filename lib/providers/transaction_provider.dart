@@ -188,6 +188,21 @@ class TransactionProvider extends ChangeNotifier {
     _checkBalanceAndTriggerHaptic();
   }
 
+  Future<void> deletePermanently(List<int> keys) async {
+    if (db == null) return;
+
+    for (var key in keys) {
+      await db!.deleteTransaction(key);
+
+      // Cloud sync: delete the transaction
+      if (_userId != null) {
+        _syncService.deleteTransaction(_userId!, key);
+      }
+    }
+
+    _loadTransactions();
+  }
+
   Future<void> clearDashboard() async {
     if (db == null) return;
 

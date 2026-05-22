@@ -58,6 +58,27 @@ class HistoryViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void enterSelectionMode() {
+    _isSelectionMode = true;
+    notifyListeners();
+  }
+
+  void selectAll() {
+    _selectedKeys.addAll(archivedTransactions.map((tx) => tx.key as int));
+    _isSelectionMode = true;
+    notifyListeners();
+  }
+
+  void deselectAll() {
+    clearSelection();
+  }
+
+  Future<void> deleteSelected() async {
+    if (_selectedKeys.isEmpty) return;
+    await _transactionProvider.deletePermanently(_selectedKeys.toList());
+    clearSelection();
+  }
+
   Future<void> restoreSelected() async {
     if (_selectedKeys.isEmpty) return;
     await _transactionProvider.restoreTransactions(_selectedKeys.toList());

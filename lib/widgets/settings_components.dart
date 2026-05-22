@@ -37,7 +37,7 @@ class SettingsGroup extends StatelessWidget {
       padding: EdgeInsets.zero,
       child: Column(
         children: List.generate(tiles.length, (index) {
-           return Column(
+          return Column(
             children: [
               tiles[index],
               if (index != tiles.length - 1)
@@ -286,7 +286,9 @@ class SettingsModals {
             Divider(color: Colors.white.withValues(alpha: 0.05), height: 1),
             buildMenuOption(
               icon: Icons.photo_library_outlined,
-              title: settings.profileImagePath != null ? "Change Photo" : "Add Photo",
+              title: settings.profileImagePath != null
+                  ? "Change Photo"
+                  : "Add Photo",
               onTap: () {
                 Navigator.pop(context);
                 settings.pickAndUpdateProfileImage();
@@ -310,6 +312,7 @@ class SettingsModals {
       ),
     );
   }
+
   static void showLogoutConfirmation({
     required BuildContext context,
     required VoidCallback onConfirm,
@@ -348,6 +351,138 @@ class SettingsModals {
               onPressed: () {
                 Navigator.pop(context);
                 onConfirm();
+              },
+            ),
+            12.heightBox,
+            AppButton(
+              text: "Cancel",
+              color: Colors.transparent,
+              borderColor: Colors.white.withValues(alpha: 0.1),
+              onPressed: () => Navigator.pop(context),
+            ),
+            20.heightBox,
+          ],
+        ),
+      ),
+    );
+  }
+
+  static void showClearDashboardConfirmation({
+    required BuildContext context,
+    required VoidCallback onConfirm,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => GlassContainer(
+        customBorderRadius: const BorderRadius.vertical(
+          top: Radius.circular(32),
+        ),
+        blur: 40,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            24.heightBox,
+            const Text("Clear Dashboard").titleLarge(color: Colors.white),
+            12.heightBox,
+            Text(
+              "This will archive all your current transactions and move them to history. You can restore them later.",
+              textAlign: TextAlign.center,
+            ).bodyLarge(color: Colors.white.withValues(alpha: 0.7)),
+            32.heightBox,
+            AppButton(
+              text: "Move to History",
+              color: Colors.orangeAccent.withValues(alpha: 0.8),
+              onPressed: () {
+                Navigator.pop(context);
+                onConfirm();
+              },
+            ),
+            12.heightBox,
+            AppButton(
+              text: "Cancel",
+              color: Colors.transparent,
+              borderColor: Colors.white.withValues(alpha: 0.1),
+              onPressed: () => Navigator.pop(context),
+            ),
+            20.heightBox,
+          ],
+        ),
+      ),
+    );
+  }
+
+  static void showCsvExportOptions({
+    required BuildContext context,
+    required Function(bool) onConfirm,
+  }) {
+    _showExportOptions(context, "Export as CSV", onConfirm);
+  }
+
+  static void showPdfExportOptions({
+    required BuildContext context,
+    required Function(bool) onConfirm,
+  }) {
+    _showExportOptions(context, "Export as PDF", onConfirm);
+  }
+
+  static void _showExportOptions(
+    BuildContext context,
+    String title,
+    Function(bool) onConfirm,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => GlassContainer(
+        customBorderRadius: const BorderRadius.vertical(
+          top: Radius.circular(32),
+        ),
+        blur: 40,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            24.heightBox,
+            Text(title).titleLarge(color: Colors.white),
+            12.heightBox,
+            Text(
+              "Would you like to include your deleted transaction history in this report?",
+              textAlign: TextAlign.center,
+            ).bodyLarge(color: Colors.white.withValues(alpha: 0.7)),
+            32.heightBox,
+            AppButton(
+              text: "Include History",
+              color: AppColors.primaryColor.withValues(alpha: 0.8),
+              onPressed: () {
+                Navigator.pop(context);
+                onConfirm(true);
+              },
+            ),
+            12.heightBox,
+            AppButton(
+              text: "Current Dashboard Only",
+              color: Colors.white.withValues(alpha: 0.1),
+              onPressed: () {
+                Navigator.pop(context);
+                onConfirm(false);
               },
             ),
             12.heightBox,

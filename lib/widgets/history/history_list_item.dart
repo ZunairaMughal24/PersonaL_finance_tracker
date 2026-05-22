@@ -69,45 +69,35 @@ class HistoryListItem extends StatelessWidget {
                 onEdit: () =>
                     onRestore(transaction.key as int), // Acts as single restore
               ),
-              // Single Restore Overlay Button (Full Control)
-              if (!isSelectionMode)
-                Positioned(
-                  right: 12,
-                  top: 0,
-                  bottom: 0,
-                  child: Center(
-                    child: IconButton(
-                      onPressed: () => onRestore(transaction.key as int),
-                      icon: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: AppColors.primaryColor.withValues(alpha: 0.1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.settings_backup_restore_rounded,
-                          color: AppColors.primaryColor,
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              if (isSelected)
+
+              if (isSelectionMode)
                 Positioned(
                   right: 16,
                   top: 0,
                   bottom: 0,
                   child: Center(
-                    child: Icon(
-                      Icons.check_circle,
-                      color: AppColors.primaryColor,
-                      shadows: [
-                        Shadow(
-                          color: Colors.black.withValues(alpha: 0.5),
-                          blurRadius: 10,
+                    child: Container(
+                      width: 24,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? AppColors.primaryColor
+                            : Colors.white.withValues(alpha: 0.05),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: isSelected
+                              ? AppColors.primaryColor
+                              : Colors.white.withValues(alpha: 0.2),
+                          width: 1.5,
                         ),
-                      ],
+                      ),
+                      child: isSelected
+                          ? const Icon(
+                              Icons.check_rounded,
+                              color: Colors.white,
+                              size: 16,
+                            )
+                          : null,
                     ),
                   ),
                 ),
