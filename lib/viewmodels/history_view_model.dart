@@ -37,7 +37,7 @@ class HistoryViewModel extends ChangeNotifier {
 
   // Logic
   void updateSearch(String query) {
-    _searchQuery = query;
+    _searchQuery = query.trim();
     notifyListeners();
   }
 
