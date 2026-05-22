@@ -7,6 +7,7 @@ import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/providers/user_settings_provider.dart';
 import 'package:montage/widgets/app_button.dart';
 import 'package:montage/widgets/glass_container.dart';
+import 'package:montage/widgets/app_bottom_sheet.dart';
 
 class SettingsSectionHeader extends StatelessWidget {
   final String title;
@@ -135,77 +136,59 @@ class SettingsModals {
     BuildContext context,
     UserSettingsProvider settings,
   ) {
-    showModalBottomSheet(
+    AppBottomSheet.show(
       context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) => GlassContainer(
-        customBorderRadius: const BorderRadius.vertical(
-          top: Radius.circular(32),
-        ),
-        blur: 40,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            12.heightBox,
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(2),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            "Select Currency",
+          ).h4(color: Colors.white, weight: FontWeight.bold),
+          20.heightBox,
+          Flexible(
+            child: ListView.separated(
+              shrinkWrap: true,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              itemCount: UserSettingsProvider.availableCurrencies.length,
+              separatorBuilder: (context, index) => Divider(
+                color: Colors.white.withValues(alpha: 0.05),
+                height: 1,
               ),
-            ),
-            20.heightBox,
-            Text(
-              "Select Currency",
-            ).h4(color: Colors.white, weight: FontWeight.bold),
-            20.heightBox,
-            Flexible(
-              child: ListView.separated(
-                shrinkWrap: true,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                itemCount: UserSettingsProvider.availableCurrencies.length,
-                separatorBuilder: (context, index) => Divider(
-                  color: Colors.white.withValues(alpha: 0.05),
-                  height: 1,
-                ),
-                itemBuilder: (context, index) {
-                  final currency =
-                      UserSettingsProvider.availableCurrencies[index];
-                  final isSelected = settings.selectedCurrency == currency;
+              itemBuilder: (context, index) {
+                final currency =
+                    UserSettingsProvider.availableCurrencies[index];
+                final isSelected = settings.selectedCurrency == currency;
 
-                  return InkWell(
-                    onTap: () {
-                      settings.setCurrency(currency);
-                      Navigator.pop(context);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(currency).bodyLarge(
-                            color: isSelected ? Colors.white : Colors.white60,
-                            weight: isSelected
-                                ? FontWeight.bold
-                                : FontWeight.w500,
+                return InkWell(
+                  onTap: () {
+                    settings.setCurrency(currency);
+                    Navigator.pop(context);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(currency).bodyLarge(
+                          color: isSelected ? Colors.white : Colors.white60,
+                          weight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.w500,
+                        ),
+                        if (isSelected)
+                          const Icon(
+                            Icons.check_circle_rounded,
+                            color: AppColors.primaryColor,
+                            size: 24,
                           ),
-                          if (isSelected)
-                            const Icon(
-                              Icons.check_circle_rounded,
-                              color: AppColors.primaryColor,
-                              size: 24,
-                            ),
-                        ],
-                      ),
+                      ],
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
-            30.heightBox,
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -250,65 +233,46 @@ class SettingsModals {
     required UserSettingsProvider settings,
     required VoidCallback onEditNameTap,
   }) {
-    showModalBottomSheet(
+    AppBottomSheet.show(
       context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) => GlassContainer(
-        customBorderRadius: const BorderRadius.vertical(
-          top: Radius.circular(32),
-        ),
-        blur: 40,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            12.heightBox,
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            20.heightBox,
-            Text(
-              "Edit Profile",
-            ).h4(color: Colors.white, weight: FontWeight.bold),
-            20.heightBox,
-            buildMenuOption(
-              icon: Icons.person,
-              title: "Edit Name",
-              onTap: () {
-                Navigator.pop(context);
-                onEditNameTap();
-              },
-            ),
+      padding: EdgeInsets.zero,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text("Edit Profile").h4(color: Colors.white, weight: FontWeight.bold),
+          20.heightBox,
+          buildMenuOption(
+            icon: Icons.person,
+            title: "Edit Name",
+            onTap: () {
+              Navigator.pop(context);
+              onEditNameTap();
+            },
+          ),
+          Divider(color: Colors.white.withValues(alpha: 0.05), height: 1),
+          buildMenuOption(
+            icon: Icons.photo_library_outlined,
+            title: settings.profileImagePath != null
+                ? "Change Photo"
+                : "Add Photo",
+            onTap: () {
+              Navigator.pop(context);
+              settings.pickAndUpdateProfileImage();
+            },
+          ),
+          if (settings.profileImagePath != null) ...[
             Divider(color: Colors.white.withValues(alpha: 0.05), height: 1),
             buildMenuOption(
-              icon: Icons.photo_library_outlined,
-              title: settings.profileImagePath != null
-                  ? "Change Photo"
-                  : "Add Photo",
+              svgAsset: AppImages.trashBin,
+              title: "Remove Photo",
+              iconColor: Colors.redAccent,
               onTap: () {
                 Navigator.pop(context);
-                settings.pickAndUpdateProfileImage();
+                settings.removeProfileImage();
               },
             ),
-            if (settings.profileImagePath != null) ...[
-              Divider(color: Colors.white.withValues(alpha: 0.05), height: 1),
-              buildMenuOption(
-                svgAsset: AppImages.trashBin,
-                title: "Remove Photo",
-                iconColor: Colors.redAccent,
-                onTap: () {
-                  Navigator.pop(context);
-                  settings.removeProfileImage();
-                },
-              ),
-            ],
-            30.heightBox,
           ],
-        ),
+        ],
       ),
     );
   }
@@ -317,52 +281,34 @@ class SettingsModals {
     required BuildContext context,
     required VoidCallback onConfirm,
   }) {
-    showModalBottomSheet(
+    AppBottomSheet.show(
       context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) => GlassContainer(
-        customBorderRadius: const BorderRadius.vertical(
-          top: Radius.circular(32),
-        ),
-        blur: 40,
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            24.heightBox,
-            const Text("Sign Out").titleLarge(color: Colors.white),
-            12.heightBox,
-            Text(
-              "Are you sure you want to sign out? You'll need to enter your credentials to log back in to your account.",
-              textAlign: TextAlign.center,
-            ).bodyLarge(color: Colors.white.withValues(alpha: 0.7)),
-            32.heightBox,
-            AppButton(
-              text: "Sign Out",
-              color: Colors.redAccent.withValues(alpha: 0.8),
-              onPressed: () {
-                Navigator.pop(context);
-                onConfirm();
-              },
-            ),
-            12.heightBox,
-            AppButton(
-              text: "Cancel",
-              color: Colors.transparent,
-              borderColor: Colors.white.withValues(alpha: 0.1),
-              onPressed: () => Navigator.pop(context),
-            ),
-            20.heightBox,
-          ],
-        ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text("Sign Out").titleLarge(color: Colors.white),
+          12.heightBox,
+          Text(
+            "Are you sure you want to sign out? You'll need to enter your credentials to log back in to your account.",
+            textAlign: TextAlign.center,
+          ).bodyLarge(color: Colors.white.withValues(alpha: 0.7)),
+          32.heightBox,
+          AppButton(
+            text: "Sign Out",
+            color: Colors.redAccent.withValues(alpha: 0.8),
+            onPressed: () {
+              Navigator.pop(context);
+              onConfirm();
+            },
+          ),
+          12.heightBox,
+          AppButton(
+            text: "Cancel",
+            color: Colors.transparent,
+            borderColor: Colors.white.withValues(alpha: 0.1),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ],
       ),
     );
   }
@@ -371,52 +317,34 @@ class SettingsModals {
     required BuildContext context,
     required VoidCallback onConfirm,
   }) {
-    showModalBottomSheet(
+    AppBottomSheet.show(
       context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) => GlassContainer(
-        customBorderRadius: const BorderRadius.vertical(
-          top: Radius.circular(32),
-        ),
-        blur: 40,
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            24.heightBox,
-            const Text("Clear Dashboard").titleLarge(color: Colors.white),
-            12.heightBox,
-            Text(
-              "This will archive all your current transactions and move them to history. You can restore them later.",
-              textAlign: TextAlign.center,
-            ).bodyLarge(color: Colors.white.withValues(alpha: 0.7)),
-            32.heightBox,
-            AppButton(
-              text: "Move to History",
-              color: Colors.orangeAccent.withValues(alpha: 0.8),
-              onPressed: () {
-                Navigator.pop(context);
-                onConfirm();
-              },
-            ),
-            12.heightBox,
-            AppButton(
-              text: "Cancel",
-              color: Colors.transparent,
-              borderColor: Colors.white.withValues(alpha: 0.1),
-              onPressed: () => Navigator.pop(context),
-            ),
-            20.heightBox,
-          ],
-        ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text("Clear Dashboard").titleLarge(color: Colors.white),
+          12.heightBox,
+          Text(
+            "This will archive all your current transactions and move them to history. You can restore them later.",
+            textAlign: TextAlign.center,
+          ).bodyLarge(color: Colors.white.withValues(alpha: 0.7)),
+          32.heightBox,
+          AppButton(
+            text: "Move to History",
+            color: Colors.orangeAccent.withValues(alpha: 0.8),
+            onPressed: () {
+              Navigator.pop(context);
+              onConfirm();
+            },
+          ),
+          12.heightBox,
+          AppButton(
+            text: "Cancel",
+            color: Colors.transparent,
+            borderColor: Colors.white.withValues(alpha: 0.1),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ],
       ),
     );
   }
@@ -440,54 +368,36 @@ class SettingsModals {
     String title,
     Function(bool) onConfirm,
   ) {
-    showModalBottomSheet(
+    AppBottomSheet.show(
       context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) => GlassContainer(
-        customBorderRadius: const BorderRadius.vertical(
-          top: Radius.circular(32),
-        ),
-        blur: 40,
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            24.heightBox,
-            Text(title).titleLarge(color: Colors.white),
-            12.heightBox,
-            Text(
-              "Would you like to include your deleted transaction history in this report?",
-              textAlign: TextAlign.center,
-            ).bodyLarge(color: Colors.white.withValues(alpha: 0.7)),
-            32.heightBox,
-            AppButton(
-              text: "Include History",
-              color: AppColors.primaryColor.withValues(alpha: 0.8),
-              onPressed: () {
-                Navigator.pop(context);
-                onConfirm(true);
-              },
-            ),
-            12.heightBox,
-            AppButton(
-              text: "Current Dashboard Only",
-              color: Colors.white.withValues(alpha: 0.1),
-              onPressed: () {
-                Navigator.pop(context);
-                onConfirm(false);
-              },
-            ),
-            20.heightBox,
-          ],
-        ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(title).titleLarge(color: Colors.white),
+          12.heightBox,
+          Text(
+            "Would you like to include your deleted transaction history in this report?",
+            textAlign: TextAlign.center,
+          ).bodyLarge(color: Colors.white.withValues(alpha: 0.7)),
+          32.heightBox,
+          AppButton(
+            text: "Include History",
+            color: AppColors.primaryColor.withValues(alpha: 0.8),
+            onPressed: () {
+              Navigator.pop(context);
+              onConfirm(true);
+            },
+          ),
+          12.heightBox,
+          AppButton(
+            text: "Current Dashboard Only",
+            color: Colors.white.withValues(alpha: 0.1),
+            onPressed: () {
+              Navigator.pop(context);
+              onConfirm(false);
+            },
+          ),
+        ],
       ),
     );
   }
