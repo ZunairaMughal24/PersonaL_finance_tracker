@@ -48,7 +48,7 @@ class HistoryModals {
         title: "Restore Everything?",
         description:
             "Do you want to restore all ${vm.archivedTransactions.length} archived transactions?",
-        confirmText: "Restore All",
+        confirmText: "Restore",
         icon: Icons.settings_backup_restore_rounded,
         onConfirm: () async {
           await vm.restoreAll();
