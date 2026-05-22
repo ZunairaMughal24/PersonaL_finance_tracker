@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:montage/core/constants/app_images.dart';
 import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/providers/transaction_provider.dart';
 import 'package:montage/providers/user_settings_provider.dart';
@@ -115,50 +117,65 @@ class _HistoryAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: vm.isSelectionMode
           ? "${vm.selectedCount} Selected"
           : 'Transaction History',
+      centerTitle: false,
       actions: [
-        if (!vm.isSelectionMode)
-          IconButton(
-            onPressed: onToggleSearch,
-            icon: Icon(
-              isSearchVisible ? Icons.close : Icons.search,
-              color: Colors.white,
-            ),
-          ),
-        if (vm.isSelectionMode)
-          IconButton(
-            icon: Icon(
-              vm.selectedCount == archived.length
-                  ? Icons.check_circle_rounded
-                  : Icons.check_circle_outline_rounded,
-              color: Colors.white,
-            ),
-            onPressed: () => vm.selectedCount == archived.length
-                ? vm.deselectAll()
-                : vm.selectAll(),
-          ),
-        if (!vm.isSelectionMode && archived.isNotEmpty)
-          PopupMenuButton<String>(
-            onSelected: (val) {
-              if (val == 'restore_all') {
-                HistoryModals.showRestoreAllConfirm(context: context, vm: vm);
-              } else if (val == 'select') {
-                vm.enterSelectionMode();
-              }
-            },
-            icon: const Icon(Icons.more_vert, color: Colors.white),
-            itemBuilder: (context) => [
-              _buildMenuItem(
-                'select',
-                Icons.check_circle_outline_rounded,
-                "Select Items",
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (!vm.isSelectionMode)
+              IconButton(
+                visualDensity: VisualDensity.compact,
+                padding: EdgeInsets.zero,
+                onPressed: onToggleSearch,
+                icon: Icon(
+                  isSearchVisible ? Icons.close : Icons.search,
+                  color: Colors.white,
+                ),
               ),
-              _buildMenuItem(
-                'restore_all',
-                Icons.settings_backup_restore_rounded,
-                "Restore All",
+            if (vm.isSelectionMode)
+              IconButton(
+                visualDensity: VisualDensity.compact,
+                padding: EdgeInsets.zero,
+                icon: Icon(
+                  vm.selectedCount == archived.length
+                      ? Icons.check_circle_rounded
+                      : Icons.check_circle_outline_rounded,
+                  color: Colors.white,
+                ),
+                onPressed: () => vm.selectedCount == archived.length
+                    ? vm.deselectAll()
+                    : vm.selectAll(),
               ),
-            ],
-          ),
+            if (!vm.isSelectionMode && archived.isNotEmpty)
+              PopupMenuButton<String>(
+                padding: EdgeInsets.zero,
+                onSelected: (val) {
+                  if (val == 'restore_all') {
+                    HistoryModals.showRestoreAllConfirm(
+                      context: context,
+                      vm: vm,
+                    );
+                  } else if (val == 'select') {
+                    vm.enterSelectionMode();
+                  }
+                },
+                icon: const Icon(Icons.more_vert, color: Colors.white),
+                itemBuilder: (context) => [
+                  _buildMenuItem(
+                    'select',
+                    Icons.check_circle_outline_rounded,
+                    "Select Items",
+                  ),
+                  _buildMenuItem(
+                    'restore_all',
+                    Icons.settings_backup_restore_rounded,
+                    "Restore All",
+                  ),
+                ],
+              ),
+            8.widthBox,
+          ],
+        ),
       ],
     );
   }
@@ -192,6 +209,7 @@ class _HistorySearchArea extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final vm = context.watch<HistoryViewModel>();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: GlassContainer(
@@ -203,20 +221,65 @@ class _HistorySearchArea extends StatelessWidget {
           AppColors.primaryColor.withValues(alpha: 0.05),
           Colors.white.withValues(alpha: 0.08),
         ],
-        child: TextField(
-          focusNode: focusNode,
-          onChanged: onChanged,
-          style: const TextStyle(color: Colors.white, fontSize: 16),
-          decoration: InputDecoration(
-            hintText: "Search history...",
-            hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
-            prefixIcon: Icon(
-              Icons.search,
-              color: Colors.white.withValues(alpha: 0.3),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                focusNode: focusNode,
+                onChanged: onChanged,
+                style: const TextStyle(color: Colors.white, fontSize: 16),
+                decoration: InputDecoration(
+                  hintText: "Search history...",
+                  hintStyle: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.3),
+                  ),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.white.withValues(alpha: 0.3),
+                  ),
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                ),
+              ),
             ),
-            border: InputBorder.none,
-            contentPadding: const EdgeInsets.symmetric(vertical: 12),
-          ),
+            12.widthBox,
+            Container(
+              height: 40,
+              width: 1,
+              color: Colors.white.withValues(alpha: 0.1),
+            ),
+            IconButton(
+              onPressed: () async {
+                final range = await showDateRangePicker(
+                  context: context,
+                  firstDate: DateTime(2020),
+                  lastDate: DateTime.now(),
+                  builder: (context, child) => Theme(
+                    data: Theme.of(context).copyWith(
+                      colorScheme: const ColorScheme.dark(
+                        primary: AppColors.primaryColor,
+                        onPrimary: Colors.white,
+                        surface: Color(0xFF1E2141),
+                        onSurface: Colors.white,
+                      ),
+                    ),
+                    child: child!,
+                  ),
+                );
+                vm.setDateRange(range);
+              },
+              icon: SvgPicture.asset(
+                AppImages.calendar,
+                colorFilter: ColorFilter.mode(
+                  vm.selectedDateRange != null
+                      ? AppColors.primaryColor
+                      : Colors.white.withValues(alpha: 0.5),
+                  BlendMode.srcIn,
+                ),
+                height: 20,
+              ),
+            ),
+          ],
         ),
       ),
     );

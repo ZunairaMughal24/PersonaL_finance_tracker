@@ -17,7 +17,7 @@ class HistoryModals {
         title: "Delete Permanently?",
         description:
             "You're about to delete ${keys.length} transactions forever. This cannot be undone.",
-        confirmText: "Delete Forever",
+        confirmText: "Delete",
         confirmColor: Colors.redAccent,
         icon: Icons.delete_forever_rounded,
         onConfirm: () async {

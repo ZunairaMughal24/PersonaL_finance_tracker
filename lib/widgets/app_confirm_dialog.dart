@@ -69,8 +69,8 @@ class AppConfirmDialog extends StatelessWidget {
                   child: AppButton(
                     text: "Cancel",
                     height: 45,
-                    color: Colors.white.withValues(alpha: 0.05),
-                    borderColor: Colors.white.withValues(alpha: 0.05),
+                    color: Colors.white.withValues(alpha: 0.09),
+                    borderColor: Colors.white.withValues(alpha: 0.1),
                     textColor: Colors.white70,
                     onPressed: () => Navigator.pop(context),
                   ),

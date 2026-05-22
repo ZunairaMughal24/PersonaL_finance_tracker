@@ -6,6 +6,7 @@ class HistoryViewModel extends ChangeNotifier {
   final TransactionProvider _transactionProvider;
 
   String _searchQuery = "";
+  DateTimeRange? _selectedDateRange;
   final Set<int> _selectedKeys = {};
   bool _isSelectionMode = false;
 
@@ -21,23 +22,43 @@ class HistoryViewModel extends ChangeNotifier {
 
   // Getters
   String get searchQuery => _searchQuery;
+  DateTimeRange? get selectedDateRange => _selectedDateRange;
   Set<int> get selectedKeys => _selectedKeys;
   bool get isSelectionMode => _isSelectionMode;
   int get selectedCount => _selectedKeys.length;
 
   List<TransactionModel> get archivedTransactions {
-    final archived = _transactionProvider.archivedTransactions;
-    if (_searchQuery.isEmpty) return archived;
+    var archived = _transactionProvider.archivedTransactions;
+
+    // Filter by date range
+    if (_selectedDateRange != null) {
+      archived = archived.where((tx) {
+        final date = DateTime.tryParse(tx.date);
+        if (date == null) return false;
+        return date.isAfter(
+              _selectedDateRange!.start.subtract(const Duration(days: 1)),
+            ) &&
+            date.isBefore(_selectedDateRange!.end.add(const Duration(days: 1)));
+      }).toList();
+    }
+
+    final query = _searchQuery.trim().toLowerCase();
+    if (query.isEmpty) return archived;
 
     return archived.where((tx) {
-      return tx.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          tx.category.toLowerCase().contains(_searchQuery.toLowerCase());
+      return tx.title.toLowerCase().contains(query) ||
+          tx.category.toLowerCase().contains(query);
     }).toList();
   }
 
   // Logic
   void updateSearch(String query) {
-    _searchQuery = query.trim();
+    _searchQuery = query;
+    notifyListeners();
+  }
+
+  void setDateRange(DateTimeRange? range) {
+    _selectedDateRange = range;
     notifyListeners();
   }
 
