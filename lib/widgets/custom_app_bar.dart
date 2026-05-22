@@ -10,6 +10,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onLeadingTap;
   final bool showBackButton;
   final bool centerTitle;
+  final double? titleSpacing;
 
   const CustomAppBar({
     super.key,
@@ -19,6 +20,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onLeadingTap,
     this.showBackButton = true,
     this.centerTitle = true,
+    this.titleSpacing,
   });
 
   @override
@@ -56,6 +58,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       centerTitle: centerTitle,
+      titleSpacing: titleSpacing,
       backgroundColor: Colors.transparent,
       elevation: 0,
       actions: actions,
