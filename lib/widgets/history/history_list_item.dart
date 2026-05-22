@@ -45,63 +45,57 @@ class HistoryListItem extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: isSelected ? AppColors.primaryColor : Colors.transparent,
-              width: 2,
-            ),
+            borderRadius: BorderRadius.circular(16),
             boxShadow: isSelected
                 ? [
                     BoxShadow(
                       color: AppColors.primaryColor.withValues(alpha: 0.3),
-                      blurRadius: 10,
-                      spreadRadius: 1,
+                      blurRadius: 12,
+                      spreadRadius: 2,
                     ),
                   ]
                 : null,
           ),
-          child: Stack(
-            children: [
-              TransactionListItem(
-                transaction: transaction,
-                currency: currency,
-                onDelete: () => onDeletePermanently(transaction.key as int),
-                onEdit: () =>
-                    onRestore(transaction.key as int), // Acts as single restore
-              ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: Stack(
+              children: [
+                TransactionListItem(
+                  transaction: transaction,
+                  currency: currency,
+                  onDelete: () => onDeletePermanently(transaction.key as int),
+                  onEdit: () => onRestore(transaction.key as int),
+                  borderColor: isSelectionMode
+                      ? AppColors.primaryColor.withValues(alpha: 0.6)
+                      : null,
+                ),
 
-              if (isSelectionMode)
-                Positioned(
-                  right: 16,
-                  top: 0,
-                  bottom: 0,
-                  child: Center(
+                if (isSelectionMode) ...[
+                  // Dark overlay to make tick icon pop
+                  Positioned.fill(
                     child: Container(
-                      width: 24,
-                      height: 24,
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? AppColors.primaryColor
-                            : Colors.white.withValues(alpha: 0.05),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: isSelected
-                              ? AppColors.primaryColor
-                              : Colors.white.withValues(alpha: 0.2),
-                          width: 1.5,
-                        ),
-                      ),
-                      child: isSelected
-                          ? const Icon(
-                              Icons.check_rounded,
-                              color: Colors.white,
-                              size: 16,
-                            )
-                          : null,
+                      color: Colors.black.withValues(alpha: 0.03),
                     ),
                   ),
-                ),
-            ],
+                  Positioned(
+                    right: 16,
+                    top: 0,
+                    bottom: 0,
+                    child: Center(
+                      child: Icon(
+                        isSelected
+                            ? Icons.check_circle_rounded
+                            : Icons.check_circle_outline_rounded,
+                        color: isSelected
+                            ? AppColors.primaryColor
+                            : AppColors.primaryColor.withValues(alpha: 0.8),
+                        size: 26,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
           ),
         ),
       ),

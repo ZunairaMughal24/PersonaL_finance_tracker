@@ -485,13 +485,6 @@ class SettingsModals {
                 onConfirm(false);
               },
             ),
-            12.heightBox,
-            AppButton(
-              text: "Cancel",
-              color: Colors.transparent,
-              borderColor: Colors.white.withValues(alpha: 0.1),
-              onPressed: () => Navigator.pop(context),
-            ),
             20.heightBox,
           ],
         ),

@@ -14,6 +14,7 @@ class TransactionListItem extends StatelessWidget {
   final String currency;
   final VoidCallback? onDelete;
   final VoidCallback? onEdit;
+  final Color? borderColor;
 
   const TransactionListItem({
     super.key,
@@ -21,12 +22,13 @@ class TransactionListItem extends StatelessWidget {
     required this.currency,
     this.onDelete,
     this.onEdit,
+    this.borderColor,
   });
 
   @override
   Widget build(BuildContext context) {
     final Color fillColor = AppColors.primaryColor.withValues(alpha: 0.15);
-    final Color borderColor = AppColors.primaryColor.withValues(alpha: 0.2);
+    final Color iconBorderColor = AppColors.primaryColor.withValues(alpha: 0.2);
 
     final Color statusColor =
         (transaction.isIncome ? AppColors.green : AppColors.red).withValues(
@@ -39,6 +41,7 @@ class TransactionListItem extends StatelessWidget {
         borderRadius: 16,
         blur: 12,
         padding: EdgeInsets.zero,
+        borderColor: borderColor,
         gradientColors: [
           Colors.white.withValues(alpha: 0.12),
           AppColors.primaryColor.withValues(alpha: 0.05),
@@ -62,10 +65,15 @@ class TransactionListItem extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: fillColor,
                           shape: BoxShape.circle,
-                          border: Border.all(color: borderColor, width: 1.5),
+                          border: Border.all(
+                            color: iconBorderColor,
+                            width: 1.5,
+                          ),
                         ),
                         child: Icon(
-                          context.watch<CategoryProvider>().getIconForCategory(transaction.category),
+                          context.watch<CategoryProvider>().getIconForCategory(
+                            transaction.category,
+                          ),
                           color: statusColor,
                           size: 20,
                         ),

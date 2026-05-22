@@ -14,6 +14,7 @@ class GlassContainer extends StatelessWidget {
   final double borderOpacity;
   final EdgeInsetsGeometry padding;
   final BoxConstraints? constraints;
+  final Color? borderColor;
 
   const GlassContainer({
     super.key,
@@ -29,6 +30,7 @@ class GlassContainer extends StatelessWidget {
     this.borderOpacity = 0.1,
     this.padding = EdgeInsets.zero,
     this.constraints,
+    this.borderColor,
   });
 
   @override
@@ -55,16 +57,34 @@ class GlassContainer extends StatelessWidget {
           child: Container(
             padding: padding,
             decoration: BoxDecoration(
-              borderRadius: customBorderRadius ?? BorderRadius.circular(borderRadius),
-              border: showBottomBorder 
+              borderRadius:
+                  customBorderRadius ?? BorderRadius.circular(borderRadius),
+              border: showBottomBorder
                   ? Border.all(
-                      color: Colors.white.withValues(alpha: borderOpacity),
+                      color:
+                          borderColor ??
+                          Colors.white.withValues(alpha: borderOpacity),
                       width: 1.5,
                     )
                   : Border(
-                      top: BorderSide(color: Colors.white.withValues(alpha: borderOpacity), width: 1.5),
-                      left: BorderSide(color: Colors.white.withValues(alpha: borderOpacity), width: 1.5),
-                      right: BorderSide(color: Colors.white.withValues(alpha: borderOpacity), width: 1.5),
+                      top: BorderSide(
+                        color:
+                            borderColor ??
+                            Colors.white.withValues(alpha: borderOpacity),
+                        width: 1.5,
+                      ),
+                      left: BorderSide(
+                        color:
+                            borderColor ??
+                            Colors.white.withValues(alpha: borderOpacity),
+                        width: 1.5,
+                      ),
+                      right: BorderSide(
+                        color:
+                            borderColor ??
+                            Colors.white.withValues(alpha: borderOpacity),
+                        width: 1.5,
+                      ),
                     ),
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
