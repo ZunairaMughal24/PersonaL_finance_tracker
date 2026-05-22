@@ -76,7 +76,7 @@ class _ProfileCardState extends State<ProfileCard> {
                     ),
                     backgroundImage: settings.profileImagePath != null
                         ? FileImage(File(settings.profileImagePath!))
-                            as ImageProvider
+                              as ImageProvider
                         : null,
                     child: settings.profileImagePath == null
                         ? const Icon(
@@ -203,29 +203,32 @@ class AccountSection extends StatelessWidget {
       children: [
         const SettingsSectionHeader(title: "Account"),
         16.heightBox,
-        SettingsGroup(tiles: [
-          SettingsTile(
-            svgAsset: AppImages.user,
-            iconColor: Colors.blueAccent,
-            title: "Personal Information",
-            subtitle: "Name, email",
-            onTap: () => context.push(AppRoutes.personalInformationScreenRoute),
-          ),
-          SettingsTile(
-            svgAsset: AppImages.lock,
-            iconColor: Colors.redAccent,
-            title: "Password",
-            subtitle: "Change password",
-            onTap: () => _showWorkInProgress(context),
-          ),
-          SettingsTile(
-            icon: Icons.account_balance_wallet_outlined,
-            iconColor: Colors.greenAccent,
-            title: "Financial Wallets",
-            subtitle: "Manage your accounts and cards",
-            onTap: () => _showWorkInProgress(context),
-          ),
-        ]),
+        SettingsGroup(
+          tiles: [
+            SettingsTile(
+              svgAsset: AppImages.user,
+              iconColor: Colors.blueAccent,
+              title: "Personal Information",
+              subtitle: "Name, email",
+              onTap: () =>
+                  context.push(AppRoutes.personalInformationScreenRoute),
+            ),
+            SettingsTile(
+              svgAsset: AppImages.lock,
+              iconColor: Colors.redAccent,
+              title: "Password",
+              subtitle: "Change password",
+              onTap: () => _showWorkInProgress(context),
+            ),
+            SettingsTile(
+              icon: Icons.account_balance_wallet_outlined,
+              iconColor: Colors.greenAccent,
+              title: "Financial Wallets",
+              subtitle: "Manage your accounts and cards",
+              onTap: () => _showWorkInProgress(context),
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -241,48 +244,50 @@ class SecuritySection extends StatelessWidget {
       children: [
         const SettingsSectionHeader(title: "Security"),
         16.heightBox,
-        SettingsGroup(tiles: [
-          Consumer<UserSettingsProvider>(
-            builder: (context, settings, _) => SettingsTile(
-              icon: Icons.fingerprint_rounded,
-              iconColor: Colors.blueAccent,
-              title: "Biometric Lock",
-              subtitle: "Secure app with fingerprint/FaceID",
-              trailing: Transform.scale(
-                scale: 0.8,
-                child: Switch.adaptive(
-                  value: settings.biometricEnabled,
-                  onChanged: (val) {
-                    settings.setBiometricEnabled(val);
-                    _showWorkInProgress(context);
-                  },
-                  activeThumbColor: AppColors.primaryColor,
-                  activeTrackColor: AppColors.primaryColor.withValues(
-                    alpha: 0.3,
-                  ),
-                  inactiveThumbColor: Colors.white,
-                  inactiveTrackColor: Colors.transparent,
-                  trackOutlineColor: WidgetStateProperty.resolveWith<Color?>(
-                    (Set<WidgetState> states) {
+        SettingsGroup(
+          tiles: [
+            Consumer<UserSettingsProvider>(
+              builder: (context, settings, _) => SettingsTile(
+                icon: Icons.fingerprint_rounded,
+                iconColor: Colors.blueAccent,
+                title: "Biometric Lock",
+                subtitle: "Secure app with fingerprint/FaceID",
+                trailing: Transform.scale(
+                  scale: 0.8,
+                  child: Switch.adaptive(
+                    value: settings.biometricEnabled,
+                    onChanged: (val) {
+                      settings.setBiometricEnabled(val);
+                      _showWorkInProgress(context);
+                    },
+                    activeThumbColor: AppColors.primaryColor,
+                    activeTrackColor: AppColors.primaryColor.withValues(
+                      alpha: 0.3,
+                    ),
+                    inactiveThumbColor: Colors.white,
+                    inactiveTrackColor: Colors.transparent,
+                    trackOutlineColor: WidgetStateProperty.resolveWith<Color?>((
+                      Set<WidgetState> states,
+                    ) {
                       if (states.contains(WidgetState.selected)) {
                         return Colors.transparent;
                       }
                       return Colors.white.withValues(alpha: 0.3);
-                    },
+                    }),
                   ),
                 ),
+                onTap: () => _showWorkInProgress(context),
               ),
+            ),
+            SettingsTile(
+              svgAsset: AppImages.lock,
+              iconColor: Colors.redAccent,
+              title: "Privacy Policy",
+              subtitle: "Read our privacy terms",
               onTap: () => _showWorkInProgress(context),
             ),
-          ),
-          SettingsTile(
-            svgAsset: AppImages.lock,
-            iconColor: Colors.redAccent,
-            title: "Privacy Policy",
-            subtitle: "Read our privacy terms",
-            onTap: () => _showWorkInProgress(context),
-          ),
-        ]),
+          ],
+        ),
       ],
     );
   }
@@ -298,71 +303,74 @@ class PreferencesSection extends StatelessWidget {
       children: [
         const SettingsSectionHeader(title: "Preferences"),
         16.heightBox,
-        SettingsGroup(tiles: [
-          Consumer<UserSettingsProvider>(
-            builder: (context, settings, _) => SettingsTile(
-              svgAsset: AppImages.bell,
-              iconColor: Colors.orangeAccent,
-              title: "Notifications",
-              subtitle: "Manage notification settings",
-              trailing: Transform.scale(
-                scale: 0.8,
-                child: Switch.adaptive(
-                  value: settings.notificationsEnabled,
-                  onChanged: (val) {
-                    settings.setNotificationsEnabled(val);
-                    _showWorkInProgress(context);
-                  },
-                  activeThumbColor: AppColors.primaryColor,
-                  activeTrackColor: AppColors.primaryColor.withValues(
-                    alpha: 0.3,
-                  ),
-                  inactiveThumbColor: Colors.white,
-                  inactiveTrackColor: Colors.transparent,
-                  trackOutlineColor: WidgetStateProperty.resolveWith<Color?>(
-                    (Set<WidgetState> states) {
+        SettingsGroup(
+          tiles: [
+            Consumer<UserSettingsProvider>(
+              builder: (context, settings, _) => SettingsTile(
+                svgAsset: AppImages.bell,
+                iconColor: Colors.orangeAccent,
+                title: "Notifications",
+                subtitle: "Manage notification settings",
+                trailing: Transform.scale(
+                  scale: 0.8,
+                  child: Switch.adaptive(
+                    value: settings.notificationsEnabled,
+                    onChanged: (val) {
+                      settings.setNotificationsEnabled(val);
+                      _showWorkInProgress(context);
+                    },
+                    activeThumbColor: AppColors.primaryColor,
+                    activeTrackColor: AppColors.primaryColor.withValues(
+                      alpha: 0.3,
+                    ),
+                    inactiveThumbColor: Colors.white,
+                    inactiveTrackColor: Colors.transparent,
+                    trackOutlineColor: WidgetStateProperty.resolveWith<Color?>((
+                      Set<WidgetState> states,
+                    ) {
                       if (states.contains(WidgetState.selected)) {
                         return Colors.transparent;
                       }
                       return Colors.white.withValues(alpha: 0.3);
-                    },
+                    }),
                   ),
                 ),
+                onTap: () => _showWorkInProgress(context),
+              ),
+            ),
+            SettingsTile(
+              icon: Icons.language_rounded,
+              iconColor: Colors.tealAccent,
+              title: "Language",
+              subtitle: "Change app language",
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "English",
+                  ).bodySmall(color: Colors.white.withValues(alpha: 0.7)),
+                  const SizedBox(width: 4),
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    color: Colors.white.withValues(alpha: 0.3),
+                    size: 25,
+                  ),
+                ],
               ),
               onTap: () => _showWorkInProgress(context),
             ),
-          ),
-          SettingsTile(
-            icon: Icons.language_rounded,
-            iconColor: Colors.tealAccent,
-            title: "Language",
-            subtitle: "Change app language",
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "English",
-                ).bodySmall(color: Colors.white.withValues(alpha: 0.7)),
-                const SizedBox(width: 4),
-                Icon(
-                  Icons.chevron_right_rounded,
-                  color: Colors.white.withValues(alpha: 0.3),
-                  size: 25,
-                ),
-              ],
+            Consumer<UserSettingsProvider>(
+              builder: (context, settings, _) => SettingsTile(
+                icon: Icons.monetization_on_outlined,
+                iconColor: Colors.amberAccent,
+                title: "Currency",
+                subtitle: "Default currency: ${settings.selectedCurrency}",
+                onTap: () =>
+                    SettingsModals.showCurrencyPicker(context, settings),
+              ),
             ),
-            onTap: () => _showWorkInProgress(context),
-          ),
-          Consumer<UserSettingsProvider>(
-            builder: (context, settings, _) => SettingsTile(
-              icon: Icons.monetization_on_outlined,
-              iconColor: Colors.amberAccent,
-              title: "Currency",
-              subtitle: "Default currency: ${settings.selectedCurrency}",
-              onTap: () => SettingsModals.showCurrencyPicker(context, settings),
-            ),
-          ),
-        ]),
+          ],
+        ),
       ],
     );
   }
@@ -371,6 +379,24 @@ class PreferencesSection extends StatelessWidget {
 class ExportSection extends StatelessWidget {
   const ExportSection({super.key});
 
+  void _performExport(BuildContext context, bool isCsv, bool includeHistory) {
+    final txProvider = context.read<TransactionProvider>();
+    final settings = context.read<UserSettingsProvider>();
+    final transactions = includeHistory
+        ? txProvider.allTransactions
+        : txProvider.transactions;
+
+    if (isCsv) {
+      ExportService.exportToCSV(transactions, settings.userName);
+    } else {
+      ExportService.exportToPDF(
+        transactions,
+        settings.selectedCurrency,
+        settings.userName,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -378,34 +404,58 @@ class ExportSection extends StatelessWidget {
       children: [
         const SettingsSectionHeader(title: "Data Management"),
         16.heightBox,
-        SettingsGroup(tiles: [
-          SettingsTile(
-            icon: Icons.file_download_outlined,
-            iconColor: Colors.greenAccent,
-            title: "Export as CSV",
-            subtitle: "Download all transactions in CSV format",
-            onTap: () {
-              final txProvider = context.read<TransactionProvider>();
-              final settings = context.read<UserSettingsProvider>();
-              ExportService.exportToCSV(txProvider.transactions, settings.userName);
-            },
-          ),
-          SettingsTile(
-            icon: Icons.picture_as_pdf_outlined,
-            iconColor: Colors.redAccent,
-            title: "Export as PDF",
-            subtitle: "Generate a professional PDF report",
-            onTap: () {
-              final txProvider = context.read<TransactionProvider>();
-              final settings = context.read<UserSettingsProvider>();
-              ExportService.exportToPDF(
-                txProvider.transactions,
-                settings.selectedCurrency,
-                settings.userName,
-              );
-            },
-          ),
-        ]),
+        SettingsGroup(
+          tiles: [
+            SettingsTile(
+              icon: Icons.history_rounded,
+              iconColor: Colors.blueAccent,
+              title: "Transaction History",
+              subtitle: "View and restore deleted transactions",
+              onTap: () => context.push(AppRoutes.historyScreenRoute),
+            ),
+            SettingsTile(
+              icon: Icons.cleaning_services_outlined,
+              iconColor: Colors.orangeAccent,
+              title: "Clear Dashboard",
+              subtitle: "Archive all current transactions",
+              onTap: () {
+                SettingsModals.showClearDashboardConfirmation(
+                  context: context,
+                  onConfirm: () {
+                    context.read<TransactionProvider>().clearDashboard();
+                    ToastUtils.show(context, "Dashboard cleared");
+                  },
+                );
+              },
+            ),
+            SettingsTile(
+              icon: Icons.file_download_outlined,
+              iconColor: Colors.greenAccent,
+              title: "Export as CSV",
+              subtitle: "Download transactions in CSV format",
+              onTap: () {
+                SettingsModals.showCsvExportOptions(
+                  context: context,
+                  onConfirm: (history) =>
+                      _performExport(context, true, history),
+                );
+              },
+            ),
+            SettingsTile(
+              icon: Icons.picture_as_pdf_outlined,
+              iconColor: Colors.redAccent,
+              title: "Export as PDF",
+              subtitle: "Generate a professional PDF report",
+              onTap: () {
+                SettingsModals.showPdfExportOptions(
+                  context: context,
+                  onConfirm: (history) =>
+                      _performExport(context, false, history),
+                );
+              },
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -421,41 +471,43 @@ class SupportSection extends StatelessWidget {
       children: [
         const SettingsSectionHeader(title: "Support"),
         16.heightBox,
-        SettingsGroup(tiles: [
-          SettingsTile(
-            icon: Icons.help_outline_rounded,
-            iconColor: Colors.indigoAccent,
-            title: "Help Center",
-            subtitle: "FAQs and help center",
-            onTap: () => _showWorkInProgress(context),
-          ),
-          SettingsTile(
-            icon: Icons.info_outline_rounded,
-            iconColor: Colors.cyanAccent,
-            title: "About",
-            subtitle: "Version 1.4.0",
-            onTap: () => _showWorkInProgress(context),
-          ),
-          SettingsTile(
-            icon: Icons.logout_rounded,
-            iconColor: Colors.redAccent.withValues(alpha: 0.8),
-            title: "Sign Out",
-            subtitle: "Exit from your account",
-            onTap: () {
-              SettingsModals.showLogoutConfirmation(
-                context: context,
-                onConfirm: () {
-                  context.read<AuthProvider>().signOut().then((_) {
-                    if (context.mounted) {
-                      context.go(AppRoutes.signInScreenRoute);
-                    }
-                  });
-                },
-              );
-            },
-            showChevron: false,
-          ),
-        ]),
+        SettingsGroup(
+          tiles: [
+            SettingsTile(
+              icon: Icons.help_outline_rounded,
+              iconColor: Colors.indigoAccent,
+              title: "Help Center",
+              subtitle: "FAQs and help center",
+              onTap: () => _showWorkInProgress(context),
+            ),
+            SettingsTile(
+              icon: Icons.info_outline_rounded,
+              iconColor: Colors.cyanAccent,
+              title: "About",
+              subtitle: "Version 1.4.0",
+              onTap: () => _showWorkInProgress(context),
+            ),
+            SettingsTile(
+              icon: Icons.logout_rounded,
+              iconColor: Colors.redAccent.withValues(alpha: 0.8),
+              title: "Sign Out",
+              subtitle: "Exit from your account",
+              onTap: () {
+                SettingsModals.showLogoutConfirmation(
+                  context: context,
+                  onConfirm: () {
+                    context.read<AuthProvider>().signOut().then((_) {
+                      if (context.mounted) {
+                        context.go(AppRoutes.signInScreenRoute);
+                      }
+                    });
+                  },
+                );
+              },
+              showChevron: false,
+            ),
+          ],
+        ),
       ],
     );
   }

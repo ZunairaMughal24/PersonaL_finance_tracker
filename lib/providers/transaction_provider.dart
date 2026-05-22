@@ -18,7 +18,10 @@ class TransactionProvider extends ChangeNotifier {
   final FirestoreSyncService _syncService = FirestoreSyncService();
   String? _userId;
 
-  static final String _geminiApiKey = dotenv.get('GEMINI_API_KEY', fallback: '');
+  static final String _geminiApiKey = dotenv.get(
+    'GEMINI_API_KEY',
+    fallback: '',
+  );
 
   bool _isReady = false;
   List<TransactionModel> _transactions = [];
@@ -26,7 +29,14 @@ class TransactionProvider extends ChangeNotifier {
   Future<String?>? _insightsFuture;
 
   bool get isReady => _isReady;
-  List<TransactionModel> get transactions => _transactions;
+  List<TransactionModel> get transactions =>
+      _transactions.where((tx) => !tx.isArchived).toList();
+
+  List<TransactionModel> get archivedTransactions =>
+      _transactions.where((tx) => tx.isArchived).toList();
+
+  List<TransactionModel> get allTransactions => _transactions;
+
   Future<String?>? get insightsFuture => _insightsFuture;
   String? get cachedInsightsValue => _cachedInsights;
 
@@ -59,7 +69,7 @@ class TransactionProvider extends ChangeNotifier {
       _loadTransactions();
       _isReady = true;
       notifyListeners();
-      
+
       // Perform background sync to stay up to date
       _performCloudSyncBackground(userId, box);
     } else {
@@ -71,11 +81,16 @@ class TransactionProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> _restoreTransactionsFromCloud(String userId, Box<TransactionModel> box) async {
+  Future<void> _restoreTransactionsFromCloud(
+    String userId,
+    Box<TransactionModel> box,
+  ) async {
     try {
       final cloudHasData = await _syncService.hasCloudData(userId);
       if (cloudHasData) {
-        final cloudTransactions = await _syncService.pullAllTransactions(userId);
+        final cloudTransactions = await _syncService.pullAllTransactions(
+          userId,
+        );
         for (final tx in cloudTransactions) {
           await box.add(tx);
         }
@@ -86,7 +101,10 @@ class TransactionProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> _performCloudSyncBackground(String userId, Box<TransactionModel> box) async {
+  Future<void> _performCloudSyncBackground(
+    String userId,
+    Box<TransactionModel> box,
+  ) async {
     try {
       final cloudHasData = await _syncService.hasCloudData(userId);
       if (!cloudHasData && box.isNotEmpty) {
@@ -152,14 +170,74 @@ class TransactionProvider extends ChangeNotifier {
 
   Future<void> deleteTransaction(int key, int index) async {
     if (db == null) return;
-    await db!.deleteTransaction(key);
+
+    // Soft delete: Find the transaction and mark it as archived
+    final txIndex = _transactions.indexWhere((t) => t.key == key);
+    if (txIndex != -1) {
+      final tx = _transactions[txIndex];
+      tx.isArchived = true;
+      await db!.updateTransaction(key, tx);
+
+      // Cloud sync: update the transaction as archived
+      if (_userId != null) {
+        _syncService.updateTransaction(_userId!, key, tx);
+      }
+    }
+
     _loadTransactions();
     _checkBalanceAndTriggerHaptic();
+  }
 
-    // Cloud sync: delete the transaction
-    if (_userId != null) {
-      _syncService.deleteTransaction(_userId!, key);
+  Future<void> clearDashboard() async {
+    if (db == null) return;
+
+    final activeTxs = _transactions.where((t) => !t.isArchived).toList();
+    for (var tx in activeTxs) {
+      tx.isArchived = true;
+      await db!.updateTransaction(tx.key as int, tx);
+      if (_userId != null) {
+        _syncService.updateTransaction(_userId!, tx.key as int, tx);
+      }
     }
+
+    _loadTransactions();
+    _checkBalanceAndTriggerHaptic();
+  }
+
+  Future<void> restoreAllTransactions() async {
+    if (db == null) return;
+
+    for (var tx in _transactions) {
+      if (tx.isArchived) {
+        tx.isArchived = false;
+        await db!.updateTransaction(tx.key as int, tx);
+        if (_userId != null) {
+          _syncService.updateTransaction(_userId!, tx.key as int, tx);
+        }
+      }
+    }
+
+    _loadTransactions();
+    _checkBalanceAndTriggerHaptic();
+  }
+
+  Future<void> restoreTransactions(List<int> keys) async {
+    if (db == null) return;
+
+    for (var key in keys) {
+      final txIndex = _transactions.indexWhere((t) => t.key == key);
+      if (txIndex != -1) {
+        final tx = _transactions[txIndex];
+        tx.isArchived = false;
+        await db!.updateTransaction(key, tx);
+        if (_userId != null) {
+          _syncService.updateTransaction(_userId!, key, tx);
+        }
+      }
+    }
+
+    _loadTransactions();
+    _checkBalanceAndTriggerHaptic();
   }
 
   Future<void> updateTransaction(int key, TransactionModel updatedTx) async {

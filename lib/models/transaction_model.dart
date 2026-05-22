@@ -25,6 +25,9 @@ class TransactionModel extends HiveObject {
   @HiveField(6, defaultValue: null)
   String? imagePath;
 
+  @HiveField(7, defaultValue: false)
+  bool isArchived;
+
   TransactionModel({
     required this.title,
     required this.amount,
@@ -33,6 +36,7 @@ class TransactionModel extends HiveObject {
     required this.category,
     this.currency = 'USD',
     this.imagePath,
+    this.isArchived = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -44,6 +48,7 @@ class TransactionModel extends HiveObject {
       'category': category,
       'currency': currency,
       'imagePath': imagePath,
+      'isArchived': isArchived,
     };
   }
 
@@ -56,6 +61,7 @@ class TransactionModel extends HiveObject {
       category: map['category'] ?? '',
       currency: map['currency'] ?? 'USD',
       imagePath: map['imagePath'],
+      isArchived: map['isArchived'] ?? false,
     );
   }
 }
