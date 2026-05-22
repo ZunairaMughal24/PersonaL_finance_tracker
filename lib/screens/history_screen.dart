@@ -128,8 +128,8 @@ class _HistoryAppBar extends StatelessWidget implements PreferredSizeWidget {
           IconButton(
             icon: Icon(
               vm.selectedCount == archived.length
-                  ? Icons.deselect_rounded
-                  : Icons.select_all_rounded,
+                  ? Icons.check_circle_rounded
+                  : Icons.check_circle_outline_rounded,
               color: Colors.white,
             ),
             onPressed: () => vm.selectedCount == archived.length
@@ -149,7 +149,7 @@ class _HistoryAppBar extends StatelessWidget implements PreferredSizeWidget {
             itemBuilder: (context) => [
               _buildMenuItem(
                 'select',
-                Icons.check_box_outlined,
+                Icons.check_circle_outline_rounded,
                 "Select Items",
               ),
               _buildMenuItem(
