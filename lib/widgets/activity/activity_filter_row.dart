@@ -53,28 +53,26 @@ class ActivityFilterRow extends StatelessWidget {
           8.widthBox,
           ActivityFilterChip(
             label: filter.selectedCategory ?? "Category",
-            isSelected:
-                filter.selectedCategory != null &&
-                filter.selectedCategory != 'All',
-            onTap: () => _pickCategory(context),
-            icon: Icons.category_outlined,
+            isSelected: filter.selectedCategory != null,
+            onTap: filter.selectedCategory != null
+                ? () => filter.setCategory(null)
+                : () async {
+                    final selected = await CategoryPickerBottomSheet.show(
+                      context: context,
+                      selectedCategory: filter.selectedCategory,
+                      isIncome: filter.isIncomeFilter,
+                    );
+                    if (selected != null) filter.setCategory(selected);
+                  },
+            icon: filter.selectedCategory != null
+                ? Icons.close_rounded
+                : Icons.category_outlined,
           ),
           16.widthBox,
           _ExportChip(filter: filter, transaction: transaction),
         ],
       ),
     );
-  }
-
-  Future<void> _pickCategory(BuildContext context) async {
-    final selected = await CategoryPickerBottomSheet.show(
-      context: context,
-      selectedCategory: filter.selectedCategory,
-      isIncome: filter.isIncomeFilter,
-    );
-    if (selected != null) {
-      filter.setCategory(selected);
-    }
   }
 }
 

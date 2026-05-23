@@ -9,7 +9,9 @@ import 'package:montage/screens/home_screen.dart';
 import 'package:montage/screens/settings_screen.dart';
 import 'package:montage/screens/activity_screen.dart';
 import 'package:provider/provider.dart';
-import '../providers/transaction_provider.dart';
+import 'package:montage/providers/transaction_filter_provider.dart';
+import 'package:montage/providers/transaction_provider.dart';
+
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:montage/core/constants/app_images.dart';
 
@@ -28,6 +30,16 @@ class MainNavScreenState extends State<MainNavScreen> {
   void switchToHome() {
     setState(() {
       _currentIndex = 0;
+    });
+  }
+
+  void _onTabSelected(int index) {
+    // Clear activity filters when navigating away from Activity tab
+    if (_currentIndex == 2 && index != 2) {
+      context.read<TransactionFilterProvider>().clearFilters();
+    }
+    setState(() {
+      _currentIndex = index;
     });
   }
 
@@ -146,11 +158,8 @@ class MainNavScreenState extends State<MainNavScreen> {
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         splashColor: AppColors.primaryColor.withValues(alpha: 0.2),
-        onTap: () {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+        onTap: () => _onTabSelected(index),
+
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 2.0),
           child: Column(
