@@ -9,9 +9,9 @@ import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/widgets/custom_app_bar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:montage/config/router.dart';
-import 'package:montage/widgets/activity/activity_search_bar.dart';
-import 'package:montage/widgets/activity/activity_filter_row.dart';
 import 'package:montage/widgets/activity/activity_empty_state.dart';
+import 'package:montage/widgets/shared/transaction_search_bar.dart';
+import 'package:montage/widgets/shared/transaction_filter_bar.dart';
 
 class ActivityScreen extends StatefulWidget {
   const ActivityScreen({super.key});
@@ -70,10 +70,24 @@ class _ActivityScreenState extends State<ActivityScreen> {
             children: [
               if (_isSearchVisible) ...[
                 10.heightBox,
-                ActivitySearchBar(focusNode: _searchFocusNode, filter: filter),
+                TransactionSearchBar(
+                  focusNode: _searchFocusNode,
+                  hintText: 'Search transactions...',
+                  onChanged: filter.setSearchQuery,
+                  selectedDateRange: filter.selectedDateRange,
+                  onDateRangeChanged: filter.setDateRange,
+                ),
               ],
               16.heightBox,
-              ActivityFilterRow(filter: filter, transaction: transaction),
+              TransactionFilterBar(
+                isIncomeFilter: filter.isIncomeFilter,
+                selectedCategory: filter.selectedCategory,
+                onTypeChanged: filter.setIsIncomeFilter,
+                onCategoryChanged: filter.setCategory,
+                transactionsForExport: filter.filterTransactions(
+                  transaction.transactions,
+                ),
+              ),
               16.heightBox,
               Expanded(
                 child: Consumer<UserSettingsProvider>(

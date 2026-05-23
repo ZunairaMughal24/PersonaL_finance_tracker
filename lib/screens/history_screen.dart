@@ -6,7 +6,8 @@ import 'package:montage/widgets/history/history_action_bar.dart';
 import 'package:montage/widgets/history/history_app_bar.dart';
 import 'package:montage/widgets/history/history_list.dart';
 import 'package:montage/widgets/history/history_modals.dart';
-import 'package:montage/widgets/history/history_search_area.dart';
+import 'package:montage/widgets/shared/transaction_filter_bar.dart';
+import 'package:montage/widgets/shared/transaction_search_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/core/utils/toast_utility.dart';
@@ -56,13 +57,24 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 child: Column(
                   children: [
                     if (_isSearchVisible) ...[
-                      16.heightBox,
-                      HistorySearchArea(
+                      10.heightBox,
+                      TransactionSearchBar(
                         focusNode: _searchFocusNode,
+                        hintText: 'Search history...',
                         onChanged: vm.updateSearch,
+                        selectedDateRange: vm.selectedDateRange,
+                        onDateRangeChanged: vm.setDateRange,
                       ),
                     ],
-                    12.heightBox,
+                    16.heightBox,
+                    TransactionFilterBar(
+                      isIncomeFilter: vm.isIncomeFilter,
+                      selectedCategory: vm.selectedCategory,
+                      onTypeChanged: vm.setIsIncomeFilter,
+                      onCategoryChanged: vm.setCategory,
+                      transactionsForExport: vm.archivedTransactions,
+                    ),
+                    16.heightBox,
                     Expanded(child: HistoryList(vm: vm)),
                   ],
                 ),

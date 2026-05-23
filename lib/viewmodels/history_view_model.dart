@@ -59,7 +59,8 @@ class HistoryViewModel extends ChangeNotifier {
   }
 
   void setCategory(String? category) {
-    _selectedCategory = category;
+    // "All" is a UI sentinel — null means no category filter
+    _selectedCategory = (category == 'All') ? null : category;
     notifyListeners();
   }
 
