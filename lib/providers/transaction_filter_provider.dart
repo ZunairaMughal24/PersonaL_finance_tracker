@@ -26,8 +26,10 @@ class TransactionFilterProvider extends ChangeNotifier {
   }
 
   void setCategory(String? category) {
-    if (_selectedCategory == category) return;
-    _selectedCategory = category;
+    // "All" is a UI sentinel value — internally, no category filter means null
+    final normalized = (category == 'All') ? null : category;
+    if (_selectedCategory == normalized) return;
+    _selectedCategory = normalized;
     notifyListeners();
   }
 

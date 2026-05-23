@@ -83,6 +83,31 @@ class CategoryProvider extends ChangeNotifier {
     return combined;
   }
 
+  /// Returns a single deduplicated, sorted list of all categories
+  /// (both income and expense) with an "All" entry prepended.
+  /// Intended for use in filter pickers.
+  List<Map<String, dynamic>> getAllCategoriesForFilter() {
+    final incomes = getMergedCategories(true);
+    final expenses = getMergedCategories(false);
+
+    final Map<String, Map<String, dynamic>> uniqueMap = {};
+    for (final cat in [...incomes, ...expenses]) {
+      uniqueMap[cat['name'] as String] = cat;
+    }
+
+    final sorted = uniqueMap.values.toList()
+      ..sort((a, b) => (a['name'] as String).compareTo(b['name'] as String));
+
+    return [
+      {
+        'name': 'All',
+        'icon': Icons.all_inclusive_rounded,
+        'color': Colors.white,
+      },
+      ...sorted,
+    ];
+  }
+
   String? validateCategory(String name, bool isIncome, {String? excludeName}) {
     final normalized = name.trim().toLowerCase();
     if (normalized.isEmpty) return "Name cannot be empty";
@@ -191,8 +216,9 @@ class CategoryProvider extends ChangeNotifier {
       ...CategoryUtils.incomeCategories,
     ];
     for (final cat in allStatic) {
-      if ((cat['name'] as String).toLowerCase() == category.toLowerCase())
+      if ((cat['name'] as String).toLowerCase() == category.toLowerCase()) {
         return cat['icon'] as IconData;
+      }
     }
     final custom = findByName(category);
     return custom?.icon ?? Icons.category_rounded;
@@ -204,8 +230,9 @@ class CategoryProvider extends ChangeNotifier {
       ...CategoryUtils.incomeCategories,
     ];
     for (final cat in allStatic) {
-      if ((cat['name'] as String).toLowerCase() == category.toLowerCase())
+      if ((cat['name'] as String).toLowerCase() == category.toLowerCase()) {
         return cat['color'] as Color;
+      }
     }
     final custom = findByName(category);
     return custom?.color ?? const Color(0xFFB0B8D4);

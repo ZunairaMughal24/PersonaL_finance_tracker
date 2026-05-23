@@ -86,6 +86,7 @@ class MainNavScreenState extends State<MainNavScreen> {
               elevation: 0,
               notchMargin: 0,
               padding: EdgeInsets.zero,
+              height: 64,
               child: Container(
                 decoration: BoxDecoration(
                   border: Border(
@@ -151,7 +152,7 @@ class MainNavScreenState extends State<MainNavScreen> {
           });
         },
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 2.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -160,10 +161,10 @@ class MainNavScreenState extends State<MainNavScreen> {
                 SvgPicture.asset(
                   iconPath,
                   colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-                  height: 24,
+                  height: 21,
                 )
               else if (icon != null)
-                Icon(icon, color: color, size: 24),
+                Icon(icon, color: color, size: 21),
               const SizedBox(height: 2),
               Text(
                 label,
