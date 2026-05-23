@@ -14,9 +14,11 @@ class AppBottomSheet {
       backgroundColor: Colors.transparent,
       isScrollControlled: isScrollControlled,
       builder: (context) => GlassContainer(
-        customBorderRadius: const BorderRadius.vertical(
-          top: Radius.circular(32),
+        customBorderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(32),
+          topRight: Radius.circular(32),
         ),
+        showBottomBorder: false,
         blur: 40,
         padding:
             padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 16),

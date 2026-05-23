@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/models/transaction_model.dart';
 import 'package:montage/services/export_service.dart';
 import 'package:montage/widgets/glass_container.dart';
+import 'package:montage/widgets/app_bottom_sheet.dart';
 
 class ExportBottomSheet extends StatelessWidget {
   final List<TransactionModel> transactions;
@@ -24,11 +24,9 @@ class ExportBottomSheet extends StatelessWidget {
     required String userName,
     required String currency,
   }) {
-    return showModalBottomSheet(
+    return AppBottomSheet.show(
       context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (context) => ExportBottomSheet(
+      child: ExportBottomSheet(
         transactions: transactions,
         userName: userName,
         currency: currency,
@@ -38,72 +36,51 @@ class ExportBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GlassContainer(
-      borderRadius: 24,
-      blur: 20,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-      gradientColors: [
-        Colors.white.withValues(alpha: 0.15),
-        AppColors.primaryColor.withValues(alpha: 0.1),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text("Export Results").h4(color: Colors.white, weight: FontWeight.bold),
+        8.heightBox,
+        Text(
+          "Total items: ${transactions.length}",
+        ).bodyMedium(color: Colors.white.withValues(alpha: 0.5)),
+        24.heightBox,
+        _buildExportOption(
+          context,
+          icon: Icons.text_snippet_outlined,
+          title: "Share as Text",
+          subtitle: "Send a quick summary to any app",
+          color: Colors.blueAccent,
+          onTap: () {
+            Navigator.pop(context);
+            ExportService.exportToText(transactions, userName);
+          },
+        ),
+        16.heightBox,
+        _buildExportOption(
+          context,
+          icon: Icons.picture_as_pdf_outlined,
+          title: "Export as PDF",
+          subtitle: "Generate a professional document",
+          color: Colors.redAccent,
+          onTap: () {
+            Navigator.pop(context);
+            ExportService.exportToPDF(transactions, currency, userName);
+          },
+        ),
+        16.heightBox,
+        _buildExportOption(
+          context,
+          icon: Icons.table_chart_outlined,
+          title: "Export as CSV",
+          subtitle: "Detailed data for spreadsheets",
+          color: Colors.greenAccent,
+          onTap: () {
+            Navigator.pop(context);
+            ExportService.exportToExcel(transactions, userName);
+          },
+        ),
       ],
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          24.heightBox,
-          Text(
-            "Export Results",
-          ).h2(color: Colors.white, weight: FontWeight.bold),
-          8.heightBox,
-          Text(
-            "Total items: ${transactions.length}",
-          ).bodyMedium(color: Colors.white.withValues(alpha: 0.5)),
-          24.heightBox,
-          _buildExportOption(
-            context,
-            icon: Icons.text_snippet_outlined,
-            title: "Share as Text",
-            subtitle: "Send a quick summary to any app",
-            color: Colors.blueAccent,
-            onTap: () {
-              Navigator.pop(context);
-              ExportService.exportToText(transactions, userName);
-            },
-          ),
-          16.heightBox,
-          _buildExportOption(
-            context,
-            icon: Icons.picture_as_pdf_outlined,
-            title: "Export as PDF",
-            subtitle: "Generate a professional document",
-            color: Colors.redAccent,
-            onTap: () {
-              Navigator.pop(context);
-              ExportService.exportToPDF(transactions, currency, userName);
-            },
-          ),
-          16.heightBox,
-          _buildExportOption(
-            context,
-            icon: Icons.table_chart_outlined,
-            title: "Export as Excel/CSV",
-            subtitle: "Detailed data for spreadsheets",
-            color: Colors.greenAccent,
-            onTap: () {
-              Navigator.pop(context);
-              ExportService.exportToExcel(transactions, userName);
-            },
-          ),
-          32.heightBox,
-        ],
-      ),
     );
   }
 
@@ -115,10 +92,12 @@ class ExportBottomSheet extends StatelessWidget {
     required Color color,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
       child: GlassContainer(
-        borderRadius: 16,
+        borderRadius: 20,
+        blur: 0,
         padding: const EdgeInsets.all(16),
         gradientColors: [
           Colors.white.withValues(alpha: 0.05),
@@ -139,11 +118,13 @@ class ExportBottomSheet extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title).titleMedium(color: Colors.white),
-                  4.heightBox,
+                  Text(
+                    title,
+                  ).bodyLarge(color: Colors.white, weight: FontWeight.w600),
+                  const SizedBox(height: 2),
                   Text(
                     subtitle,
-                  ).bodySmall(color: Colors.white.withValues(alpha: 0.4)),
+                  ).bodyMedium(color: Colors.white.withValues(alpha: 0.5)),
                 ],
               ),
             ),
