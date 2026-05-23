@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:montage/models/transaction_model.dart';
 import 'package:montage/providers/transaction_provider.dart';
+import 'package:montage/core/utils/transaction_filter_utils.dart';
 
 class HistoryViewModel extends ChangeNotifier {
   final TransactionProvider _transactionProvider;
 
   String _searchQuery = "";
   DateTimeRange? _selectedDateRange;
+  String? _selectedCategory;
+  bool? _isIncomeFilter; // null means 'All'
   final Set<int> _selectedKeys = {};
   bool _isSelectionMode = false;
 
@@ -23,37 +26,40 @@ class HistoryViewModel extends ChangeNotifier {
   // Getters
   String get searchQuery => _searchQuery;
   DateTimeRange? get selectedDateRange => _selectedDateRange;
+  String? get selectedCategory => _selectedCategory;
+  bool? get isIncomeFilter => _isIncomeFilter;
   Set<int> get selectedKeys => _selectedKeys;
   bool get isSelectionMode => _isSelectionMode;
   int get selectedCount => _selectedKeys.length;
 
   List<TransactionModel> get archivedTransactions {
-    var archived = _transactionProvider.archivedTransactions;
+    final archived = _transactionProvider.archivedTransactions;
 
-    // Filter by date range
-    if (_selectedDateRange != null) {
-      archived = archived.where((tx) {
-        final date = DateTime.tryParse(tx.date);
-        if (date == null) return false;
-        return date.isAfter(
-              _selectedDateRange!.start.subtract(const Duration(days: 1)),
-            ) &&
-            date.isBefore(_selectedDateRange!.end.add(const Duration(days: 1)));
-      }).toList();
-    }
+    final filtered = TransactionFilterUtils.filter(
+      transactions: archived,
+      query: _searchQuery,
+      dateRange: _selectedDateRange,
+      category: _selectedCategory,
+      isIncome: _isIncomeFilter,
+    );
 
-    final query = _searchQuery.trim().toLowerCase();
-    if (query.isEmpty) return archived;
-
-    return archived.where((tx) {
-      return tx.title.toLowerCase().contains(query) ||
-          tx.category.toLowerCase().contains(query);
-    }).toList();
+    TransactionFilterUtils.sortByDate(filtered);
+    return filtered;
   }
 
   // Logic
   void updateSearch(String query) {
     _searchQuery = query;
+    notifyListeners();
+  }
+
+  void setIsIncomeFilter(bool? value) {
+    _isIncomeFilter = value;
+    notifyListeners();
+  }
+
+  void setCategory(String? category) {
+    _selectedCategory = category;
     notifyListeners();
   }
 

@@ -46,8 +46,6 @@ class _TransactionScreenContentState extends State<_TransactionScreenContent> {
     super.dispose();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Consumer<TransactionFormViewModel>(
@@ -56,9 +54,7 @@ class _TransactionScreenContentState extends State<_TransactionScreenContent> {
           onTap: () => vm.toggleKeypad(false),
           child: AppBackground(
             style: BackgroundStyle.deepFluid,
-            appBar: const CustomAppBar(
-              title: "Add Transaction",
-            ),
+            appBar: const CustomAppBar(title: "Add Transaction"),
             child: SafeArea(
               child: GestureDetector(
                 onHorizontalDragEnd: (details) {
@@ -87,7 +83,9 @@ class _TransactionScreenContentState extends State<_TransactionScreenContent> {
                             ),
                             const SizedBox(height: 20),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
@@ -96,7 +94,9 @@ class _TransactionScreenContentState extends State<_TransactionScreenContent> {
                                     fontSize: 12,
                                     fontWeight: FontWeight.w800,
                                     letterSpacing: 2.0,
-                                    color: AppColors.white.withValues(alpha: 0.7),
+                                    color: AppColors.white.withValues(
+                                      alpha: 0.7,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -109,25 +109,38 @@ class _TransactionScreenContentState extends State<_TransactionScreenContent> {
                                   .getMergedCategories(vm.isIncome),
                               isIncome: vm.isIncome,
                               onAddCategory: () {
-                                final catProvider = context.read<CategoryProvider>();
+                                final catProvider = context
+                                    .read<CategoryProvider>();
                                 showDialog(
                                   context: context,
                                   barrierColor: Colors.black54,
                                   builder: (context) => CategoryEditorDialog(
                                     isIncome: vm.isIncome,
-                                    onSubmitted: (customName, customIcon, {Color? color}) {
-                                      catProvider.addCustomCategory(customName, customIcon, vm.isIncome, color: color);
-                                      vm.setCategory(customName);
-                                      vm.toggleKeypad(true);
-                                    },
+                                    onSubmitted:
+                                        (
+                                          customName,
+                                          customIcon, {
+                                          Color? color,
+                                        }) {
+                                          catProvider.addCustomCategory(
+                                            customName,
+                                            customIcon,
+                                            vm.isIncome,
+                                            color: color,
+                                          );
+                                          vm.setCategory(customName);
+                                          vm.toggleKeypad(true);
+                                        },
                                   ),
                                 );
                               },
-                              onCategoryLongPress: (catName) => vm.handleCategoryAction(
-                                context: context, 
-                                catName: catName, 
-                                catProvider: context.read<CategoryProvider>()
-                              ),
+                              onCategoryLongPress: (catName) =>
+                                  vm.handleCategoryAction(
+                                    context: context,
+                                    catName: catName,
+                                    catProvider: context
+                                        .read<CategoryProvider>(),
+                                  ),
                               onCategorySelected: (cat) {
                                 if (cat == "Other") {
                                   showDialog(
@@ -151,7 +164,9 @@ class _TransactionScreenContentState extends State<_TransactionScreenContent> {
                                       double scrollAmount = 140.0;
                                       _scrollController.animateTo(
                                         scrollAmount,
-                                        duration: const Duration(milliseconds: 500),
+                                        duration: const Duration(
+                                          milliseconds: 500,
+                                        ),
                                         curve: Curves.easeOut,
                                       );
                                     }

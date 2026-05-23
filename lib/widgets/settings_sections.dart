@@ -387,7 +387,7 @@ class ExportSection extends StatelessWidget {
         : txProvider.transactions;
 
     if (isCsv) {
-      ExportService.exportToCSV(transactions, settings.userName);
+      ExportService.exportToExcel(transactions, settings.userName);
     } else {
       ExportService.exportToPDF(
         transactions,

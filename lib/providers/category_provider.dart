@@ -1,80 +1,52 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:montage/models/category_model.dart';
-import 'package:montage/services/firestore_sync_service.dart';
 import 'package:montage/core/utils/category_utils.dart';
+import 'package:montage/repositories/category_repository.dart';
 
-class CategoryProvider with ChangeNotifier {
-  final FirestoreSyncService _syncService = FirestoreSyncService();
-  String? _userId;
-  Box? _box;
+class CategoryProvider extends ChangeNotifier {
+  late CategoryRepository _repository;
   List<CustomCategory> _customCategories = [];
 
   List<CustomCategory> get customCategories => _customCategories;
 
+  CategoryProvider({CategoryRepository? repository}) {
+    if (repository != null) {
+      _repository = repository;
+    }
+  }
+
+  void updateRepository(CategoryRepository repository) {
+    _repository = repository;
+  }
+
   void updateUser(String? uid) async {
-    _userId = uid;
     if (uid == null) {
-      _box = null;
       _customCategories = [];
       notifyListeners();
       return;
     }
 
-    _box = await Hive.openBox('custom_categories_$uid');
-    _loadFromBox();
+    await _repository.init(uid);
+    _customCategories = _repository.getAllLocal();
     notifyListeners();
 
-    final cloudData = await _syncService.pullCategories(uid);
-    if (cloudData != null && cloudData['categories'] != null) {
-      final List<dynamic> catList = cloudData['categories'];
-      _customCategories = catList
-          .map((c) => CustomCategory.fromMap(Map<String, dynamic>.from(c)))
-          .toList();
-      await _saveToBox();
+    final cloud = await _repository.pullFromCloud();
+    if (cloud.isNotEmpty) {
+      _customCategories = cloud;
+      await _repository.saveLocal(_customCategories);
       notifyListeners();
     }
   }
 
-  void _loadFromBox() {
-    if (_box == null) return;
-    _customCategories = [];
-    for (final value in _box!.values) {
-      try {
-        if (value is Map) {
-          _customCategories.add(
-            CustomCategory.fromMap(Map<dynamic, dynamic>.from(value)),
-          );
-        }
-      } catch (e) {
-        debugPrint('CategoryProvider: skipping legacy data');
-      }
-    }
-  }
-
-  Future<void> _saveToBox() async {
-    if (_box == null) return;
-    await _box!.clear();
-    for (var cat in _customCategories) {
-      await _box!.add(cat.toMap());
-    }
-  }
-
   void _syncToFirestore() {
-    if (_userId != null) {
-      _syncService.pushCategories(_userId!, {
-        'categories': _customCategories.map((c) => c.toMap()).toList(),
-      });
-    }
+    _repository.syncToCloud(_customCategories);
   }
 
   List<Map<String, dynamic>> getMergedCategories(bool isIncome) {
-    // Get Static Categories
     final List<Map<String, dynamic>> staticCats = isIncome
         ? CategoryUtils.incomeCategories
         : CategoryUtils.expenseCategories;
 
-    // Map Custom Categories to the UI format
     final List<Map<String, dynamic>> userCats = _customCategories
         .where((c) => c.isIncome == isIncome)
         .map(
@@ -86,12 +58,10 @@ class CategoryProvider with ChangeNotifier {
         )
         .toList();
 
-    // Combine and ensure 'Other' is last
     List<Map<String, dynamic>> combined = List<Map<String, dynamic>>.from(
       staticCats,
     );
 
-    // Find 'Other' if it exists to preserve its position at the end
     final otherIndex = combined.indexWhere((c) => c['name'] == "Other");
     Map<String, dynamic>? otherCat;
     if (otherIndex != -1) {
@@ -156,7 +126,7 @@ class CategoryProvider with ChangeNotifier {
         colorValue: color?.toARGB32(),
       ),
     );
-    await _saveToBox();
+    await _repository.saveLocal(_customCategories);
     notifyListeners();
     _syncToFirestore();
   }
@@ -178,7 +148,7 @@ class CategoryProvider with ChangeNotifier {
         isIncome: isIncome,
         colorValue: color?.toARGB32(),
       );
-      await _saveToBox();
+      await _repository.saveLocal(_customCategories);
       notifyListeners();
       _syncToFirestore();
     }
@@ -188,7 +158,7 @@ class CategoryProvider with ChangeNotifier {
     _customCategories.removeWhere(
       (c) => c.name == name && c.isIncome == isIncome,
     );
-    await _saveToBox();
+    await _repository.saveLocal(_customCategories);
     notifyListeners();
     _syncToFirestore();
   }
@@ -205,8 +175,6 @@ class CategoryProvider with ChangeNotifier {
     }
   }
 
-  /// Look up a custom category by name only (any type).
-
   CustomCategory? findByName(String name) {
     try {
       return _customCategories.firstWhere(
@@ -217,43 +185,29 @@ class CategoryProvider with ChangeNotifier {
     }
   }
 
-  /// Get the icon for a category, checking custom categories first.
   IconData getIconForCategory(String category) {
-    // First check static categories
     final allStatic = [
       ...CategoryUtils.expenseCategories,
       ...CategoryUtils.incomeCategories,
     ];
     for (final cat in allStatic) {
-      if ((cat['name'] as String).toLowerCase() == category.toLowerCase()) {
+      if ((cat['name'] as String).toLowerCase() == category.toLowerCase())
         return cat['icon'] as IconData;
-      }
     }
-    // Then check custom categories
     final custom = findByName(category);
-    if (custom != null) {
-      return custom.icon;
-    }
-    return Icons.category_rounded;
+    return custom?.icon ?? Icons.category_rounded;
   }
 
-  /// Get the color for a category, checking custom categories first.
   Color getCategoryColor(String category) {
-    // First check static categories
     final allStatic = [
       ...CategoryUtils.expenseCategories,
       ...CategoryUtils.incomeCategories,
     ];
     for (final cat in allStatic) {
-      if ((cat['name'] as String).toLowerCase() == category.toLowerCase()) {
+      if ((cat['name'] as String).toLowerCase() == category.toLowerCase())
         return cat['color'] as Color;
-      }
     }
-    // Then check custom categories
     final custom = findByName(category);
-    if (custom != null) {
-      return custom.color;
-    }
-    return const Color(0xFFB0B8D4);
+    return custom?.color ?? const Color(0xFFB0B8D4);
   }
 }

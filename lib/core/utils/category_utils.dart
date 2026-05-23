@@ -192,6 +192,20 @@ class CategoryUtils {
     },
   ];
 
+  static List<Map<String, dynamic>> get allCategories => [
+    ...expenseCategories,
+    ...incomeCategories,
+  ];
+
+  static List<String> get allCategoryNames {
+    final names = allCategories
+        .map((c) => c['name'] as String)
+        .toSet()
+        .toList();
+    names.sort();
+    return names;
+  }
+
   static List<String> get spendingCategories {
     final Set<String> categories = {};
     for (var cat in expenseCategories) {

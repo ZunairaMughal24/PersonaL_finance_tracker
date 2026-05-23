@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:montage/models/transaction_model.dart';
-import 'package:montage/core/utils/date_formatter.dart';
+import 'package:montage/core/utils/transaction_filter_utils.dart';
+
 class TransactionFilterProvider extends ChangeNotifier {
   String _searchQuery = '';
   DateTimeRange? _selectedDateRange;
   String? _selectedCategory;
-  bool _isIncomeFilter = false;
+  bool? _isIncomeFilter;
 
   String get searchQuery => _searchQuery;
   DateTimeRange? get selectedDateRange => _selectedDateRange;
   String? get selectedCategory => _selectedCategory;
-  bool get isIncomeFilter => _isIncomeFilter;
+  bool? get isIncomeFilter => _isIncomeFilter;
 
   void setSearchQuery(String query) {
     if (_searchQuery == query) return;
@@ -30,7 +31,7 @@ class TransactionFilterProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setIsIncomeFilter(bool value) {
+  void setIsIncomeFilter(bool? value) {
     if (_isIncomeFilter == value) return;
     _isIncomeFilter = value;
     notifyListeners();
@@ -40,42 +41,22 @@ class TransactionFilterProvider extends ChangeNotifier {
     _searchQuery = '';
     _selectedDateRange = null;
     _selectedCategory = null;
-    _isIncomeFilter = false;
+    _isIncomeFilter = null;
     notifyListeners();
   }
 
-  List<TransactionModel> filterTransactions(List<TransactionModel> transactions) {
-    final filtered = transactions.where((tx) {
-      final matchesSearch = tx.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          tx.category.toLowerCase().contains(_searchQuery.toLowerCase());
+  List<TransactionModel> filterTransactions(
+    List<TransactionModel> transactions,
+  ) {
+    final filtered = TransactionFilterUtils.filter(
+      transactions: transactions,
+      query: _searchQuery,
+      dateRange: _selectedDateRange,
+      category: _selectedCategory,
+      isIncome: _isIncomeFilter,
+    );
 
-      bool matchesDate = true;
-      if (_selectedDateRange != null) {
-        final txDate = DateUtilsCustom.parseDate(tx.date);
-        if (txDate == null) {
-          matchesDate = false;
-        } else {
-          matchesDate = txDate.isAfter(_selectedDateRange!.start.subtract(const Duration(days: 1))) &&
-              txDate.isBefore(_selectedDateRange!.end.add(const Duration(days: 1)));
-        }
-      }
-
-      bool matchesCategory = true;
-      if (_selectedCategory != null && _selectedCategory != 'All') {
-        matchesCategory = tx.category == _selectedCategory;
-      }
-
-      final matchesType = tx.isIncome == _isIncomeFilter;
-
-      return matchesSearch && matchesDate && matchesCategory && matchesType;
-    }).toList();
-
-    filtered.sort((a, b) {
-      final dateA = DateUtilsCustom.parseDate(a.date) ?? DateTime.fromMillisecondsSinceEpoch(0);
-      final dateB = DateUtilsCustom.parseDate(b.date) ?? DateTime.fromMillisecondsSinceEpoch(0);
-      return dateB.compareTo(dateA);
-    });
-
+    TransactionFilterUtils.sortByDate(filtered);
     return filtered;
   }
 }

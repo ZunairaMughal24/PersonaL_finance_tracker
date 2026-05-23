@@ -23,10 +23,42 @@ class ExportService {
     return "$start - $end";
   }
 
-  static Future<void> exportToCSV(
+  static Future<void> exportToText(
     List<TransactionModel> transactions,
     String userName,
   ) async {
+    final periodText = _getPeriodText(transactions);
+    StringBuffer buffer = StringBuffer();
+    buffer.writeln("Montage Financial Report");
+    buffer.writeln("User: $userName");
+    buffer.writeln("Period: $periodText");
+    buffer.writeln("-" * 40);
+    buffer.writeln(
+      "${"Date".padRight(12)} | ${"Category".padRight(12)} | ${"Amount".padLeft(10)}",
+    );
+    buffer.writeln("-" * 40);
+
+    for (var tx in transactions) {
+      final date = DateUtilsCustom.parseDate(tx.date) ?? DateTime.now();
+      final dateStr = DateFormat('MMM dd').format(date);
+      final amountStr =
+          "${tx.isIncome ? '+' : '-'}${tx.amount.toStringAsFixed(2)}";
+      buffer.writeln(
+        "${dateStr.padRight(12)} | ${tx.category.padRight(12)} | ${amountStr.padLeft(10)}",
+      );
+    }
+
+    await Share.share(
+      buffer.toString(),
+      subject: 'My Transactions Report (Text)',
+    );
+  }
+
+  static Future<void> exportToExcel(
+    List<TransactionModel> transactions,
+    String userName,
+  ) async {
+    // We use CSV format as it is universally accepted by Excel
     List<List<dynamic>> rows = [];
 
     // Header Info
@@ -53,13 +85,13 @@ class ExportService {
 
     final directory = await getTemporaryDirectory();
     final path =
-        "${directory.path}/montage_transactions_${DateTime.now().millisecondsSinceEpoch}.csv";
+        "${directory.path}/montage_report_${DateTime.now().millisecondsSinceEpoch}.csv";
     final file = File(path);
     await file.writeAsString(csvContent);
 
     await Share.shareXFiles([
       XFile(path),
-    ], text: 'My Transactions Export (CSV)');
+    ], text: 'My Transactions Export (Excel/CSV)');
   }
 
   static Future<void> exportToPDF(
