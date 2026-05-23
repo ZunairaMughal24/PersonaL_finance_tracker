@@ -43,7 +43,6 @@ class HistoryListItem extends StatelessWidget {
         onTap: () =>
             onToggleSelection(transaction.key as int), // Selective control
         child: Container(
-          margin: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             boxShadow: isSelected
@@ -104,7 +103,6 @@ class HistoryListItem extends StatelessWidget {
 
   Widget _buildSwipeBackground(bool isRestore) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         color: isRestore
             ? Colors.green.withValues(alpha: 0.2)
