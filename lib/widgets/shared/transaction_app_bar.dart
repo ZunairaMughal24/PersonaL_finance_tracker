@@ -96,7 +96,8 @@ class TransactionAppBar extends StatelessWidget implements PreferredSizeWidget {
             tooltip: isSearchVisible ? 'Close Search' : 'Search',
             onPressed: onToggleSearch,
           ),
-          _AppBarPopupMenu(transactions: transactions, vm: vm),
+          if (transactions.isNotEmpty)
+            _AppBarPopupMenu(transactions: transactions, vm: vm),
           const SizedBox(width: 4),
         ],
       ],
@@ -138,6 +139,10 @@ class _AppBarPopupMenu extends StatelessWidget {
       onSelected: (val) {
         if (val == 'select' && transactions.isNotEmpty) {
           vm.enterSelectionMode();
+        } else if (val == 'clear_filters') {
+          vm.updateSearch("");
+          vm.setCategory(null);
+          vm.setIsIncomeFilter(null);
         } else if (val == 'restore_all' || val == 'clear_dashboard') {
           if (vm.isHistoryMode) {
             TransactionModals.showRestoreAllConfirm(context: context, vm: vm);
@@ -152,7 +157,16 @@ class _AppBarPopupMenu extends StatelessWidget {
             value: 'select',
             icon: Icons.check_circle_outline_rounded,
             label: 'Select Items',
-            iconColor: Colors.white70,
+            iconColor: AppColors.primaryLight,
+            bgColor: AppColors.primaryColor.withValues(alpha: 0.15),
+          ),
+        if (vm.searchQuery.isNotEmpty || vm.selectedCategory != null)
+          _buildMenuItem(
+            value: 'clear_filters',
+            icon: Icons.filter_alt_off_rounded,
+            label: 'Clear Filters',
+            iconColor: Colors.amberAccent,
+            bgColor: Colors.amberAccent.withValues(alpha: 0.1),
           ),
         if (transactions.isNotEmpty)
           _buildMenuItem(
@@ -161,7 +175,9 @@ class _AppBarPopupMenu extends StatelessWidget {
                 ? Icons.settings_backup_restore_rounded
                 : Icons.delete_sweep_rounded,
             label: vm.isHistoryMode ? 'Restore All' : 'Delete All',
-            iconColor: vm.isHistoryMode ? Colors.white70 : AppColors.red,
+            iconColor: vm.isHistoryMode ? AppColors.accent : AppColors.red,
+            bgColor: (vm.isHistoryMode ? AppColors.accent : AppColors.red)
+                .withValues(alpha: 0.15),
           ),
       ],
     );
@@ -172,19 +188,24 @@ class _AppBarPopupMenu extends StatelessWidget {
     required IconData icon,
     required String label,
     required Color iconColor,
+    required Color bgColor,
   }) {
     return PopupMenuItem<String>(
       value: value,
       child: Row(
         children: [
           Container(
-            width: 30,
-            height: 30,
+            width: 32,
+            height: 32,
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.06),
-              borderRadius: BorderRadius.circular(6),
+              color: bgColor,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: iconColor.withValues(alpha: 0.2),
+                width: 1,
+              ),
             ),
-            child: Icon(icon, size: 17, color: iconColor),
+            child: Icon(icon, size: 18, color: iconColor),
           ),
           const SizedBox(width: 12),
           Text(
@@ -192,7 +213,8 @@ class _AppBarPopupMenu extends StatelessWidget {
             style: const TextStyle(
               color: Colors.white,
               fontSize: 14,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.2,
             ),
           ),
         ],

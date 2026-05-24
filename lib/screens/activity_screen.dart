@@ -179,7 +179,19 @@ class _ActivityScreenBodyState extends State<_ActivityScreenBody> {
                   builder: (context, settings, _) {
                     final filtered = vm.filteredTransactions;
 
-                    if (filtered.isEmpty) return const ActivityEmptyState();
+                    if (filtered.isEmpty) {
+                      return ActivityEmptyState(
+                        hasFilters:
+                            vm.searchQuery.isNotEmpty ||
+                            vm.selectedCategory != null ||
+                            vm.isIncomeFilter != null,
+                        onClearFilters: () {
+                          vm.updateSearch("");
+                          vm.setCategory(null);
+                          vm.setIsIncomeFilter(null);
+                        },
+                      );
+                    }
 
                     return ListView.builder(
                       physics: const BouncingScrollPhysics(),

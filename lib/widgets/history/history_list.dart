@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/core/utils/toast_utility.dart';
@@ -19,7 +20,17 @@ class HistoryList extends StatelessWidget {
     final archived = vm.filteredTransactions;
 
     if (archived.isEmpty) {
-      return HistoryEmptyState(isSearching: vm.searchQuery.isNotEmpty);
+      return HistoryEmptyState(
+        hasFilters:
+            vm.searchQuery.isNotEmpty ||
+            vm.selectedCategory != null ||
+            vm.isIncomeFilter != null,
+        onClearFilters: () {
+          vm.updateSearch("");
+          vm.setCategory(null);
+          vm.setIsIncomeFilter(null);
+        },
+      );
     }
 
     return ListView.builder(
@@ -36,7 +47,7 @@ class HistoryList extends StatelessWidget {
           isHistoryMode: true,
           onToggleSelection: (key) => vm.toggleSelection(key),
           onPrimaryAction: (key) {
-            vm.restoreSelected(); // Or a restoreSingle if we had one
+            vm.restoreSelected();
             ToastUtils.show(
               context,
               "Transaction successfully restored",
@@ -55,9 +66,14 @@ class HistoryList extends StatelessWidget {
 }
 
 class HistoryEmptyState extends StatelessWidget {
-  final bool isSearching;
+  final bool hasFilters;
+  final VoidCallback? onClearFilters;
 
-  const HistoryEmptyState({super.key, required this.isSearching});
+  const HistoryEmptyState({
+    super.key,
+    required this.hasFilters,
+    this.onClearFilters,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -65,17 +81,54 @@ class HistoryEmptyState extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            isSearching ? Icons.search_off_rounded : Icons.history_rounded,
-            size: 64,
-            color: Colors.white.withValues(alpha: 0.1),
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.03),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              hasFilters
+                  ? Icons.filter_list_off_rounded
+                  : Icons.history_rounded,
+              size: 50,
+              color: Colors.white.withValues(alpha: 0.15),
+            ),
           ),
-          16.heightBox,
+          24.heightBox,
           Text(
-            isSearching
-                ? "No transactions match your search"
-                : "No archived transactions",
-          ).bodyLarge(color: Colors.white.withValues(alpha: 0.3)),
+            hasFilters ? "No matches in history" : "History is empty",
+            textAlign: TextAlign.center,
+          ).h4(
+            color: Colors.white.withValues(alpha: 0.8),
+            weight: FontWeight.bold,
+          ),
+          8.heightBox,
+          Text(
+            hasFilters
+                ? "Try adjusting your filters to find archived records"
+                : "Transactions you archive will appear here",
+            textAlign: TextAlign.center,
+          ).bodyLarge(color: Colors.white38),
+          if (hasFilters && onClearFilters != null) ...[
+            24.heightBox,
+            TextButton.icon(
+              onPressed: onClearFilters,
+              icon: const Icon(Icons.refresh_rounded, size: 18),
+              label: const Text("Clear all filters"),
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.accent,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
+                backgroundColor: AppColors.accent.withValues(alpha: 0.1),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
