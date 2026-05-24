@@ -39,6 +39,7 @@ class AppBottomSheetContainer extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          12.heightBox,
           // Drag Handle
           Container(
             width: 40,

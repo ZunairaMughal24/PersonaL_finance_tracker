@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/widgets/app_bottom_sheet.dart';
+import 'package:montage/widgets/app_button.dart';
 
 class HistoryActionBar extends StatelessWidget {
   final int selectedCount;
@@ -32,115 +34,48 @@ class HistoryActionBar extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           // Selection Info
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "$selectedCount items selected",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              InkWell(
-                onTap: onCancel,
-                child: Text(
-                  "Clear selection",
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.6),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          24.heightBox,
+          Text(
+            "$selectedCount Items Selected",
+          ).titleLarge(color: Colors.white, weight: FontWeight.bold),
+          8.heightBox,
+          Text(
+            "What would you like to do with these transactions?",
+            textAlign: TextAlign.center,
+          ).bodyLarge(color: Colors.white.withValues(alpha: 0.6)),
+          32.heightBox,
 
-          // Full-width Actions
           Row(
             children: [
               Expanded(
-                child: _FullWidthActionButton(
-                  icon: Icons.settings_backup_restore_rounded,
-                  label: "Restore",
-                  onTap: onRestore,
+                child: AppButton(
+                  icon: const Icon(
+                    Icons.settings_backup_restore_rounded,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                  text: "Restore",
+                  onPressed: onRestore,
                   color: AppColors.primaryColor,
+                  height: 45,
                 ),
               ),
               16.widthBox,
               Expanded(
-                child: _FullWidthActionButton(
-                  icon: Icons.delete_outline_rounded,
-                  label: "Delete",
-                  onTap: onDelete,
+                child: AppButton(
+                  icon: const Icon(
+                    Icons.delete_outline_rounded,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                  text: "Delete",
+                  onPressed: onDelete,
                   color: Colors.redAccent,
-                  isDanger: true,
+                  height: 45,
                 ),
               ),
             ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _FullWidthActionButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-  final Color color;
-  final bool isDanger;
-
-  const _FullWidthActionButton({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-    required this.color,
-    this.isDanger = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final bgColor = isDanger ? Colors.redAccent : color;
-
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(18),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: BorderRadius.circular(18),
-            boxShadow: [
-              BoxShadow(
-                color: bgColor.withValues(alpha: 0.3),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, color: Colors.white, size: 20),
-              10.widthBox,
-              Text(
-                label,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 0.5,
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

@@ -35,7 +35,7 @@ class HistoryModals {
           const Text(
             "Delete Permanently?",
             textAlign: TextAlign.center,
-          ).h4(color: Colors.white, weight: FontWeight.bold),
+          ).titleLarge(color: Colors.white, weight: FontWeight.bold),
           12.heightBox,
           Text(
             "You're about to delete ${keys.length} transactions forever. This cannot be undone.",
@@ -47,9 +47,8 @@ class HistoryModals {
               Expanded(
                 child: AppButton(
                   text: "Cancel",
-                  height: 50,
-                  color: Colors.white.withValues(alpha: 0.08),
-                  textColor: Colors.white70,
+                  color: Colors.transparent,
+                  textColor: Colors.white,
                   onPressed: () => Navigator.pop(context),
                 ),
               ),
@@ -57,7 +56,6 @@ class HistoryModals {
               Expanded(
                 child: AppButton(
                   text: "Delete",
-                  height: 50,
                   color: Colors.redAccent,
                   onPressed: () async {
                     Navigator.pop(context);
@@ -110,7 +108,7 @@ class HistoryModals {
           const Text(
             "Restore Everything?",
             textAlign: TextAlign.center,
-          ).h4(color: Colors.white, weight: FontWeight.bold),
+          ).titleLarge(color: Colors.white, weight: FontWeight.bold),
           12.heightBox,
           Text(
             "Do you want to restore all ${vm.archivedTransactions.length} archived transactions?",
@@ -122,9 +120,8 @@ class HistoryModals {
               Expanded(
                 child: AppButton(
                   text: "Wait, No",
-                  height: 50,
-                  color: Colors.white.withValues(alpha: 0.08),
-                  textColor: Colors.white70,
+                  color: Colors.transparent,
+                  textColor: Colors.white,
                   onPressed: () => Navigator.pop(context),
                 ),
               ),
@@ -132,7 +129,6 @@ class HistoryModals {
               Expanded(
                 child: AppButton(
                   text: "Restore All",
-                  height: 50,
                   color: Colors.blueAccent,
                   onPressed: () async {
                     Navigator.pop(context);

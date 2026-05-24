@@ -39,7 +39,9 @@ class ExportBottomSheet extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text("Export Results").h3(color: Colors.white, weight: FontWeight.bold),
+        Text(
+          "Export Results",
+        ).titleLarge(color: Colors.white, weight: FontWeight.bold),
         8.heightBox,
         Text(
           "Total items: ${transactions.length}",

@@ -3,7 +3,7 @@ import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/models/transaction_model.dart';
 import 'package:montage/providers/user_settings_provider.dart';
-import 'package:montage/widgets/activity/activity_filter_chip.dart';
+import 'package:montage/widgets/shared/transaction_filter_chip.dart';
 import 'package:montage/widgets/category_picker_bottom_sheet.dart';
 import 'package:montage/widgets/glass_container.dart';
 import 'package:montage/widgets/history/export_bottom_sheet.dart';
@@ -35,14 +35,14 @@ class TransactionFilterBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         children: [
-          ActivityFilterChip(
+          TransactionFilterChip(
             label: "All",
             isSelected: isIncomeFilter == null,
             onTap: () => onTypeChanged(null),
             icon: Icons.all_inclusive_rounded,
           ),
           8.widthBox,
-          ActivityFilterChip(
+          TransactionFilterChip(
             label: "Income",
             isSelected: isIncomeFilter == true,
             onTap: () => onTypeChanged(true),
@@ -50,7 +50,7 @@ class TransactionFilterBar extends StatelessWidget {
             activeColor: AppColors.green,
           ),
           8.widthBox,
-          ActivityFilterChip(
+          TransactionFilterChip(
             label: "Expense",
             isSelected: isIncomeFilter == false,
             onTap: () => onTypeChanged(false),
@@ -58,7 +58,7 @@ class TransactionFilterBar extends StatelessWidget {
             activeColor: AppColors.red,
           ),
           8.widthBox,
-          ActivityFilterChip(
+          TransactionFilterChip(
             label: selectedCategory ?? "Category",
             isSelected: selectedCategory != null,
             onTap: selectedCategory != null
@@ -103,7 +103,7 @@ class _ExportChip extends StatelessWidget {
       },
       child: GlassContainer(
         borderRadius: 12,
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
         gradientColors: [
           AppColors.primaryColor.withValues(alpha: 0.6),
           AppColors.primaryColor.withValues(alpha: 0.4),
@@ -111,14 +111,15 @@ class _ExportChip extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.ios_share_rounded, size: 16, color: Colors.white),
-            8.widthBox,
+            const Icon(Icons.ios_share_rounded, size: 18, color: Colors.white),
+            10.widthBox,
             const Text(
               "Export",
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.2,
               ),
             ),
           ],

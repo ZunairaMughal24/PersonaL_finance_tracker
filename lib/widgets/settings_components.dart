@@ -248,7 +248,9 @@ class SettingsModals {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text("Edit Profile").h4(color: Colors.white, weight: FontWeight.bold),
+          Text(
+            "Edit Profile",
+          ).titleLarge(color: Colors.white, weight: FontWeight.bold),
           20.heightBox,
           buildMenuOption(
             icon: Icons.person,
