@@ -112,7 +112,7 @@ class _ExportChip extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Icon(Icons.ios_share_rounded, size: 18, color: Colors.white),
-            10.widthBox,
+            6.widthBox,
             const Text(
               "Export",
               style: TextStyle(

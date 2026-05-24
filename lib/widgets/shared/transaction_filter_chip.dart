@@ -50,7 +50,7 @@ class TransactionFilterChip extends StatelessWidget {
                   ? (activeColor ?? Colors.white)
                   : Colors.white.withValues(alpha: 0.7),
             ),
-            10.widthBox,
+            6.widthBox,
             Text(
               label,
               style: TextStyle(
