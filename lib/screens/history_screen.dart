@@ -14,6 +14,7 @@ import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/widgets/history/export_bottom_sheet.dart';
 import 'package:montage/providers/user_settings_provider.dart';
 import 'package:montage/core/utils/toast_utility.dart';
+import 'package:montage/widgets/shared/transaction_section_header.dart';
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});
@@ -162,6 +163,7 @@ class _HistoryScreenBodyState extends State<_HistoryScreenBody> {
                 ),
               ],
               16.heightBox,
+              const TransactionSectionHeader(title: "QUICK FILTERS"),
               TransactionFilterBar(
                 isIncomeFilter: vm.isIncomeFilter,
                 selectedCategory: vm.selectedCategory,
@@ -169,7 +171,20 @@ class _HistoryScreenBodyState extends State<_HistoryScreenBody> {
                 onCategoryChanged: vm.setCategory,
                 transactionsForExport: vm.filteredTransactions,
               ),
-              16.heightBox,
+              if (vm.filteredTransactions.isNotEmpty) ...[
+                12.heightBox,
+                TransactionSectionHeader(
+                  title: "ARCHIVE EXPLORER",
+                  subtitle:
+                      vm.selectedCategory != null ||
+                          vm.isIncomeFilter != null ||
+                          vm.searchQuery.isNotEmpty
+                      ? "Displaying Filtered Records"
+                      : "All Archived Transactions",
+                  badgeText: "${vm.filteredTransactions.length} ARCHIVED",
+                ),
+                8.heightBox,
+              ],
               Expanded(child: HistoryList(vm: vm)),
             ],
           ),

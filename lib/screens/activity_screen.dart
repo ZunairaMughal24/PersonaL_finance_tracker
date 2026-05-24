@@ -17,6 +17,7 @@ import 'package:montage/widgets/app_bottom_sheet.dart';
 import 'package:montage/widgets/history/export_bottom_sheet.dart';
 import 'package:montage/widgets/shared/transaction_modals.dart';
 import 'package:montage/core/utils/toast_utility.dart';
+import 'package:montage/widgets/shared/transaction_section_header.dart';
 
 class ActivityScreen extends StatelessWidget {
   const ActivityScreen({super.key});
@@ -167,6 +168,7 @@ class _ActivityScreenBodyState extends State<_ActivityScreenBody> {
                 ),
               ],
               16.heightBox,
+              const TransactionSectionHeader(title: "QUICK FILTERS"),
               TransactionFilterBar(
                 isIncomeFilter: vm.isIncomeFilter,
                 selectedCategory: vm.selectedCategory,
@@ -174,7 +176,20 @@ class _ActivityScreenBodyState extends State<_ActivityScreenBody> {
                 onCategoryChanged: vm.setCategory,
                 transactionsForExport: vm.filteredTransactions,
               ),
-              16.heightBox,
+              if (vm.filteredTransactions.isNotEmpty) ...[
+                12.heightBox,
+                TransactionSectionHeader(
+                  title: "DETAILED ACTIVITY",
+                  subtitle:
+                      vm.selectedCategory != null ||
+                          vm.isIncomeFilter != null ||
+                          vm.searchQuery.isNotEmpty
+                      ? "Filtered Results"
+                      : "Recent Transactions",
+                  badgeText: "${vm.filteredTransactions.length} RECORDS",
+                ),
+                8.heightBox,
+              ],
               Expanded(
                 child: Consumer<UserSettingsProvider>(
                   builder: (context, settings, _) {
