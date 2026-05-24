@@ -54,6 +54,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             body: AppBackground(
               style: BackgroundStyle.premiumHybrid,
               child: SafeArea(
+                bottom: false,
                 child: Column(
                   children: [
                     if (_isSearchVisible) ...[
@@ -80,8 +81,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 ),
               ),
             ),
-            bottomNavigationBar: vm.isSelectionMode
+            bottomSheet: vm.isSelectionMode
                 ? HistoryActionBar(
+                    selectedCount: vm.selectedCount,
                     onRestore: () async {
                       await vm.restoreSelected();
                       if (context.mounted) {

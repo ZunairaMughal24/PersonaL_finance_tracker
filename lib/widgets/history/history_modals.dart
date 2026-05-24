@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:montage/viewmodels/history_view_model.dart';
-import 'package:montage/widgets/app_confirm_dialog.dart';
+import 'package:montage/widgets/app_bottom_sheet.dart';
+import 'package:montage/widgets/app_button.dart';
 import 'package:montage/core/utils/toast_utility.dart';
+import 'package:montage/core/utils/widget_utility_extention.dart';
+import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/providers/transaction_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -11,29 +14,73 @@ class HistoryModals {
     required HistoryViewModel vm,
     required List<int> keys,
   }) {
-    showDialog(
+    AppBottomSheet.show(
       context: context,
-      builder: (context) => AppConfirmDialog(
-        title: "Delete Permanently?",
-        description:
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.redAccent.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.delete_forever_rounded,
+              color: Colors.redAccent,
+              size: 32,
+            ),
+          ),
+          20.heightBox,
+          const Text(
+            "Delete Permanently?",
+            textAlign: TextAlign.center,
+          ).h4(color: Colors.white, weight: FontWeight.bold),
+          12.heightBox,
+          Text(
             "You're about to delete ${keys.length} transactions forever. This cannot be undone.",
-        confirmText: "Delete",
-        confirmColor: Colors.redAccent,
-        icon: Icons.delete_forever_rounded,
-        onConfirm: () async {
-          if (keys.length == vm.selectedCount) {
-            await vm.deleteSelected();
-          } else {
-            await context.read<TransactionProvider>().deletePermanently(keys);
-            vm.clearSelection();
-          }
-          if (context.mounted) {
-            ToastUtils.show(
-              context,
-              "${keys.length} transactions deleted permanently",
-            );
-          }
-        },
+            textAlign: TextAlign.center,
+          ).bodyLarge(color: Colors.white.withValues(alpha: 0.7)),
+          32.heightBox,
+          Row(
+            children: [
+              Expanded(
+                child: AppButton(
+                  text: "Cancel",
+                  height: 50,
+                  color: Colors.white.withValues(alpha: 0.08),
+                  textColor: Colors.white70,
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ),
+              16.widthBox,
+              Expanded(
+                child: AppButton(
+                  text: "Delete",
+                  height: 50,
+                  color: Colors.redAccent,
+                  onPressed: () async {
+                    Navigator.pop(context);
+                    if (keys.length == vm.selectedCount) {
+                      await vm.deleteSelected();
+                    } else {
+                      await context
+                          .read<TransactionProvider>()
+                          .deletePermanently(keys);
+                      vm.clearSelection();
+                    }
+                    if (context.mounted) {
+                      ToastUtils.show(
+                        context,
+                        "${keys.length} transactions deleted permanently",
+                      );
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -42,20 +89,63 @@ class HistoryModals {
     required BuildContext context,
     required HistoryViewModel vm,
   }) {
-    showDialog(
+    AppBottomSheet.show(
       context: context,
-      builder: (context) => AppConfirmDialog(
-        title: "Restore Everything?",
-        description:
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.blueAccent.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.settings_backup_restore_rounded,
+              color: Colors.blueAccent,
+              size: 32,
+            ),
+          ),
+          20.heightBox,
+          const Text(
+            "Restore Everything?",
+            textAlign: TextAlign.center,
+          ).h4(color: Colors.white, weight: FontWeight.bold),
+          12.heightBox,
+          Text(
             "Do you want to restore all ${vm.archivedTransactions.length} archived transactions?",
-        confirmText: "Restore",
-        icon: Icons.settings_backup_restore_rounded,
-        onConfirm: () async {
-          await vm.restoreAll();
-          if (context.mounted) {
-            ToastUtils.show(context, "All transactions restored");
-          }
-        },
+            textAlign: TextAlign.center,
+          ).bodyLarge(color: Colors.white.withValues(alpha: 0.7)),
+          32.heightBox,
+          Row(
+            children: [
+              Expanded(
+                child: AppButton(
+                  text: "Wait, No",
+                  height: 50,
+                  color: Colors.white.withValues(alpha: 0.08),
+                  textColor: Colors.white70,
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ),
+              16.widthBox,
+              Expanded(
+                child: AppButton(
+                  text: "Restore All",
+                  height: 50,
+                  color: Colors.blueAccent,
+                  onPressed: () async {
+                    Navigator.pop(context);
+                    await vm.restoreAll();
+                    if (context.mounted) {
+                      ToastUtils.show(context, "All transactions restored");
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
