@@ -39,15 +39,15 @@ class ExportBottomSheet extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text("Export Results").h4(color: Colors.white, weight: FontWeight.bold),
+        Text("Export Results").h3(color: Colors.white, weight: FontWeight.bold),
         8.heightBox,
         Text(
           "Total items: ${transactions.length}",
-        ).bodyMedium(color: Colors.white.withValues(alpha: 0.5)),
+        ).bodyLarge(color: Colors.white.withValues(alpha: 0.6)),
         24.heightBox,
         _buildExportOption(
           context,
-          icon: Icons.text_snippet_outlined,
+          icon: Icons.share_rounded,
           title: "Share as Text",
           subtitle: "Send a quick summary to any app",
           color: Colors.blueAccent,
@@ -56,10 +56,10 @@ class ExportBottomSheet extends StatelessWidget {
             ExportService.exportToText(transactions, userName);
           },
         ),
-        16.heightBox,
+        12.heightBox,
         _buildExportOption(
           context,
-          icon: Icons.picture_as_pdf_outlined,
+          icon: Icons.picture_as_pdf_rounded,
           title: "Export as PDF",
           subtitle: "Generate a professional document",
           color: Colors.redAccent,
@@ -68,10 +68,10 @@ class ExportBottomSheet extends StatelessWidget {
             ExportService.exportToPDF(transactions, currency, userName);
           },
         ),
-        16.heightBox,
+        12.heightBox,
         _buildExportOption(
           context,
-          icon: Icons.table_chart_outlined,
+          icon: Icons.description_rounded,
           title: "Export as CSV",
           subtitle: "Detailed data for spreadsheets",
           color: Colors.greenAccent,
@@ -94,11 +94,11 @@ class ExportBottomSheet extends StatelessWidget {
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(18),
       child: GlassContainer(
-        borderRadius: 20,
+        borderRadius: 18,
         blur: 0,
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         gradientColors: [
           Colors.white.withValues(alpha: 0.05),
           Colors.white.withValues(alpha: 0.02),
@@ -106,12 +106,12 @@ class ExportBottomSheet extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(icon, color: color, size: 28),
+              child: Icon(icon, color: color, size: 22),
             ),
             16.widthBox,
             Expanded(
@@ -120,17 +120,18 @@ class ExportBottomSheet extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                  ).bodyLarge(color: Colors.white, weight: FontWeight.w600),
+                  ).titleMedium(color: Colors.white, weight: FontWeight.w600),
                   const SizedBox(height: 2),
                   Text(
                     subtitle,
-                  ).bodyMedium(color: Colors.white.withValues(alpha: 0.5)),
+                  ).bodySmall(color: Colors.white.withValues(alpha: 0.5)),
                 ],
               ),
             ),
             Icon(
               Icons.chevron_right_rounded,
               color: Colors.white.withValues(alpha: 0.3),
+              size: 20,
             ),
           ],
         ),
