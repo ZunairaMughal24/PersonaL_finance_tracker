@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/models/transaction_model.dart';
 import 'package:montage/widgets/transaction/transaction_list_item.dart';
 
@@ -40,61 +41,65 @@ class HistoryListItem extends StatelessWidget {
       },
       child: GestureDetector(
         onLongPress: () => onToggleSelection(transaction.key as int),
-        onTap: () =>
-            onToggleSelection(transaction.key as int), // Selective control
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: isSelected
-                ? [
-                    BoxShadow(
-                      color: AppColors.primaryColor.withValues(alpha: 0.3),
-                      blurRadius: 12,
-                      spreadRadius: 2,
-                    ),
-                  ]
-                : null,
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: Stack(
-              children: [
-                TransactionListItem(
+        onTap: () => onToggleSelection(transaction.key as int),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          padding: EdgeInsets.zero,
+          child: Row(
+            children: [
+              Expanded(
+                child: TransactionListItem(
                   transaction: transaction,
                   currency: currency,
                   onDelete: () => onDeletePermanently(transaction.key as int),
                   onEdit: () => onRestore(transaction.key as int),
-                  borderColor: isSelectionMode
+                  borderColor: isSelected
                       ? AppColors.primaryColor.withValues(alpha: 0.6)
+                      : isSelectionMode
+                      ? Colors.white.withValues(alpha: 0.1)
                       : null,
                 ),
-
-                if (isSelectionMode) ...[
-                  // Dark overlay to make tick icon pop
-                  Positioned.fill(
-                    child: Container(
-                      color: Colors.black.withValues(alpha: 0.03),
+              ),
+              if (isSelectionMode) ...[
+                10.widthBox, // Tighten gap to tile
+                Container(
+                  width: 24,
+                  height: 24,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isSelected
+                        ? AppColors.primaryColor
+                        : Colors.white.withValues(alpha: 0.1),
+                    border: Border.all(
+                      color: isSelected
+                          ? AppColors.primaryColor
+                          : Colors.white.withValues(alpha: 0.2),
+                      width: 1.5,
                     ),
+                    boxShadow: isSelected
+                        ? [
+                            BoxShadow(
+                              color: AppColors.primaryColor.withValues(
+                                alpha: 0.3,
+                              ),
+                              blurRadius: 8,
+                              spreadRadius: 1,
+                            ),
+                          ]
+                        : [],
                   ),
-                  Positioned(
-                    right: 16,
-                    top: 0,
-                    bottom: 0,
-                    child: Center(
-                      child: Icon(
-                        isSelected
-                            ? Icons.check_circle_rounded
-                            : Icons.check_circle_outline_rounded,
-                        color: isSelected
-                            ? AppColors.primaryColor
-                            : AppColors.primaryColor.withValues(alpha: 0.8),
-                        size: 26,
-                      ),
-                    ),
-                  ),
-                ],
+                  child: isSelected
+                      ? const Icon(
+                          Icons.check_rounded,
+                          color: Colors.white,
+                          size: 16,
+                        )
+                      : null,
+                ),
+                2.widthBox,
               ],
-            ),
+            ],
           ),
         ),
       ),
