@@ -244,7 +244,6 @@ class SettingsModals {
   }) {
     AppBottomSheet.show(
       context: context,
-      padding: EdgeInsets.zero,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -252,7 +251,7 @@ class SettingsModals {
             "Edit Profile",
           ).titleLarge(color: Colors.white, weight: FontWeight.bold),
           20.heightBox,
-          buildMenuOption(
+          _buildMenuRow(
             icon: Icons.person,
             title: "Edit Name",
             onTap: () {
@@ -261,7 +260,7 @@ class SettingsModals {
             },
           ),
           Divider(color: Colors.white.withValues(alpha: 0.05), height: 1),
-          buildMenuOption(
+          _buildMenuRow(
             icon: Icons.photo_library_outlined,
             title: settings.profileImagePath != null
                 ? "Change Photo"
@@ -273,7 +272,7 @@ class SettingsModals {
           ),
           if (settings.profileImagePath != null) ...[
             Divider(color: Colors.white.withValues(alpha: 0.05), height: 1),
-            buildMenuOption(
+            _buildMenuRow(
               svgAsset: AppImages.trashBin,
               title: "Remove Photo",
               iconColor: Colors.redAccent,
@@ -284,6 +283,41 @@ class SettingsModals {
             ),
           ],
         ],
+      ),
+    );
+  }
+
+  static Widget _buildMenuRow({
+    IconData? icon,
+    String? svgAsset,
+    required String title,
+    required VoidCallback onTap,
+    Color iconColor = Colors.white,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 16),
+        child: Row(
+          children: [
+            if (svgAsset != null)
+              SvgPicture.asset(
+                svgAsset,
+                colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                height: 22,
+              )
+            else
+              Icon(icon, color: iconColor, size: 22),
+            const SizedBox(width: 14),
+            Text(title).bodyLarge(color: Colors.white, weight: FontWeight.w500),
+            const Spacer(),
+            Icon(
+              Icons.chevron_right_rounded,
+              color: Colors.white.withValues(alpha: 0.4),
+              size: 22,
+            ),
+          ],
+        ),
       ),
     );
   }

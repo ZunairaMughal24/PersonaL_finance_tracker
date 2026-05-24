@@ -18,6 +18,24 @@ class TransactionAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onShowBatchActions,
   });
 
+  Widget _iconBtn({
+    required IconData icon,
+    required VoidCallback? onPressed,
+    Color color = Colors.white70,
+    String? tooltip,
+    double size = 22,
+  }) {
+    return IconButton(
+      icon: Icon(icon, color: color, size: size),
+      onPressed: onPressed,
+      tooltip: tooltip,
+      splashRadius: 20,
+      visualDensity: VisualDensity.compact,
+      padding: const EdgeInsets.all(6),
+      constraints: const BoxConstraints(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<TransactionListViewModel>();
@@ -26,7 +44,11 @@ class TransactionAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       automaticallyImplyLeading: true,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        icon: const Icon(
+          Icons.arrow_back_ios_new_rounded,
+          color: Colors.white,
+          size: 20,
+        ),
         onPressed: () => Navigator.of(context).maybePop(),
       ),
       title: Text(
@@ -44,106 +66,44 @@ class TransactionAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         if (vm.isSelectionMode) ...[
           if (vm.selectedCount > 0)
-            IconButton(
-              icon: const Icon(
-                Icons.bolt_rounded,
-                color: AppColors.primaryColor,
-              ),
-              onPressed: onShowBatchActions,
+            _iconBtn(
+              icon: Icons.bolt_rounded,
+              color: AppColors.primaryLight,
               tooltip: 'Batch Actions',
+              onPressed: onShowBatchActions,
             ),
-          IconButton(
-            icon: Icon(
-              vm.selectedCount == transactions.length
-                  ? Icons.check_circle_rounded
-                  : Icons.check_circle_outline_rounded,
-              color: Colors.white,
-            ),
+          _iconBtn(
+            icon: vm.selectedCount == transactions.length
+                ? Icons.check_circle_rounded
+                : Icons.check_circle_outline_rounded,
+            color: vm.selectedCount == transactions.length
+                ? AppColors.primaryLight
+                : Colors.white70,
+            tooltip: vm.selectedCount == transactions.length
+                ? 'Deselect All'
+                : 'Select All',
             onPressed: () => vm.selectedCount == transactions.length
                 ? vm.deselectAll()
                 : vm.selectAll(),
           ),
-        ] else
-          PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert_rounded, color: Colors.white),
-            offset: const Offset(0, 48),
-            onSelected: (val) {
-              if (val == 'search') {
-                onToggleSearch();
-              } else if (val == 'select' && transactions.isNotEmpty) {
-                vm.enterSelectionMode();
-              } else if (val == 'restore_all' || val == 'clear_dashboard') {
-                if (vm.isHistoryMode) {
-                  TransactionModals.showRestoreAllConfirm(
-                    context: context,
-                    vm: vm,
-                  );
-                } else {
-                  TransactionModals.showArchiveAllConfirm(
-                    context: context,
-                    vm: vm,
-                  );
-                }
-              }
-            },
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 'search',
-                child: Row(
-                  children: [
-                    Icon(
-                      isSearchVisible
-                          ? Icons.search_off_rounded
-                          : Icons.search_rounded,
-                      size: 20,
-                      color: isSearchVisible
-                          ? AppColors.primaryColor
-                          : Colors.white70,
-                    ),
-                    const SizedBox(width: 12),
-                    Text(isSearchVisible ? 'Close Search' : 'Search'),
-                  ],
-                ),
-              ),
-              if (transactions.isNotEmpty)
-                PopupMenuItem(
-                  value: 'select',
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.check_circle_outline_rounded,
-                        size: 20,
-                        color: Colors.white70,
-                      ),
-                      const SizedBox(width: 12),
-                      const Text('Select Items'),
-                    ],
-                  ),
-                ),
-              if (transactions.isNotEmpty)
-                PopupMenuItem(
-                  value: vm.isHistoryMode ? 'restore_all' : 'clear_dashboard',
-                  child: Row(
-                    children: [
-                      Icon(
-                        vm.isHistoryMode
-                            ? Icons.settings_backup_restore_rounded
-                            : Icons.delete_sweep_rounded,
-                        size: 20,
-                        color: Colors.white70,
-                      ),
-                      const SizedBox(width: 12),
-                      Text(vm.isHistoryMode ? 'Restore All' : 'Delete All'),
-                    ],
-                  ),
-                ),
-            ],
+          const SizedBox(width: 4),
+        ] else ...[
+          _iconBtn(
+            icon: isSearchVisible
+                ? Icons.search_off_rounded
+                : Icons.search_rounded,
+            color: isSearchVisible ? AppColors.primaryLight : Colors.white70,
+            tooltip: isSearchVisible ? 'Close Search' : 'Search',
+            onPressed: onToggleSearch,
           ),
+          _AppBarPopupMenu(transactions: transactions, vm: vm),
+          const SizedBox(width: 4),
+        ],
       ],
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1.0),
         child: Container(
-          color: Colors.white.withValues(alpha: 0.12),
+          color: Colors.white.withValues(alpha: 0.10),
           height: 1.0,
         ),
       ),
@@ -152,4 +112,91 @@ class TransactionAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight + 1.0);
+}
+
+class _AppBarPopupMenu extends StatelessWidget {
+  final List transactions;
+  final TransactionListViewModel vm;
+
+  const _AppBarPopupMenu({required this.transactions, required this.vm});
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<String>(
+      tooltip: 'More options',
+      offset: const Offset(0, 40),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+        side: BorderSide(color: Colors.white.withValues(alpha: 0.10), width: 1),
+      ),
+      color: const Color(0xFF1E2444),
+      elevation: 12,
+      child: Padding(
+        padding: const EdgeInsets.all(6),
+        child: Icon(Icons.more_vert_rounded, color: Colors.white70, size: 22),
+      ),
+      onSelected: (val) {
+        if (val == 'select' && transactions.isNotEmpty) {
+          vm.enterSelectionMode();
+        } else if (val == 'restore_all' || val == 'clear_dashboard') {
+          if (vm.isHistoryMode) {
+            TransactionModals.showRestoreAllConfirm(context: context, vm: vm);
+          } else {
+            TransactionModals.showArchiveAllConfirm(context: context, vm: vm);
+          }
+        }
+      },
+      itemBuilder: (context) => [
+        if (transactions.isNotEmpty)
+          _buildMenuItem(
+            value: 'select',
+            icon: Icons.check_circle_outline_rounded,
+            label: 'Select Items',
+            iconColor: Colors.white70,
+          ),
+        if (transactions.isNotEmpty)
+          _buildMenuItem(
+            value: vm.isHistoryMode ? 'restore_all' : 'clear_dashboard',
+            icon: vm.isHistoryMode
+                ? Icons.settings_backup_restore_rounded
+                : Icons.delete_sweep_rounded,
+            label: vm.isHistoryMode ? 'Restore All' : 'Delete All',
+            iconColor: vm.isHistoryMode ? Colors.white70 : AppColors.red,
+          ),
+      ],
+    );
+  }
+
+  PopupMenuItem<String> _buildMenuItem({
+    required String value,
+    required IconData icon,
+    required String label,
+    required Color iconColor,
+  }) {
+    return PopupMenuItem<String>(
+      value: value,
+      child: Row(
+        children: [
+          Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.06),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Icon(icon, size: 17, color: iconColor),
+          ),
+          const SizedBox(width: 12),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

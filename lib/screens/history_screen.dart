@@ -132,7 +132,7 @@ class _HistoryScreenBodyState extends State<_HistoryScreenBody> {
       backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
       appBar: TransactionAppBar(
-        title: 'Transaction History',
+        title: 'History',
         isSearchVisible: _isSearchVisible,
         onShowBatchActions: () => _showBatchActionsSheet(vm),
         onToggleSearch: () => setState(() {

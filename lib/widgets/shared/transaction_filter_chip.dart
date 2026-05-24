@@ -25,7 +25,7 @@ class TransactionFilterChip extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: GlassContainer(
-        borderRadius: 14,
+        borderRadius: 12,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
         gradientColors: isSelected
             ? [
