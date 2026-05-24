@@ -3,6 +3,7 @@ import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/widgets/glass_container.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
+import 'package:montage/widgets/app_button.dart';
 import 'package:provider/provider.dart';
 import 'package:montage/viewmodels/speech_view_model.dart';
 import 'package:montage/widgets/pulse_effect.dart';
@@ -79,9 +80,7 @@ class _CustomCategoryDialogState extends State<CustomCategoryDialog> {
                   ),
                 ],
               ),
-              Text(
-                "Enter a name for your custom category",
-              ).bodyLarge(
+              Text("Enter a name for your custom category").bodyLarge(
                 color: Colors.white.withValues(alpha: 0.8),
                 weight: FontWeight.w600,
               ),
@@ -137,8 +136,9 @@ class _CustomCategoryDialogState extends State<CustomCategoryDialog> {
                                     width: 32,
                                     height: 32,
                                     decoration: BoxDecoration(
-                                      color:
-                                          AppColors.green.withValues(alpha: 0.2),
+                                      color: AppColors.green.withValues(
+                                        alpha: 0.2,
+                                      ),
                                       shape: BoxShape.circle,
                                     ),
                                   ),
@@ -171,23 +171,10 @@ class _CustomCategoryDialogState extends State<CustomCategoryDialog> {
                 },
               ),
               24.heightBox,
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _submit,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.all(16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: const Text(
-                    "Confirm",
-                  ).titleLarge(weight: FontWeight.bold),
-                ),
+              AppButton(
+                text: "Confirm",
+                onPressed: _submit,
+                color: AppColors.primaryColor,
               ),
             ],
           ),

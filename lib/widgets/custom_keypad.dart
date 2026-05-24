@@ -318,18 +318,19 @@ class _KeypadNoteField extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: isListening 
+                      color: isListening
                           ? AppColors.green.withValues(alpha: 0.2)
                           : Colors.white.withValues(alpha: 0.05),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       isListening ? Icons.mic : Icons.mic_none_rounded,
-                      color: isListening ? AppColors.green : Colors.white.withValues(alpha: 0.4),
+                      color: isListening
+                          ? AppColors.green
+                          : Colors.white.withValues(alpha: 0.4),
                       size: 20,
                     ),
                   ),
-
                 ],
               ),
             ),
@@ -561,7 +562,7 @@ class _KeypadButton extends StatelessWidget {
             onTap: onTap,
             borderRadius: BorderRadius.circular(6),
             child: Container(
-              height: 50,
+              height: 45,
               alignment: Alignment.center,
               child:
                   child ??
@@ -584,6 +585,3 @@ class _KeypadButton extends StatelessWidget {
     );
   }
 }
-
-
-

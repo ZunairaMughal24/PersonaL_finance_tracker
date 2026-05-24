@@ -12,6 +12,7 @@ import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:montage/core/constants/app_images.dart';
 import 'package:montage/widgets/app_background.dart';
+import 'package:montage/widgets/app_button.dart';
 import 'package:provider/provider.dart';
 
 class TransactionDetailSheet extends StatelessWidget {
@@ -197,7 +198,11 @@ class TransactionDetailSheet extends StatelessWidget {
 
               24.heightBox,
 
-              _CloseButton(onTap: () => Navigator.pop(context)),
+              AppButton(
+                text: "Close",
+                onPressed: () => Navigator.pop(context),
+                color: AppColors.primaryColor,
+              ),
             ],
           ),
         ),
@@ -249,53 +254,6 @@ class TransactionDetailSheet extends StatelessWidget {
               ),
         ),
       ],
-    );
-  }
-}
-
-class _CloseButton extends StatelessWidget {
-  final VoidCallback onTap;
-
-  const _CloseButton({required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        gradient: LinearGradient(
-          colors: [
-            AppColors.primaryColor.withValues(alpha: 0.9),
-            AppColors.primaryColor.withValues(alpha: 0.6),
-          ],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primaryColor.withValues(alpha: 0.4),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          ),
-        ],
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(16),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 14),
-            child: Center(
-              child: const Text("Close").labelLarge(
-                color: Colors.white,
-                weight: FontWeight.w800,
-                fontSize: 16,
-              ),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
