@@ -37,12 +37,15 @@ class TransactionSectionHeader extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                  ).labelLarge(color: Colors.white, weight: FontWeight.bold),
+                  Text(title).labelLarge(
+                    color: Colors.white,
+                    fontSize: 14.5,
+                    weight: FontWeight.w800,
+                  ),
                   if (subtitle != null) ...[
-                    Text(subtitle!).bodyMedium(
-                      color: Colors.white.withValues(alpha: 0.8),
+                    Text(subtitle!).labelLarge(
+                      fontSize: 13,
+                      color: Colors.white.withValues(alpha: 0.7),
                       weight: FontWeight.w500,
                     ),
                   ],

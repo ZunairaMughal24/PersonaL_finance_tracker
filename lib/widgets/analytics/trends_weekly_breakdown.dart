@@ -29,14 +29,6 @@ class TrendsWeeklyBreakdown extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 4, bottom: 12),
-              child: Text("WEEKLY BREAKDOWN").labelLarge(
-                color: Colors.white.withValues(alpha: 0.7),
-                weight: FontWeight.w800,
-                letterSpacing: 1.5,
-              ),
-            ),
             GlassContainer(
               borderRadius: 24,
               blur: 40,
@@ -218,4 +210,3 @@ class TrendsWeeklyBreakdown extends StatelessWidget {
     );
   }
 }
-

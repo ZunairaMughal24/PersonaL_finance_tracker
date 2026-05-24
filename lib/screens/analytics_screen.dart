@@ -14,6 +14,7 @@ import '../providers/transaction_provider.dart';
 import 'package:montage/providers/user_settings_provider.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
+import 'package:montage/widgets/shared/transaction_section_header.dart';
 
 class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({super.key});
@@ -75,7 +76,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  12.heightBox,
+                  10.heightBox,
+                  const TransactionSectionHeader(
+                    title: "VISUAL DATA",
+                    subtitle: "Comparison of spending vs trends",
+                  ),
                   _buildToggle(),
                   8.heightBox,
                   SizedBox(
@@ -96,7 +101,15 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       ],
                     ),
                   ),
-                  16.heightBox,
+                  10.heightBox,
+                  TransactionSectionHeader(
+                    title: _isPieChart
+                        ? "DATA DISTRIBUTION"
+                        : "WEEKLY PERFORMANCE",
+                    subtitle: _isPieChart
+                        ? "Spending by category"
+                        : "Historical trend analysis",
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: _isPieChart
