@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/viewmodels/transaction_list_view_model.dart';
 import 'package:montage/widgets/shared/transaction_modals.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:montage/core/constants/app_images.dart';
 import 'package:provider/provider.dart';
 
 class TransactionAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -173,7 +175,8 @@ class _AppBarPopupMenu extends StatelessWidget {
             value: vm.isHistoryMode ? 'restore_all' : 'clear_dashboard',
             icon: vm.isHistoryMode
                 ? Icons.settings_backup_restore_rounded
-                : Icons.delete_sweep_rounded,
+                : null,
+            svgAsset: vm.isHistoryMode ? null : AppImages.trashBin,
             label: vm.isHistoryMode ? 'Restore All' : 'Delete All',
             iconColor: vm.isHistoryMode ? AppColors.accent : AppColors.red,
             bgColor: (vm.isHistoryMode ? AppColors.accent : AppColors.red)
@@ -185,7 +188,8 @@ class _AppBarPopupMenu extends StatelessWidget {
 
   PopupMenuItem<String> _buildMenuItem({
     required String value,
-    required IconData icon,
+    IconData? icon,
+    String? svgAsset,
     required String label,
     required Color iconColor,
     required Color bgColor,
@@ -205,7 +209,15 @@ class _AppBarPopupMenu extends StatelessWidget {
                 width: 1,
               ),
             ),
-            child: Icon(icon, size: 18, color: iconColor),
+            child: Center(
+              child: svgAsset != null
+                  ? SvgPicture.asset(
+                      svgAsset,
+                      colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                      height: 16,
+                    )
+                  : Icon(icon, size: 18, color: iconColor),
+            ),
           ),
           const SizedBox(width: 12),
           Text(

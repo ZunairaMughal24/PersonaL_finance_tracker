@@ -76,12 +76,13 @@ class _HistoryScreenBodyState extends State<_HistoryScreenBody> {
         selectedCount: vm.selectedCount,
         isHistoryMode: true,
         onPrimaryAction: () async {
+          final count = vm.selectedCount;
           Navigator.pop(context);
           await vm.restoreSelected();
           if (context.mounted) {
             ToastUtils.show(
               context,
-              "${vm.selectedCount} transaction${vm.selectedCount > 1 ? 's' : ''} restored",
+              "$count transaction${count > 1 ? 's' : ''} restored",
               isError: false,
             );
           }

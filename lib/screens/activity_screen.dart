@@ -79,12 +79,13 @@ class _ActivityScreenBodyState extends State<_ActivityScreenBody> {
         selectedCount: vm.selectedCount,
         isHistoryMode: false,
         onPrimaryAction: () async {
+          final count = vm.selectedCount;
           Navigator.pop(context);
           await vm.archiveSelected();
           if (context.mounted) {
             ToastUtils.show(
               context,
-              "${vm.selectedCount} transactions deleted (moved to history)",
+              "$count transaction${count > 1 ? 's' : ''} deleted (moved to history)",
               isError: false,
             );
           }
