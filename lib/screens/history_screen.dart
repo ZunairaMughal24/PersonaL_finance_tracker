@@ -92,7 +92,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       if (context.mounted) {
                         ToastUtils.show(
                           context,
-                          "Selected transactions restored",
+                          "${vm.selectedCount} transaction${vm.selectedCount > 1 ? 's' : ''} restored",
+                          isError: false,
                         );
                       }
                     },

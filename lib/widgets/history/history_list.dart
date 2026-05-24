@@ -36,7 +36,11 @@ class HistoryList extends StatelessWidget {
           onToggleSelection: vm.toggleSelection,
           onRestore: (key) {
             vm.restoreSingle(key);
-            ToastUtils.show(context, "Transaction restored");
+            ToastUtils.show(
+              context,
+              "Transaction successfully restored",
+              isError: false,
+            );
           },
           onDeletePermanently: (key) => HistoryModals.showDeleteConfirm(
             context: context,

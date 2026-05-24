@@ -3,7 +3,7 @@ import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/widgets/app_bottom_sheet.dart';
-import 'package:montage/widgets/app_button.dart';
+import 'package:montage/widgets/glass_container.dart';
 
 class HistoryActionBar extends StatelessWidget {
   final int selectedCount;
@@ -23,69 +23,88 @@ class HistoryActionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bottomPadding = MediaQuery.of(context).padding.bottom;
-
     return AppBottomSheetContainer(
-      padding: EdgeInsets.fromLTRB(24, 20, 24, (bottomPadding.clamp(12, 16))),
+      padding: EdgeInsets.zero,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Selection Info
-          Text(
-            "$selectedCount Items Selected",
-          ).titleLarge(color: Colors.white, weight: FontWeight.bold),
-          20.heightBox,
-
-          // Restore (Primary Action)
-          AppButton(
-            icon: const Icon(
-              Icons.settings_backup_restore_rounded,
-              color: Colors.white,
-              size: 20,
-            ),
-            text: "Restore Transactions",
-            onPressed: onRestore,
-            color: AppColors.primaryColor,
-            height: 45,
-            borderRadius: 16,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
+            child: Text(
+              "$selectedCount Selected",
+            ).titleMedium(color: Colors.white, weight: FontWeight.w600),
           ),
-          10.heightBox,
-
-          // Export (Secondary Action)
-          AppButton(
-            icon: const Icon(
-              Icons.ios_share_rounded,
-              color: Colors.cyanAccent,
-              size: 18,
-            ),
-            text: "Export Items",
-            onPressed: onExport,
-            color: Colors.cyanAccent.withValues(alpha: 0.1),
-            borderColor: Colors.cyanAccent.withValues(alpha: 0.2),
-            textColor: Colors.cyanAccent,
-            height: 45,
-            borderRadius: 16,
+          Divider(
+            color: Colors.white.withValues(alpha: 0.05),
+            height: 1,
+            indent: 24,
+            endIndent: 24,
           ),
-          10.heightBox,
-
-          // Delete (Destructive Action)
-          AppButton(
-            icon: const Icon(
-              Icons.delete_outline_rounded,
-              color: Colors.redAccent,
-              size: 18,
-            ),
-            text: "Delete History",
-            onPressed: onDelete,
-            color: Colors.redAccent.withValues(alpha: 0.1),
-            borderColor: Colors.redAccent.withValues(alpha: 0.2),
-            textColor: Colors.redAccent,
-            height: 45,
-            borderRadius: 16,
+          _buildMenuOption(
+            icon: Icons.settings_backup_restore_rounded,
+            title: "Restore",
+            iconColor: AppColors.primaryColor,
+            onTap: onRestore,
+            showDivider: true,
           ),
-          4.heightBox,
+          _buildMenuOption(
+            icon: Icons.ios_share_rounded,
+            title: "Export",
+            iconColor: Colors.cyanAccent,
+            onTap: onExport,
+            showDivider: true,
+          ),
+          _buildMenuOption(
+            icon: Icons.delete_outline_rounded,
+            title: "Delete",
+            iconColor: Colors.redAccent,
+            onTap: onDelete,
+            showDivider: false,
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _buildMenuOption({
+    required IconData icon,
+    required String title,
+    required Color iconColor,
+    required VoidCallback onTap,
+    required bool showDivider,
+  }) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+            child: Row(
+              children: [
+                Icon(icon, color: iconColor, size: 24),
+                16.widthBox,
+                Text(
+                  title,
+                ).bodyLarge(color: Colors.white, weight: FontWeight.w500),
+                const Spacer(),
+                Icon(
+                  Icons.chevron_right_rounded,
+                  color: Colors.white.withValues(alpha: 0.4),
+                  size: 22,
+                ),
+              ],
+            ),
+          ),
+        ),
+        if (showDivider)
+          Divider(
+            color: Colors.white.withValues(alpha: 0.05),
+            height: 1,
+            indent: 24,
+            endIndent: 24,
+          ),
+      ],
     );
   }
 }

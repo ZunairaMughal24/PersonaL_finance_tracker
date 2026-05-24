@@ -70,7 +70,8 @@ class HistoryModals {
                     if (context.mounted) {
                       ToastUtils.show(
                         context,
-                        "${keys.length} transactions deleted permanently",
+                        "${keys.length} transaction${keys.length > 1 ? 's' : ''} deleted permanently",
+                        isError: true,
                       );
                     }
                   },
@@ -134,7 +135,11 @@ class HistoryModals {
                     Navigator.pop(context);
                     await vm.restoreAll();
                     if (context.mounted) {
-                      ToastUtils.show(context, "All transactions restored");
+                      ToastUtils.show(
+                        context,
+                        "All transactions restored successfully",
+                        isError: false,
+                      );
                     }
                   },
                 ),
