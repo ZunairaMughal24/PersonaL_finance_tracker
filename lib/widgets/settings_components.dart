@@ -304,7 +304,7 @@ class SettingsModals {
           32.heightBox,
           AppButton(
             text: "Sign Out",
-            color: Colors.redAccent.withValues(alpha: 0.8),
+            color: Colors.redAccent.withValues(alpha: 0.9),
             onPressed: () {
               Navigator.pop(context);
               onConfirm();
@@ -314,7 +314,6 @@ class SettingsModals {
           AppButton(
             text: "Cancel",
             color: Colors.transparent,
-            borderColor: Colors.white.withValues(alpha: 0.1),
             onPressed: () => Navigator.pop(context),
           ),
         ],
@@ -340,7 +339,7 @@ class SettingsModals {
           32.heightBox,
           AppButton(
             text: "Move to History",
-            color: Colors.orangeAccent.withValues(alpha: 0.8),
+            color: Colors.orangeAccent.withValues(alpha: 0.9),
             onPressed: () {
               Navigator.pop(context);
               onConfirm();
@@ -350,7 +349,6 @@ class SettingsModals {
           AppButton(
             text: "Cancel",
             color: Colors.transparent,
-            borderColor: Colors.white.withValues(alpha: 0.1),
             onPressed: () => Navigator.pop(context),
           ),
         ],
@@ -391,7 +389,7 @@ class SettingsModals {
           32.heightBox,
           AppButton(
             text: "Include History",
-            color: AppColors.primaryColor.withValues(alpha: 0.8),
+            color: AppColors.primaryColor.withValues(alpha: 0.9),
             onPressed: () {
               Navigator.pop(context);
               onConfirm(true);
@@ -400,7 +398,7 @@ class SettingsModals {
           12.heightBox,
           AppButton(
             text: "Current Dashboard Only",
-            color: Colors.white.withValues(alpha: 0.1),
+            color: Colors.transparent,
             onPressed: () {
               Navigator.pop(context);
               onConfirm(false);
