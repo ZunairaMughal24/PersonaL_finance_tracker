@@ -3,6 +3,7 @@ import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/core/utils/toast_utility.dart';
+import 'package:montage/providers/transaction_provider.dart';
 import 'package:montage/providers/user_settings_provider.dart';
 import 'package:montage/viewmodels/transaction_list_view_model.dart';
 import 'package:montage/widgets/shared/selectable_transaction_list_item.dart';
@@ -46,13 +47,13 @@ class HistoryList extends StatelessWidget {
           isSelectionMode: vm.isSelectionMode,
           isHistoryMode: true,
           onToggleSelection: (key) => vm.toggleSelection(key),
-          onPrimaryAction: (key) {
-            vm.restoreSelected();
-            ToastUtils.show(
-              context,
-              "Transaction successfully restored",
-              isError: false,
-            );
+          onPrimaryAction: (key) async {
+            await context.read<TransactionProvider>().restoreTransactions([
+              key,
+            ]);
+            if (context.mounted) {
+              ToastUtils.show(context, "Transaction restored", isError: false);
+            }
           },
           onDelete: (key) => TransactionModals.showDeleteConfirm(
             context: context,
@@ -85,7 +86,7 @@ class HistoryEmptyState extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.03),
+                color: Colors.white.withValues(alpha: 0.07),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -93,7 +94,7 @@ class HistoryEmptyState extends StatelessWidget {
                     ? Icons.filter_list_off_rounded
                     : Icons.history_rounded,
                 size: 32,
-                color: Colors.white.withValues(alpha: 0.1),
+                color: Colors.white.withValues(alpha: 0.3),
               ),
             ),
             24.heightBox,

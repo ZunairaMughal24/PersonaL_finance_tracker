@@ -110,6 +110,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         ? "Spending by category"
                         : "Historical trend analysis",
                   ),
+                  10.heightBox,
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: _isPieChart

@@ -23,7 +23,7 @@ class ActivityEmptyState extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.03),
+                color: Colors.white.withValues(alpha: 0.07),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -31,7 +31,7 @@ class ActivityEmptyState extends StatelessWidget {
                     ? Icons.filter_list_off_rounded
                     : Icons.receipt_long_rounded,
                 size: 50,
-                color: Colors.white.withValues(alpha: 0.15),
+                color: Colors.white.withValues(alpha: 0.3),
               ),
             ),
             24.heightBox,
