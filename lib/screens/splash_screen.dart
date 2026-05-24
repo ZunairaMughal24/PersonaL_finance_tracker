@@ -23,14 +23,30 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FadeScaleTransition(
+              key: const ValueKey('logo'),
+              duration: const Duration(milliseconds: 1200),
               child: GlassContainer(
                 borderRadius: 100,
-                padding: const EdgeInsets.all(32),
+                padding: const EdgeInsets.all(20),
                 blur: 40,
-                child: Image.asset(
-                  AppImages.lineChartIcon,
-                  height: 120,
-                  width: 120,
+                child: Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 8,
+                        spreadRadius: 1,
+                      ),
+                    ],
+                  ),
+                  child: Image.asset(
+                    AppImages.lineChartIcon,
+                    height: 70,
+                    width: 70,
+                  ),
                 ),
               ),
             ),
@@ -49,7 +65,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                   8.heightBox,
                   Text(
-                    "FINANCIAL DISCIPLINE, REFINED",
+                    "FINANCIAL DISCIPLINE REFINED",
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Colors.white.withValues(alpha: 0.6),
                       fontWeight: FontWeight.w600,

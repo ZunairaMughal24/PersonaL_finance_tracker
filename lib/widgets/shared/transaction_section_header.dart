@@ -41,13 +41,9 @@ class TransactionSectionHeader extends StatelessWidget {
                     title,
                   ).labelLarge(color: Colors.white, weight: FontWeight.bold),
                   if (subtitle != null) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      subtitle!,
-                      style: AppTextTheme.body(
-                        color: Colors.white.withValues(alpha: 0.6),
-                        weight: FontWeight.w500,
-                      ).copyWith(fontSize: 13),
+                    Text(subtitle!).bodyMedium(
+                      color: Colors.white.withValues(alpha: 0.8),
+                      weight: FontWeight.w500,
                     ),
                   ],
                 ],
