@@ -162,7 +162,7 @@ class MainNavScreenState extends State<MainNavScreen> {
                 SvgPicture.asset(
                   iconPath,
                   colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-                  height: 21,
+                  height: 22,
                 )
               else if (icon != null)
                 Icon(icon, color: color, size: 21),
@@ -171,7 +171,7 @@ class MainNavScreenState extends State<MainNavScreen> {
                 label,
                 style: TextStyle(
                   color: color,
-                  fontSize: 12,
+                  fontSize: 13,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                 ),
               ),
