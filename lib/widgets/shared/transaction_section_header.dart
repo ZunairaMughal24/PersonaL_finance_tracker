@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
+import 'package:montage/core/themes/text_theme_extension.dart';
 
 class TransactionSectionHeader extends StatelessWidget {
   final String title;
   final String? subtitle;
   final String? badgeText;
+  final Widget? trailing;
   final double horizontalPadding;
   final double opacity;
 
@@ -12,6 +15,7 @@ class TransactionSectionHeader extends StatelessWidget {
     required this.title,
     this.subtitle,
     this.badgeText,
+    this.trailing,
     this.horizontalPadding = 20,
     this.opacity = 1.0,
   });
@@ -29,33 +33,27 @@ class TransactionSectionHeader extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 1.2,
-                  ),
-                ),
-                if (subtitle != null) ...[
-                  const SizedBox(height: 4),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    subtitle!,
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.6),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
+                    title,
+                  ).labelLarge(color: Colors.white, weight: FontWeight.bold),
+                  if (subtitle != null) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle!,
+                      style: AppTextTheme.body(
+                        color: Colors.white.withValues(alpha: 0.6),
+                        weight: FontWeight.w500,
+                      ).copyWith(fontSize: 13),
                     ),
-                  ),
+                  ],
                 ],
-              ],
+              ),
             ),
-            if (badgeText != null) ...[
-              const Spacer(),
+            if (badgeText != null)
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 10,
@@ -70,14 +68,14 @@ class TransactionSectionHeader extends StatelessWidget {
                 ),
                 child: Text(
                   badgeText!,
-                  style: const TextStyle(
+                  style: AppTextTheme.body(
                     color: Colors.white70,
+                    weight: FontWeight.w700,
                     fontSize: 11,
-                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
-            ],
+            if (trailing != null) trailing!,
           ],
         ),
       ),

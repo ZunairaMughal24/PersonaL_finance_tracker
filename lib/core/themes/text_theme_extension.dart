@@ -74,7 +74,7 @@ extension TextThemeExtension on Text {
 
   Text labelLarge({
     Color? color,
-    FontWeight weight = FontWeight.w500,
+    FontWeight weight = FontWeight.w600,
     double? fontSize,
     double? letterSpacing,
   }) => Text(

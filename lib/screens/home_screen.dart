@@ -16,6 +16,7 @@ import 'package:montage/providers/user_settings_provider.dart';
 import 'package:montage/widgets/app_background.dart';
 import 'package:montage/widgets/ai_insights_card.dart';
 import 'package:montage/widgets/home_skeleton.dart';
+import 'package:montage/widgets/shared/transaction_section_header.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -90,29 +91,33 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        4.heightBox,
+                        12.heightBox,
+                        const TransactionSectionHeader(
+                          title: "SMART ANALYSIS",
+                          subtitle: "AI-powered financial insights",
+                          horizontalPadding: 0,
+                        ),
                         AIInsightsCard(txProvider: tx),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text('Recent Activity').titleLarge(
-                              color: Colors.white,
-                              weight: FontWeight.bold,
-                            ),
-                            TextButton(
-                              onPressed: () =>
-                                  context.push(AppRoutes.activityScreenRoute),
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.white.withValues(
-                                  alpha: 0.7,
-                                ),
-                                padding: EdgeInsets.zero,
+                        8.heightBox,
+                        TransactionSectionHeader(
+                          title: "RECENT ACTIVITY",
+                          subtitle: "Your latest transactions",
+                          horizontalPadding: 0,
+                          trailing: TextButton(
+                            onPressed: () =>
+                                context.push(AppRoutes.activityScreenRoute),
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.white.withValues(
+                                alpha: 0.7,
                               ),
-                              child: const Text(
-                                'See All',
-                              ).labelLarge(weight: FontWeight.w600),
+                              padding: EdgeInsets.zero,
+                              minimumSize: const Size(0, 0),
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
-                          ],
+                            child: const Text(
+                              'See All',
+                            ).labelLarge(weight: FontWeight.w600),
+                          ),
                         ),
                       ],
                     ).pOnly(bottom: 2),
