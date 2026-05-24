@@ -162,7 +162,7 @@ class _HistoryScreenBodyState extends State<_HistoryScreenBody> {
                   onDateRangeChanged: vm.setDateRange,
                 ),
               ],
-              16.heightBox,
+              if (_isSearchVisible) 10.heightBox else 4.heightBox,
               const TransactionSectionHeader(title: "QUICK FILTERS"),
               TransactionFilterBar(
                 isIncomeFilter: vm.isIncomeFilter,
