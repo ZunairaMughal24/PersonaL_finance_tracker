@@ -1,67 +1,154 @@
 import 'package:flutter/material.dart';
 import 'package:montage/providers/transaction_provider.dart';
-import 'package:montage/providers/transaction_filter_provider.dart';
-import 'package:montage/widgets/transaction/transaction_list_item.dart';
+import 'package:montage/widgets/shared/selectable_transaction_list_item.dart';
 import 'package:montage/providers/user_settings_provider.dart';
 import 'package:montage/widgets/app_background.dart';
 import 'package:provider/provider.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
-import 'package:montage/widgets/custom_app_bar.dart';
+import 'package:montage/widgets/shared/transaction_app_bar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:montage/config/router.dart';
 import 'package:montage/widgets/activity/activity_empty_state.dart';
 import 'package:montage/widgets/shared/transaction_search_bar.dart';
 import 'package:montage/widgets/shared/transaction_filter_bar.dart';
+import 'package:montage/viewmodels/transaction_list_view_model.dart';
+import 'package:montage/widgets/shared/transaction_action_bar.dart';
+import 'package:montage/widgets/app_bottom_sheet.dart';
+import 'package:montage/widgets/history/export_bottom_sheet.dart';
+import 'package:montage/widgets/shared/transaction_modals.dart';
+import 'package:montage/core/utils/toast_utility.dart';
 
-class ActivityScreen extends StatefulWidget {
+class ActivityScreen extends StatelessWidget {
   const ActivityScreen({super.key});
 
   @override
-  State<ActivityScreen> createState() => _ActivityScreenState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => TransactionListViewModel(
+        context.read<TransactionProvider>(),
+        isHistoryMode: false,
+      ),
+      child: const _ActivityScreenBody(),
+    );
+  }
 }
 
-class _ActivityScreenState extends State<ActivityScreen> {
+class _ActivityScreenBody extends StatefulWidget {
+  const _ActivityScreenBody();
+
+  @override
+  State<_ActivityScreenBody> createState() => _ActivityScreenBodyState();
+}
+
+class _ActivityScreenBodyState extends State<_ActivityScreenBody> {
   bool _isSearchVisible = false;
   final FocusNode _searchFocusNode = FocusNode();
+  bool _selectionModalOpen = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchFocusNode.addListener(_onSearchFocusChange);
+  }
+
+  void _onSearchFocusChange() {
+    if (!_searchFocusNode.hasFocus && _isSearchVisible) {
+      final vm = context.read<TransactionListViewModel>();
+      if (vm.searchQuery.isEmpty) {
+        setState(() {
+          _isSearchVisible = false;
+        });
+      }
+    }
+  }
 
   @override
   void dispose() {
+    _searchFocusNode.removeListener(_onSearchFocusChange);
     _searchFocusNode.dispose();
     super.dispose();
   }
 
+  void _showBatchActionsSheet(TransactionListViewModel vm) {
+    if (_selectionModalOpen) return;
+    _selectionModalOpen = true;
+    AppBottomSheet.show(
+      context: context,
+      child: TransactionActionBar(
+        selectedCount: vm.selectedCount,
+        isHistoryMode: false,
+        onPrimaryAction: () async {
+          Navigator.pop(context);
+          await vm.archiveSelected();
+          if (context.mounted) {
+            ToastUtils.show(
+              context,
+              "${vm.selectedCount} transactions deleted (moved to history)",
+              isError: false,
+            );
+          }
+        },
+        onExport: () {
+          Navigator.pop(context);
+          final selectedTxs = vm.filteredTransactions
+              .where((tx) => vm.selectedKeys.contains(tx.key))
+              .toList();
+          final settings = context.read<UserSettingsProvider>();
+          ExportBottomSheet.show(
+            context: context,
+            transactions: selectedTxs,
+            userName: settings.userName,
+            currency: settings.selectedCurrency,
+          );
+        },
+        onDelete: () {
+          Navigator.pop(context);
+          TransactionModals.showDeleteConfirm(
+            context: context,
+            vm: vm,
+            keys: vm.selectedKeys.toList(),
+          );
+        },
+        onCancel: () {
+          Navigator.pop(context);
+          vm.clearSelection();
+        },
+      ),
+    ).then((_) {
+      _selectionModalOpen = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final transaction = Provider.of<TransactionProvider>(context);
-    final filter = Provider.of<TransactionFilterProvider>(context);
+    final vm = context.watch<TransactionListViewModel>();
+
+    // Automatic dismissal only (if count becomes zero while modal is open)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_selectionModalOpen && vm.selectedCount == 0) {
+        Navigator.pop(context);
+        _selectionModalOpen = false;
+      }
+    });
 
     return Scaffold(
       backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
-      appBar: CustomAppBar(
+      appBar: TransactionAppBar(
         title: 'Activity',
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(6.0),
-            child: IconButton(
-              onPressed: () {
-                setState(() {
-                  _isSearchVisible = !_isSearchVisible;
-                  if (_isSearchVisible) {
-                    _searchFocusNode.requestFocus();
-                  } else {
-                    filter.setSearchQuery('');
-                    _searchFocusNode.unfocus();
-                  }
-                });
-              },
-              icon: Icon(
-                _isSearchVisible ? Icons.close : Icons.search,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
+        isSearchVisible: _isSearchVisible,
+        onShowBatchActions: () => _showBatchActionsSheet(vm),
+        onToggleSearch: () {
+          setState(() {
+            _isSearchVisible = !_isSearchVisible;
+            if (_isSearchVisible) {
+              _searchFocusNode.requestFocus();
+            } else {
+              vm.updateSearch('');
+              _searchFocusNode.unfocus();
+            }
+          });
+        },
       ),
       body: AppBackground(
         style: BackgroundStyle.premiumHybrid,
@@ -73,28 +160,24 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 TransactionSearchBar(
                   focusNode: _searchFocusNode,
                   hintText: 'Search transactions...',
-                  onChanged: filter.setSearchQuery,
-                  selectedDateRange: filter.selectedDateRange,
-                  onDateRangeChanged: filter.setDateRange,
+                  onChanged: vm.updateSearch,
+                  selectedDateRange: vm.selectedDateRange,
+                  onDateRangeChanged: vm.setDateRange,
                 ),
               ],
               16.heightBox,
               TransactionFilterBar(
-                isIncomeFilter: filter.isIncomeFilter,
-                selectedCategory: filter.selectedCategory,
-                onTypeChanged: filter.setIsIncomeFilter,
-                onCategoryChanged: filter.setCategory,
-                transactionsForExport: filter.filterTransactions(
-                  transaction.transactions,
-                ),
+                isIncomeFilter: vm.isIncomeFilter,
+                selectedCategory: vm.selectedCategory,
+                onTypeChanged: vm.setIsIncomeFilter,
+                onCategoryChanged: vm.setCategory,
+                transactionsForExport: vm.filteredTransactions,
               ),
               16.heightBox,
               Expanded(
                 child: Consumer<UserSettingsProvider>(
                   builder: (context, settings, _) {
-                    final filtered = filter.filterTransactions(
-                      transaction.transactions,
-                    );
+                    final filtered = vm.filteredTransactions;
 
                     if (filtered.isEmpty) return const ActivityEmptyState();
 
@@ -104,22 +187,27 @@ class _ActivityScreenState extends State<ActivityScreen> {
                       itemCount: filtered.length,
                       itemBuilder: (context, index) {
                         final tx = filtered[index];
-                        return TransactionListItem(
+                        return SelectableTransactionListItem(
                           transaction: tx,
                           currency: settings.selectedCurrency,
-                          onDelete: () {
-                            final originalIndex = transaction.transactions
-                                .indexOf(tx);
-                            transaction.deleteTransaction(
-                              tx.key as int,
-                              originalIndex,
-                            );
-                          },
-                          onEdit: () {
+                          isSelected: vm.selectedKeys.contains(tx.key),
+                          isSelectionMode: vm.isSelectionMode,
+                          isHistoryMode: false,
+                          onToggleSelection: (key) => vm.toggleSelection(key),
+                          onPrimaryAction: (key) {
                             context.push(
                               AppRoutes.editTransactionScreenRoute,
                               extra: tx,
                             );
+                          },
+                          onDelete: (key) {
+                            final originalIndex = context
+                                .read<TransactionProvider>()
+                                .allTransactions
+                                .indexOf(tx);
+                            context
+                                .read<TransactionProvider>()
+                                .deleteTransaction(key, originalIndex);
                           },
                         );
                       },

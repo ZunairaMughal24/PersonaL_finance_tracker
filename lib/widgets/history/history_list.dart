@@ -3,20 +3,20 @@ import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/core/utils/toast_utility.dart';
 import 'package:montage/providers/user_settings_provider.dart';
-import 'package:montage/viewmodels/history_view_model.dart';
-import 'package:montage/widgets/history/history_list_item.dart';
-import 'package:montage/widgets/history/history_modals.dart';
+import 'package:montage/viewmodels/transaction_list_view_model.dart';
+import 'package:montage/widgets/shared/selectable_transaction_list_item.dart';
+import 'package:montage/widgets/shared/transaction_modals.dart';
 import 'package:provider/provider.dart';
 
 class HistoryList extends StatelessWidget {
-  final HistoryViewModel vm;
+  final TransactionListViewModel vm;
 
   const HistoryList({super.key, required this.vm});
 
   @override
   Widget build(BuildContext context) {
     final settings = context.watch<UserSettingsProvider>();
-    final archived = vm.archivedTransactions;
+    final archived = vm.filteredTransactions;
 
     if (archived.isEmpty) {
       return HistoryEmptyState(isSearching: vm.searchQuery.isNotEmpty);
@@ -28,21 +28,22 @@ class HistoryList extends StatelessWidget {
       itemCount: archived.length,
       itemBuilder: (context, index) {
         final tx = archived[index];
-        return HistoryListItem(
+        return SelectableTransactionListItem(
           transaction: tx,
           currency: settings.selectedCurrency,
           isSelected: vm.selectedKeys.contains(tx.key),
           isSelectionMode: vm.isSelectionMode,
-          onToggleSelection: vm.toggleSelection,
-          onRestore: (key) {
-            vm.restoreSingle(key);
+          isHistoryMode: true,
+          onToggleSelection: (key) => vm.toggleSelection(key),
+          onPrimaryAction: (key) {
+            vm.restoreSelected(); // Or a restoreSingle if we had one
             ToastUtils.show(
               context,
               "Transaction successfully restored",
               isError: false,
             );
           },
-          onDeletePermanently: (key) => HistoryModals.showDeleteConfirm(
+          onDelete: (key) => TransactionModals.showDeleteConfirm(
             context: context,
             vm: vm,
             keys: [key],

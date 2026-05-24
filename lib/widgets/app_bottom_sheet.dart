@@ -36,7 +36,7 @@ class AppBottomSheetContainer extends StatelessWidget {
       blur: 40,
       borderOpacity: 0.12,
       gradientColors: [
-        Colors.white.withValues(alpha: 0.1),
+        Colors.white.withValues(alpha: 0.05),
         Colors.white.withValues(alpha: 0.02),
       ],
       padding:
