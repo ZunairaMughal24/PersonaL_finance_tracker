@@ -24,6 +24,7 @@ class HistoryScreen extends StatefulWidget {
 class _HistoryScreenState extends State<HistoryScreen> {
   bool _isSearchVisible = false;
   final FocusNode _searchFocusNode = FocusNode();
+  bool _selectionModalOpen = false;
 
   @override
   void dispose() {
@@ -38,6 +39,58 @@ class _HistoryScreenState extends State<HistoryScreen> {
           HistoryViewModel(context.read<TransactionProvider>()),
       child: Consumer<HistoryViewModel>(
         builder: (context, vm, _) {
+          // Open modal sheet when selection mode becomes active.
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (vm.isSelectionMode && !_selectionModalOpen) {
+              _selectionModalOpen = true;
+              AppBottomSheet.show(
+                context: context,
+                child: HistoryActionBar(
+                  selectedCount: vm.selectedCount,
+                  onRestore: () async {
+                    Navigator.pop(context);
+                    await vm.restoreSelected();
+                    if (context.mounted) {
+                      ToastUtils.show(
+                        context,
+                        "${vm.selectedCount} transaction${vm.selectedCount > 1 ? 's' : ''} restored",
+                        isError: false,
+                      );
+                    }
+                  },
+                  onExport: () {
+                    Navigator.pop(context);
+                    final selectedTxs = vm.archivedTransactions
+                        .where((tx) => vm.selectedKeys.contains(tx.key))
+                        .toList();
+                    final settings = context.read<UserSettingsProvider>();
+                    ExportBottomSheet.show(
+                      context: context,
+                      transactions: selectedTxs,
+                      userName: settings.userName,
+                      currency: settings.selectedCurrency,
+                    );
+                  },
+                  onDelete: () {
+                    Navigator.pop(context);
+                    HistoryModals.showDeleteConfirm(
+                      context: context,
+                      vm: vm,
+                      keys: vm.selectedKeys.toList(),
+                    );
+                  },
+                  onCancel: () {
+                    Navigator.pop(context);
+                    vm.clearSelection();
+                  },
+                ),
+              ).then((_) {
+                _selectionModalOpen = false;
+                if (mounted && vm.isSelectionMode) vm.clearSelection();
+              });
+            }
+          });
+
           return Scaffold(
             backgroundColor: Colors.transparent,
             extendBodyBehindAppBar: true,
@@ -84,39 +137,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
               ),
             ),
 
-            bottomSheet: vm.isSelectionMode
-                ? HistoryActionBar(
-                    selectedCount: vm.selectedCount,
-                    onRestore: () async {
-                      await vm.restoreSelected();
-                      if (context.mounted) {
-                        ToastUtils.show(
-                          context,
-                          "${vm.selectedCount} transaction${vm.selectedCount > 1 ? 's' : ''} restored",
-                          isError: false,
-                        );
-                      }
-                    },
-                    onExport: () {
-                      final selectedTxs = vm.archivedTransactions
-                          .where((tx) => vm.selectedKeys.contains(tx.key))
-                          .toList();
-                      final settings = context.read<UserSettingsProvider>();
-                      ExportBottomSheet.show(
-                        context: context,
-                        transactions: selectedTxs,
-                        userName: settings.userName,
-                        currency: settings.selectedCurrency,
-                      );
-                    },
-                    onDelete: () => HistoryModals.showDeleteConfirm(
-                      context: context,
-                      vm: vm,
-                      keys: vm.selectedKeys.toList(),
-                    ),
-                    onCancel: vm.clearSelection,
-                  )
-                : null,
+            // Selection actions now presented as a modal bottom sheet so
+            // the drag handle works and users can swipe down to dismiss.
           );
         },
       ),

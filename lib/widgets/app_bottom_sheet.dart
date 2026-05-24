@@ -34,6 +34,11 @@ class AppBottomSheetContainer extends StatelessWidget {
       ),
       showBottomBorder: false,
       blur: 40,
+      borderOpacity: 0.12,
+      gradientColors: [
+        Colors.white.withValues(alpha: 0.1),
+        Colors.white.withValues(alpha: 0.02),
+      ],
       padding:
           padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: Column(
