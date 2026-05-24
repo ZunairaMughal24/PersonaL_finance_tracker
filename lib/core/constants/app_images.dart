@@ -6,7 +6,8 @@ class AppImages {
   static const String journalIcon = 'assets/icons/journal_icon.png';
   static const String lineChartIcon = 'assets/icons/line_chart.png';
   static const String salesIcon = 'assets/icons/sales.png';
-
+  static const String cleaner = 'assets/icons/cleaner.png';
+  static const String cleanerOutlined = 'assets/icons/cleaner1.png';
   // SVGs
   static const String bell = 'assets/icons/svgs/bell.svg';
   static const String lock = 'assets/icons/svgs/lock.svg';

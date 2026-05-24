@@ -58,6 +58,7 @@ class SettingsGroup extends StatelessWidget {
 class SettingsTile extends StatelessWidget {
   final IconData? icon;
   final String? svgAsset;
+  final String? imageAsset;
   final Color iconColor;
   final String title;
   final String subtitle;
@@ -69,6 +70,7 @@ class SettingsTile extends StatelessWidget {
     super.key,
     this.icon,
     this.svgAsset,
+    this.imageAsset,
     required this.iconColor,
     required this.title,
     required this.subtitle,
@@ -92,7 +94,14 @@ class SettingsTile extends StatelessWidget {
                 color: iconColor.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: svgAsset != null
+              child: imageAsset != null
+                  ? Image.asset(
+                      imageAsset!,
+                      color: iconColor,
+                      height: 22,
+                      width: 22,
+                    )
+                  : svgAsset != null
                   ? SvgPicture.asset(
                       svgAsset!,
                       colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),

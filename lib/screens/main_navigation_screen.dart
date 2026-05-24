@@ -14,6 +14,7 @@ import 'package:montage/providers/transaction_provider.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:montage/core/constants/app_images.dart';
+import 'package:montage/widgets/glass_container.dart';
 
 class MainNavScreen extends StatefulWidget {
   static final GlobalKey<MainNavScreenState> navKey =
@@ -86,55 +87,46 @@ class MainNavScreenState extends State<MainNavScreen> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
-        bottomNavigationBar: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
+        bottomNavigationBar: GlassContainer(
+          customBorderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
           ),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-            child: BottomAppBar(
-              color: Colors.white.withValues(alpha: 0.08),
-              elevation: 0,
-              notchMargin: 0,
-              padding: EdgeInsets.zero,
-              height: 64,
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: Colors.white.withValues(alpha: 0.12),
-                      width: 0.5,
-                    ),
-                  ),
+          showBottomBorder: false,
+          blur: 40,
+          borderOpacity: 0.12,
+          padding: EdgeInsets.zero,
+          child: BottomAppBar(
+            color: Colors.transparent,
+            elevation: 0,
+            notchMargin: 0,
+            padding: EdgeInsets.zero,
+            height: 65,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _navItem(
+                  iconPath: AppImages.homeAngle,
+                  label: 'Home',
+                  index: 0,
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _navItem(
-                      iconPath: AppImages.homeAngle,
-                      label: 'Home',
-                      index: 0,
-                    ),
-                    _navItem(
-                      iconPath: AppImages.chart,
-                      label: 'Analytics',
-                      index: 1,
-                    ),
-                    const SizedBox(width: 48),
-                    _navItem(
-                      iconPath: AppImages.record,
-                      label: 'Activity',
-                      index: 2,
-                    ),
-                    _navItem(
-                      icon: CupertinoIcons.person_fill,
-                      label: 'Settings',
-                      index: 3,
-                    ),
-                  ],
+                _navItem(
+                  iconPath: AppImages.chart,
+                  label: 'Analytics',
+                  index: 1,
                 ),
-              ),
+                const SizedBox(width: 48),
+                _navItem(
+                  iconPath: AppImages.record,
+                  label: 'Activity',
+                  index: 2,
+                ),
+                _navItem(
+                  icon: CupertinoIcons.person_fill,
+                  label: 'Settings',
+                  index: 3,
+                ),
+              ],
             ),
           ),
         ),

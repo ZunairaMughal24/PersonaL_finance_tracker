@@ -414,7 +414,7 @@ class ExportSection extends StatelessWidget {
               onTap: () => context.push(AppRoutes.historyScreenRoute),
             ),
             SettingsTile(
-              icon: Icons.cleaning_services_outlined,
+              imageAsset: AppImages.cleanerOutlined,
               iconColor: Colors.orangeAccent,
               title: "Clear Dashboard",
               subtitle: "Archive all current transactions",
