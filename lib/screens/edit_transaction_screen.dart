@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/models/transaction_model.dart';
 import 'package:montage/providers/category_provider.dart';
 import 'package:montage/providers/transaction_provider.dart';
@@ -15,6 +14,8 @@ import 'package:montage/widgets/app_background.dart';
 import 'package:montage/widgets/transaction/custom_category_dialog.dart';
 import 'package:montage/widgets/transaction/category_editor_dialog.dart';
 import 'package:montage/viewmodels/speech_view_model.dart';
+import 'package:montage/core/utils/widget_utility_extention.dart';
+import 'package:montage/widgets/shared/transaction_section_header.dart';
 
 class EditTransactionScreen extends StatelessWidget {
   const EditTransactionScreen({super.key, required this.transaction});
@@ -80,35 +81,23 @@ class _EditTransactionScreenContentState
                         physics: const BouncingScrollPhysics(),
                         child: Column(
                           children: [
-                            const SizedBox(height: 10),
+                            const TransactionSectionHeader(
+                              title: "TRANSACTION TYPE",
+                              subtitle: "Choose between income or expense",
+                            ),
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
                               child: TransactionTypeToggle(
                                 isIncome: vm.isIncome,
                                 onChanged: (val) => vm.toggleType(val),
                               ),
                             ),
-                            const SizedBox(height: 20),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                              ),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  "SELECT CATEGORY",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w800,
-                                    letterSpacing: 2.0,
-                                    color: AppColors.white.withValues(
-                                      alpha: 0.7,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                            12.heightBox,
+                            const TransactionSectionHeader(
+                              title: "SELECT CATEGORY",
                             ),
-                            const SizedBox(height: 16),
                             CategorySelector(
                               selectedCategory: vm.selectedCategory,
                               categories: context

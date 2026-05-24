@@ -56,8 +56,8 @@ class TransactionAppBar extends StatelessWidget implements PreferredSizeWidget {
         style: const TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.bold,
-          letterSpacing: 0.3,
-          fontSize: 19,
+          letterSpacing: 0.5,
+          fontSize: 21,
         ),
       ),
       centerTitle: true,
