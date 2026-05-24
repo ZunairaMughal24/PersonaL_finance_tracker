@@ -3,6 +3,8 @@ import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/models/transaction_model.dart';
 import 'package:montage/widgets/transaction/transaction_list_item.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:montage/core/constants/app_images.dart';
 
 class SelectableTransactionListItem extends StatelessWidget {
   final TransactionModel transaction;
@@ -120,29 +122,38 @@ class SelectableTransactionListItem extends StatelessWidget {
     final color = isPrimary ? Colors.green : Colors.red;
     final icon = isPrimary
         ? (isHistoryMode ? Icons.restore : Icons.edit_outlined)
-        : (isHistoryMode ? Icons.delete_forever : Icons.archive_outlined);
+        : null;
     final label = isPrimary
         ? (isHistoryMode ? "Restore" : "Edit")
-        : (isHistoryMode ? "Delete" : "Archive");
+        : (isHistoryMode ? "Delete" : "Delete");
 
     return Container(
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(20),
+        color: color.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(16),
       ),
       alignment: isPrimary ? Alignment.centerLeft : Alignment.centerRight,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: color),
+          if (isPrimary || icon != null)
+            Icon(icon, color: color, size: 22)
+          else
+            SvgPicture.asset(
+              AppImages.trashBin,
+              colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+              height: 22,
+            ),
+          const SizedBox(height: 4),
           Text(
-            label,
+            label.toUpperCase(),
             style: TextStyle(
               color: color,
               fontSize: 10,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 1.0,
             ),
           ),
         ],

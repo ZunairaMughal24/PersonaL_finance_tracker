@@ -36,21 +36,19 @@ class ActivityEmptyState extends StatelessWidget {
             ),
             24.heightBox,
             Text(
-              hasFilters
-                  ? "No transactions match your filters"
-                  : "Your dashboard is clean",
+              hasFilters ? "No matching outcomes" : "Dashboard is waiting",
               textAlign: TextAlign.center,
-            ).h4(
-              color: Colors.white.withValues(alpha: 0.8),
-              weight: FontWeight.bold,
+            ).bodyLarge(
+              color: Colors.white.withValues(alpha: 0.6),
+              weight: FontWeight.w600,
             ),
-            8.heightBox,
+            4.heightBox,
             Text(
               hasFilters
                   ? "Try adjusting your filters or search query"
                   : "Add your first transaction to get started",
               textAlign: TextAlign.center,
-            ).bodyLarge(color: Colors.white38),
+            ).bodyLarge(color: Colors.white.withValues(alpha: 0.25)),
             if (hasFilters && onClearFilters != null) ...[
               24.heightBox,
               TextButton.icon(

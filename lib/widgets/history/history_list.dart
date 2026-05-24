@@ -92,25 +92,25 @@ class HistoryEmptyState extends StatelessWidget {
                 hasFilters
                     ? Icons.filter_list_off_rounded
                     : Icons.history_rounded,
-                size: 50,
-                color: Colors.white.withValues(alpha: 0.15),
+                size: 32,
+                color: Colors.white.withValues(alpha: 0.1),
               ),
             ),
             24.heightBox,
             Text(
               hasFilters ? "No matches in history" : "History is empty",
               textAlign: TextAlign.center,
-            ).h4(
-              color: Colors.white.withValues(alpha: 0.8),
-              weight: FontWeight.bold,
+            ).bodyLarge(
+              color: Colors.white.withValues(alpha: 0.6),
+              weight: FontWeight.w600,
             ),
-            8.heightBox,
+            4.heightBox,
             Text(
               hasFilters
-                  ? "Try adjusting your filters to find archived records"
-                  : "Transactions you archive will appear here",
+                  ? "Try adjusting your filters"
+                  : "Deleted items will appear here",
               textAlign: TextAlign.center,
-            ).bodyLarge(color: Colors.white38),
+            ).bodyLarge(color: Colors.white.withValues(alpha: 0.25)),
             if (hasFilters && onClearFilters != null) ...[
               24.heightBox,
               TextButton.icon(

@@ -85,7 +85,7 @@ class _ActivityScreenBodyState extends State<_ActivityScreenBody> {
           if (context.mounted) {
             ToastUtils.show(
               context,
-              "$count transaction${count > 1 ? 's' : ''} deleted (moved to history)",
+              "$count transaction${count > 1 ? 's' : ''} deleted",
               isError: false,
             );
           }

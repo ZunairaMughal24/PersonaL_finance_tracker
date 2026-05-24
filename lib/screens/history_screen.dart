@@ -175,14 +175,14 @@ class _HistoryScreenBodyState extends State<_HistoryScreenBody> {
               if (vm.filteredTransactions.isNotEmpty) ...[
                 12.heightBox,
                 TransactionSectionHeader(
-                  title: "ARCHIVE EXPLORER",
+                  title: "HISTORY EXPLORER",
                   subtitle:
                       vm.selectedCategory != null ||
                           vm.isIncomeFilter != null ||
                           vm.searchQuery.isNotEmpty
                       ? "Displaying Filtered Records"
                       : "All Archived Transactions",
-                  badgeText: "${vm.filteredTransactions.length} ARCHIVED",
+                  badgeText: "${vm.filteredTransactions.length} RECORDS",
                 ),
                 8.heightBox,
               ],
