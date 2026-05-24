@@ -244,16 +244,21 @@ class SettingsModals {
   }) {
     AppBottomSheet.show(
       context: context,
+      padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            "Edit Profile",
-          ).titleLarge(color: Colors.white, weight: FontWeight.bold),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: const Text("Edit Profile").titleLarge(color: Colors.white),
+          ),
           20.heightBox,
           _buildMenuRow(
-            icon: Icons.person,
-            title: "Edit Name",
+            icon: Icons.person_rounded,
+            title: "Edit Display Name",
+            subtitle: "Update how your name appears in the app",
+            iconColor: Colors.blueAccent,
+            bgColor: Colors.blueAccent.withValues(alpha: 0.1),
             onTap: () {
               Navigator.pop(context);
               onEditNameTap();
@@ -261,10 +266,13 @@ class SettingsModals {
           ),
           Divider(color: Colors.white.withValues(alpha: 0.05), height: 1),
           _buildMenuRow(
-            icon: Icons.photo_library_outlined,
+            icon: Icons.add_a_photo_rounded,
             title: settings.profileImagePath != null
-                ? "Change Photo"
-                : "Add Photo",
+                ? "Change Profile Photo"
+                : "Upload Profile Photo",
+            subtitle: "Personalize your dashboard with a photo",
+            iconColor: Colors.tealAccent,
+            bgColor: Colors.tealAccent.withValues(alpha: 0.1),
             onTap: () {
               Navigator.pop(context);
               settings.pickAndUpdateProfileImage();
@@ -274,8 +282,10 @@ class SettingsModals {
             Divider(color: Colors.white.withValues(alpha: 0.05), height: 1),
             _buildMenuRow(
               svgAsset: AppImages.trashBin,
-              title: "Remove Photo",
+              title: "Remove Current Photo",
+              subtitle: "Revert to default profile avatar",
               iconColor: Colors.redAccent,
+              bgColor: Colors.redAccent.withValues(alpha: 0.15),
               onTap: () {
                 Navigator.pop(context);
                 settings.removeProfileImage();
@@ -291,30 +301,61 @@ class SettingsModals {
     IconData? icon,
     String? svgAsset,
     required String title,
+    required String subtitle,
     required VoidCallback onTap,
-    Color iconColor = Colors.white,
+    required Color iconColor,
+    required Color bgColor,
   }) {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
         child: Row(
           children: [
-            if (svgAsset != null)
-              SvgPicture.asset(
-                svgAsset,
-                colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
-                height: 22,
-              )
-            else
-              Icon(icon, color: iconColor, size: 22),
-            const SizedBox(width: 14),
-            Text(title).bodyLarge(color: Colors.white, weight: FontWeight.w500),
-            const Spacer(),
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: iconColor.withValues(alpha: 0.2),
+                  width: 1,
+                ),
+              ),
+              child: Center(
+                child: svgAsset != null
+                    ? SvgPicture.asset(
+                        svgAsset,
+                        colorFilter: ColorFilter.mode(
+                          iconColor,
+                          BlendMode.srcIn,
+                        ),
+                        height: 22,
+                      )
+                    : Icon(icon, color: iconColor, size: 22),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                  ).bodyLarge(color: Colors.white, weight: FontWeight.w500),
+                  const SizedBox(height: 4),
+                  Text(subtitle).bodyMedium(
+                    color: Colors.white.withValues(alpha: 0.5),
+                    weight: FontWeight.w400,
+                  ),
+                ],
+              ),
+            ),
             Icon(
               Icons.chevron_right_rounded,
-              color: Colors.white.withValues(alpha: 0.4),
-              size: 22,
+              color: Colors.white.withValues(alpha: 0.2),
+              size: 24,
             ),
           ],
         ),
