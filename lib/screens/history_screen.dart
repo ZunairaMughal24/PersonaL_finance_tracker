@@ -10,6 +10,8 @@ import 'package:montage/widgets/shared/transaction_filter_bar.dart';
 import 'package:montage/widgets/shared/transaction_search_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
+import 'package:montage/widgets/history/export_bottom_sheet.dart';
+import 'package:montage/providers/user_settings_provider.dart';
 import 'package:montage/core/utils/toast_utility.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -81,6 +83,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 ),
               ),
             ),
+
             bottomSheet: vm.isSelectionMode
                 ? HistoryActionBar(
                     selectedCount: vm.selectedCount,
@@ -92,6 +95,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           "Selected transactions restored",
                         );
                       }
+                    },
+                    onExport: () {
+                      final selectedTxs = vm.archivedTransactions
+                          .where((tx) => vm.selectedKeys.contains(tx.key))
+                          .toList();
+                      final settings = context.read<UserSettingsProvider>();
+                      ExportBottomSheet.show(
+                        context: context,
+                        transactions: selectedTxs,
+                        userName: settings.userName,
+                        currency: settings.selectedCurrency,
+                      );
                     },
                     onDelete: () => HistoryModals.showDeleteConfirm(
                       context: context,
