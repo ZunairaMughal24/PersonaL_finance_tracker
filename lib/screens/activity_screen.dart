@@ -133,6 +133,7 @@ class _ActivityScreenBodyState extends State<_ActivityScreenBody> {
 
     return Scaffold(
       backgroundColor: Colors.transparent,
+      resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       appBar: TransactionAppBar(
         title: 'Activity',

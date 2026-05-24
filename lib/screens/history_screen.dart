@@ -130,6 +130,7 @@ class _HistoryScreenBodyState extends State<_HistoryScreenBody> {
 
     return Scaffold(
       backgroundColor: Colors.transparent,
+      resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       appBar: TransactionAppBar(
         title: 'History',

@@ -78,58 +78,60 @@ class HistoryEmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.03),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              hasFilters
-                  ? Icons.filter_list_off_rounded
-                  : Icons.history_rounded,
-              size: 50,
-              color: Colors.white.withValues(alpha: 0.15),
-            ),
-          ),
-          24.heightBox,
-          Text(
-            hasFilters ? "No matches in history" : "History is empty",
-            textAlign: TextAlign.center,
-          ).h4(
-            color: Colors.white.withValues(alpha: 0.8),
-            weight: FontWeight.bold,
-          ),
-          8.heightBox,
-          Text(
-            hasFilters
-                ? "Try adjusting your filters to find archived records"
-                : "Transactions you archive will appear here",
-            textAlign: TextAlign.center,
-          ).bodyLarge(color: Colors.white38),
-          if (hasFilters && onClearFilters != null) ...[
-            24.heightBox,
-            TextButton.icon(
-              onPressed: onClearFilters,
-              icon: const Icon(Icons.refresh_rounded, size: 18),
-              label: const Text("Clear all filters"),
-              style: TextButton.styleFrom(
-                foregroundColor: AppColors.accent,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 12,
-                ),
-                backgroundColor: AppColors.accent.withValues(alpha: 0.1),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.03),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                hasFilters
+                    ? Icons.filter_list_off_rounded
+                    : Icons.history_rounded,
+                size: 50,
+                color: Colors.white.withValues(alpha: 0.15),
               ),
             ),
+            24.heightBox,
+            Text(
+              hasFilters ? "No matches in history" : "History is empty",
+              textAlign: TextAlign.center,
+            ).h4(
+              color: Colors.white.withValues(alpha: 0.8),
+              weight: FontWeight.bold,
+            ),
+            8.heightBox,
+            Text(
+              hasFilters
+                  ? "Try adjusting your filters to find archived records"
+                  : "Transactions you archive will appear here",
+              textAlign: TextAlign.center,
+            ).bodyLarge(color: Colors.white38),
+            if (hasFilters && onClearFilters != null) ...[
+              24.heightBox,
+              TextButton.icon(
+                onPressed: onClearFilters,
+                icon: const Icon(Icons.refresh_rounded, size: 18),
+                label: const Text("Clear all filters"),
+                style: TextButton.styleFrom(
+                  foregroundColor: AppColors.accent,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
+                  ),
+                  backgroundColor: AppColors.accent.withValues(alpha: 0.1),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
