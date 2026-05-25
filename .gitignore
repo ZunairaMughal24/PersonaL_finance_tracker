@@ -43,3 +43,17 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Environment variables and secrets
+.env
+*.env.local
+*.env.*.local
+
+# Firebase Configuration
+ios/Runner/GoogleService-Info.plist
+android/app/google-services.json
+lib/firebase_options.dart
+
+# Mac/Windows noise
+.DS_Store
+Thumbs.db
