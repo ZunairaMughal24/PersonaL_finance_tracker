@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2026-05-25
+
+### Added
+- **Batch Action System**: Non-intrusive transaction selection workflow with a dynamic "Batch Actions" trigger (bolt icon) in the AppBar.
+- **Selective Data Export**: Enabled exporting specific selected transactions to CSV or PDF, providing granular control over financial reports.
+- **Swipe-to-Action Gestures**: Implemented intuitive swipe gestures (Delete/Edit) for transactions on both Home and History screens for a faster, native feel.
+- **Soft Delete Ecosystem**: Comprehensive "History" management system for managing deleted transactions with one-tap restoration capabilities.
+- **Horizontal Filter Chips**: Introduced a sleek, scrollable row of filters for one-tap category navigation in the Activity screen.
+
+### Improved
+- **Modular Widget Architecture**: Extracted and standardized transaction-related components (`TransactionAppBar`, `TransactionFilterBar`, `TransactionSearchBar`) into a reusable shared library.
+- **UI Modernization**: Standardized all interactive buttons and action items to a premium 45px glassmorphic height.
+- **Terminology Alignment**: Unified the user experience by standardizing all "Archive" references to "Delete" throughout the UI and notifications.
+- **Empty States**: Refined empty state illustrations and typography to be more subtle, professional, and consistent with the dark glassmorphic aesthetic.
+- **AppBar Refinement**: Minimalist, centered title design for the History screen with a consolidated popup menu for advanced actions.
+
+### Fixed
+- **Swipe-to-Restore Synchronization**: Resolved critical state management bugs where restored transactions weren't immediately reflecting in the UI.
+- **Selection Modal UX**: Fixed provider scoping issues that caused intrusive modal popups during multi-selection, ensuring a non-disruptive workflow.
+- **Restore All Functionality**: Fixed a regression in the History screen where the "Restore All" action failed to update the list state correctly.
+
 ## [1.7.0] - 2026-04-18
 
 ### Added

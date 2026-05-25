@@ -1,5 +1,9 @@
 # Montage
 
+> **PROPRIETARY & CONFIDENTIAL**
+> 
+> © 2026 Zunaira Mughal. All rights reserved. Unauthorized cloning, distribution, or usage of this repository is strictly prohibited.
+
 **Financial discipline, refined.**
 
 Montage is a personal finance management application built with Flutter. It helps users track income and expenses, visualize spending patterns, attach receipts to transactions, and manage their financial goals — all wrapped in a polished, dark-themed glassmorphic interface.
@@ -14,7 +18,10 @@ Montage is a personal finance management application built with Flutter. It help
 - **Icon Customization**: Select from a curated list of icons for personalized category tracking.
 - **Cloud Sync**: Automatic background synchronization between local Hive storage and Firebase Firestore.
 - **Predictive Selection**: Intelligently updates transaction category references when custom categories are edited or deleted (auto-fallback to 'Other').
-- Toggle between income and expense views with optimized **swipe gestures**.
+- **Swipe-to-Action**: Intuitive swipe gestures (Delete/Edit) on both Home and History lists for rapid transaction management.
+- **Batch Selection**: Select multiple transactions to perform bulk actions (Delete/Export) without interrupting the workflow.
+- **Soft Delete & History**: A robust safety-net system allowing users to manage deleted transactions and restore them with a single tap.
+- **Selective Exporting**: Generate PDF or CSV reports for specific selected transactions or the entire history.
 - **Smart Dictation**: Multi-lingual speech-to-text (English & Urdu) for transaction notes, titles, and **custom category creation**.
 - Attach photos (camera or gallery) as receipts or proof of purchase.
 - View attached images in a full-screen viewer with pinch-to-zoom.
@@ -54,6 +61,8 @@ Montage is a personal finance management application built with Flutter. It help
 - Consistent bottom-sheet interactions for all secondary actions (transaction details, editing, media picking, profile options).
 - **Data-Ready Startup**: A "Bulletproof" splash screen that polls for both authentication status and database readiness, ensuring a flicker-free transition once the home screen appears.
 - Haptic feedback on key interactions.
+- **Interactive Filters**: Horizontal scrollable filter chips for instant category-based results.
+- **Modular Architecture**: Clean separation of concerns with dedicated, reusable widgets for App Bars, search, and filtering.
 - **Interactive Animations**: Smooth page transitions, micro-animations, and animated line indicators for enhanced navigation feedback.
 - **Stable UI Engineering**: Fixed-height input validation area prevents screen layout shifts or "jumping" when errors are displayed.
 - **Iconography**: Unified, professional iconography powered by **Font Awesome**.
@@ -101,46 +110,6 @@ lib/
 ```
 
 ---
-
-## Getting Started
-
-### Prerequisites
-- Flutter SDK (stable channel, Dart ≥ 3.8.1)
-- Android Studio or VS Code
-- A configured Firebase project
-
-### Setup
-
-```bash
-# Clone the repository
-git clone https://github.com/ZunairaMughal24/PersonaL_finance_tracker.git
-
-# Install dependencies
-flutter pub get
-
-# Generate Hive adapters
-dart run build_runner build --delete-conflicting-outputs
-
-# Run the app
-flutter run
-```
-
-### Firebase Configuration
-Place your `google-services.json` (Android) and `GoogleService-Info.plist` (iOS) in the appropriate platform directories. Refer to the [FlutterFire setup guide](https://firebase.google.com/docs/flutter/setup) for details.
-
----
-
-## Design Philosophy
-
-Montage follows a **refined 3D container aesthetic** with subtle shadows, frosted glass effects, and elegant border treatments. Moving beyond traditional Neumorphism, the app now utilizes a custom `AppContainer` system that provides depth and hierarchy through soft, layered shadows and curated gradients. 
-
-All interactive surfaces share a unified visual language — from the professional Font Awesome iconography to the animated line indicators. Business logic is strictly separated from UI, ensuring that screens remain thin while delegating complex state management to Providers, ViewModels, and Services.
-
----
-
-## License
-
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
 ---
 
