@@ -3,6 +3,8 @@ import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/core/utils/date_formatter.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/widgets/glass_container.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/utils/currency_utils.dart';
 import 'package:montage/providers/user_settings_provider.dart';
 import 'package:provider/provider.dart';
@@ -39,11 +41,21 @@ class TotalBalanceCard extends StatelessWidget {
           child: Stack(
             children: [
               Positioned.fill(
-                child: Image.network(
-                  'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=2574&auto=format&fit=crop',
+                child: CachedNetworkImage(
+                  imageUrl:
+                      'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=2574&auto=format&fit=crop',
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      Container(color: const Color(0xFF0A0E27)),
+                  placeholder: (context, url) => Container(
+                    decoration: const BoxDecoration(
+                      gradient: AppColors.mainBackgroundGradient,
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: AppColors.background,
+                    decoration: BoxDecoration(
+                      gradient: AppColors.mainBackgroundGradient,
+                    ),
+                  ),
                 ),
               ),
               Positioned.fill(

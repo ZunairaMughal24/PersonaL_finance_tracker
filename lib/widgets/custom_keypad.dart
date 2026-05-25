@@ -4,6 +4,7 @@ import 'package:montage/core/constants/app_colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:montage/core/constants/app_images.dart';
 import 'package:montage/widgets/pulse_effect.dart';
+import 'package:montage/core/utils/haptic_feedback_helper.dart';
 
 class CustomKeypad extends StatefulWidget {
   final String amount;
@@ -559,7 +560,10 @@ class _KeypadButton extends StatelessWidget {
           color: backgroundColor ?? AppColors.background.withValues(alpha: 0.2),
           borderRadius: BorderRadius.circular(6),
           child: InkWell(
-            onTap: onTap,
+            onTap: () {
+              HapticHelper.light();
+              onTap();
+            },
             borderRadius: BorderRadius.circular(6),
             child: Container(
               height: 45,

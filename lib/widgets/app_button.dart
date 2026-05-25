@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/utils/haptic_feedback_helper.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 
 class AppButton extends StatelessWidget {
@@ -64,7 +65,12 @@ class AppButton extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: isLoading ? null : onPressed,
+          onTap: isLoading
+              ? null
+              : () {
+                  HapticHelper.light();
+                  onPressed();
+                },
           borderRadius: BorderRadius.circular(borderRadius),
           child: Center(
             child: isLoading

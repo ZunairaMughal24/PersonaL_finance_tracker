@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:flutter/material.dart';
 
 enum BackgroundStyle {
   premiumHybrid, // Home: Iridescent + Splash Hints
@@ -87,9 +88,12 @@ class AppBackground extends StatelessWidget {
     return Stack(
       children: [
         Positioned.fill(
-          child: Image.network(
-            'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=2574&auto=format&fit=crop',
+          child: CachedNetworkImage(
+            imageUrl:
+                'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=2574&auto=format&fit=crop',
             fit: BoxFit.cover,
+            errorWidget: (context, url, error) =>
+                Container(color: AppColors.background),
           ),
         ),
         Positioned.fill(
@@ -188,9 +192,12 @@ class AppBackground extends StatelessWidget {
     return Stack(
       children: [
         Positioned.fill(
-          child: Image.network(
-            'https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2187&auto=format&fit=crop',
+          child: CachedNetworkImage(
+            imageUrl:
+                'https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2187&auto=format&fit=crop',
             fit: BoxFit.cover,
+            errorWidget: (context, url, error) =>
+                Container(color: AppColors.background),
           ),
         ),
         Positioned.fill(
@@ -230,9 +237,12 @@ class AppBackground extends StatelessWidget {
     return Stack(
       children: [
         Positioned.fill(
-          child: Image.network(
-            'https://images.unsplash.com/photo-1635776062127-d379bfcba9f8?q=80&w=1920&auto=format&fit=crop',
+          child: CachedNetworkImage(
+            imageUrl:
+                'https://images.unsplash.com/photo-1635776062127-d379bfcba9f8?q=80&w=1920&auto=format&fit=crop',
             fit: BoxFit.cover,
+            errorWidget: (context, url, error) =>
+                Container(color: AppColors.background),
           ),
         ),
         Positioned.fill(
