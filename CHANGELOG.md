@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2026-05-26
+
+### UI/UX & Professional Polish
+- **Standardized Alignment**: Implemented a strict 16px horizontal padding rule across all screens and widgets for visual consistency.
+- **Typography Overhaul**: Increased minimum font sizes and adjusted opacity for better legibility and accessibility in dark mode.
+- **Haptic Feedback System**: Added a centralized `HapticHelper` utility providing tactile physical feedback for the keypad, navigation tabs, and the main FAB.
+- **Network Resilience**: Migrated all network images to `CachedNetworkImage` to prevent crashes during internet instability and added elegant gradient placeholders.
+- **Interactive Refinements**: Improved tap targets for text buttons and increased the Bottom Navigation Bar height for a more "premium" feel.
+
 ## [1.8.0] - 2026-05-25
 
 ### Added
