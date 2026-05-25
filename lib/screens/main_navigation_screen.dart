@@ -14,6 +14,7 @@ import 'package:montage/providers/transaction_provider.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:montage/core/constants/app_images.dart';
+import 'package:montage/core/utils/haptic_feedback_helper.dart';
 import 'package:montage/widgets/glass_container.dart';
 
 class MainNavScreen extends StatefulWidget {
@@ -35,6 +36,8 @@ class MainNavScreenState extends State<MainNavScreen> {
   }
 
   void _onTabSelected(int index) {
+    if (_currentIndex == index) return;
+    HapticHelper.selection();
     // Clear activity filters when navigating away from Activity tab
     if (_currentIndex == 2 && index != 2) {
       context.read<TransactionFilterProvider>().clearFilters();
@@ -81,6 +84,7 @@ class MainNavScreenState extends State<MainNavScreen> {
           elevation: 6,
           shape: const CircleBorder(),
           onPressed: () {
+            HapticHelper.medium();
             context.push(AppRoutes.transactionScreenRoute);
           },
           child: const Icon(Icons.add, size: 28, color: Colors.white),
@@ -101,7 +105,7 @@ class MainNavScreenState extends State<MainNavScreen> {
             elevation: 0,
             notchMargin: 0,
             padding: EdgeInsets.zero,
-            height: 65,
+            height: 70,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [

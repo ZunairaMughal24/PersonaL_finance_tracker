@@ -21,7 +21,7 @@ class HomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 16, top: 10, bottom: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -98,10 +98,8 @@ class HomeHeader extends StatelessWidget {
                     BlendMode.srcIn,
                   ),
                   height: 22,
-                  placeholderBuilder: (BuildContext context) => const SizedBox(
-                    height: 22,
-                    width: 22,
-                  ),
+                  placeholderBuilder: (BuildContext context) =>
+                      const SizedBox(height: 22, width: 22),
                 ),
                 Positioned(
                   right: 2,

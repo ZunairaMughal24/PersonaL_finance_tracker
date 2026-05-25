@@ -82,7 +82,7 @@ class _TransactionScreenContentState extends State<_TransactionScreenContent> {
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 20,
+                                horizontal: 16,
                               ),
                               child: TransactionTypeToggle(
                                 isIncome: vm.isIncome,

@@ -72,7 +72,7 @@ class AppTheme {
       ),
 
       textTheme: GoogleFonts.nunitoTextTheme(
-        const TextTheme(
+        TextTheme(
           displayLarge: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
@@ -103,18 +103,18 @@ class AppTheme {
             fontWeight: FontWeight.w500,
             color: AppColors.textPrimary,
           ),
-          bodyLarge: TextStyle(fontSize: 15, color: AppColors.textPrimary),
-          bodyMedium: TextStyle(fontSize: 14, color: AppColors.textSecondary),
-          bodySmall: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+          bodyLarge: TextStyle(fontSize: 16, color: AppColors.textPrimary),
+          bodyMedium: TextStyle(fontSize: 15, color: AppColors.textSecondary),
+          bodySmall: TextStyle(fontSize: 13, color: AppColors.textSecondary),
           labelLarge: TextStyle(
             fontSize: 14,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
             color: AppColors.textPrimary,
           ),
           labelSmall: TextStyle(
-            fontSize: 10,
+            fontSize: 12,
             fontWeight: FontWeight.w500,
-            color: AppColors.textSecondary,
+            color: AppColors.textSecondary.withValues(alpha: 0.8),
           ),
         ),
       ),

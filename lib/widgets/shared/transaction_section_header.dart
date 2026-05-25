@@ -16,7 +16,7 @@ class TransactionSectionHeader extends StatelessWidget {
     this.subtitle,
     this.badgeText,
     this.trailing,
-    this.horizontalPadding = 20,
+    this.horizontalPadding = 16,
     this.opacity = 1.0,
   });
 

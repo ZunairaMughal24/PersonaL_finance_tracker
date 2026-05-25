@@ -60,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     style: Theme.of(context).textTheme.displaySmall?.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.w900,
-                      letterSpacing: 4,
+                      letterSpacing: 3,
                     ),
                   ),
                   8.heightBox,
@@ -69,7 +69,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Colors.white.withValues(alpha: 0.6),
                       fontWeight: FontWeight.w600,
-                      letterSpacing: 2.5,
+                      letterSpacing: 2,
                     ),
                   ),
                 ],

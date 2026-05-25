@@ -44,7 +44,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -110,9 +110,12 @@ class HomeScreen extends StatelessWidget {
                               foregroundColor: Colors.white.withValues(
                                 alpha: 0.7,
                               ),
-                              padding: EdgeInsets.zero,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
                               minimumSize: const Size(0, 0),
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              tapTargetSize: MaterialTapTargetSize.padded,
                             ),
                             child: const Text(
                               'See All',

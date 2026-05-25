@@ -30,12 +30,13 @@ class AppTextTheme {
   static TextStyle body({
     Color? color,
     FontWeight weight = FontWeight.w400,
-    double fontSize = 14,
+    double fontSize = 15,
   }) => GoogleFonts.nunito(
     fontSize: fontSize,
     height: 1.4,
     fontWeight: weight,
     color: color,
+    letterSpacing: 0.2,
   );
 
   // Mono Font Style (using Geologica)
