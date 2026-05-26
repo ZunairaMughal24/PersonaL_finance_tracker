@@ -131,7 +131,7 @@ class TrendsWeeklyBreakdown extends StatelessWidget {
                   ),
                   Text(CurrencyUtils.formatAmount(data.income, currency)).mono(
                     weight: FontWeight.bold,
-                    fontSize: 17,
+                    fontSize: 15,
                     color: AppColors.green,
                   ),
                 ],
@@ -174,7 +174,7 @@ class TrendsWeeklyBreakdown extends StatelessWidget {
                 ),
                 Text(CurrencyUtils.formatAmount(data.expense, currency)).mono(
                   weight: FontWeight.bold,
-                  fontSize: 17,
+                  fontSize: 15,
                   color: AppColors.primaryLight,
                 ),
               ],
@@ -197,7 +197,7 @@ class TrendsWeeklyBreakdown extends StatelessWidget {
                   ),
                 ).mono(
                   weight: FontWeight.bold,
-                  fontSize: 14,
+                  fontSize: 13,
                   color: (data.income - data.expense) >= 0
                       ? AppColors.green
                       : AppColors.red.withValues(alpha: 0.8),

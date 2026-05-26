@@ -42,30 +42,11 @@ class _ActivityScreenBody extends StatefulWidget {
 }
 
 class _ActivityScreenBodyState extends State<_ActivityScreenBody> {
-  bool _isSearchVisible = false;
   final FocusNode _searchFocusNode = FocusNode();
   bool _selectionModalOpen = false;
 
   @override
-  void initState() {
-    super.initState();
-    _searchFocusNode.addListener(_onSearchFocusChange);
-  }
-
-  void _onSearchFocusChange() {
-    if (!_searchFocusNode.hasFocus && _isSearchVisible) {
-      final vm = context.read<TransactionListViewModel>();
-      if (vm.searchQuery.isEmpty) {
-        setState(() {
-          _isSearchVisible = false;
-        });
-      }
-    }
-  }
-
-  @override
   void dispose() {
-    _searchFocusNode.removeListener(_onSearchFocusChange);
     _searchFocusNode.dispose();
     super.dispose();
   }
@@ -139,18 +120,15 @@ class _ActivityScreenBodyState extends State<_ActivityScreenBody> {
       extendBodyBehindAppBar: true,
       appBar: TransactionAppBar(
         title: 'Activity',
-        isSearchVisible: _isSearchVisible,
+        isSearchVisible: vm.isSearchVisible,
         onShowBatchActions: () => _showBatchActionsSheet(vm),
         onToggleSearch: () {
-          setState(() {
-            _isSearchVisible = !_isSearchVisible;
-            if (_isSearchVisible) {
-              _searchFocusNode.requestFocus();
-            } else {
-              vm.updateSearch('');
-              _searchFocusNode.unfocus();
-            }
-          });
+          vm.toggleSearch();
+          if (vm.isSearchVisible) {
+            _searchFocusNode.requestFocus();
+          } else {
+            _searchFocusNode.unfocus();
+          }
         },
       ),
       body: AppBackground(
@@ -158,7 +136,7 @@ class _ActivityScreenBodyState extends State<_ActivityScreenBody> {
         child: SafeArea(
           child: Column(
             children: [
-              if (_isSearchVisible) ...[
+              if (vm.isSearchVisible) ...[
                 10.heightBox,
                 TransactionSearchBar(
                   focusNode: _searchFocusNode,
@@ -168,7 +146,7 @@ class _ActivityScreenBodyState extends State<_ActivityScreenBody> {
                   onDateRangeChanged: vm.setDateRange,
                 ),
               ],
-              if (_isSearchVisible) 10.heightBox else 4.heightBox,
+              if (vm.isSearchVisible) 10.heightBox else 4.heightBox,
               const TransactionSectionHeader(title: "QUICK FILTERS"),
               TransactionFilterBar(
                 isIncomeFilter: vm.isIncomeFilter,
@@ -229,15 +207,7 @@ class _ActivityScreenBodyState extends State<_ActivityScreenBody> {
                               extra: tx,
                             );
                           },
-                          onDelete: (key) {
-                            final originalIndex = context
-                                .read<TransactionProvider>()
-                                .allTransactions
-                                .indexOf(tx);
-                            context
-                                .read<TransactionProvider>()
-                                .deleteTransaction(key, originalIndex);
-                          },
+                          onDelete: (key) => vm.deleteSingleTransaction(key),
                         );
                       },
                     );

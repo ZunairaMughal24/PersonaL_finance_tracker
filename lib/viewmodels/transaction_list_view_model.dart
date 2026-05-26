@@ -13,6 +13,7 @@ class TransactionListViewModel extends ChangeNotifier {
   bool? _isIncomeFilter; // null means 'All'
   final Set<int> _selectedKeys = {};
   bool _isSelectionMode = false;
+  bool _isSearchVisible = false;
 
   TransactionListViewModel(
     this._transactionProvider, {
@@ -35,6 +36,7 @@ class TransactionListViewModel extends ChangeNotifier {
   Set<int> get selectedKeys => _selectedKeys;
   bool get isSelectionMode => _isSelectionMode;
   int get selectedCount => _selectedKeys.length;
+  bool get isSearchVisible => _isSearchVisible;
 
   List<TransactionModel> get filteredTransactions {
     final baseTransactions = isHistoryMode
@@ -59,14 +61,11 @@ class TransactionListViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setIsIncomeFilter(bool? value) {
-    _isIncomeFilter = value;
-    notifyListeners();
-  }
-
-  void setCategory(String? category) {
-    // "All" is a UI sentinel, null means no category filter
-    _selectedCategory = (category == 'All') ? null : category;
+  void toggleSearch() {
+    _isSearchVisible = !_isSearchVisible;
+    if (!_isSearchVisible) {
+      _searchQuery = "";
+    }
     notifyListeners();
   }
 
@@ -75,20 +74,29 @@ class TransactionListViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleSelection(int key) {
-    if (_selectedKeys.contains(key)) {
-      _selectedKeys.remove(key);
-      if (_selectedKeys.isEmpty) _isSelectionMode = false;
-    } else {
-      _selectedKeys.add(key);
-      _isSelectionMode = true;
-    }
+  void setCategory(String? category) {
+    _selectedCategory = category;
     notifyListeners();
   }
 
-  void clearSelection() {
-    _selectedKeys.clear();
-    _isSelectionMode = false;
+  void setIsIncomeFilter(bool? isIncome) {
+    _isIncomeFilter = isIncome;
+    notifyListeners();
+  }
+
+  void clearFilters() {
+    _searchQuery = "";
+    _selectedDateRange = null;
+    _selectedCategory = null;
+    _isIncomeFilter = null;
+    notifyListeners();
+  }
+
+  void toggleSelectionMode() {
+    _isSelectionMode = !_isSelectionMode;
+    if (!_isSelectionMode) {
+      _selectedKeys.clear();
+    }
     notifyListeners();
   }
 
@@ -97,44 +105,60 @@ class TransactionListViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void selectAll() {
-    _selectedKeys.addAll(filteredTransactions.map((tx) => tx.key as int));
+  void toggleSelection(int key) {
+    if (_selectedKeys.contains(key)) {
+      _selectedKeys.remove(key);
+      if (_selectedKeys.isEmpty) {
+        _isSelectionMode = false;
+      }
+    } else {
+      _selectedKeys.add(key);
+      _isSelectionMode = true;
+    }
+    notifyListeners();
+  }
+
+  void selectAll([List<int>? keys]) {
+    final targets =
+        keys ?? filteredTransactions.map((tx) => tx.key as int).toList();
+    _selectedKeys.addAll(targets);
     _isSelectionMode = true;
     notifyListeners();
   }
 
   void deselectAll() {
-    clearSelection();
+    _selectedKeys.clear();
+    _isSelectionMode = false;
+    notifyListeners();
   }
+
+  // Alias for UI compatibility
+  void clearSelection() => deselectAll();
 
   Future<void> deleteSelected() async {
-    if (_selectedKeys.isEmpty) return;
     await _transactionProvider.deletePermanently(_selectedKeys.toList());
-    clearSelection();
+    _selectedKeys.clear();
+    _isSelectionMode = false;
+    notifyListeners();
   }
 
-  Future<void> archiveSelected() async {
-    if (_selectedKeys.isEmpty) return;
-    final keysToArchive = _selectedKeys.toList();
-    for (var key in keysToArchive) {
-      // Find index for the provider's logic
-      final allTxs = _transactionProvider.allTransactions;
-      final index = allTxs.indexWhere((tx) => tx.key == key);
-      if (index != -1) {
-        await _transactionProvider.deleteTransaction(key, index);
-      }
-    }
-    clearSelection();
-  }
+  // Alias for UI compatibility (Legacy terminology)
+  Future<void> archiveSelected() => deleteSelected();
 
   Future<void> restoreSelected() async {
-    if (_selectedKeys.isEmpty) return;
     await _transactionProvider.restoreTransactions(_selectedKeys.toList());
-    clearSelection();
+    _selectedKeys.clear();
+    _isSelectionMode = false;
+    notifyListeners();
   }
 
   Future<void> restoreAll() async {
     await _transactionProvider.restoreAllTransactions();
-    clearSelection();
+    notifyListeners();
+  }
+
+  Future<void> deleteSingleTransaction(int key) async {
+    await _transactionProvider.deleteTransaction(key, 0);
+    notifyListeners();
   }
 }
