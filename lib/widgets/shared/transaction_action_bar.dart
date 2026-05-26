@@ -45,8 +45,8 @@ class TransactionActionBar extends StatelessWidget {
             onTap: onPrimaryAction,
           ),
         _buildMenuOption(
-          icon: Icons.share_rounded,
-          title: "Share Export",
+          icon: Icons.ios_share_rounded,
+          title: "Export Selected",
           iconColor: Colors.cyanAccent,
           onTap: onExport,
         ),

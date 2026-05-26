@@ -153,7 +153,11 @@ class _ActivityScreenBodyState extends State<_ActivityScreenBody> {
                 selectedCategory: vm.selectedCategory,
                 onTypeChanged: vm.setIsIncomeFilter,
                 onCategoryChanged: vm.setCategory,
-                transactionsForExport: vm.filteredTransactions,
+                transactionsForExport: vm.selectedCount > 0
+                    ? vm.filteredTransactions
+                          .where((tx) => vm.selectedKeys.contains(tx.key))
+                          .toList()
+                    : vm.filteredTransactions,
               ),
               if (vm.filteredTransactions.isNotEmpty) ...[
                 12.heightBox,
