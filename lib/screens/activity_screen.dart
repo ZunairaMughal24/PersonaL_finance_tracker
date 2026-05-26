@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:montage/providers/transaction_provider.dart';
 import 'package:montage/widgets/shared/selectable_transaction_list_item.dart';
 import 'package:montage/providers/user_settings_provider.dart';
 import 'package:montage/widgets/app_background.dart';
@@ -24,13 +23,7 @@ class ActivityScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => TransactionListViewModel(
-        context.read<TransactionProvider>(),
-        isHistoryMode: false,
-      ),
-      child: const _ActivityScreenBody(),
-    );
+    return const _ActivityScreenBody();
   }
 }
 

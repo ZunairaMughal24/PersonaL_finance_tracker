@@ -15,6 +15,7 @@ import 'package:montage/repositories/transaction_repository.dart';
 import 'package:montage/repositories/user_settings_repository.dart';
 import 'package:montage/repositories/category_repository.dart';
 import 'package:montage/viewmodels/speech_view_model.dart';
+import 'package:montage/viewmodels/transaction_list_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -80,6 +81,18 @@ void main() async {
             ..updateUser(auth.currentUser?.uid),
         ),
         ChangeNotifierProvider(create: (_) => TransactionFilterProvider()),
+        ChangeNotifierProxyProvider<
+          TransactionProvider,
+          TransactionListViewModel
+        >(
+          create: (context) => TransactionListViewModel(
+            context.read<TransactionProvider>(),
+            isHistoryMode: false,
+          ),
+          update: (context, provider, previous) =>
+              previous ??
+              TransactionListViewModel(provider, isHistoryMode: false),
+        ),
         ChangeNotifierProvider(create: (_) => SpeechViewModel()),
       ],
       child: const MyApp(),

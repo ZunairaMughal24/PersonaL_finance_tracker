@@ -11,6 +11,7 @@ import 'package:montage/screens/activity_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:montage/providers/transaction_filter_provider.dart';
 import 'package:montage/providers/transaction_provider.dart';
+import 'package:montage/viewmodels/transaction_list_view_model.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:montage/core/constants/app_images.dart';
@@ -38,9 +39,10 @@ class MainNavScreenState extends State<MainNavScreen> {
   void _onTabSelected(int index) {
     if (_currentIndex == index) return;
     HapticHelper.selection();
-    // Clear activity filters when navigating away from Activity tab
+    // Clear activity filters and selection when navigating away from Activity tab
     if (_currentIndex == 2 && index != 2) {
       context.read<TransactionFilterProvider>().clearFilters();
+      context.read<TransactionListViewModel>().clearSelection();
     }
     setState(() {
       _currentIndex = index;
