@@ -49,10 +49,12 @@ class AppButton extends StatelessWidget {
               : [color, color.withValues(alpha: 0.8)],
         ),
         border: Border.all(
-          color: isTransparent
-              ? Colors.white.withValues(alpha: 0.15)
-              : Colors.white.withValues(alpha: 0.2),
-          width: 1,
+          color:
+              borderColor ??
+              (isTransparent
+                  ? Colors.white.withValues(alpha: 0.1)
+                  : Colors.white.withValues(alpha: 0.12)),
+          width: 0.8,
         ),
         boxShadow: [
           BoxShadow(
