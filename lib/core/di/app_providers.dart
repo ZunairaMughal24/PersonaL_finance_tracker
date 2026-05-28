@@ -1,3 +1,6 @@
+import 'package:montage/core/interfaces/i_category_repository.dart';
+import 'package:montage/core/interfaces/i_transaction_repository.dart';
+import 'package:montage/core/interfaces/i_user_settings_repository.dart';
 import 'package:montage/providers/auth_provider.dart';
 import 'package:montage/providers/category_provider.dart';
 import 'package:montage/providers/transaction_filter_provider.dart';
@@ -6,6 +9,7 @@ import 'package:montage/providers/user_settings_provider.dart';
 import 'package:montage/repositories/category_repository.dart';
 import 'package:montage/repositories/transaction_repository.dart';
 import 'package:montage/repositories/user_settings_repository.dart';
+import 'package:montage/viewmodels/home_view_model.dart';
 import 'package:montage/viewmodels/speech_view_model.dart';
 import 'package:montage/viewmodels/transaction_list_view_model.dart';
 import 'package:provider/provider.dart';
@@ -14,12 +18,12 @@ import 'package:provider/single_child_widget.dart';
 class AppProviders {
   static List<SingleChildWidget> get providers => [
     ChangeNotifierProvider(create: (_) => AuthProvider()),
-    Provider<TransactionRepository>(create: (_) => TransactionRepository()),
-    Provider<UserSettingsRepository>(create: (_) => UserSettingsRepository()),
-    Provider<CategoryRepository>(create: (_) => CategoryRepository()),
+    Provider<ITransactionRepository>(create: (_) => TransactionRepository()),
+    Provider<IUserSettingsRepository>(create: (_) => UserSettingsRepository()),
+    Provider<ICategoryRepository>(create: (_) => CategoryRepository()),
     ChangeNotifierProxyProvider2<
       AuthProvider,
-      TransactionRepository,
+      ITransactionRepository,
       TransactionProvider
     >(
       create: (_) => TransactionProvider(),
@@ -31,7 +35,7 @@ class AppProviders {
     ),
     ChangeNotifierProxyProvider2<
       AuthProvider,
-      UserSettingsRepository,
+      IUserSettingsRepository,
       UserSettingsProvider
     >(
       create: (_) => UserSettingsProvider(),
@@ -45,13 +49,25 @@ class AppProviders {
     ),
     ChangeNotifierProxyProvider2<
       AuthProvider,
-      CategoryRepository,
+      ICategoryRepository,
       CategoryProvider
     >(
       create: (_) => CategoryProvider(),
       update: (_, auth, repo, cat) => cat!
         ..updateRepository(repo)
         ..updateUser(auth.currentUser?.uid),
+    ),
+    ChangeNotifierProxyProvider2<
+      TransactionProvider,
+      UserSettingsProvider,
+      HomeViewModel
+    >(
+      create: (context) => HomeViewModel(
+        context.read<TransactionProvider>(),
+        context.read<UserSettingsProvider>(),
+      ),
+      update: (context, tx, settings, previous) =>
+          previous ?? HomeViewModel(tx, settings),
     ),
     ChangeNotifierProvider(create: (_) => TransactionFilterProvider()),
     ChangeNotifierProxyProvider<TransactionProvider, TransactionListViewModel>(

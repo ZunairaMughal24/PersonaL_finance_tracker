@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:montage/repositories/user_settings_repository.dart';
+import 'package:montage/core/interfaces/i_user_settings_repository.dart';
+import 'package:montage/core/constants/app_keys.dart';
 
 class UserSettingsProvider extends ChangeNotifier {
-  static const String _currencyKey = 'selected_currency';
-  static const String _nameKey = 'user_name';
-  static const String _imageKey = 'profile_image_path';
-  static const String _emailKey = 'user_email';
-  static const String _biometricKey = 'biometric_enabled';
-
-  late UserSettingsRepository _repository;
+  late IUserSettingsRepository _repository;
   String? _userId;
   String _selectedCurrency = 'USD';
   String _userName = 'User';
@@ -27,13 +21,13 @@ class UserSettingsProvider extends ChangeNotifier {
   bool get biometricEnabled => _biometricEnabled;
   bool get isReady => _isReady;
 
-  UserSettingsProvider({UserSettingsRepository? repository}) {
+  UserSettingsProvider({IUserSettingsRepository? repository}) {
     if (repository != null) {
       _repository = repository;
     }
   }
 
-  void updateRepository(UserSettingsRepository repository) {
+  void updateRepository(IUserSettingsRepository repository) {
     _repository = repository;
   }
 
@@ -92,51 +86,58 @@ class UserSettingsProvider extends ChangeNotifier {
   }
 
   void _applyLocalSettings(String? displayName, String? email) {
-    _userName = _repository.get(_nameKey) ?? displayName ?? 'User';
-    _userEmail = _repository.get(_emailKey) ?? email ?? 'user@example.com';
-    _profileImagePath = _repository.get(_imageKey);
-    _notificationsEnabled = _repository.get(
-      'notifications_enabled',
+    _userName = _repository.get(AppKeys.userName) ?? displayName ?? 'User';
+    _userEmail =
+        _repository.get(AppKeys.userEmail) ?? email ?? 'user@example.com';
+    _profileImagePath = _repository.get(AppKeys.profileImage);
+    _notificationsEnabled = _repository.get<bool>(
+      AppKeys.notificationsEnabled,
       defaultValue: true,
-    );
-    _biometricEnabled = _repository.get(_biometricKey, defaultValue: false);
-    _selectedCurrency = _repository.get(_currencyKey, defaultValue: 'USD');
+    )!;
+    _biometricEnabled = _repository.get<bool>(
+      AppKeys.biometricEnabled,
+      defaultValue: false,
+    )!;
+    _selectedCurrency = _repository.get<String>(
+      AppKeys.currency,
+      defaultValue: 'USD',
+    )!;
 
-    if (displayName != null) _repository.put(_nameKey, displayName);
-    if (email != null) _repository.put(_emailKey, email);
+    if (displayName != null) _repository.put(AppKeys.userName, displayName);
+    if (email != null) _repository.put(AppKeys.userEmail, email);
   }
 
   Future<void> setCurrency(String currency) async {
     _selectedCurrency = currency;
-    await _repository.put(_currencyKey, currency);
+    await _repository.put(AppKeys.currency, currency);
     _pushToCloud();
     notifyListeners();
   }
 
   Future<void> updateUserName(String name) async {
     _userName = name.trim();
-    await _repository.put(_nameKey, _userName);
+    await _repository.put(AppKeys.userName, _userName);
     _pushToCloud();
     notifyListeners();
   }
 
   Future<void> updateUserEmail(String email) async {
     _userEmail = email.trim();
-    await _repository.put(_emailKey, _userEmail);
+    await _repository.put(AppKeys.userEmail, _userEmail);
     _pushToCloud();
     notifyListeners();
   }
 
   Future<void> setNotificationsEnabled(bool enabled) async {
     _notificationsEnabled = enabled;
-    await _repository.put('notifications_enabled', enabled);
+    await _repository.put(AppKeys.notificationsEnabled, enabled);
     _pushToCloud();
     notifyListeners();
   }
 
   Future<void> setBiometricEnabled(bool enabled) async {
     _biometricEnabled = enabled;
-    await _repository.put(_biometricKey, enabled);
+    await _repository.put(AppKeys.biometricEnabled, enabled);
     _pushToCloud();
     notifyListeners();
   }
@@ -144,20 +145,20 @@ class UserSettingsProvider extends ChangeNotifier {
   Future<void> updateProfileImage(String? path) async {
     _profileImagePath = path;
     if (path == null) {
-      await _repository.delete(_imageKey);
+      await _repository.delete(AppKeys.profileImage);
     } else {
-      await _repository.put(_imageKey, path);
+      await _repository.put(AppKeys.profileImage, path);
     }
     notifyListeners();
   }
 
   void _pushToCloud() {
     _repository.pushToCloud({
-      _currencyKey: _selectedCurrency,
-      _nameKey: _userName,
-      _emailKey: _userEmail,
-      _biometricKey: _biometricEnabled,
-      'notifications_enabled': _notificationsEnabled,
+      AppKeys.currency: _selectedCurrency,
+      AppKeys.userName: _userName,
+      AppKeys.userEmail: _userEmail,
+      AppKeys.biometricEnabled: _biometricEnabled,
+      AppKeys.notificationsEnabled: _notificationsEnabled,
     });
   }
 
@@ -165,12 +166,6 @@ class UserSettingsProvider extends ChangeNotifier {
   Future<void> setProfileImage(String path) => updateProfileImage(path);
   Future<void> setUserEmail(String email) => updateUserEmail(email);
   Future<void> removeProfileImage() => updateProfileImage(null);
-
-  Future<void> pickAndUpdateProfileImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    if (image != null) await updateProfileImage(image.path);
-  }
 
   static List<String> get availableCurrencies => [
     'USD',

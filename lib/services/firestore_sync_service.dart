@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:montage/models/transaction_model.dart';
+import 'package:montage/core/interfaces/i_firestore_sync_service.dart';
 
 /// Service for handling offline-first cloud synchronization between Hive and Firestore.
-class FirestoreSyncService {
+class FirestoreSyncService implements IFirestoreSyncService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   //References

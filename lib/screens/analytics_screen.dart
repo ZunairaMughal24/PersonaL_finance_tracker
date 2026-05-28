@@ -239,7 +239,7 @@ class _AnalyticsScreenContentState extends State<_AnalyticsScreenContent> {
                 ),
                 sectionsSpace: 6,
                 centerSpaceRadius: 105,
-                sections: vm.buildPieChartSections(context),
+                sections: _buildPieChartSections(vm),
                 startDegreeOffset: 270,
               ),
               swapAnimationDuration: const Duration(milliseconds: 150),
@@ -307,6 +307,54 @@ class _AnalyticsScreenContentState extends State<_AnalyticsScreenContent> {
           20.heightBox,
           const Text("No data to display").bodyMedium(color: Colors.white30),
         ],
+      ),
+    );
+  }
+
+  List<PieChartSectionData> _buildPieChartSections(AnalyticsViewModel vm) {
+    final totals = vm.summary.categoryTotals;
+    int i = 0;
+    return totals.entries.map((entry) {
+      final isTouched = i == vm.touchedIndex;
+      i++;
+      final color = vm.categoryProvider.getCategoryColor(entry.key);
+      final radius = isTouched ? 26.0 : 22.0;
+      final double opacity = isTouched ? 1.0 : 0.85;
+
+      return PieChartSectionData(
+        color: color.withValues(alpha: opacity),
+        value: entry.value,
+        radius: radius,
+        showTitle: false,
+        badgeWidget: isTouched ? _buildBadge(entry.key, vm) : null,
+        badgePositionPercentageOffset: .98,
+      );
+    }).toList();
+  }
+
+  // Built here in the UI layer (not in the VM) — badge widget for touched pie slice
+  Widget _buildBadge(String category, AnalyticsViewModel vm) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.grey.withValues(alpha: 0.25),
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.15),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Icon(
+        vm.categoryProvider.getIconForCategory(category),
+        color: Colors.white,
+        size: 16,
       ),
     );
   }

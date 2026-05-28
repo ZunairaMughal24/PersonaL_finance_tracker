@@ -4,7 +4,6 @@ import 'package:montage/providers/category_provider.dart';
 import 'package:montage/core/utils/currency_utils.dart';
 import 'package:montage/models/spending_summary.dart';
 import 'package:montage/models/trends_model.dart';
-import 'package:fl_chart/fl_chart.dart';
 
 class AnalyticsViewModel extends ChangeNotifier {
   final TransactionProvider _transactionProvider;
@@ -23,15 +22,16 @@ class AnalyticsViewModel extends ChangeNotifier {
     super.dispose();
   }
 
-  // Getters
+  // ── Getters
   bool get isPieChart => _isPieChart;
   int get touchedIndex => _touchedIndex;
+  CategoryProvider get categoryProvider => _categoryProvider;
 
   SpendingSummary get summary => _transactionProvider.spendingSummary;
   List<FinancialPeriodData> get weeklyData =>
       _transactionProvider.weeklyFinancialSummary;
 
-  // Actions
+  // ── Actions
   void setPage(int index) {
     _isPieChart = index == 0;
     notifyListeners();
@@ -42,54 +42,15 @@ class AnalyticsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Transformers
-  List<PieChartSectionData> buildPieChartSections(BuildContext context) {
-    final totals = summary.categoryTotals;
-    int i = 0;
-    return totals.entries.map((entry) {
-      final isTouched = i == _touchedIndex;
-      i++;
-      final color = _categoryProvider.getCategoryColor(entry.key);
-      final radius = isTouched ? 26.0 : 22.0;
-      final double opacity = isTouched ? 1.0 : 0.85;
-
-      return PieChartSectionData(
-        color: color.withValues(alpha: opacity),
-        value: entry.value,
-        radius: radius,
-        showTitle: false,
-        badgeWidget: isTouched ? _buildBadge(entry.key) : null,
-        badgePositionPercentageOffset: .98,
-      );
-    }).toList();
+  //  The category currently touched (null if none).
+  String? get touchedCategory {
+    if (_touchedIndex < 0) return null;
+    final keys = summary.categoryTotals.keys.toList();
+    if (_touchedIndex >= keys.length) return null;
+    return keys[_touchedIndex];
   }
 
-  Widget _buildBadge(String category) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.grey.withValues(alpha: 0.25),
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.15),
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.2),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Icon(
-        _categoryProvider.getIconForCategory(category),
-        color: Colors.white,
-        size: 16,
-      ),
-    );
-  }
-
+  // Formatters
   String formatAmount(double amount, String currency) {
     final raw = CurrencyUtils.formatAmount(amount, currency);
     final hasSuffix = raw.contains(RegExp(r'[A-Za-z]'));

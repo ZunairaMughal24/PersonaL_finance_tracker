@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
-import 'package:montage/providers/transaction_provider.dart';
+import 'package:montage/viewmodels/home_view_model.dart';
 import 'package:montage/widgets/info_card.dart';
 import 'package:provider/provider.dart';
 import 'package:montage/widgets/balance_card.dart';
@@ -8,11 +8,9 @@ import 'package:montage/widgets/home_header.dart';
 import 'package:montage/widgets/recent_transactions_list.dart';
 import 'package:go_router/go_router.dart';
 import 'package:montage/config/router.dart';
-import 'package:montage/core/utils/currency_utils.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/core/utils/padding_extention.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
-import 'package:montage/providers/user_settings_provider.dart';
 import 'package:montage/widgets/app_background.dart';
 import 'package:montage/widgets/ai_insights_card.dart';
 import 'package:montage/widgets/home_skeleton.dart';
@@ -26,11 +24,9 @@ class HomeScreen extends StatelessWidget {
     return AppBackground(
       style: BackgroundStyle.premiumHybrid,
       child: SafeArea(
-        child: Consumer2<TransactionProvider, UserSettingsProvider>(
-          builder: (context, tx, settings, _) {
-            if (!tx.isReady || !settings.isReady) {
-              return const HomeSkeleton();
-            }
+        child: Consumer<HomeViewModel>(
+          builder: (context, vm, _) {
+            if (!vm.isReady) return const HomeSkeleton();
 
             return SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
@@ -38,8 +34,8 @@ class HomeScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   HomeHeader(
-                    userName: settings.userName,
-                    profileImagePath: settings.profileImagePath,
+                    userName: vm.userName,
+                    profileImagePath: vm.profileImagePath,
                     summaryText: "Your financial dashboard",
                   ),
                   const SizedBox(height: 8),
@@ -62,8 +58,8 @@ class HomeScreen extends StatelessWidget {
                         ),
                         12.heightBox,
                         TotalBalanceCard(
-                          totalBalance: tx.totalBalance,
-                          hasEntries: tx.transactions.isNotEmpty,
+                          totalBalance: vm.totalBalance,
+                          hasEntries: vm.hasEntries,
                         ),
                         20.heightBox,
                         Row(
@@ -71,10 +67,7 @@ class HomeScreen extends StatelessWidget {
                             Expanded(
                               child: InfoBox(
                                 title: "Income",
-                                amount: CurrencyUtils.formatAmount(
-                                  tx.totalIncome,
-                                  settings.selectedCurrency,
-                                ),
+                                amount: vm.formattedIncome,
                                 amountColor: AppColors.green,
                               ),
                             ),
@@ -82,10 +75,7 @@ class HomeScreen extends StatelessWidget {
                             Expanded(
                               child: InfoBox(
                                 title: "Expenses",
-                                amount: CurrencyUtils.formatAmount(
-                                  tx.totalExpense,
-                                  settings.selectedCurrency,
-                                ),
+                                amount: vm.formattedExpense,
                                 amountColor: AppColors.red,
                               ),
                             ),
@@ -97,7 +87,7 @@ class HomeScreen extends StatelessWidget {
                           subtitle: "AI-powered financial insights",
                           horizontalPadding: 0,
                         ),
-                        AIInsightsCard(txProvider: tx),
+                        AIInsightsCard(vm: vm),
                         8.heightBox,
                         TransactionSectionHeader(
                           title: "RECENT ACTIVITY",

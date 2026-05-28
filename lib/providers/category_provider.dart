@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:montage/models/category_model.dart';
 import 'package:montage/core/utils/category_utils.dart';
-import 'package:montage/repositories/category_repository.dart';
+import 'package:montage/core/interfaces/i_category_repository.dart';
 
 class CategoryProvider extends ChangeNotifier {
-  late CategoryRepository _repository;
+  late ICategoryRepository _repository;
   List<CustomCategory> _customCategories = [];
 
   List<CustomCategory> get customCategories => _customCategories;
 
-  CategoryProvider({CategoryRepository? repository}) {
+  CategoryProvider({ICategoryRepository? repository}) {
     if (repository != null) {
       _repository = repository;
     }
   }
 
-  void updateRepository(CategoryRepository repository) {
+  void updateRepository(ICategoryRepository repository) {
     _repository = repository;
   }
 

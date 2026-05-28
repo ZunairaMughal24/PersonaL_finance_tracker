@@ -3,22 +3,27 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:montage/models/transaction_model.dart';
 import 'package:montage/services/database_services.dart';
 import 'package:montage/services/firestore_sync_service.dart';
+import 'package:montage/core/constants/app_keys.dart';
+import 'package:montage/core/interfaces/i_transaction_repository.dart';
+import 'package:montage/core/interfaces/i_firestore_sync_service.dart';
 
-class TransactionRepository {
-  final FirestoreSyncService _syncService;
+class TransactionRepository implements ITransactionRepository {
+  final IFirestoreSyncService _syncService;
   DatabaseService? _db;
   String? _userId;
 
-  TransactionRepository({FirestoreSyncService? syncService})
+  TransactionRepository({IFirestoreSyncService? syncService})
     : _syncService = syncService ?? FirestoreSyncService();
 
+  @override
   bool get isInitialized => _db != null;
 
+  @override
   Future<void> init(String userId) async {
     if (_userId == userId && _db != null) return;
     _userId = userId;
 
-    final boxName = 'transactions_$userId';
+    final boxName = AppKeys.transactions(userId);
     final box = await Hive.openBox<TransactionModel>(boxName);
     _db = DatabaseService(box);
 
@@ -56,10 +61,12 @@ class TransactionRepository {
     }
   }
 
+  @override
   List<TransactionModel> getAll() {
     return _db?.getAllTransaction() ?? [];
   }
 
+  @override
   Future<void> add(TransactionModel tx) async {
     if (_db == null) return;
     await _db!.addTransaction(tx);
@@ -68,6 +75,7 @@ class TransactionRepository {
     }
   }
 
+  @override
   Future<void> update(int key, TransactionModel tx) async {
     if (_db == null) return;
     await _db!.updateTransaction(key, tx);
@@ -76,6 +84,7 @@ class TransactionRepository {
     }
   }
 
+  @override
   Future<void> delete(int key) async {
     if (_db == null) return;
     await _db!.deleteTransaction(key);
@@ -84,12 +93,14 @@ class TransactionRepository {
     }
   }
 
+  @override
   Future<void> deleteBulk(List<int> keys) async {
     for (var key in keys) {
       await delete(key);
     }
   }
 
+  @override
   void dispose() {
     _db = null;
     _userId = null;

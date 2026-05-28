@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
-import 'package:montage/providers/transaction_provider.dart';
+import 'package:montage/viewmodels/home_view_model.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class AIInsightsCard extends StatelessWidget {
-  final TransactionProvider txProvider;
+  final HomeViewModel vm;
 
-  const AIInsightsCard({super.key, required this.txProvider});
+  const AIInsightsCard({super.key, required this.vm});
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String?>(
-      future: txProvider.insightsFuture,
+      future: vm.insightsFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting &&
             snapshot.data == null) {
@@ -27,7 +27,7 @@ class AIInsightsCard extends StatelessWidget {
           );
         }
 
-        final insights = snapshot.data ?? txProvider.cachedInsightsValue;
+        final insights = snapshot.data ?? vm.cachedInsights;
         if (insights == null || insights.isEmpty) {
           return const SizedBox.shrink();
         }

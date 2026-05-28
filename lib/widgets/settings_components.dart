@@ -241,6 +241,7 @@ class SettingsModals {
     required BuildContext context,
     required UserSettingsProvider settings,
     required VoidCallback onEditNameTap,
+    required VoidCallback onPickImage,
   }) {
     AppBottomSheet.show(
       context: context,
@@ -275,7 +276,7 @@ class SettingsModals {
             bgColor: Colors.tealAccent.withValues(alpha: 0.1),
             onTap: () {
               Navigator.pop(context);
-              settings.pickAndUpdateProfileImage();
+              onPickImage();
             },
           ),
           if (settings.profileImagePath != null) ...[

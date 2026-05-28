@@ -63,3 +63,21 @@ class AuthFailure extends Failure {
 class ServerFailure extends Failure {
   const ServerFailure(super.message, {super.code});
 }
+
+class CacheFailure extends Failure {
+  const CacheFailure(super.message, {super.code});
+}
+
+class NetworkFailure extends Failure {
+  const NetworkFailure([
+    super.message = "Please check your internet connection.",
+    String? code,
+  ]) : super(code: code);
+}
+
+class UnknownFailure extends Failure {
+  const UnknownFailure([
+    super.message = "An unexpected error occurred.",
+    String? code,
+  ]) : super(code: code);
+}

@@ -1,7 +1,8 @@
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:montage/models/transaction_model.dart';
+import 'package:montage/core/interfaces/i_ai_service.dart';
 
-class AIService {
+class AIService implements IAIService {
   final String apiKey;
   late final GenerativeModel _model;
 

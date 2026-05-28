@@ -15,6 +15,7 @@ import 'package:montage/providers/user_settings_provider.dart';
 import 'package:montage/services/export_service.dart';
 import 'package:montage/widgets/glass_container.dart';
 import 'package:montage/widgets/settings_components.dart';
+import 'package:montage/core/utils/settings_ui_utils.dart';
 
 void _showWorkInProgress(BuildContext context) {
   ToastUtils.show(context, "Implementation is in progress", isError: false);
@@ -174,6 +175,8 @@ class _ProfileCardState extends State<ProfileCard> {
                       _isEditingName = true;
                     });
                   },
+                  onPickImage: () =>
+                      SettingsUIUtils.pickProfileImage(context, settings),
                 ),
                 icon: Icon(
                   Icons.edit_outlined,

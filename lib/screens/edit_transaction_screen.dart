@@ -16,6 +16,7 @@ import 'package:montage/widgets/transaction/category_editor_dialog.dart';
 import 'package:montage/viewmodels/speech_view_model.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/widgets/shared/transaction_section_header.dart';
+import 'package:montage/core/utils/transaction_ui_utils.dart';
 
 class EditTransactionScreen extends StatelessWidget {
   const EditTransactionScreen({super.key, required this.transaction});
@@ -131,11 +132,12 @@ class _EditTransactionScreenContentState
                                 );
                               },
                               onCategoryLongPress: (catName) =>
-                                  vm.handleCategoryAction(
+                                  TransactionUIUtils.handleCategoryActionUI(
                                     context: context,
-                                    catName: catName,
+                                    vm: vm,
                                     catProvider: context
                                         .read<CategoryProvider>(),
+                                    catName: catName,
                                   ),
                               onCategorySelected: (cat) {
                                 if (cat == "Other") {
@@ -198,7 +200,8 @@ class _EditTransactionScreenContentState
                             onError: (error) => ToastUtils.show(context, error),
                           ),
                           onEqualPressed: vm.onEqualPressed,
-                          onCameraTap: () => vm.pickImage(context),
+                          onCameraTap: () =>
+                              TransactionUIUtils.pickImage(context, vm),
                           onNoteChanged: (val) => vm.setTitle(val),
                           onDateChanged: (val) => vm.setDate(val),
                           onMicTap: () => speechVm.toggleListening((result) {
