@@ -39,7 +39,24 @@ class _ActivityScreenBodyState extends State<_ActivityScreenBody> {
   bool _selectionModalOpen = false;
 
   @override
+  void initState() {
+    super.initState();
+    _searchFocusNode.addListener(_onSearchFocusChange);
+  }
+
+  void _onSearchFocusChange() {
+    // If the keyboard is dismissed/focus lost and there's no text, close the search bar
+    if (!_searchFocusNode.hasFocus) {
+      final vm = context.read<TransactionListViewModel>();
+      if (vm.isSearchVisible && vm.searchQuery.isEmpty) {
+        vm.toggleSearch();
+      }
+    }
+  }
+
+  @override
   void dispose() {
+    _searchFocusNode.removeListener(_onSearchFocusChange);
     _searchFocusNode.dispose();
     super.dispose();
   }

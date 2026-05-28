@@ -42,7 +42,11 @@ class MainNavScreenState extends State<MainNavScreen> {
     // Clear activity filters and selection when navigating away from Activity tab
     if (_currentIndex == 2 && index != 2) {
       context.read<TransactionFilterProvider>().clearFilters();
-      context.read<TransactionListViewModel>().clearSelection();
+      final listVm = context.read<TransactionListViewModel>();
+      listVm.clearSelection();
+      if (listVm.isSearchVisible) {
+        listVm.toggleSearch();
+      }
     }
     setState(() {
       _currentIndex = index;

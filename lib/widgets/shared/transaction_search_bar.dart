@@ -28,9 +28,9 @@ class TransactionSearchBar extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: GlassContainer(
-        borderRadius: 16,
+        borderRadius: 12,
         blur: 12,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
         gradientColors: [
           Colors.white.withValues(alpha: 0.12),
           AppColors.primaryColor.withValues(alpha: 0.05),
@@ -38,32 +38,38 @@ class TransactionSearchBar extends StatelessWidget {
         ],
         child: Row(
           children: [
+            12.widthBox,
+            Icon(
+              Icons.search,
+              color: Colors.white.withValues(alpha: 0.5),
+              size: 20,
+            ),
+            8.widthBox,
             Expanded(
               child: TextField(
                 focusNode: focusNode,
                 onChanged: onChanged,
-                style: const TextStyle(color: Colors.white, fontSize: 16),
+                style: const TextStyle(color: Colors.white, fontSize: 15),
                 decoration: InputDecoration(
                   hintText: hintText,
                   hintStyle: TextStyle(
                     color: Colors.white.withValues(alpha: 0.3),
-                  ),
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.white.withValues(alpha: 0.3),
+                    fontSize: 14,
                   ),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                  isDense: true,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10),
                 ),
               ),
             ),
-            12.widthBox,
             Container(
               height: 40,
               width: 1,
               color: Colors.white.withValues(alpha: 0.1),
             ),
             IconButton(
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(minWidth: 44, minHeight: 40),
               onPressed: () async {
                 final range = await showDateRangePicker(
                   context: context,
