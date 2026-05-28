@@ -104,13 +104,13 @@ class _CustomCategoryDialogState extends State<CustomCategoryDialog> {
                       filled: true,
                       fillColor: Colors.white.withValues(alpha: 0.05),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
                           color: Colors.white.withValues(alpha: 0.1),
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(12),
                         borderSide: const BorderSide(
                           color: AppColors.primaryColor,
                           width: 1.5,
@@ -118,7 +118,7 @@ class _CustomCategoryDialogState extends State<CustomCategoryDialog> {
                       ),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,
-                        vertical: 16,
+                        vertical: 10,
                       ),
                       suffixIcon: Padding(
                         padding: const EdgeInsets.only(right: 8),
