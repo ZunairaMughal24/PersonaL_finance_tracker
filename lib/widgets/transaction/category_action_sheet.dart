@@ -22,6 +22,7 @@ class CategoryActionSheet extends StatelessWidget {
     return GlassContainer(
       customBorderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
       blur: 40,
+      showBottomBorder: false,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

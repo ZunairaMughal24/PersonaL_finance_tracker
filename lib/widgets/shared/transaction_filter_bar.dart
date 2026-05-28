@@ -103,7 +103,7 @@ class _ExportChip extends StatelessWidget {
       },
       child: GlassContainer(
         borderRadius: 12,
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         gradientColors: [
           AppColors.primaryColor.withValues(alpha: 0.6),
           AppColors.primaryColor.withValues(alpha: 0.4),

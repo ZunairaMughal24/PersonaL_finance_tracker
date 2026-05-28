@@ -13,6 +13,7 @@ class ImageSourceSheet extends StatelessWidget {
     return GlassContainer(
       padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
       borderRadius: 24,
+      showBottomBorder: false,
       customBorderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       child: SafeArea(
         child: Column(
@@ -27,10 +28,9 @@ class ImageSourceSheet extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            Text("Attach Media").titleLarge(
-              color: AppColors.white,
-              weight: FontWeight.w700,
-            ),
+            Text(
+              "Attach Media",
+            ).titleLarge(color: AppColors.white, weight: FontWeight.w700),
             const SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -56,7 +56,12 @@ class ImageSourceSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildOption(BuildContext context, {required IconData icon, required String label, required ImageSource source}) {
+  Widget _buildOption(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required ImageSource source,
+  }) {
     return GestureDetector(
       onTap: () => context.pop(source),
       child: Column(
@@ -67,7 +72,9 @@ class ImageSourceSheet extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.primaryColor.withValues(alpha: 0.15),
               shape: BoxShape.circle,
-              border: Border.all(color: AppColors.primaryColor.withValues(alpha: 0.3)),
+              border: Border.all(
+                color: AppColors.primaryColor.withValues(alpha: 0.3),
+              ),
             ),
             child: Icon(icon, color: AppColors.primaryColor, size: 32),
           ),

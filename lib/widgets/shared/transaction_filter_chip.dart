@@ -26,7 +26,7 @@ class TransactionFilterChip extends StatelessWidget {
       onTap: onTap,
       child: GlassContainer(
         borderRadius: 12,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
         gradientColors: isSelected
             ? [
                 effective.withValues(alpha: 0.4),
