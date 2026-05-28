@@ -53,23 +53,24 @@ class _AppTextFieldState extends State<AppTextField> {
             Text(
               widget.title,
               style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-                color: AppColors.white.withValues(alpha: 0.7),
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: AppColors.white.withValues(alpha: 0.6),
+                letterSpacing: 0.4,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             ShakeTransition(
               shake: displayError != null,
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.05),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(10),
                   border: Border.all(
                     color: displayError != null
                         ? Colors.redAccent.withValues(alpha: 0.6)
                         : Colors.white.withValues(alpha: 0.1),
-                    width: 1.2,
+                    width: 1.0,
                   ),
                 ),
                 child: TextField(
@@ -83,24 +84,26 @@ class _AppTextFieldState extends State<AppTextField> {
                   },
                   style: const TextStyle(
                     color: Colors.white,
+                    fontSize: 15,
                     fontWeight: FontWeight.w500,
                   ),
                   decoration: InputDecoration(
                     hintText: widget.hint,
                     labelText: widget.label,
                     hintStyle: TextStyle(
-                      color: AppColors.white.withValues(alpha: 0.4),
+                      color: AppColors.white.withValues(alpha: 0.35),
+                      fontSize: 14,
                     ),
                     contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 12,
+                      horizontal: 16,
+                      vertical: 10,
                     ),
                     prefixIcon: widget.prefixChild,
                     suffixIcon: displayError != null
                         ? const Icon(
                             Icons.error_outline_rounded,
                             color: Colors.redAccent,
-                            size: 20,
+                            size: 18,
                           )
                         : (widget.suffixChild ??
                               (widget.showDropdown
