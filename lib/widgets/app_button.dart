@@ -54,7 +54,7 @@ class AppButton extends StatelessWidget {
               (isTransparent
                   ? Colors.white.withValues(alpha: 0.1)
                   : Colors.white.withValues(alpha: 0.12)),
-          width: 0.8,
+          width: 1.0,
         ),
         boxShadow: [
           BoxShadow(

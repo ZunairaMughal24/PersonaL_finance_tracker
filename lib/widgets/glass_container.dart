@@ -64,26 +64,26 @@ class GlassContainer extends StatelessWidget {
                       color:
                           borderColor ??
                           Colors.white.withValues(alpha: borderOpacity),
-                      width: 0.8,
+                      width: 1.0,
                     )
                   : Border(
                       top: BorderSide(
                         color:
                             borderColor ??
                             Colors.white.withValues(alpha: borderOpacity),
-                        width: 0.8,
+                        width: 1.0,
                       ),
                       left: BorderSide(
                         color:
                             borderColor ??
                             Colors.white.withValues(alpha: borderOpacity),
-                        width: 0.8,
+                        width: 1.0,
                       ),
                       right: BorderSide(
                         color:
                             borderColor ??
                             Colors.white.withValues(alpha: borderOpacity),
-                        width: 0.8,
+                        width: 1.0,
                       ),
                     ),
               gradient: LinearGradient(
