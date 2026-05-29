@@ -28,6 +28,9 @@ class TransactionModel extends HiveObject {
   @HiveField(7, defaultValue: false)
   bool isArchived;
 
+  @HiveField(8)
+  int? lastModified;
+
   TransactionModel({
     required this.title,
     required this.amount,
@@ -37,6 +40,7 @@ class TransactionModel extends HiveObject {
     this.currency = 'USD',
     this.imagePath,
     this.isArchived = false,
+    this.lastModified,
   });
 
   Map<String, dynamic> toMap() {
@@ -49,6 +53,7 @@ class TransactionModel extends HiveObject {
       'currency': currency,
       'imagePath': imagePath,
       'isArchived': isArchived,
+      'lastModified': lastModified ?? DateTime.now().millisecondsSinceEpoch,
     };
   }
 
@@ -62,6 +67,7 @@ class TransactionModel extends HiveObject {
       currency: map['currency'] ?? 'USD',
       imagePath: map['imagePath'],
       isArchived: map['isArchived'] ?? false,
+      lastModified: map['lastModified'],
     );
   }
 }

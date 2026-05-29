@@ -120,34 +120,52 @@ class TransactionProvider extends ChangeNotifier {
   }
 
   Future<void> clearDashboard() async {
-    final activeTxs = _transactions.where((t) => !t.isArchived).toList();
-    for (var tx in activeTxs) {
-      tx.isArchived = true;
-      await _repository.update(tx.key as int, tx);
+    final Map<int, TransactionModel> updates = {};
+    for (var tx in _transactions) {
+      if (!tx.isArchived) {
+        tx.isArchived = true;
+        updates[tx.key as int] = tx;
+      }
     }
-    _loadTransactions();
+
+    if (updates.isNotEmpty) {
+      await _repository.updateBulk(updates);
+      _loadTransactions();
+    }
   }
 
   Future<void> restoreAllTransactions() async {
+    final Map<int, TransactionModel> updates = {};
     for (var tx in _transactions) {
       if (tx.isArchived) {
         tx.isArchived = false;
-        await _repository.update(tx.key as int, tx);
+        updates[tx.key as int] = tx;
       }
     }
-    _loadTransactions();
+
+    if (updates.isNotEmpty) {
+      await _repository.updateBulk(updates);
+      _loadTransactions();
+    }
   }
 
   Future<void> restoreTransactions(List<int> keys) async {
+    final Map<int, TransactionModel> updates = {};
     for (var key in keys) {
       final txIndex = _transactions.indexWhere((t) => t.key == key);
       if (txIndex != -1) {
         final tx = _transactions[txIndex];
-        tx.isArchived = false;
-        await _repository.update(key, tx);
+        if (tx.isArchived) {
+          tx.isArchived = false;
+          updates[key] = tx;
+        }
       }
     }
-    _loadTransactions();
+
+    if (updates.isNotEmpty) {
+      await _repository.updateBulk(updates);
+      _loadTransactions();
+    }
   }
 
   Future<void> updateTransaction(int key, TransactionModel updatedTx) async {

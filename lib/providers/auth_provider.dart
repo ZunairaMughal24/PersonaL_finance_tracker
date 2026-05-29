@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:montage/services/auth_service.dart';
@@ -6,10 +7,11 @@ import 'package:montage/core/utils/auth_error_handler.dart';
 class AuthProvider extends ChangeNotifier {
   final AuthService _authService = AuthService();
   User? _user;
+  StreamSubscription<User?>? _authSubscription;
 
   AuthProvider() {
     _user = _authService.currentUser;
-    _authService.authStateChanges.listen((User? user) {
+    _authSubscription = _authService.authStateChanges.listen((User? user) {
       _user = user;
       notifyListeners();
     });
@@ -31,12 +33,15 @@ class AuthProvider extends ChangeNotifier {
 
   // Sign In Controllers
   final TextEditingController signInEmailController = TextEditingController();
-  final TextEditingController signInPasswordController = TextEditingController();
+  final TextEditingController signInPasswordController =
+      TextEditingController();
 
   // Sign Up Controllers
   final TextEditingController signUpEmailController = TextEditingController();
-  final TextEditingController signUpPasswordController = TextEditingController();
-  final TextEditingController signUpUsernameController = TextEditingController();
+  final TextEditingController signUpPasswordController =
+      TextEditingController();
+  final TextEditingController signUpUsernameController =
+      TextEditingController();
   final TextEditingController signUpConfirmPasswordController =
       TextEditingController();
 
@@ -156,7 +161,9 @@ class AuthProvider extends ChangeNotifier {
       );
 
       if (signUpUsernameController.text.isNotEmpty) {
-        await _authService.updateDisplayName(signUpUsernameController.text.trim());
+        await _authService.updateDisplayName(
+          signUpUsernameController.text.trim(),
+        );
       }
 
       _isLoading = false;
@@ -196,6 +203,7 @@ class AuthProvider extends ChangeNotifier {
 
   @override
   void dispose() {
+    _authSubscription?.cancel();
     signInEmailController.dispose();
     signInPasswordController.dispose();
     signUpEmailController.dispose();

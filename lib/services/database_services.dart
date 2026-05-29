@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:montage/core/utils/app_logger.dart';
 
 import 'package:hive_flutter/adapters.dart';
 import 'package:montage/models/transaction_model.dart';
@@ -12,8 +13,12 @@ class DatabaseService {
   Future<void> addTransaction(TransactionModel tx) async {
     try {
       await box.add(tx);
-    } catch (e) {
-      debugPrint('DatabaseService: Error adding transaction: $e');
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'DatabaseService: Error adding transaction',
+        e,
+        stackTrace,
+      );
       rethrow;
     }
   }
@@ -25,8 +30,12 @@ class DatabaseService {
   Future<void> deleteTransaction(int key) async {
     try {
       await box.delete(key);
-    } catch (e) {
-      debugPrint('DatabaseService: Error deleting transaction: $e');
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'DatabaseService: Error deleting transaction',
+        e,
+        stackTrace,
+      );
       rethrow;
     }
   }
@@ -34,8 +43,27 @@ class DatabaseService {
   Future<void> updateTransaction(int key, TransactionModel updatedTx) async {
     try {
       await box.put(key, updatedTx);
-    } catch (e) {
-      debugPrint('DatabaseService: Error updating transaction: $e');
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'DatabaseService: Error updating transaction',
+        e,
+        stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  Future<void> updateBulkTransactions(
+    Map<int, TransactionModel> transactions,
+  ) async {
+    try {
+      await box.putAll(transactions);
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'DatabaseService: Error updating bulk transactions',
+        e,
+        stackTrace,
+      );
       rethrow;
     }
   }

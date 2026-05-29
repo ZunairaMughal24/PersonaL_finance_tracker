@@ -25,13 +25,14 @@ class TransactionModelAdapter extends TypeAdapter<TransactionModel> {
       currency: fields[5] == null ? 'USD' : fields[5] as String,
       imagePath: fields[6] as String?,
       isArchived: fields[7] == null ? false : fields[7] as bool,
+      lastModified: fields[8] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, TransactionModel obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class TransactionModelAdapter extends TypeAdapter<TransactionModel> {
       ..writeByte(6)
       ..write(obj.imagePath)
       ..writeByte(7)
-      ..write(obj.isArchived);
+      ..write(obj.isArchived)
+      ..writeByte(8)
+      ..write(obj.lastModified);
   }
 
   @override

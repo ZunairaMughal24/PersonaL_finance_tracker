@@ -9,18 +9,19 @@ import 'package:montage/models/transaction_model.dart';
 import 'package:montage/core/di/app_providers.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:montage/core/utils/app_logger.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
 
   try {
-    debugPrint('Initializing Firebase...');
+    AppLogger.info('Initializing Firebase...');
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-  } catch (e) {
-    debugPrint('Firebase init error: $e');
+  } catch (e, stackTrace) {
+    AppLogger.error('Firebase initialization failed', e, stackTrace);
   }
 
   _setPortraitMode();

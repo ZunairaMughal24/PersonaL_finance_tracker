@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
+import 'package:montage/core/utils/app_logger.dart';
 import 'package:montage/models/transaction_model.dart';
 import 'package:montage/core/interfaces/i_firestore_sync_service.dart';
 
@@ -28,8 +28,8 @@ class FirestoreSyncService implements IFirestoreSyncService {
   Future<void> pushTransaction(String uid, int key, TransactionModel tx) async {
     try {
       await _txCollection(uid).doc(key.toString()).set(tx.toMap());
-    } catch (e) {
-      debugPrint('FirestoreSyncService: push failed – $e');
+    } catch (e, stackTrace) {
+      AppLogger.error('FirestoreSyncService action failed', e, stackTrace);
     }
   }
 
@@ -40,16 +40,16 @@ class FirestoreSyncService implements IFirestoreSyncService {
   ) async {
     try {
       await _txCollection(uid).doc(key.toString()).set(tx.toMap());
-    } catch (e) {
-      debugPrint('FirestoreSyncService: update failed – $e');
+    } catch (e, stackTrace) {
+      AppLogger.error('FirestoreSyncService operation failed', e, stackTrace);
     }
   }
 
   Future<void> deleteTransaction(String uid, int key) async {
     try {
       await _txCollection(uid).doc(key.toString()).delete();
-    } catch (e) {
-      debugPrint('FirestoreSyncService: delete failed – $e');
+    } catch (e, stackTrace) {
+      AppLogger.error('FirestoreSyncService delete failed', e, stackTrace);
     }
   }
 
@@ -60,8 +60,8 @@ class FirestoreSyncService implements IFirestoreSyncService {
       return snapshot.docs
           .map((doc) => TransactionModel.fromMap(doc.data()))
           .toList();
-    } catch (e) {
-      debugPrint('FirestoreSyncService: pull failed – $e');
+    } catch (e, stackTrace) {
+      AppLogger.error('FirestoreSyncService pull failed', e, stackTrace);
       return [];
     }
   }
@@ -79,8 +79,8 @@ class FirestoreSyncService implements IFirestoreSyncService {
         );
       }
       await batch.commit();
-    } catch (e) {
-      debugPrint('FirestoreSyncService: pushAll failed – $e');
+    } catch (e, stackTrace) {
+      AppLogger.error('FirestoreSyncService pushAll failed', e, stackTrace);
     }
   }
 
@@ -88,8 +88,12 @@ class FirestoreSyncService implements IFirestoreSyncService {
   Future<void> pushSettings(String uid, Map<String, dynamic> settings) async {
     try {
       await _settingsDoc(uid).set(settings);
-    } catch (e) {
-      debugPrint('FirestoreSyncService: pushSettings failed – $e');
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'FirestoreSyncService pushSettings failed',
+        e,
+        stackTrace,
+      );
     }
   }
 
@@ -97,8 +101,12 @@ class FirestoreSyncService implements IFirestoreSyncService {
     try {
       final doc = await _settingsDoc(uid).get();
       return doc.exists ? doc.data() : null;
-    } catch (e) {
-      debugPrint('FirestoreSyncService: pullSettings failed – $e');
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'FirestoreSyncService pullSettings failed',
+        e,
+        stackTrace,
+      );
       return null;
     }
   }
@@ -107,8 +115,12 @@ class FirestoreSyncService implements IFirestoreSyncService {
   Future<void> pushCategories(String uid, Map<String, dynamic> data) async {
     try {
       await _categoriesDoc(uid).set(data);
-    } catch (e) {
-      debugPrint('FirestoreSyncService: pushCategories failed – $e');
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'FirestoreSyncService pushCategories failed',
+        e,
+        stackTrace,
+      );
     }
   }
 
@@ -116,8 +128,12 @@ class FirestoreSyncService implements IFirestoreSyncService {
     try {
       final doc = await _categoriesDoc(uid).get();
       return doc.exists ? doc.data() : null;
-    } catch (e) {
-      debugPrint('FirestoreSyncService: pullCategories failed – $e');
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'FirestoreSyncService pullCategories failed',
+        e,
+        stackTrace,
+      );
       return null;
     }
   }
@@ -127,8 +143,12 @@ class FirestoreSyncService implements IFirestoreSyncService {
     try {
       final snapshot = await _txCollection(uid).limit(1).get();
       return snapshot.docs.isNotEmpty;
-    } catch (e) {
-      debugPrint('FirestoreSyncService: hasCloudData check failed – $e');
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'FirestoreSyncService hasCloudData check failed',
+        e,
+        stackTrace,
+      );
       return false;
     }
   }

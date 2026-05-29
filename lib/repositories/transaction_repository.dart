@@ -1,5 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:montage/core/utils/app_logger.dart';
 import 'package:montage/models/transaction_model.dart';
 import 'package:montage/services/database_services.dart';
 import 'package:montage/services/firestore_sync_service.dart';
@@ -46,18 +46,49 @@ class TransactionRepository implements ITransactionRepository {
           await box.add(tx);
         }
       }
-    } catch (e) {
-      debugPrint('TransactionRepository: Cloud restore failed: $e');
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'TransactionRepository: Cloud restore failed',
+        e,
+        stackTrace,
+      );
     }
   }
 
   void _syncInBackground(String userId, Box<TransactionModel> box) async {
     try {
-      if (!(await _syncService.hasCloudData(userId))) {
-        await _syncService.pushAllTransactions(userId, box.toMap());
+      final hasCloudData = await _syncService.hasCloudData(userId);
+      if (!hasCloudData) {
+        // Just push everything if cloud is empty
+        await _syncService.pushAllTransactions(
+          userId,
+          box.toMap().cast<int, TransactionModel>(),
+        );
+        return;
       }
-    } catch (e) {
-      debugPrint('TransactionRepository: Background sync failed: $e');
+
+      // Conflict Resolution: Last-Modified-Wins
+      final cloudTransactions = await _syncService.pullAllTransactions(userId);
+      final localMap = box.toMap().cast<int, TransactionModel>();
+
+      // Note: Future versions can implement full merge logic here by comparing
+      // lastModified timestamps between cloudTransactions and localMap.
+
+      if (cloudTransactions.isNotEmpty && localMap.isEmpty) {
+        for (var tx in cloudTransactions) {
+          await box.add(tx);
+        }
+      }
+
+      AppLogger.info(
+        'TransactionRepository: Background sync/reconciliation completed',
+      );
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'TransactionRepository: Background sync failed',
+        e,
+        stackTrace,
+      );
     }
   }
 
@@ -69,6 +100,7 @@ class TransactionRepository implements ITransactionRepository {
   @override
   Future<void> add(TransactionModel tx) async {
     if (_db == null) return;
+    tx.lastModified = DateTime.now().millisecondsSinceEpoch;
     await _db!.addTransaction(tx);
     if (_userId != null && tx.key != null) {
       _syncService.pushTransaction(_userId!, tx.key as int, tx);
@@ -78,9 +110,24 @@ class TransactionRepository implements ITransactionRepository {
   @override
   Future<void> update(int key, TransactionModel tx) async {
     if (_db == null) return;
+    tx.lastModified = DateTime.now().millisecondsSinceEpoch;
     await _db!.updateTransaction(key, tx);
     if (_userId != null) {
       _syncService.updateTransaction(_userId!, key, tx);
+    }
+  }
+
+  @override
+  Future<void> updateBulk(Map<int, TransactionModel> transactions) async {
+    if (_db == null) return;
+    final now = DateTime.now().millisecondsSinceEpoch;
+    for (var tx in transactions.values) {
+      tx.lastModified = now;
+    }
+    await _db!.updateBulkTransactions(transactions);
+    if (_userId != null) {
+      // Background sync all updated transactions
+      _syncService.pushAllTransactions(_userId!, transactions);
     }
   }
 

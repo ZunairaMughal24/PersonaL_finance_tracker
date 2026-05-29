@@ -6,6 +6,7 @@ abstract class ITransactionRepository {
   List<TransactionModel> getAll();
   Future<void> add(TransactionModel tx);
   Future<void> update(int key, TransactionModel tx);
+  Future<void> updateBulk(Map<int, TransactionModel> transactions);
   Future<void> deleteBulk(List<int> keys);
   // Optional: Add delete if needed, but deleteBulk handles it.
   Future<void> delete(int key);
