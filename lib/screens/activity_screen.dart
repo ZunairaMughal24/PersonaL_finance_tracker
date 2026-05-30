@@ -222,6 +222,7 @@ class _ActivityScreenBodyState extends State<_ActivityScreenBody> {
                             );
                           },
                           onDelete: (key) => vm.deleteSingleTransaction(key),
+                          onArchive: (key) => vm.archiveSingleTransaction(key),
                         );
                       },
                     );

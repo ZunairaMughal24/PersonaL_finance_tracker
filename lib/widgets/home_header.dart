@@ -4,7 +4,6 @@ import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/constants/app_images.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:montage/core/enums/sync_status.dart';
-
 import 'package:montage/widgets/glass_container.dart';
 
 class HomeHeader extends StatelessWidget {
@@ -137,26 +136,62 @@ class HomeHeader extends StatelessWidget {
   }
 
   Widget _buildSyncIcon() {
-    IconData icon;
-    Color color;
-
     switch (syncStatus) {
-      case SyncStatus.syncing:
-        icon = Icons.sync_rounded;
-        color = Colors.blueAccent;
-        break;
-      case SyncStatus.success:
-        icon = Icons.cloud_done_rounded;
-        color = Colors.greenAccent;
-        break;
-      case SyncStatus.error:
-        icon = Icons.cloud_off_rounded;
-        color = Colors.redAccent;
-        break;
       case SyncStatus.idle:
         return const SizedBox.shrink();
+      case SyncStatus.syncing:
+        return const _SpinningSyncIcon();
+      case SyncStatus.success:
+        return Icon(
+          Icons.cloud_done_rounded,
+          size: 14,
+          color: Colors.greenAccent.withValues(alpha: 0.9),
+        );
+      case SyncStatus.error:
+        return Icon(
+          Icons.cloud_off_rounded,
+          size: 14,
+          color: Colors.redAccent.withValues(alpha: 0.9),
+        );
     }
+  }
+}
 
-    return Icon(icon, size: 14, color: color.withValues(alpha: 0.8));
+class _SpinningSyncIcon extends StatefulWidget {
+  const _SpinningSyncIcon();
+
+  @override
+  State<_SpinningSyncIcon> createState() => _SpinningSyncIconState();
+}
+
+class _SpinningSyncIconState extends State<_SpinningSyncIcon>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RotationTransition(
+      turns: _controller,
+      child: Icon(
+        Icons.sync_rounded,
+        size: 14,
+        color: Colors.blueAccent.withValues(alpha: 0.9),
+      ),
+    );
   }
 }

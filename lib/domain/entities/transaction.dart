@@ -8,6 +8,7 @@ class Transaction {
   final String currency;
   final String? imagePath;
   final bool isArchived;
+  final bool isDeleted;
   final int? lastModified;
 
   const Transaction({
@@ -20,6 +21,7 @@ class Transaction {
     this.currency = 'USD',
     this.imagePath,
     this.isArchived = false,
+    this.isDeleted = false,
     this.lastModified,
   });
 
@@ -34,6 +36,7 @@ class Transaction {
     String? imagePath,
     bool clearImagePath = false,
     bool? isArchived,
+    bool? isDeleted,
     int? lastModified,
   }) {
     return Transaction(
@@ -46,6 +49,7 @@ class Transaction {
       currency: currency ?? this.currency,
       imagePath: clearImagePath ? null : (imagePath ?? this.imagePath),
       isArchived: isArchived ?? this.isArchived,
+      isDeleted: isDeleted ?? this.isDeleted,
       lastModified: lastModified ?? this.lastModified,
     );
   }
@@ -60,6 +64,7 @@ class Transaction {
       'currency': currency,
       'imagePath': imagePath,
       'isArchived': isArchived,
+      'isDeleted': isDeleted,
       'lastModified': lastModified ?? DateTime.now().millisecondsSinceEpoch,
     };
   }
@@ -74,6 +79,7 @@ class Transaction {
       currency: map['currency'] as String? ?? 'USD',
       imagePath: map['imagePath'] as String?,
       isArchived: map['isArchived'] as bool? ?? false,
+      isDeleted: map['isDeleted'] as bool? ?? false,
       lastModified: map['lastModified'] as int?,
     );
   }

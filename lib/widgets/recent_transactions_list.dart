@@ -63,6 +63,10 @@ class RecentTransactionsList extends StatelessWidget {
               transactionProvider.deleteTransaction(key);
               ToastUtils.show(context, 'Transaction deleted', isError: false);
             },
+            onArchive: (key) {
+              transactionProvider.archiveTransaction(key);
+              ToastUtils.show(context, 'Transaction archived', isError: false);
+            },
           );
         },
       ),

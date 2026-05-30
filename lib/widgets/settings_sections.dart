@@ -417,6 +417,13 @@ class ExportSection extends StatelessWidget {
               onTap: () => context.push(AppRoutes.historyScreenRoute),
             ),
             SettingsTile(
+              icon: Icons.archive_rounded,
+              iconColor: Colors.purpleAccent,
+              title: "Archive",
+              subtitle: "Transactions cleaned from view, balance unchanged",
+              onTap: () => context.push(AppRoutes.archiveScreenRoute),
+            ),
+            SettingsTile(
               imageAsset: AppImages.cleanerOutlined,
               iconColor: Colors.orangeAccent,
               title: "Clear Dashboard",

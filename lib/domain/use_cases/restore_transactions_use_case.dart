@@ -10,8 +10,8 @@ class RestoreTransactionsUseCase {
     final now = DateTime.now().millisecondsSinceEpoch;
     final updates = <int, Transaction>{};
     for (final tx in _repository.getAll()) {
-      if (tx.id != null && ids.contains(tx.id) && tx.isArchived) {
-        updates[tx.id!] = tx.copyWith(isArchived: false, lastModified: now);
+      if (tx.id != null && ids.contains(tx.id) && (tx.isArchived || tx.isDeleted)) {
+        updates[tx.id!] = tx.copyWith(isArchived: false, isDeleted: false, lastModified: now);
       }
     }
     if (updates.isNotEmpty) await _repository.updateBulk(updates);

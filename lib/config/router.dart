@@ -15,6 +15,7 @@ import 'package:montage/config/auth_wrapper.dart';
 import 'package:montage/screens/image_view_screen.dart';
 import 'package:montage/screens/personal_information_screen.dart';
 import 'package:montage/screens/history_screen.dart';
+import 'package:montage/screens/archive_screen.dart';
 
 // ─── Route Constants
 
@@ -33,6 +34,7 @@ class AppRoutes {
   static const String imageViewScreenRoute = '/imageView';
   static const String personalInformationScreenRoute = '/personalInformation';
   static const String historyScreenRoute = '/history';
+  static const String archiveScreenRoute = '/archive';
 
   static const String rootRoute = '/';
 
@@ -189,6 +191,14 @@ GoRouter createRouter() {
           context: context,
           state: state,
           child: const HistoryScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.archiveScreenRoute,
+        pageBuilder: (context, state) => _buildPageWithDefaultTransition(
+          context: context,
+          state: state,
+          child: const ArchiveScreen(),
         ),
       ),
     ],

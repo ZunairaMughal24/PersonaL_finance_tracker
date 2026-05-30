@@ -6,6 +6,7 @@ import 'package:montage/core/utils/transaction_filter_utils.dart';
 class TransactionListViewModel extends ChangeNotifier {
   final TransactionProvider _transactionProvider;
   final bool isHistoryMode;
+  final bool isArchiveMode;
 
   String _searchQuery = "";
   DateTimeRange? _selectedDateRange;
@@ -18,6 +19,7 @@ class TransactionListViewModel extends ChangeNotifier {
   TransactionListViewModel(
     this._transactionProvider, {
     required this.isHistoryMode,
+    this.isArchiveMode = false,
   }) {
     _transactionProvider.addListener(notifyListeners);
   }
@@ -39,8 +41,10 @@ class TransactionListViewModel extends ChangeNotifier {
 
   List<Transaction> get filteredTransactions {
     final baseTransactions = isHistoryMode
-        ? _transactionProvider.archivedTransactions
-        : _transactionProvider.transactions;
+        ? _transactionProvider.deletedTransactions
+        : isArchiveMode
+            ? _transactionProvider.archivedTransactions
+            : _transactionProvider.transactions;
 
     final filtered = TransactionFilterUtils.filter(
       transactions: baseTransactions,
@@ -131,7 +135,12 @@ class TransactionListViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> archiveSelected() => deleteSelected();
+  Future<void> archiveSelected() async {
+    await _transactionProvider.archiveTransactions(_selectedIds.toList());
+    _selectedIds.clear();
+    _isSelectionMode = false;
+    notifyListeners();
+  }
 
   Future<void> restoreSelected() async {
     await _transactionProvider.restoreTransactions(_selectedIds.toList());
@@ -147,6 +156,11 @@ class TransactionListViewModel extends ChangeNotifier {
 
   Future<void> deleteSingleTransaction(int id) async {
     await _transactionProvider.deleteTransaction(id);
+    notifyListeners();
+  }
+
+  Future<void> archiveSingleTransaction(int id) async {
+    await _transactionProvider.archiveTransaction(id);
     notifyListeners();
   }
 }

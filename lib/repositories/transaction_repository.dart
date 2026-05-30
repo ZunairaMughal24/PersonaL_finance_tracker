@@ -73,19 +73,22 @@ class TransactionRepository implements ITransactionRepository {
         return;
       }
 
-      final cloudTransactions = await _syncService.pullAllTransactions(userId);
-      if (cloudTransactions.isNotEmpty && box.isEmpty) {
-        for (var tx in cloudTransactions) {
-          await box.add(TransactionModel.fromEntity(tx));
-        }
-      }
-
       _syncStatusController.add(SyncStatus.success);
       AppLogger.info('TransactionRepository: Background sync completed');
     } catch (e, stackTrace) {
       _syncStatusController.add(SyncStatus.error);
       AppLogger.error('TransactionRepository: Background sync failed', e, stackTrace);
     }
+  }
+
+  void _pushToCloud(Future<void> Function() action) {
+    _syncStatusController.add(SyncStatus.syncing);
+    action().then((_) {
+      _syncStatusController.add(SyncStatus.success);
+    }).catchError((Object e, StackTrace st) {
+      _syncStatusController.add(SyncStatus.error);
+      AppLogger.error('TransactionRepository: Cloud push failed', e, st);
+    });
   }
 
   @override
@@ -98,7 +101,7 @@ class TransactionRepository implements ITransactionRepository {
     if (_db == null) return;
     final assignedId = await _db!.addTransaction(tx);
     if (_userId != null) {
-      _syncService.pushTransaction(_userId!, assignedId, tx);
+      _pushToCloud(() => _syncService.pushTransaction(_userId!, assignedId, tx));
     }
   }
 
@@ -107,7 +110,7 @@ class TransactionRepository implements ITransactionRepository {
     if (_db == null) return;
     await _db!.updateTransaction(id, tx);
     if (_userId != null) {
-      _syncService.updateTransaction(_userId!, id, tx);
+      _pushToCloud(() => _syncService.updateTransaction(_userId!, id, tx));
     }
   }
 
@@ -116,7 +119,7 @@ class TransactionRepository implements ITransactionRepository {
     if (_db == null) return;
     await _db!.updateBulkTransactions(transactions);
     if (_userId != null) {
-      _syncService.pushAllTransactions(_userId!, transactions);
+      _pushToCloud(() => _syncService.pushAllTransactions(_userId!, transactions));
     }
   }
 
@@ -125,7 +128,7 @@ class TransactionRepository implements ITransactionRepository {
     if (_db == null) return;
     await _db!.deleteTransaction(id);
     if (_userId != null) {
-      _syncService.deleteTransaction(_userId!, id);
+      _pushToCloud(() => _syncService.deleteTransaction(_userId!, id));
     }
   }
 

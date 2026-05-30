@@ -15,6 +15,7 @@ class TransactionListItem extends StatelessWidget {
   final VoidCallback? onDelete;
   final VoidCallback? onEdit;
   final Color? borderColor;
+  final EdgeInsets outerPadding;
 
   const TransactionListItem({
     super.key,
@@ -23,6 +24,7 @@ class TransactionListItem extends StatelessWidget {
     this.onDelete,
     this.onEdit,
     this.borderColor,
+    this.outerPadding = const EdgeInsets.symmetric(vertical: 4),
   });
 
   @override
@@ -33,7 +35,7 @@ class TransactionListItem extends StatelessWidget {
         (transaction.isIncome ? AppColors.green : AppColors.red).withValues(alpha: 0.8);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: outerPadding,
       child: GlassContainer(
         borderRadius: 16,
         blur: 12,

@@ -12,22 +12,28 @@ import 'package:provider/provider.dart';
 
 class HistoryList extends StatelessWidget {
   final TransactionListViewModel vm;
+  final bool isArchiveMode;
 
-  const HistoryList({super.key, required this.vm});
+  const HistoryList({
+    super.key,
+    required this.vm,
+    this.isArchiveMode = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     final settings = context.watch<UserSettingsProvider>();
-    final archived = vm.filteredTransactions;
+    final items = vm.filteredTransactions;
 
-    if (archived.isEmpty) {
+    if (items.isEmpty) {
       return HistoryEmptyState(
+        isArchiveMode: isArchiveMode,
         hasFilters:
             vm.searchQuery.isNotEmpty ||
             vm.selectedCategory != null ||
             vm.isIncomeFilter != null,
         onClearFilters: () {
-          vm.updateSearch("");
+          vm.updateSearch('');
           vm.setCategory(null);
           vm.setIsIncomeFilter(null);
         },
@@ -37,22 +43,21 @@ class HistoryList extends StatelessWidget {
     return ListView.builder(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      itemCount: archived.length,
+      itemCount: items.length,
       itemBuilder: (context, index) {
-        final tx = archived[index];
+        final tx = items[index];
         return SelectableTransactionListItem(
           transaction: tx,
           currency: settings.selectedCurrency,
           isSelected: vm.selectedIds.contains(tx.id),
           isSelectionMode: vm.isSelectionMode,
-          isHistoryMode: true,
+          isHistoryMode: !isArchiveMode,
+          isArchiveMode: isArchiveMode,
           onToggleSelection: (key) => vm.toggleSelection(key),
           onPrimaryAction: (key) async {
-            await context.read<TransactionProvider>().restoreTransactions([
-              key,
-            ]);
+            await context.read<TransactionProvider>().restoreTransactions([key]);
             if (context.mounted) {
-              ToastUtils.show(context, "Transaction restored", isError: false);
+              ToastUtils.show(context, 'Transaction restored', isError: false);
             }
           },
           onDelete: (key) => TransactionModals.showDeleteConfirm(
@@ -60,6 +65,15 @@ class HistoryList extends StatelessWidget {
             vm: vm,
             keys: [key],
           ),
+          // Archive mode: left swipe delete moves to History (soft delete)
+          onArchive: isArchiveMode
+              ? (key) async {
+                  await context.read<TransactionProvider>().deleteTransaction(key);
+                  if (context.mounted) {
+                    ToastUtils.show(context, 'Moved to History', isError: false);
+                  }
+                }
+              : null,
         );
       },
     );
@@ -68,16 +82,23 @@ class HistoryList extends StatelessWidget {
 
 class HistoryEmptyState extends StatelessWidget {
   final bool hasFilters;
+  final bool isArchiveMode;
   final VoidCallback? onClearFilters;
 
   const HistoryEmptyState({
     super.key,
     required this.hasFilters,
+    this.isArchiveMode = false,
     this.onClearFilters,
   });
 
   @override
   Widget build(BuildContext context) {
+    final emptyTitle = isArchiveMode ? 'Archive is empty' : 'History is empty';
+    final emptySubtitle = isArchiveMode
+        ? 'Archived transactions appear here'
+        : 'Deleted items will appear here';
+
     return Center(
       child: SingleChildScrollView(
         child: Column(
@@ -92,14 +113,18 @@ class HistoryEmptyState extends StatelessWidget {
               child: Icon(
                 hasFilters
                     ? Icons.filter_list_off_rounded
-                    : Icons.history_rounded,
+                    : isArchiveMode
+                        ? Icons.archive_rounded
+                        : Icons.history_rounded,
                 size: 32,
                 color: Colors.white.withValues(alpha: 0.3),
               ),
             ),
             24.heightBox,
             Text(
-              hasFilters ? "No matches in history" : "History is empty",
+              hasFilters
+                  ? (isArchiveMode ? 'No matches in archive' : 'No matches in history')
+                  : emptyTitle,
               textAlign: TextAlign.center,
             ).bodyLarge(
               color: Colors.white.withValues(alpha: 0.6),
@@ -107,9 +132,7 @@ class HistoryEmptyState extends StatelessWidget {
             ),
             4.heightBox,
             Text(
-              hasFilters
-                  ? "Try adjusting your filters"
-                  : "Deleted items will appear here",
+              hasFilters ? 'Try adjusting your filters' : emptySubtitle,
               textAlign: TextAlign.center,
             ).bodyLarge(color: Colors.white.withValues(alpha: 0.25)),
             if (hasFilters && onClearFilters != null) ...[
@@ -117,7 +140,7 @@ class HistoryEmptyState extends StatelessWidget {
               TextButton.icon(
                 onPressed: onClearFilters,
                 icon: const Icon(Icons.refresh_rounded, size: 18),
-                label: const Text("Clear all filters"),
+                label: const Text('Clear all filters'),
                 style: TextButton.styleFrom(
                   foregroundColor: AppColors.accent,
                   padding: const EdgeInsets.symmetric(

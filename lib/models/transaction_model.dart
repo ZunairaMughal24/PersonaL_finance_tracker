@@ -32,6 +32,9 @@ class TransactionModel extends HiveObject {
   @HiveField(8)
   int? lastModified;
 
+  @HiveField(9, defaultValue: false)
+  bool isDeleted;
+
   TransactionModel({
     required this.title,
     required this.amount,
@@ -42,6 +45,7 @@ class TransactionModel extends HiveObject {
     this.imagePath,
     this.isArchived = false,
     this.lastModified,
+    this.isDeleted = false,
   });
 
   Transaction toEntity() {
@@ -55,6 +59,7 @@ class TransactionModel extends HiveObject {
       currency: currency,
       imagePath: imagePath,
       isArchived: isArchived,
+      isDeleted: isDeleted,
       lastModified: lastModified,
     );
   }
@@ -69,6 +74,7 @@ class TransactionModel extends HiveObject {
       currency: entity.currency,
       imagePath: entity.imagePath,
       isArchived: entity.isArchived,
+      isDeleted: entity.isDeleted,
       lastModified: entity.lastModified,
     );
   }
