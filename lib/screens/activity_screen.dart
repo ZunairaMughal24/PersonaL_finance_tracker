@@ -84,7 +84,7 @@ class _ActivityScreenBodyState extends State<_ActivityScreenBody> {
         onExport: () {
           Navigator.pop(context);
           final selectedTxs = vm.filteredTransactions
-              .where((tx) => vm.selectedKeys.contains(tx.key))
+              .where((tx) => vm.selectedIds.contains(tx.id))
               .toList();
           final settings = context.read<UserSettingsProvider>();
           ExportBottomSheet.show(
@@ -99,7 +99,7 @@ class _ActivityScreenBodyState extends State<_ActivityScreenBody> {
           TransactionModals.showDeleteConfirm(
             context: context,
             vm: vm,
-            keys: vm.selectedKeys.toList(),
+            keys: vm.selectedIds.toList(),
           );
         },
         onCancel: () {
@@ -165,7 +165,7 @@ class _ActivityScreenBodyState extends State<_ActivityScreenBody> {
                 onCategoryChanged: vm.setCategory,
                 transactionsForExport: vm.selectedCount > 0
                     ? vm.filteredTransactions
-                          .where((tx) => vm.selectedKeys.contains(tx.key))
+                          .where((tx) => vm.selectedIds.contains(tx.id))
                           .toList()
                     : vm.filteredTransactions,
               ),
@@ -211,7 +211,7 @@ class _ActivityScreenBodyState extends State<_ActivityScreenBody> {
                         return SelectableTransactionListItem(
                           transaction: tx,
                           currency: settings.selectedCurrency,
-                          isSelected: vm.selectedKeys.contains(tx.key),
+                          isSelected: vm.selectedIds.contains(tx.id),
                           isSelectionMode: vm.isSelectionMode,
                           isHistoryMode: false,
                           onToggleSelection: (key) => vm.toggleSelection(key),

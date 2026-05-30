@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:montage/models/transaction_model.dart';
+import 'package:montage/domain/entities/transaction.dart';
 import 'package:montage/core/utils/transaction_filter_utils.dart';
 
 class TransactionFilterProvider extends ChangeNotifier {
@@ -26,7 +26,6 @@ class TransactionFilterProvider extends ChangeNotifier {
   }
 
   void setCategory(String? category) {
-    // "All" is a UI sentinel value — internally, no category filter means null
     final normalized = (category == 'All') ? null : category;
     if (_selectedCategory == normalized) return;
     _selectedCategory = normalized;
@@ -47,9 +46,7 @@ class TransactionFilterProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<TransactionModel> filterTransactions(
-    List<TransactionModel> transactions,
-  ) {
+  List<Transaction> filterTransactions(List<Transaction> transactions) {
     final filtered = TransactionFilterUtils.filter(
       transactions: transactions,
       query: _searchQuery,
@@ -57,7 +54,6 @@ class TransactionFilterProvider extends ChangeNotifier {
       category: _selectedCategory,
       isIncome: _isIncomeFilter,
     );
-
     TransactionFilterUtils.sortByDate(filtered);
     return filtered;
   }

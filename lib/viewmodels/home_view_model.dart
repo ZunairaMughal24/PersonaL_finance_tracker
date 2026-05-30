@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:montage/core/utils/currency_utils.dart';
 import 'package:montage/providers/transaction_provider.dart';
 import 'package:montage/providers/user_settings_provider.dart';
+import 'package:montage/core/enums/sync_status.dart';
 
 class HomeViewModel extends ChangeNotifier {
   final TransactionProvider _txProvider;
@@ -43,4 +44,6 @@ class HomeViewModel extends ChangeNotifier {
   // AI Insights (pass-through from provider)
   Future<String?>? get insightsFuture => _txProvider.insightsFuture;
   String? get cachedInsights => _txProvider.cachedInsightsValue;
+
+  SyncStatus get syncStatus => _txProvider.syncStatus;
 }

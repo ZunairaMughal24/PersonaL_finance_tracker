@@ -6,7 +6,7 @@ import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/providers/category_provider.dart';
 import 'package:montage/core/utils/currency_utils.dart';
-import 'package:montage/models/transaction_model.dart';
+import 'package:montage/domain/entities/transaction.dart';
 import 'package:montage/widgets/glass_container.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,7 +16,7 @@ import 'package:montage/widgets/app_button.dart';
 import 'package:provider/provider.dart';
 
 class TransactionDetailSheet extends StatelessWidget {
-  final TransactionModel transaction;
+  final Transaction transaction;
   final String currency;
 
   const TransactionDetailSheet({
@@ -41,11 +41,9 @@ class TransactionDetailSheet extends StatelessWidget {
           borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
           child: Stack(
             children: [
-              // Dark glass base
               GlassContainer(
-                customBorderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(32),
-                ),
+                customBorderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(32)),
                 blur: 24,
                 showBottomBorder: false,
                 showShadow: false,
@@ -67,7 +65,6 @@ class TransactionDetailSheet extends StatelessWidget {
                       ),
                     ),
                     20.heightBox,
-
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
@@ -92,43 +89,27 @@ class TransactionDetailSheet extends StatelessWidget {
                       ),
                     ),
                     12.heightBox,
-
                     Text(
                       transaction.category,
                       textAlign: TextAlign.center,
                     ).h2(color: Colors.white, weight: FontWeight.w700),
                     2.heightBox,
-                    Text(
-                      transaction.isIncome ? "INCOME" : "EXPENSE",
-                    ).labelLarge(
+                    Text(transaction.isIncome ? "INCOME" : "EXPENSE").labelLarge(
                       color: statusColor.withValues(alpha: 0.7),
                       weight: FontWeight.w900,
                       letterSpacing: 1.5,
                       fontSize: 11,
                     ),
                     8.heightBox,
-
                     FittedBox(
                       fit: BoxFit.scaleDown,
-                      child:
-                          Text(
-                            CurrencyUtils.formatAmount(
-                              transaction.amount,
-                              currency,
-                            ),
-                          ).h1(
-                            color: statusColor,
-                            weight: FontWeight.w900,
-                            fontSize: 24,
-                          ),
+                      child: Text(
+                        CurrencyUtils.formatAmount(transaction.amount, currency),
+                      ).h1(color: statusColor, weight: FontWeight.w900, fontSize: 24),
                     ),
                     12.heightBox,
-
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.04),
                         borderRadius: BorderRadius.circular(16),
@@ -191,15 +172,11 @@ class TransactionDetailSheet extends StatelessWidget {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       border: Border.all(
-                                        color: Colors.white.withValues(
-                                          alpha: 0.1,
-                                        ),
+                                        color: Colors.white.withValues(alpha: 0.1),
                                         width: 1,
                                       ),
                                       image: DecorationImage(
-                                        image: FileImage(
-                                          File(transaction.imagePath!),
-                                        ),
+                                        image: FileImage(File(transaction.imagePath!)),
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -211,9 +188,7 @@ class TransactionDetailSheet extends StatelessWidget {
                         ],
                       ),
                     ),
-
                     24.heightBox,
-
                     AppButton(
                       text: "Close",
                       onPressed: () => Navigator.pop(context),
@@ -222,7 +197,6 @@ class TransactionDetailSheet extends StatelessWidget {
                   ],
                 ),
               ),
-              // Soft color wash from top
               Positioned.fill(
                 child: IgnorePointer(
                   child: DecoratedBox(
@@ -256,9 +230,8 @@ class TransactionDetailSheet extends StatelessWidget {
     bool isMultiline = false,
   }) {
     return Row(
-      crossAxisAlignment: isMultiline
-          ? CrossAxisAlignment.start
-          : CrossAxisAlignment.center,
+      crossAxisAlignment:
+          isMultiline ? CrossAxisAlignment.start : CrossAxisAlignment.center,
       children: [
         if (iconPath != null)
           SvgPicture.asset(
@@ -280,16 +253,15 @@ class TransactionDetailSheet extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         Expanded(
-          child:
-              Text(
-                value,
-                textAlign: TextAlign.right,
-                maxLines: isMultiline ? null : 1,
-              ).labelLarge(
-                color: Colors.white.withValues(alpha: 0.9),
-                weight: FontWeight.w600,
-                fontSize: label == "DATE" ? 16 : 15,
-              ),
+          child: Text(
+            value,
+            textAlign: TextAlign.right,
+            maxLines: isMultiline ? null : 1,
+          ).labelLarge(
+            color: Colors.white.withValues(alpha: 0.9),
+            weight: FontWeight.w600,
+            fontSize: label == "DATE" ? 16 : 15,
+          ),
         ),
       ],
     );

@@ -8,6 +8,7 @@ import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/core/utils/validators.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/providers/auth_provider.dart';
+import 'package:montage/viewmodels/auth_form_view_model.dart';
 import 'package:montage/widgets/app_button.dart';
 import 'package:montage/widgets/app_text_field.dart';
 import 'package:montage/core/utils/animation_utils.dart';
@@ -37,7 +38,8 @@ class _SignUpContentState extends State<SignUpContent> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<AuthProvider>();
+    final auth = context.watch<AuthProvider>();
+    final form = context.watch<AuthFormViewModel>();
 
     return Scaffold(
       body: AppBackground(
@@ -61,9 +63,8 @@ class _SignUpContentState extends State<SignUpContent> {
                         child: Column(
                           children: [
                             14.heightBox,
-                            const Text(
-                              "Create Account",
-                            ).h1(color: Colors.white, fontSize: 24),
+                            const Text("Create Account")
+                                .h1(color: Colors.white, fontSize: 24),
                             6.heightBox,
                             const Text(
                               "Sign up to start your journey",
@@ -73,11 +74,11 @@ class _SignUpContentState extends State<SignUpContent> {
                             AppTextField(
                               title: "Username",
                               hint: "Enter your username",
-                              controller: provider.signUpUsernameController,
+                              controller: form.signUpUsernameController,
                               validator: Validators.usernameValidator,
-                              errorText: provider.signUpUsernameError,
+                              errorText: form.signUpUsernameError,
                               onChanged: (_) =>
-                                  provider.clearErrors(field: 'signUpUsername'),
+                                  form.clearErrors(field: 'signUpUsername'),
                               textInputAction: TextInputAction.next,
                               prefixChild: const Icon(
                                 Icons.person_rounded,
@@ -86,15 +87,14 @@ class _SignUpContentState extends State<SignUpContent> {
                               ),
                             ),
                             12.heightBox,
-
                             AppTextField(
                               title: "Email Address",
                               hint: "Enter your email",
-                              controller: provider.signUpEmailController,
+                              controller: form.signUpEmailController,
                               validator: Validators.emailValidator,
-                              errorText: provider.signUpEmailError,
+                              errorText: form.signUpEmailError,
                               onChanged: (_) =>
-                                  provider.clearErrors(field: 'signUpEmail'),
+                                  form.clearErrors(field: 'signUpEmail'),
                               textInputAction: TextInputAction.next,
                               prefixChild: const Icon(
                                 Icons.email_rounded,
@@ -103,16 +103,15 @@ class _SignUpContentState extends State<SignUpContent> {
                               ),
                             ),
                             12.heightBox,
-
                             AppTextField(
                               title: "Password",
                               hint: "Create a password",
-                              controller: provider.signUpPasswordController,
-                              obscureText: !provider.isSignUpPasswordVisible,
+                              controller: form.signUpPasswordController,
+                              obscureText: !form.isSignUpPasswordVisible,
                               validator: Validators.passwordValidator,
-                              errorText: provider.signUpPasswordError,
+                              errorText: form.signUpPasswordError,
                               onChanged: (_) =>
-                                  provider.clearErrors(field: 'signUpPassword'),
+                                  form.clearErrors(field: 'signUpPassword'),
                               textInputAction: TextInputAction.next,
                               prefixChild: const Icon(
                                 Icons.lock_rounded,
@@ -120,14 +119,12 @@ class _SignUpContentState extends State<SignUpContent> {
                                 size: 20,
                               ),
                               suffixChild: IconButton(
-                                onPressed:
-                                    provider.toggleSignUpPasswordVisibility,
-                                icon: provider.isSignUpPasswordVisible
+                                onPressed: form.toggleSignUpPasswordVisibility,
+                                icon: form.isSignUpPasswordVisible
                                     ? Icon(
                                         Icons.visibility,
-                                        color: Colors.white.withValues(
-                                          alpha: 0.35,
-                                        ),
+                                        color:
+                                            Colors.white.withValues(alpha: 0.35),
                                         size: 20,
                                       )
                                     : SvgPicture.asset(
@@ -141,32 +138,28 @@ class _SignUpContentState extends State<SignUpContent> {
                               ),
                             ),
                             12.heightBox,
-
                             AppTextField(
                               title: "Confirm Password",
                               hint: "Re-enter your password",
-                              controller:
-                                  provider.signUpConfirmPasswordController,
-                              obscureText: !provider.isConfirmPasswordVisible,
+                              controller: form.signUpConfirmPasswordController,
+                              obscureText: !form.isConfirmPasswordVisible,
                               validator: (val) =>
                                   Validators.confirmPasswordValidator(
-                                    val,
-                                    provider.signUpPasswordController.text,
-                                  ),
+                                val,
+                                form.signUpPasswordController.text,
+                              ),
                               prefixChild: const Icon(
                                 Icons.lock_rounded,
                                 color: Colors.white70,
                                 size: 20,
                               ),
                               suffixChild: IconButton(
-                                onPressed:
-                                    provider.toggleConfirmPasswordVisibility,
-                                icon: provider.isConfirmPasswordVisible
+                                onPressed: form.toggleConfirmPasswordVisibility,
+                                icon: form.isConfirmPasswordVisible
                                     ? Icon(
                                         Icons.visibility,
-                                        color: Colors.white.withValues(
-                                          alpha: 0.35,
-                                        ),
+                                        color:
+                                            Colors.white.withValues(alpha: 0.35),
                                         size: 20,
                                       )
                                     : SvgPicture.asset(
@@ -182,28 +175,29 @@ class _SignUpContentState extends State<SignUpContent> {
                             30.heightBox,
                             AppButton(
                               text: "Sign Up",
-                              isLoading: provider.isLoading,
+                              isLoading: auth.isLoading,
                               onPressed: () {
-                                if (_formKey.currentState?.validate() ??
-                                    false) {
-                                  provider.signUp().then((credential) {
+                                if (_formKey.currentState?.validate() ?? false) {
+                                  auth
+                                      .signUp(
+                                    form.signUpEmailController.text.trim(),
+                                    form.signUpPasswordController.text.trim(),
+                                    form.signUpUsernameController.text.trim(),
+                                  )
+                                      .then((failure) {
                                     if (!context.mounted) return;
-                                    if (credential != null) {
+                                    if (failure == null) {
                                       context.go(
-                                        AppRoutes.mainNavigationScreenRoute,
-                                      );
-                                    } else if (provider.generalError != null) {
-                                      ToastUtils.show(
-                                        context,
-                                        provider.generalError!,
-                                      );
+                                          AppRoutes.mainNavigationScreenRoute);
+                                    } else if (failure.code != null) {
+                                      form.handleSignUpFailure(failure);
+                                    } else {
+                                      ToastUtils.show(context, failure.message);
                                     }
                                   });
                                 }
                               },
-                              color: AppColors.primaryColor.withValues(
-                                alpha: 0.4,
-                              ),
+                              color: AppColors.primaryColor.withValues(alpha: 0.4),
                               textColor: Colors.white,
                               width: double.infinity,
                             ),
@@ -211,13 +205,11 @@ class _SignUpContentState extends State<SignUpContent> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Text(
-                                  "Already have an account? ",
-                                ).bodyMedium(color: Colors.white70),
+                                const Text("Already have an account? ")
+                                    .bodyMedium(color: Colors.white70),
                                 GestureDetector(
-                                  onTap: () {
-                                    context.go(AppRoutes.signInScreenRoute);
-                                  },
+                                  onTap: () =>
+                                      context.go(AppRoutes.signInScreenRoute),
                                   child: const Text("Sign In").bodyMedium(
                                     color: Colors.white,
                                     weight: FontWeight.bold,

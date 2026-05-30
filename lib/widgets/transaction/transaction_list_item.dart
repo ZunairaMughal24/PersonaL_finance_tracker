@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/utils/currency_utils.dart';
 import 'package:montage/providers/category_provider.dart';
-import 'package:montage/models/transaction_model.dart';
+import 'package:montage/domain/entities/transaction.dart';
 import 'package:montage/widgets/transaction/transaction_action_sheet.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/widgets/glass_container.dart';
@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:montage/widgets/transaction/transaction_detail_sheet.dart';
 
 class TransactionListItem extends StatelessWidget {
-  final TransactionModel transaction;
+  final Transaction transaction;
   final String currency;
   final VoidCallback? onDelete;
   final VoidCallback? onEdit;
@@ -29,11 +29,8 @@ class TransactionListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color fillColor = AppColors.primaryColor.withValues(alpha: 0.15);
     final Color iconBorderColor = AppColors.primaryColor.withValues(alpha: 0.2);
-
     final Color statusColor =
-        (transaction.isIncome ? AppColors.green : AppColors.red).withValues(
-          alpha: 0.8,
-        );
+        (transaction.isIncome ? AppColors.green : AppColors.red).withValues(alpha: 0.8);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -65,10 +62,7 @@ class TransactionListItem extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: fillColor,
                           shape: BoxShape.circle,
-                          border: Border.all(
-                            color: iconBorderColor,
-                            width: 1.5,
-                          ),
+                          border: Border.all(color: iconBorderColor, width: 1.5),
                         ),
                         child: Icon(
                           context.watch<CategoryProvider>().getIconForCategory(
@@ -98,7 +92,6 @@ class TransactionListItem extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(width: 12),
-
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,24 +100,18 @@ class TransactionListItem extends StatelessWidget {
                           transaction.category,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                        ).titleMedium(
-                          color: AppColors.white,
-                          weight: FontWeight.w600,
-                        ),
+                        ).titleMedium(color: AppColors.white, weight: FontWeight.w600),
                         if (transaction.title.isNotEmpty) ...[
                           const SizedBox(height: 2),
                           Text(
                             transaction.title,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                          ).bodySmall(
-                            color: AppColors.white.withValues(alpha: 0.8),
-                          ),
+                          ).bodySmall(color: AppColors.white.withValues(alpha: 0.8)),
                         ],
                       ],
                     ),
                   ),
-
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
@@ -143,17 +130,13 @@ class TransactionListItem extends StatelessWidget {
                             child: FittedBox(
                               fit: BoxFit.scaleDown,
                               alignment: Alignment.centerRight,
-                              child:
-                                  Text(
-                                    CurrencyUtils.formatAmount(
-                                      transaction.amount,
-                                      currency,
-                                    ),
-                                  ).mono(
-                                    fontSize: 14,
-                                    weight: FontWeight.w600,
-                                    color: statusColor,
-                                  ),
+                              child: Text(
+                                CurrencyUtils.formatAmount(transaction.amount, currency),
+                              ).mono(
+                                fontSize: 14,
+                                weight: FontWeight.w600,
+                                color: statusColor,
+                              ),
                             ),
                           ),
                         ],

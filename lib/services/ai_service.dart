@@ -1,5 +1,5 @@
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'package:montage/models/transaction_model.dart';
+import 'package:montage/domain/entities/transaction.dart';
 import 'package:montage/core/interfaces/i_ai_service.dart';
 
 class AIService implements IAIService {
@@ -10,8 +10,9 @@ class AIService implements IAIService {
     _model = GenerativeModel(model: 'gemini-1.5-flash', apiKey: apiKey);
   }
 
+  @override
   Future<String?> getSuggestionsAndAppreciation(
-    List<TransactionModel> transactions,
+    List<Transaction> transactions,
   ) async {
     try {
       final summary = transactions
@@ -24,18 +25,17 @@ class AIService implements IAIService {
 
       final seed = DateTime.now().millisecond;
 
-      final prompt =
-          '''
+      final prompt = '''
         Act as a "No-Nonsense Financial Mentor".
         Current Context Seed: $seed
         Transactions Data: [$summary].
-        
+
         YOUR ROLE:
-        - Analyze the data and JUDGE the user's financial choices. 
+        - Analyze the data and JUDGE the user's financial choices.
         - Call out "Bad" uses of money (e.g., high subscriptions, luxury, frequent dining).
         - Appreciate "Good" moves (e.g., high income, low expense streaks).
         - Identify the category with the HIGHEST volume and tell the user how to control it.
-        
+
         TONE & STYLE:
         - Be a Mentor: Wise, direct, slightly critical if needed, but ultimately empowering.
         - NO generic advice like "Consistency is key". Be specific to categories.

@@ -90,7 +90,7 @@ class _HistoryScreenBodyState extends State<_HistoryScreenBody> {
         onExport: () {
           Navigator.pop(context);
           final selectedTxs = vm.filteredTransactions
-              .where((tx) => vm.selectedKeys.contains(tx.key))
+              .where((tx) => vm.selectedIds.contains(tx.id))
               .toList();
           final settings = context.read<UserSettingsProvider>();
           ExportBottomSheet.show(
@@ -105,7 +105,7 @@ class _HistoryScreenBodyState extends State<_HistoryScreenBody> {
           TransactionModals.showDeleteConfirm(
             context: context,
             vm: vm,
-            keys: vm.selectedKeys.toList(),
+            keys: vm.selectedIds.toList(),
           );
         },
         onCancel: () {
@@ -172,7 +172,7 @@ class _HistoryScreenBodyState extends State<_HistoryScreenBody> {
                 onCategoryChanged: vm.setCategory,
                 transactionsForExport: vm.selectedCount > 0
                     ? vm.filteredTransactions
-                          .where((tx) => vm.selectedKeys.contains(tx.key))
+                          .where((tx) => vm.selectedIds.contains(tx.id))
                           .toList()
                     : vm.filteredTransactions,
               ),

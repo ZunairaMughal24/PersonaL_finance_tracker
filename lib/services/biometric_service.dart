@@ -1,8 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:montage/core/interfaces/i_biometric_service.dart';
+import 'package:montage/core/utils/app_logger.dart';
 
-class BiometricService {
+class BiometricService implements IBiometricService {
   final LocalAuthentication _auth = LocalAuthentication();
 
   Future<bool> isBiometricAvailable() async {
@@ -11,8 +12,12 @@ class BiometricService {
       final bool canAuthenticate =
           canAuthenticateWithBiometrics || await _auth.isDeviceSupported();
       return canAuthenticate;
-    } catch (e) {
-      debugPrint('BiometricService: Error checking availability: $e');
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'BiometricService: Error checking availability',
+        e,
+        stackTrace,
+      );
       return false;
     }
   }
@@ -20,23 +25,34 @@ class BiometricService {
   Future<List<BiometricType>> getAvailableBiometrics() async {
     try {
       return await _auth.getAvailableBiometrics();
-    } on PlatformException catch (e) {
-      debugPrint('BiometricService: Error getting biometrics: $e');
+    } on PlatformException catch (e, stackTrace) {
+      AppLogger.error(
+        'BiometricService: Error getting biometrics',
+        e,
+        stackTrace,
+      );
       return <BiometricType>[];
     }
   }
 
-  Future<bool> authenticate({String reason = 'Please authenticate to access your finance tracker'}) async {
+  Future<bool> authenticate({
+    String reason = 'Please authenticate to access your finance tracker',
+  }) async {
     try {
       return await _auth.authenticate(
         localizedReason: reason,
         options: const AuthenticationOptions(
           stickyAuth: true,
-          biometricOnly: false, // Allows PIN/Pattern fallback if biometrics fail/unavailable
+          biometricOnly:
+              false, // Allows PIN/Pattern fallback if biometrics fail/unavailable
         ),
       );
-    } on PlatformException catch (e) {
-      debugPrint('BiometricService: Error during authentication: $e');
+    } on PlatformException catch (e, stackTrace) {
+      AppLogger.error(
+        'BiometricService: Error during authentication',
+        e,
+        stackTrace,
+      );
       return false;
     }
   }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:montage/screens/main_navigation_screen.dart';
 import 'package:montage/screens/onboarding_screen.dart';
 import 'package:montage/screens/splash_screen.dart';
+import 'package:montage/core/utils/app_logger.dart';
 
 class AuthWrapper extends StatefulWidget {
   const AuthWrapper({super.key});
@@ -33,7 +34,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
     return StreamBuilder<User?>(
       stream: _authStateStream,
       builder: (context, snapshot) {
-        debugPrint(
+        AppLogger.debug(
           'AuthWrapper State: ${snapshot.connectionState}, Data UID: ${snapshot.data?.uid}, Show Splash: ${!_minSplashOver}',
         );
 

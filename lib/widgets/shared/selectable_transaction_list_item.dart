@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
-import 'package:montage/models/transaction_model.dart';
+import 'package:montage/domain/entities/transaction.dart';
 import 'package:montage/widgets/transaction/transaction_list_item.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:montage/core/constants/app_images.dart';
 
 class SelectableTransactionListItem extends StatelessWidget {
-  final TransactionModel transaction;
+  final Transaction transaction;
   final String currency;
   final bool isSelected;
   final bool isSelectionMode;
   final bool isHistoryMode;
   final Function(int) onToggleSelection;
-  final Function(int)
-  onPrimaryAction; // Restore for history, Edit for activity?
-  final Function(int)
-  onDelete; // Delete permanently for history, Archive for activity
+  final Function(int) onPrimaryAction;
+  final Function(int) onDelete;
 
   const SelectableTransactionListItem({
     super.key,
@@ -32,26 +30,27 @@ class SelectableTransactionListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final id = transaction.id!;
     return Dismissible(
-      key: Key(transaction.key.toString() + (isHistoryMode ? "_hist" : "_act")),
+      key: Key('$id${isHistoryMode ? "_hist" : "_act"}'),
       direction: DismissDirection.horizontal,
       background: _buildSwipeBackground(true),
       secondaryBackground: _buildSwipeBackground(false),
       confirmDismiss: (direction) async {
         if (direction == DismissDirection.startToEnd) {
-          onPrimaryAction(transaction.key as int);
+          onPrimaryAction(id);
         } else {
-          onDelete(transaction.key as int);
+          onDelete(id);
         }
         return false;
       },
       child: GestureDetector(
-        onLongPress: () => onToggleSelection(transaction.key as int),
+        onLongPress: () => onToggleSelection(id),
         onTap: () {
           if (isSelectionMode) {
-            onToggleSelection(transaction.key as int);
+            onToggleSelection(id);
           } else {
-            onPrimaryAction(transaction.key as int);
+            onPrimaryAction(id);
           }
         },
         child: AnimatedContainer(
@@ -64,8 +63,8 @@ class SelectableTransactionListItem extends StatelessWidget {
                 child: TransactionListItem(
                   transaction: transaction,
                   currency: currency,
-                  onDelete: () => onDelete(transaction.key as int),
-                  onEdit: () => onPrimaryAction(transaction.key as int),
+                  onDelete: () => onDelete(id),
+                  onEdit: () => onPrimaryAction(id),
                   borderColor: isSelected
                       ? AppColors.primaryColor.withValues(alpha: 0.6)
                       : isSelectionMode
@@ -92,9 +91,7 @@ class SelectableTransactionListItem extends StatelessWidget {
                     boxShadow: isSelected
                         ? [
                             BoxShadow(
-                              color: AppColors.primaryColor.withValues(
-                                alpha: 0.3,
-                              ),
+                              color: AppColors.primaryColor.withValues(alpha: 0.3),
                               blurRadius: 8,
                               spreadRadius: 1,
                             ),
@@ -102,11 +99,7 @@ class SelectableTransactionListItem extends StatelessWidget {
                         : [],
                   ),
                   child: isSelected
-                      ? const Icon(
-                          Icons.check_rounded,
-                          color: Colors.white,
-                          size: 16,
-                        )
+                      ? const Icon(Icons.check_rounded, color: Colors.white, size: 16)
                       : null,
                 ),
                 2.widthBox,

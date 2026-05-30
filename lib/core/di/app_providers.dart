@@ -1,3 +1,4 @@
+import 'package:montage/core/config/app_config.dart';
 import 'package:montage/core/interfaces/i_category_repository.dart';
 import 'package:montage/core/interfaces/i_transaction_repository.dart';
 import 'package:montage/core/interfaces/i_user_settings_repository.dart';
@@ -9,6 +10,9 @@ import 'package:montage/providers/user_settings_provider.dart';
 import 'package:montage/repositories/category_repository.dart';
 import 'package:montage/repositories/transaction_repository.dart';
 import 'package:montage/repositories/user_settings_repository.dart';
+import 'package:montage/services/ai_service.dart';
+import 'package:montage/services/firestore_sync_service.dart';
+import 'package:montage/viewmodels/auth_form_view_model.dart';
 import 'package:montage/viewmodels/home_view_model.dart';
 import 'package:montage/viewmodels/speech_view_model.dart';
 import 'package:montage/viewmodels/transaction_list_view_model.dart';
@@ -18,7 +22,12 @@ import 'package:provider/single_child_widget.dart';
 class AppProviders {
   static List<SingleChildWidget> get providers => [
     ChangeNotifierProvider(create: (_) => AuthProvider()),
-    Provider<ITransactionRepository>(create: (_) => TransactionRepository()),
+    ChangeNotifierProvider(create: (_) => AuthFormViewModel()),
+    Provider<ITransactionRepository>(
+      create: (_) => TransactionRepository(
+        syncService: FirestoreSyncService(),
+      ),
+    ),
     Provider<IUserSettingsRepository>(create: (_) => UserSettingsRepository()),
     Provider<ICategoryRepository>(create: (_) => CategoryRepository()),
     ChangeNotifierProxyProvider2<
@@ -26,12 +35,12 @@ class AppProviders {
       ITransactionRepository,
       TransactionProvider
     >(
-      create: (_) => TransactionProvider(),
-      update: (_, auth, repo, tx) {
-        return tx!
-          ..updateRepository(repo)
-          ..updateUser(auth.currentUser?.uid);
-      },
+      create: (_) => TransactionProvider(
+        aiService: AIService(AppConfig.geminiApiKey),
+      ),
+      update: (_, auth, repo, tx) => tx!
+        ..updateRepository(repo)
+        ..updateUser(auth.currentUser?.uid),
     ),
     ChangeNotifierProxyProvider2<
       AuthProvider,

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
-import 'package:montage/models/transaction_model.dart';
+import 'package:montage/domain/entities/transaction.dart';
 import 'package:montage/services/export_service.dart';
 import 'package:montage/widgets/glass_container.dart';
 import 'package:montage/widgets/app_bottom_sheet.dart';
 
 class ExportBottomSheet extends StatelessWidget {
-  final List<TransactionModel> transactions;
+  final List<Transaction> transactions;
   final String userName;
   final String currency;
 
@@ -20,7 +20,7 @@ class ExportBottomSheet extends StatelessWidget {
 
   static Future<void> show({
     required BuildContext context,
-    required List<TransactionModel> transactions,
+    required List<Transaction> transactions,
     required String userName,
     required String currency,
   }) {
@@ -39,13 +39,11 @@ class ExportBottomSheet extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          "Export Results",
-        ).titleLarge(color: Colors.white, weight: FontWeight.bold),
+        Text("Export Results").titleLarge(color: Colors.white, weight: FontWeight.bold),
         8.heightBox,
-        Text(
-          "Total items: ${transactions.length}",
-        ).bodyLarge(color: Colors.white.withValues(alpha: 0.6)),
+        Text("Total items: ${transactions.length}").bodyLarge(
+          color: Colors.white.withValues(alpha: 0.6),
+        ),
         24.heightBox,
         _buildExportOption(
           context,
@@ -120,13 +118,9 @@ class ExportBottomSheet extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                  ).titleMedium(color: Colors.white, weight: FontWeight.w600),
+                  Text(title).titleMedium(color: Colors.white, weight: FontWeight.w600),
                   const SizedBox(height: 2),
-                  Text(
-                    subtitle,
-                  ).bodySmall(color: Colors.white.withValues(alpha: 0.5)),
+                  Text(subtitle).bodySmall(color: Colors.white.withValues(alpha: 0.5)),
                 ],
               ),
             ),

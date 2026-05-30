@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/utils/date_formatter.dart';
-import 'package:montage/models/transaction_model.dart';
+import 'package:montage/domain/entities/transaction.dart';
 import 'package:montage/providers/transaction_provider.dart';
 import 'package:montage/services/media_service.dart';
 import 'package:expressions/expressions.dart';
@@ -32,7 +32,7 @@ class TransactionFormViewModel extends ChangeNotifier {
       RegExp(r'[+\-*/]').hasMatch(_amountExpression) &&
       _amountExpression != '-';
 
-  TransactionFormViewModel({TransactionModel? transaction}) {
+  TransactionFormViewModel({Transaction? transaction}) {
     if (transaction != null) {
       _loadTransaction(transaction);
     } else {
@@ -40,7 +40,7 @@ class TransactionFormViewModel extends ChangeNotifier {
     }
   }
 
-  void _loadTransaction(TransactionModel tx) {
+  void _loadTransaction(Transaction tx) {
     _title = tx.title;
     _isIncome = tx.isIncome;
     _amountResult = tx.amount.toString();
@@ -51,7 +51,6 @@ class TransactionFormViewModel extends ChangeNotifier {
     _selectedCategory = tx.category;
     _selectedCurrency = tx.currency;
     _imagePath = tx.imagePath;
-
     _selectedDate = DateUtilsCustom.parseDate(tx.date) ?? DateTime.now();
   }
 
@@ -93,17 +92,12 @@ class TransactionFormViewModel extends ChangeNotifier {
 
   bool _isSavingImage = false;
 
-  /// Handles saving a picked image to the local documents directory.
-  /// The UI layer (Screen) passes the raw path and name from the picker.
   Future<void> handleImageSelected(String path, String name) async {
     if (_isSavingImage) return;
-
     _isSavingImage = true;
     try {
       final newPath = await _mediaService.saveImageLocally(path, name);
-      if (newPath != null) {
-        setImagePath(newPath);
-      }
+      if (newPath != null) setImagePath(newPath);
     } finally {
       _isSavingImage = false;
     }
@@ -112,11 +106,7 @@ class TransactionFormViewModel extends ChangeNotifier {
   void onKeyPressed(String value) {
     if (RegExp(r'[0-9.]').hasMatch(value)) {
       if (_amountExpression == "0") {
-        if (value == ".") {
-          _amountExpression = "0.";
-        } else {
-          _amountExpression = value;
-        }
+        _amountExpression = value == "." ? "0." : value;
       } else {
         if (value == "." && _amountExpression.contains(".")) {
           final parts = _amountExpression.split(RegExp(r'[+\-*/]'));
@@ -132,11 +122,9 @@ class TransactionFormViewModel extends ChangeNotifier {
         _amountExpression += value;
       } else if (RegExp(r'[+\-*/]$').hasMatch(_amountExpression)) {
         _amountExpression =
-            _amountExpression.substring(0, _amountExpression.length - 1) +
-            value;
+            _amountExpression.substring(0, _amountExpression.length - 1) + value;
       }
     }
-
     _evaluateExpression();
     notifyListeners();
   }
@@ -148,24 +136,17 @@ class TransactionFormViewModel extends ChangeNotifier {
   }
 
   String _calculate(String expression) {
-    if (expression.isEmpty || expression == "0" || expression == "-") {
-      return "0";
-    }
-
+    if (expression.isEmpty || expression == "0" || expression == "-") return "0";
     try {
       String expStr = expression;
       if (RegExp(r'[+\-*/]$').hasMatch(expStr)) {
         expStr = expStr.substring(0, expStr.length - 1);
       }
-
       final Expression parsedExpression = Expression.parse(expStr);
       const evaluator = ExpressionEvaluator();
       final result = evaluator.eval(parsedExpression, {});
-
       if (result == null) return "0";
-
       String resultStr = result.toString();
-
       if (result is double) {
         if (result.isInfinite || result.isNaN) return "0";
         if (resultStr.endsWith(".0")) {
@@ -187,10 +168,7 @@ class TransactionFormViewModel extends ChangeNotifier {
 
   void onBackspace() {
     if (_amountExpression.length > 1) {
-      _amountExpression = _amountExpression.substring(
-        0,
-        _amountExpression.length - 1,
-      );
+      _amountExpression = _amountExpression.substring(0, _amountExpression.length - 1);
     } else {
       _amountExpression = "0";
     }
@@ -213,14 +191,12 @@ class TransactionFormViewModel extends ChangeNotifier {
   String? validate() {
     if (_selectedCategory.isEmpty) return "Please select a category";
     final amountVal = double.tryParse(_amountResult);
-    if (amountVal == null || amountVal <= 0) {
-      return "Please enter a valid amount";
-    }
+    if (amountVal == null || amountVal <= 0) return "Please enter a valid amount";
     return null;
   }
 
-  TransactionModel getTransactionModel() {
-    return TransactionModel(
+  Transaction buildTransaction() {
+    return Transaction(
       title: _title.trim(),
       amount: double.tryParse(_amountResult) ?? 0.0,
       isIncome: _isIncome,
@@ -241,14 +217,13 @@ class TransactionFormViewModel extends ChangeNotifier {
       onError(error);
       return;
     }
-
-    await provider.addTransaction(getTransactionModel());
+    await provider.addTransaction(buildTransaction());
     onSuccess();
   }
 
   Future<void> updateTransaction({
     required TransactionProvider provider,
-    required int key,
+    required int id,
     required VoidCallback onSuccess,
     required Function(String) onError,
   }) async {
@@ -257,8 +232,7 @@ class TransactionFormViewModel extends ChangeNotifier {
       onError(error);
       return;
     }
-
-    await provider.updateTransaction(key, getTransactionModel());
+    await provider.updateTransaction(id, buildTransaction());
     onSuccess();
   }
 }

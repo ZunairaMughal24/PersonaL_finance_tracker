@@ -1,19 +1,25 @@
+import 'dart:async';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:montage/core/enums/sync_status.dart';
 import 'package:montage/core/utils/app_logger.dart';
+import 'package:montage/domain/entities/transaction.dart';
 import 'package:montage/models/transaction_model.dart';
 import 'package:montage/services/database_services.dart';
-import 'package:montage/services/firestore_sync_service.dart';
 import 'package:montage/core/constants/app_keys.dart';
 import 'package:montage/core/interfaces/i_transaction_repository.dart';
 import 'package:montage/core/interfaces/i_firestore_sync_service.dart';
 
 class TransactionRepository implements ITransactionRepository {
   final IFirestoreSyncService _syncService;
+  final _syncStatusController = StreamController<SyncStatus>.broadcast();
   DatabaseService? _db;
   String? _userId;
 
-  TransactionRepository({IFirestoreSyncService? syncService})
-    : _syncService = syncService ?? FirestoreSyncService();
+  TransactionRepository({required IFirestoreSyncService syncService})
+      : _syncService = syncService;
+
+  @override
+  Stream<SyncStatus> get syncStatus => _syncStatusController.stream;
 
   @override
   bool get isInitialized => _db != null;
@@ -27,7 +33,6 @@ class TransactionRepository implements ITransactionRepository {
     final box = await Hive.openBox<TransactionModel>(boxName);
     _db = DatabaseService(box);
 
-    // Initial Sync Logic
     if (box.isEmpty) {
       await _restoreFromCloud(userId, box);
     } else {
@@ -40,115 +45,100 @@ class TransactionRepository implements ITransactionRepository {
     Box<TransactionModel> box,
   ) async {
     try {
+      _syncStatusController.add(SyncStatus.syncing);
       if (await _syncService.hasCloudData(userId)) {
         final cloudData = await _syncService.pullAllTransactions(userId);
         for (final tx in cloudData) {
-          await box.add(tx);
+          await box.add(TransactionModel.fromEntity(tx));
         }
       }
+      _syncStatusController.add(SyncStatus.success);
     } catch (e, stackTrace) {
-      AppLogger.error(
-        'TransactionRepository: Cloud restore failed',
-        e,
-        stackTrace,
-      );
+      _syncStatusController.add(SyncStatus.error);
+      AppLogger.error('TransactionRepository: Cloud restore failed', e, stackTrace);
     }
   }
 
   void _syncInBackground(String userId, Box<TransactionModel> box) async {
     try {
+      _syncStatusController.add(SyncStatus.syncing);
       final hasCloudData = await _syncService.hasCloudData(userId);
       if (!hasCloudData) {
-        // Just push everything if cloud is empty
-        await _syncService.pushAllTransactions(
-          userId,
-          box.toMap().cast<int, TransactionModel>(),
-        );
+        final localMap = <int, Transaction>{};
+        for (final entry in box.toMap().entries) {
+          localMap[entry.key as int] = entry.value.toEntity();
+        }
+        await _syncService.pushAllTransactions(userId, localMap);
+        _syncStatusController.add(SyncStatus.success);
         return;
       }
 
-      // Conflict Resolution: Last-Modified-Wins
       final cloudTransactions = await _syncService.pullAllTransactions(userId);
-      final localMap = box.toMap().cast<int, TransactionModel>();
-
-      // Note: Future versions can implement full merge logic here by comparing
-      // lastModified timestamps between cloudTransactions and localMap.
-
-      if (cloudTransactions.isNotEmpty && localMap.isEmpty) {
+      if (cloudTransactions.isNotEmpty && box.isEmpty) {
         for (var tx in cloudTransactions) {
-          await box.add(tx);
+          await box.add(TransactionModel.fromEntity(tx));
         }
       }
 
-      AppLogger.info(
-        'TransactionRepository: Background sync/reconciliation completed',
-      );
+      _syncStatusController.add(SyncStatus.success);
+      AppLogger.info('TransactionRepository: Background sync completed');
     } catch (e, stackTrace) {
-      AppLogger.error(
-        'TransactionRepository: Background sync failed',
-        e,
-        stackTrace,
-      );
+      _syncStatusController.add(SyncStatus.error);
+      AppLogger.error('TransactionRepository: Background sync failed', e, stackTrace);
     }
   }
 
   @override
-  List<TransactionModel> getAll() {
+  List<Transaction> getAll() {
     return _db?.getAllTransaction() ?? [];
   }
 
   @override
-  Future<void> add(TransactionModel tx) async {
+  Future<void> add(Transaction tx) async {
     if (_db == null) return;
-    tx.lastModified = DateTime.now().millisecondsSinceEpoch;
-    await _db!.addTransaction(tx);
-    if (_userId != null && tx.key != null) {
-      _syncService.pushTransaction(_userId!, tx.key as int, tx);
-    }
-  }
-
-  @override
-  Future<void> update(int key, TransactionModel tx) async {
-    if (_db == null) return;
-    tx.lastModified = DateTime.now().millisecondsSinceEpoch;
-    await _db!.updateTransaction(key, tx);
+    final assignedId = await _db!.addTransaction(tx);
     if (_userId != null) {
-      _syncService.updateTransaction(_userId!, key, tx);
+      _syncService.pushTransaction(_userId!, assignedId, tx);
     }
   }
 
   @override
-  Future<void> updateBulk(Map<int, TransactionModel> transactions) async {
+  Future<void> update(int id, Transaction tx) async {
     if (_db == null) return;
-    final now = DateTime.now().millisecondsSinceEpoch;
-    for (var tx in transactions.values) {
-      tx.lastModified = now;
+    await _db!.updateTransaction(id, tx);
+    if (_userId != null) {
+      _syncService.updateTransaction(_userId!, id, tx);
     }
+  }
+
+  @override
+  Future<void> updateBulk(Map<int, Transaction> transactions) async {
+    if (_db == null) return;
     await _db!.updateBulkTransactions(transactions);
     if (_userId != null) {
-      // Background sync all updated transactions
       _syncService.pushAllTransactions(_userId!, transactions);
     }
   }
 
   @override
-  Future<void> delete(int key) async {
+  Future<void> delete(int id) async {
     if (_db == null) return;
-    await _db!.deleteTransaction(key);
+    await _db!.deleteTransaction(id);
     if (_userId != null) {
-      _syncService.deleteTransaction(_userId!, key);
+      _syncService.deleteTransaction(_userId!, id);
     }
   }
 
   @override
-  Future<void> deleteBulk(List<int> keys) async {
-    for (var key in keys) {
-      await delete(key);
+  Future<void> deleteBulk(List<int> ids) async {
+    for (var id in ids) {
+      await delete(id);
     }
   }
 
   @override
   void dispose() {
+    _syncStatusController.close();
     _db = null;
     _userId = null;
   }

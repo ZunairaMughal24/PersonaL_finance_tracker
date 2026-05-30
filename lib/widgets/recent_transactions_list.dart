@@ -60,11 +60,7 @@ class RecentTransactionsList extends StatelessWidget {
               context.push(AppRoutes.editTransactionScreenRoute, extra: tx);
             },
             onDelete: (key) {
-              // Find index in allTransactions for precise deletion
-              final originalIndex = transactionProvider.allTransactions.indexOf(
-                tx,
-              );
-              transactionProvider.deleteTransaction(key, originalIndex);
+              transactionProvider.deleteTransaction(key);
               ToastUtils.show(context, 'Transaction deleted', isError: false);
             },
           );

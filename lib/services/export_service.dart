@@ -5,11 +5,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:share_plus/share_plus.dart';
-import 'package:montage/models/transaction_model.dart';
+import 'package:montage/domain/entities/transaction.dart';
 import 'package:montage/core/utils/date_formatter.dart';
 
 class ExportService {
-  static String _getPeriodText(List<TransactionModel> transactions) {
+  static String _getPeriodText(List<Transaction> transactions) {
     if (transactions.isEmpty) return "All Time";
     final dates = transactions
         .map((t) => DateUtilsCustom.parseDate(t.date))
@@ -24,7 +24,7 @@ class ExportService {
   }
 
   static Future<void> exportToText(
-    List<TransactionModel> transactions,
+    List<Transaction> transactions,
     String userName,
   ) async {
     final periodText = _getPeriodText(transactions);
@@ -41,33 +41,24 @@ class ExportService {
     for (var tx in transactions) {
       final date = DateUtilsCustom.parseDate(tx.date) ?? DateTime.now();
       final dateStr = DateFormat('MMM dd').format(date);
-      final amountStr =
-          "${tx.isIncome ? '+' : '-'}${tx.amount.toStringAsFixed(2)}";
+      final amountStr = "${tx.isIncome ? '+' : '-'}${tx.amount.toStringAsFixed(2)}";
       buffer.writeln(
         "${dateStr.padRight(12)} | ${tx.category.padRight(12)} | ${amountStr.padLeft(10)}",
       );
     }
 
-    await Share.share(
-      buffer.toString(),
-      subject: 'My Transactions Report (Text)',
-    );
+    await Share.share(buffer.toString(), subject: 'My Transactions Report (Text)');
   }
 
   static Future<void> exportToExcel(
-    List<TransactionModel> transactions,
+    List<Transaction> transactions,
     String userName,
   ) async {
-    // We use CSV format as it is universally accepted by Excel
     List<List<dynamic>> rows = [];
-
-    // Header Info
     rows.add(["Montage Financial Report"]);
     rows.add(["User:", userName]);
     rows.add(["Period:", _getPeriodText(transactions)]);
     rows.add([]);
-
-    // Data Header
     rows.add(["Date", "Description", "Category", "Type", "Amount"]);
 
     for (var tx in transactions) {
@@ -82,20 +73,15 @@ class ExportService {
     }
 
     String csvContent = const ListToCsvConverter().convert(rows);
-
     final directory = await getTemporaryDirectory();
     final path =
         "${directory.path}/montage_report_${DateTime.now().millisecondsSinceEpoch}.csv";
-    final file = File(path);
-    await file.writeAsString(csvContent);
-
-    await Share.shareXFiles([
-      XFile(path),
-    ], text: 'My Transactions Export (Excel/CSV)');
+    await File(path).writeAsString(csvContent);
+    await Share.shareXFiles([XFile(path)], text: 'My Transactions Export (Excel/CSV)');
   }
 
   static Future<void> exportToPDF(
-    List<TransactionModel> transactions,
+    List<Transaction> transactions,
     String currency,
     String userName,
   ) async {
@@ -123,23 +109,14 @@ class ExportService {
                 pw.SizedBox(height: 6),
                 pw.Text(
                   "Report Period: $periodText",
-                  style: const pw.TextStyle(
-                    fontSize: 14,
-                    color: PdfColors.grey700,
-                  ),
+                  style: const pw.TextStyle(fontSize: 14, color: PdfColors.grey700),
                 ),
               ],
             ),
           ),
           pw.SizedBox(height: 20),
           pw.TableHelper.fromTextArray(
-            headers: [
-              "Date",
-              "Description",
-              "Category",
-              "Type",
-              "Amount ($currency)",
-            ],
+            headers: ["Date", "Description", "Category", "Type", "Amount ($currency)"],
             data: transactions.map((tx) {
               final date = DateUtilsCustom.parseDate(tx.date) ?? DateTime.now();
               return [
@@ -150,13 +127,8 @@ class ExportService {
                 tx.amount.toStringAsFixed(2),
               ];
             }).toList(),
-            headerStyle: pw.TextStyle(
-              fontWeight: pw.FontWeight.bold,
-              color: PdfColors.white,
-            ),
-            headerDecoration: const pw.BoxDecoration(
-              color: PdfColors.blueGrey800,
-            ),
+            headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold, color: PdfColors.white),
+            headerDecoration: const pw.BoxDecoration(color: PdfColors.blueGrey800),
             cellHeight: 30,
             columnWidths: {
               0: const pw.FlexColumnWidth(2.5),
@@ -182,9 +154,6 @@ class ExportService {
         "${directory.path}/montage_report_${DateTime.now().millisecondsSinceEpoch}.pdf";
     final file = File(path);
     await file.writeAsBytes(await pdf.save());
-
-    await Share.shareXFiles([
-      XFile(path),
-    ], text: 'My Transactions Report (PDF)');
+    await Share.shareXFiles([XFile(path)], text: 'My Transactions Report (PDF)');
   }
 }

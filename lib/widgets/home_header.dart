@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/constants/app_images.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:montage/core/enums/sync_status.dart';
 
 import 'package:montage/widgets/glass_container.dart';
 
@@ -10,12 +11,14 @@ class HomeHeader extends StatelessWidget {
   final String userName;
   final String? profileImagePath;
   final String summaryText;
+  final SyncStatus syncStatus;
 
   const HomeHeader({
     super.key,
     required this.userName,
     this.profileImagePath,
     required this.summaryText,
+    this.syncStatus = SyncStatus.idle,
   });
 
   @override
@@ -72,13 +75,21 @@ class HomeHeader extends StatelessWidget {
                       letterSpacing: -0.5,
                     ),
                   ),
-                  Text(
-                    summaryText,
-                    style: TextStyle(
-                      color: AppColors.white.withValues(alpha: 0.9),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w400,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        summaryText,
+                        style: TextStyle(
+                          color: AppColors.white.withValues(alpha: 0.9),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      if (syncStatus != SyncStatus.idle) ...[
+                        const SizedBox(width: 8),
+                        _buildSyncIcon(),
+                      ],
+                    ],
                   ),
                 ],
               ),
@@ -123,5 +134,29 @@ class HomeHeader extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildSyncIcon() {
+    IconData icon;
+    Color color;
+
+    switch (syncStatus) {
+      case SyncStatus.syncing:
+        icon = Icons.sync_rounded;
+        color = Colors.blueAccent;
+        break;
+      case SyncStatus.success:
+        icon = Icons.cloud_done_rounded;
+        color = Colors.greenAccent;
+        break;
+      case SyncStatus.error:
+        icon = Icons.cloud_off_rounded;
+        color = Colors.redAccent;
+        break;
+      case SyncStatus.idle:
+        return const SizedBox.shrink();
+    }
+
+    return Icon(icon, size: 14, color: color.withValues(alpha: 0.8));
   }
 }

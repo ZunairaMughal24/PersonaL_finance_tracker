@@ -1,7 +1,6 @@
-import 'package:flutter/foundation.dart';
-import 'package:montage/core/utils/app_logger.dart';
-
 import 'package:hive_flutter/adapters.dart';
+import 'package:montage/core/utils/app_logger.dart';
+import 'package:montage/domain/entities/transaction.dart';
 import 'package:montage/models/transaction_model.dart';
 
 class DatabaseService {
@@ -9,66 +8,46 @@ class DatabaseService {
 
   DatabaseService(this.box);
 
-  // Method to add a transaction
-  Future<void> addTransaction(TransactionModel tx) async {
+  Future<int> addTransaction(Transaction tx) async {
     try {
-      await box.add(tx);
+      return await box.add(TransactionModel.fromEntity(tx));
     } catch (e, stackTrace) {
-      AppLogger.error(
-        'DatabaseService: Error adding transaction',
-        e,
-        stackTrace,
-      );
+      AppLogger.error('DatabaseService: Error adding transaction', e, stackTrace);
       rethrow;
     }
   }
 
-  List<TransactionModel> getAllTransaction() {
-    return box.values.toList();
+  List<Transaction> getAllTransaction() {
+    return box.values.map((m) => m.toEntity()).toList();
   }
 
-  Future<void> deleteTransaction(int key) async {
+  Future<void> deleteTransaction(int id) async {
     try {
-      await box.delete(key);
+      await box.delete(id);
     } catch (e, stackTrace) {
-      AppLogger.error(
-        'DatabaseService: Error deleting transaction',
-        e,
-        stackTrace,
-      );
+      AppLogger.error('DatabaseService: Error deleting transaction', e, stackTrace);
       rethrow;
     }
   }
 
-  Future<void> updateTransaction(int key, TransactionModel updatedTx) async {
+  Future<void> updateTransaction(int id, Transaction tx) async {
     try {
-      await box.put(key, updatedTx);
+      await box.put(id, TransactionModel.fromEntity(tx));
     } catch (e, stackTrace) {
-      AppLogger.error(
-        'DatabaseService: Error updating transaction',
-        e,
-        stackTrace,
-      );
+      AppLogger.error('DatabaseService: Error updating transaction', e, stackTrace);
       rethrow;
     }
   }
 
-  Future<void> updateBulkTransactions(
-    Map<int, TransactionModel> transactions,
-  ) async {
+  Future<void> updateBulkTransactions(Map<int, Transaction> transactions) async {
     try {
-      await box.putAll(transactions);
-    } catch (e, stackTrace) {
-      AppLogger.error(
-        'DatabaseService: Error updating bulk transactions',
-        e,
-        stackTrace,
+      final hiveMap = transactions.map(
+        (k, v) => MapEntry(k, TransactionModel.fromEntity(v)),
       );
+      await box.putAll(hiveMap);
+    } catch (e, stackTrace) {
+      AppLogger.error('DatabaseService: Error updating bulk transactions', e, stackTrace);
       rethrow;
     }
-  }
-
-  ValueListenable<Box<TransactionModel>> listenToBox() {
-    return box.listenable();
   }
 }

@@ -37,6 +37,7 @@ class HomeScreen extends StatelessWidget {
                     userName: vm.userName,
                     profileImagePath: vm.profileImagePath,
                     summaryText: "Your financial dashboard",
+                    syncStatus: vm.syncStatus,
                   ),
                   const SizedBox(height: 8),
                   Padding(

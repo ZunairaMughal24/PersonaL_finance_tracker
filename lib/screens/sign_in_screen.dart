@@ -8,6 +8,7 @@ import 'package:montage/core/utils/toast_utility.dart';
 import 'package:montage/core/utils/validators.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/providers/auth_provider.dart';
+import 'package:montage/viewmodels/auth_form_view_model.dart';
 import 'package:montage/widgets/app_button.dart';
 import 'package:montage/widgets/app_text_field.dart';
 import 'package:montage/core/utils/animation_utils.dart';
@@ -37,7 +38,8 @@ class _SignInContentState extends State<SignInContent> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<AuthProvider>();
+    final auth = context.watch<AuthProvider>();
+    final form = context.watch<AuthFormViewModel>();
 
     return Scaffold(
       body: AppBackground(
@@ -61,9 +63,8 @@ class _SignInContentState extends State<SignInContent> {
                         child: Column(
                           children: [
                             14.heightBox,
-                            const Text(
-                              "Welcome Back",
-                            ).h1(color: Colors.white, fontSize: 24),
+                            const Text("Welcome Back")
+                                .h1(color: Colors.white, fontSize: 24),
                             6.heightBox,
                             const Text(
                               "Please sign in to your account",
@@ -73,10 +74,11 @@ class _SignInContentState extends State<SignInContent> {
                             AppTextField(
                               title: "Email Address",
                               hint: "Enter your email",
-                              controller: provider.signInEmailController,
+                              controller: form.signInEmailController,
                               validator: Validators.emailValidator,
-                              errorText: provider.signInEmailError,
-                              onChanged: (_) => provider.clearErrors(field: 'signInEmail'),
+                              errorText: form.signInEmailError,
+                              onChanged: (_) =>
+                                  form.clearErrors(field: 'signInEmail'),
                               textInputAction: TextInputAction.next,
                               prefixChild: const Icon(
                                 Icons.email_rounded,
@@ -85,15 +87,15 @@ class _SignInContentState extends State<SignInContent> {
                               ),
                             ),
                             12.heightBox,
-
                             AppTextField(
                               title: "Password",
                               hint: "Enter your password",
-                              controller: provider.signInPasswordController,
-                              obscureText: !provider.isSignInPasswordVisible,
+                              controller: form.signInPasswordController,
+                              obscureText: !form.isSignInPasswordVisible,
                               validator: Validators.passwordValidator,
-                              errorText: provider.signInPasswordError,
-                              onChanged: (_) => provider.clearErrors(field: 'signInPassword'),
+                              errorText: form.signInPasswordError,
+                              onChanged: (_) =>
+                                  form.clearErrors(field: 'signInPassword'),
                               textInputAction: TextInputAction.done,
                               prefixChild: const Icon(
                                 Icons.lock_rounded,
@@ -101,14 +103,12 @@ class _SignInContentState extends State<SignInContent> {
                                 size: 20,
                               ),
                               suffixChild: IconButton(
-                                onPressed:
-                                    provider.toggleSignInPasswordVisibility,
-                                icon: provider.isSignInPasswordVisible
+                                onPressed: form.toggleSignInPasswordVisibility,
+                                icon: form.isSignInPasswordVisible
                                     ? Icon(
                                         Icons.visibility,
-                                        color: Colors.white.withValues(
-                                          alpha: 0.35,
-                                        ),
+                                        color:
+                                            Colors.white.withValues(alpha: 0.35),
                                         size: 20,
                                       )
                                     : SvgPicture.asset(
@@ -131,35 +131,23 @@ class _SignInContentState extends State<SignInContent> {
                                       height: 24,
                                       width: 24,
                                       child: Checkbox(
-                                        value: provider.rememberMe,
-                                        onChanged: provider.toggleRememberMe,
+                                        value: form.rememberMe,
+                                        onChanged: form.toggleRememberMe,
                                         side: const BorderSide(
-                                          color: Colors.white70,
-                                        ),
+                                            color: Colors.white70),
                                         checkColor: AppColors.primaryColor,
                                         activeColor: Colors.white,
                                       ),
                                     ),
                                     8.widthBox,
-                                    const Text(
-                                      "Remember me",
-                                    ).bodyMedium(color: Colors.white70),
+                                    const Text("Remember me")
+                                        .bodyMedium(color: Colors.white70),
                                   ],
                                 ),
                                 GestureDetector(
                                   onTap: () {},
-                                  child: RichText(
-                                    text: const TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: "Forgot Password? ",
-                                          style: TextStyle(
-                                            color: Colors.white70,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                  child: const Text("Forgot Password?").bodyMedium(
+                                    color: Colors.white70,
                                   ),
                                 ),
                               ],
@@ -167,28 +155,28 @@ class _SignInContentState extends State<SignInContent> {
                             30.heightBox,
                             AppButton(
                               text: "Login",
-                              isLoading: provider.isLoading,
+                              isLoading: auth.isLoading,
                               onPressed: () {
-                                if (_formKey.currentState?.validate() ??
-                                    false) {
-                                  provider.signIn().then((credential) {
+                                if (_formKey.currentState?.validate() ?? false) {
+                                  auth
+                                      .signIn(
+                                    form.signInEmailController.text.trim(),
+                                    form.signInPasswordController.text.trim(),
+                                  )
+                                      .then((failure) {
                                     if (!context.mounted) return;
-                                    if (credential != null) {
+                                    if (failure == null) {
                                       context.go(
-                                        AppRoutes.mainNavigationScreenRoute,
-                                      );
-                                    } else if (provider.generalError != null) {
-                                      ToastUtils.show(
-                                        context,
-                                        provider.generalError!,
-                                      );
+                                          AppRoutes.mainNavigationScreenRoute);
+                                    } else if (failure.code != null) {
+                                      form.handleSignInFailure(failure);
+                                    } else {
+                                      ToastUtils.show(context, failure.message);
                                     }
                                   });
                                 }
                               },
-                              color: AppColors.primaryColor.withValues(
-                                alpha: 0.4,
-                              ),
+                              color: AppColors.primaryColor.withValues(alpha: 0.4),
                               textColor: Colors.white,
                               width: double.infinity,
                             ),
@@ -196,13 +184,11 @@ class _SignInContentState extends State<SignInContent> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Text(
-                                  "Don't have an account? ",
-                                ).bodyMedium(color: Colors.white70),
+                                const Text("Don't have an account? ")
+                                    .bodyMedium(color: Colors.white70),
                                 GestureDetector(
-                                  onTap: () {
-                                    context.go(AppRoutes.signUpScreenRoute);
-                                  },
+                                  onTap: () =>
+                                      context.go(AppRoutes.signUpScreenRoute),
                                   child: const Text("Sign Up").bodyMedium(
                                     color: Colors.white,
                                     weight: FontWeight.bold,

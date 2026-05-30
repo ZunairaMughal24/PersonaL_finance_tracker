@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:montage/models/transaction_model.dart';
+import 'package:montage/domain/entities/transaction.dart';
 import 'package:montage/providers/transaction_provider.dart';
 import 'package:montage/core/utils/transaction_filter_utils.dart';
 
@@ -10,8 +10,8 @@ class TransactionListViewModel extends ChangeNotifier {
   String _searchQuery = "";
   DateTimeRange? _selectedDateRange;
   String? _selectedCategory;
-  bool? _isIncomeFilter; // null means 'All'
-  final Set<int> _selectedKeys = {};
+  bool? _isIncomeFilter;
+  final Set<int> _selectedIds = {};
   bool _isSelectionMode = false;
   bool _isSearchVisible = false;
 
@@ -28,17 +28,16 @@ class TransactionListViewModel extends ChangeNotifier {
     super.dispose();
   }
 
-  // Getters
   String get searchQuery => _searchQuery;
   DateTimeRange? get selectedDateRange => _selectedDateRange;
   String? get selectedCategory => _selectedCategory;
   bool? get isIncomeFilter => _isIncomeFilter;
-  Set<int> get selectedKeys => _selectedKeys;
+  Set<int> get selectedIds => _selectedIds;
   bool get isSelectionMode => _isSelectionMode;
-  int get selectedCount => _selectedKeys.length;
+  int get selectedCount => _selectedIds.length;
   bool get isSearchVisible => _isSearchVisible;
 
-  List<TransactionModel> get filteredTransactions {
+  List<Transaction> get filteredTransactions {
     final baseTransactions = isHistoryMode
         ? _transactionProvider.archivedTransactions
         : _transactionProvider.transactions;
@@ -50,12 +49,10 @@ class TransactionListViewModel extends ChangeNotifier {
       category: _selectedCategory,
       isIncome: _isIncomeFilter,
     );
-
     TransactionFilterUtils.sortByDate(filtered);
     return filtered;
   }
 
-  // Logic
   void updateSearch(String query) {
     _searchQuery = query;
     notifyListeners();
@@ -63,9 +60,7 @@ class TransactionListViewModel extends ChangeNotifier {
 
   void toggleSearch() {
     _isSearchVisible = !_isSearchVisible;
-    if (!_isSearchVisible) {
-      _searchQuery = "";
-    }
+    if (!_isSearchVisible) _searchQuery = "";
     notifyListeners();
   }
 
@@ -94,9 +89,7 @@ class TransactionListViewModel extends ChangeNotifier {
 
   void toggleSelectionMode() {
     _isSelectionMode = !_isSelectionMode;
-    if (!_isSelectionMode) {
-      _selectedKeys.clear();
-    }
+    if (!_isSelectionMode) _selectedIds.clear();
     notifyListeners();
   }
 
@@ -105,49 +98,44 @@ class TransactionListViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleSelection(int key) {
-    if (_selectedKeys.contains(key)) {
-      _selectedKeys.remove(key);
-      if (_selectedKeys.isEmpty) {
-        _isSelectionMode = false;
-      }
+  void toggleSelection(int id) {
+    if (_selectedIds.contains(id)) {
+      _selectedIds.remove(id);
+      if (_selectedIds.isEmpty) _isSelectionMode = false;
     } else {
-      _selectedKeys.add(key);
+      _selectedIds.add(id);
       _isSelectionMode = true;
     }
     notifyListeners();
   }
 
-  void selectAll([List<int>? keys]) {
-    final targets =
-        keys ?? filteredTransactions.map((tx) => tx.key as int).toList();
-    _selectedKeys.addAll(targets);
+  void selectAll([List<int>? ids]) {
+    final targets = ids ?? filteredTransactions.map((tx) => tx.id!).toList();
+    _selectedIds.addAll(targets);
     _isSelectionMode = true;
     notifyListeners();
   }
 
   void deselectAll() {
-    _selectedKeys.clear();
+    _selectedIds.clear();
     _isSelectionMode = false;
     notifyListeners();
   }
 
-  // Alias for UI compatibility
   void clearSelection() => deselectAll();
 
   Future<void> deleteSelected() async {
-    await _transactionProvider.deletePermanently(_selectedKeys.toList());
-    _selectedKeys.clear();
+    await _transactionProvider.deletePermanently(_selectedIds.toList());
+    _selectedIds.clear();
     _isSelectionMode = false;
     notifyListeners();
   }
 
-  // Alias for UI compatibility (Legacy terminology)
   Future<void> archiveSelected() => deleteSelected();
 
   Future<void> restoreSelected() async {
-    await _transactionProvider.restoreTransactions(_selectedKeys.toList());
-    _selectedKeys.clear();
+    await _transactionProvider.restoreTransactions(_selectedIds.toList());
+    _selectedIds.clear();
     _isSelectionMode = false;
     notifyListeners();
   }
@@ -157,8 +145,8 @@ class TransactionListViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteSingleTransaction(int key) async {
-    await _transactionProvider.deleteTransaction(key, 0);
+  Future<void> deleteSingleTransaction(int id) async {
+    await _transactionProvider.deleteTransaction(id);
     notifyListeners();
   }
 }

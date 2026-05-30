@@ -1,17 +1,17 @@
 import 'package:intl/intl.dart';
 import 'package:montage/core/utils/date_formatter.dart';
-import 'package:montage/models/transaction_model.dart';
+import 'package:montage/domain/entities/transaction.dart';
 import 'package:montage/models/spending_summary.dart';
 import 'package:montage/models/trends_model.dart';
 
 class FinanceService {
-  static double calculateTotalIncome(List<TransactionModel> transactions) {
+  static double calculateTotalIncome(List<Transaction> transactions) {
     return transactions
         .where((tx) => tx.isIncome)
         .fold(0.0, (sum, item) => sum + item.amount);
   }
 
-  static double calculateTotalExpense(List<TransactionModel> transactions) {
+  static double calculateTotalExpense(List<Transaction> transactions) {
     return transactions
         .where((tx) => !tx.isIncome)
         .fold(0.0, (sum, item) => sum + item.amount);
@@ -21,16 +21,14 @@ class FinanceService {
     return totalIncome - totalExpense;
   }
 
-  static List<TransactionModel> getTransactionsByType(
-    List<TransactionModel> transactions,
+  static List<Transaction> getTransactionsByType(
+    List<Transaction> transactions,
     bool isIncome,
   ) {
     return transactions.where((tx) => tx.isIncome == isIncome).toList();
   }
 
-  static SpendingSummary getSpendingSummary(
-    List<TransactionModel> transactions,
-  ) {
+  static SpendingSummary getSpendingSummary(List<Transaction> transactions) {
     Map<String, double> categoryTotals = {};
     double grandTotal = 0;
 
@@ -63,10 +61,8 @@ class FinanceService {
     );
   }
 
-  /// Calculates a per-day income/expense breakdown for the current week.
-
   static List<FinancialPeriodData> getWeeklyFinancialSummary(
-    List<TransactionModel> transactions,
+    List<Transaction> transactions,
   ) {
     DateTime getThisWeekDay(int dayOfWeek) {
       final now = DateTime.now();
@@ -74,48 +70,13 @@ class FinanceService {
     }
 
     final Map<String, FinancialPeriodData> dayMap = {
-      'Mon': FinancialPeriodData(
-        label: 'Mon',
-        date: getThisWeekDay(DateTime.monday),
-        income: 0,
-        expense: 0,
-      ),
-      'Tue': FinancialPeriodData(
-        label: 'Tue',
-        date: getThisWeekDay(DateTime.tuesday),
-        income: 0,
-        expense: 0,
-      ),
-      'Wed': FinancialPeriodData(
-        label: 'Wed',
-        date: getThisWeekDay(DateTime.wednesday),
-        income: 0,
-        expense: 0,
-      ),
-      'Thu': FinancialPeriodData(
-        label: 'Thu',
-        date: getThisWeekDay(DateTime.thursday),
-        income: 0,
-        expense: 0,
-      ),
-      'Fri': FinancialPeriodData(
-        label: 'Fri',
-        date: getThisWeekDay(DateTime.friday),
-        income: 0,
-        expense: 0,
-      ),
-      'Sat': FinancialPeriodData(
-        label: 'Sat',
-        date: getThisWeekDay(DateTime.saturday),
-        income: 0,
-        expense: 0,
-      ),
-      'Sun': FinancialPeriodData(
-        label: 'Sun',
-        date: getThisWeekDay(DateTime.sunday),
-        income: 0,
-        expense: 0,
-      ),
+      'Mon': FinancialPeriodData(label: 'Mon', date: getThisWeekDay(DateTime.monday), income: 0, expense: 0),
+      'Tue': FinancialPeriodData(label: 'Tue', date: getThisWeekDay(DateTime.tuesday), income: 0, expense: 0),
+      'Wed': FinancialPeriodData(label: 'Wed', date: getThisWeekDay(DateTime.wednesday), income: 0, expense: 0),
+      'Thu': FinancialPeriodData(label: 'Thu', date: getThisWeekDay(DateTime.thursday), income: 0, expense: 0),
+      'Fri': FinancialPeriodData(label: 'Fri', date: getThisWeekDay(DateTime.friday), income: 0, expense: 0),
+      'Sat': FinancialPeriodData(label: 'Sat', date: getThisWeekDay(DateTime.saturday), income: 0, expense: 0),
+      'Sun': FinancialPeriodData(label: 'Sun', date: getThisWeekDay(DateTime.sunday), income: 0, expense: 0),
     };
 
     for (var tx in transactions) {
@@ -124,13 +85,9 @@ class FinanceService {
       final day = DateFormat('E').format(parsedDate);
       if (!dayMap.containsKey(day)) continue;
       if (tx.isIncome) {
-        dayMap[day] = dayMap[day]!.copyWith(
-          income: dayMap[day]!.income + tx.amount,
-        );
+        dayMap[day] = dayMap[day]!.copyWith(income: dayMap[day]!.income + tx.amount);
       } else {
-        dayMap[day] = dayMap[day]!.copyWith(
-          expense: dayMap[day]!.expense + tx.amount,
-        );
+        dayMap[day] = dayMap[day]!.copyWith(expense: dayMap[day]!.expense + tx.amount);
       }
     }
 

@@ -1,7 +1,5 @@
-import 'package:montage/models/transaction_model.dart';
+import 'package:montage/domain/entities/transaction.dart';
 
 abstract class IAIService {
-  Future<String?> getSuggestionsAndAppreciation(
-    List<TransactionModel> transactions,
-  );
+  Future<String?> getSuggestionsAndAppreciation(List<Transaction> transactions);
 }

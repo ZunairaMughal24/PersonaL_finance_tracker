@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
-import 'package:montage/models/transaction_model.dart';
+import 'package:montage/domain/entities/transaction.dart';
 import 'package:montage/providers/user_settings_provider.dart';
 import 'package:montage/widgets/shared/transaction_filter_chip.dart';
 import 'package:montage/widgets/category_picker_bottom_sheet.dart';
@@ -9,14 +9,12 @@ import 'package:montage/widgets/glass_container.dart';
 import 'package:montage/widgets/history/export_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
-/// A shared, dumb filter row used by both Activity and History screens.
-/// Knows nothing about providers or view models, just values and callbacks.
 class TransactionFilterBar extends StatelessWidget {
   final bool? isIncomeFilter;
   final String? selectedCategory;
   final void Function(bool?) onTypeChanged;
   final void Function(String?) onCategoryChanged;
-  final List<TransactionModel> transactionsForExport;
+  final List<Transaction> transactionsForExport;
 
   const TransactionFilterBar({
     super.key,
@@ -84,7 +82,7 @@ class TransactionFilterBar extends StatelessWidget {
 }
 
 class _ExportChip extends StatelessWidget {
-  final List<TransactionModel> transactions;
+  final List<Transaction> transactions;
 
   const _ExportChip({required this.transactions});
 

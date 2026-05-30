@@ -43,7 +43,7 @@ class HistoryList extends StatelessWidget {
         return SelectableTransactionListItem(
           transaction: tx,
           currency: settings.selectedCurrency,
-          isSelected: vm.selectedKeys.contains(tx.key),
+          isSelected: vm.selectedIds.contains(tx.id),
           isSelectionMode: vm.isSelectionMode,
           isHistoryMode: true,
           onToggleSelection: (key) => vm.toggleSelection(key),

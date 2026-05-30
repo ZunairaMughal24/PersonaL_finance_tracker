@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import 'package:montage/core/utils/app_logger.dart';
 
 class SpeechViewModel extends ChangeNotifier {
   final SpeechToText _speechToText = SpeechToText();
@@ -23,14 +24,14 @@ class SpeechViewModel extends ChangeNotifier {
   Future<void> _initSpeech() async {
     _speechEnabled = await _speechToText.initialize(
       onStatus: (status) {
-        debugPrint('Speech status: $status');
+        AppLogger.debug('Speech status: $status');
         if (status == 'done' || status == 'notListening') {
           _isListening = false;
           notifyListeners();
         }
       },
       onError: (error) {
-        debugPrint('Speech error: $error');
+        AppLogger.error('Speech error notification', error.errorMsg);
         _isListening = false;
         notifyListeners();
       },

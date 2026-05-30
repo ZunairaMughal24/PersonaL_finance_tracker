@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:montage/core/utils/app_logger.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:montage/models/category_model.dart';
 import 'package:montage/services/firestore_sync_service.dart';
@@ -31,7 +31,7 @@ class CategoryRepository implements ICategoryRepository {
           cats.add(CustomCategory.fromMap(Map<dynamic, dynamic>.from(value)));
         }
       } catch (e) {
-        debugPrint('CategoryRepository: legacy data error');
+        AppLogger.warning('CategoryRepository: legacy data error detected');
       }
     }
     return cats;

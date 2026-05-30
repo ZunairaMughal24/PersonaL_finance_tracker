@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:montage/models/transaction_model.dart';
+import 'package:montage/domain/entities/transaction.dart';
 import 'package:montage/providers/category_provider.dart';
 import 'package:montage/providers/transaction_provider.dart';
 import 'package:montage/viewmodels/transaction_form_view_model.dart';
@@ -20,7 +20,8 @@ import 'package:montage/core/utils/transaction_ui_utils.dart';
 
 class EditTransactionScreen extends StatelessWidget {
   const EditTransactionScreen({super.key, required this.transaction});
-  final TransactionModel transaction;
+  final Transaction transaction;
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -29,16 +30,14 @@ class EditTransactionScreen extends StatelessWidget {
           create: (_) => TransactionFormViewModel(transaction: transaction),
         ),
       ],
-      child: _EditTransactionScreenContent(
-        transactionKey: transaction.key as int,
-      ),
+      child: _EditTransactionScreenContent(transactionId: transaction.id!),
     );
   }
 }
 
 class _EditTransactionScreenContent extends StatefulWidget {
-  final int transactionKey;
-  const _EditTransactionScreenContent({required this.transactionKey});
+  final int transactionId;
+  const _EditTransactionScreenContent({required this.transactionId});
 
   @override
   State<_EditTransactionScreenContent> createState() =>
@@ -87,9 +86,8 @@ class _EditTransactionScreenContentState
                               subtitle: "Choose between income or expense",
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                              ),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
                               child: TransactionTypeToggle(
                                 isIncome: vm.isIncome,
                                 onChanged: (val) => vm.toggleType(val),
@@ -106,28 +104,27 @@ class _EditTransactionScreenContentState
                                   .getMergedCategories(vm.isIncome),
                               isIncome: vm.isIncome,
                               onAddCategory: () {
-                                final catProvider = context
-                                    .read<CategoryProvider>();
+                                final catProvider =
+                                    context.read<CategoryProvider>();
                                 showDialog(
                                   context: context,
                                   barrierColor: Colors.black54,
                                   builder: (context) => CategoryEditorDialog(
                                     isIncome: vm.isIncome,
-                                    onSubmitted:
-                                        (
-                                          customName,
-                                          customIcon, {
-                                          Color? color,
-                                        }) {
-                                          catProvider.addCustomCategory(
-                                            customName,
-                                            customIcon,
-                                            vm.isIncome,
-                                            color: color,
-                                          );
-                                          vm.setCategory(customName);
-                                          vm.toggleKeypad(true);
-                                        },
+                                    onSubmitted: (
+                                      customName,
+                                      customIcon, {
+                                      Color? color,
+                                    }) {
+                                      catProvider.addCustomCategory(
+                                        customName,
+                                        customIcon,
+                                        vm.isIncome,
+                                        color: color,
+                                      );
+                                      vm.setCategory(customName);
+                                      vm.toggleKeypad(true);
+                                    },
                                   ),
                                 );
                               },
@@ -135,15 +132,16 @@ class _EditTransactionScreenContentState
                                   TransactionUIUtils.handleCategoryActionUI(
                                     context: context,
                                     vm: vm,
-                                    catProvider: context
-                                        .read<CategoryProvider>(),
+                                    catProvider:
+                                        context.read<CategoryProvider>(),
                                     catName: catName,
                                   ),
                               onCategorySelected: (cat) {
                                 if (cat == "Other") {
                                   showDialog(
                                     context: context,
-                                    builder: (context) => CustomCategoryDialog(
+                                    builder: (context) =>
+                                        CustomCategoryDialog(
                                       initialCategory: vm.selectedCategory,
                                       onSubmitted: (customName) {
                                         vm.setCategory(customName);
@@ -159,12 +157,10 @@ class _EditTransactionScreenContentState
                                   const Duration(milliseconds: 300),
                                   () {
                                     if (_scrollController.hasClients) {
-                                      double scrollAmount = 140.0;
                                       _scrollController.animateTo(
-                                        scrollAmount,
-                                        duration: const Duration(
-                                          milliseconds: 500,
-                                        ),
+                                        140.0,
+                                        duration:
+                                            const Duration(milliseconds: 500),
                                         curve: Curves.easeOut,
                                       );
                                     }
@@ -195,7 +191,7 @@ class _EditTransactionScreenContentState
                           onClear: vm.onClear,
                           onComplete: () => vm.updateTransaction(
                             provider: context.read<TransactionProvider>(),
-                            key: widget.transactionKey,
+                            id: widget.transactionId,
                             onSuccess: () => context.pop(),
                             onError: (error) => ToastUtils.show(context, error),
                           ),

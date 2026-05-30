@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:montage/domain/entities/transaction.dart';
 
 part 'transaction_model.g.dart';
 
@@ -43,31 +44,32 @@ class TransactionModel extends HiveObject {
     this.lastModified,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'title': title,
-      'amount': amount,
-      'isIncome': isIncome,
-      'date': date,
-      'category': category,
-      'currency': currency,
-      'imagePath': imagePath,
-      'isArchived': isArchived,
-      'lastModified': lastModified ?? DateTime.now().millisecondsSinceEpoch,
-    };
+  Transaction toEntity() {
+    return Transaction(
+      id: key as int?,
+      title: title,
+      amount: amount,
+      isIncome: isIncome,
+      date: date,
+      category: category,
+      currency: currency,
+      imagePath: imagePath,
+      isArchived: isArchived,
+      lastModified: lastModified,
+    );
   }
 
-  factory TransactionModel.fromMap(Map<String, dynamic> map) {
+  static TransactionModel fromEntity(Transaction entity) {
     return TransactionModel(
-      title: map['title'],
-      amount: map['amount'],
-      isIncome: map['isIncome'],
-      date: map['date'],
-      category: map['category'] ?? '',
-      currency: map['currency'] ?? 'USD',
-      imagePath: map['imagePath'],
-      isArchived: map['isArchived'] ?? false,
-      lastModified: map['lastModified'],
+      title: entity.title,
+      amount: entity.amount,
+      isIncome: entity.isIncome,
+      date: entity.date,
+      category: entity.category,
+      currency: entity.currency,
+      imagePath: entity.imagePath,
+      isArchived: entity.isArchived,
+      lastModified: entity.lastModified,
     );
   }
 }
