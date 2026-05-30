@@ -9,6 +9,68 @@ import 'package:montage/providers/transaction_provider.dart';
 import 'package:provider/provider.dart';
 
 class TransactionModals {
+  // Single-item delete — used from swipe actions on individual tiles.
+  static void showSingleDeleteConfirm({
+    required BuildContext context,
+    required VoidCallback onConfirm,
+  }) {
+    AppBottomSheet.show(
+      context: context,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.redAccent.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.delete_forever_rounded,
+              color: Colors.redAccent,
+              size: 32,
+            ),
+          ),
+          20.heightBox,
+          const Text(
+            "Delete Permanently?",
+            textAlign: TextAlign.center,
+          ).titleLarge(color: Colors.white, weight: FontWeight.bold),
+          12.heightBox,
+          const Text(
+            "This cannot be undone.",
+            textAlign: TextAlign.center,
+          ).bodyLarge(color: Colors.white.withValues(alpha: 0.7)),
+          32.heightBox,
+          Row(
+            children: [
+              Expanded(
+                child: AppButton(
+                  text: "Cancel",
+                  color: Colors.transparent,
+                  textColor: Colors.white,
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ),
+              16.widthBox,
+              Expanded(
+                child: AppButton(
+                  text: "Delete Forever",
+                  color: Colors.redAccent,
+                  onPressed: () {
+                    Navigator.pop(context);
+                    onConfirm();
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Batch delete — used from selection mode action bar (requires VM + keys).
   static void showDeleteConfirm({
     required BuildContext context,
     required TransactionListViewModel vm,
@@ -38,7 +100,7 @@ class TransactionModals {
           ).titleLarge(color: Colors.white, weight: FontWeight.bold),
           12.heightBox,
           Text(
-            "You're about to delete ${keys.length} transactions forever. This cannot be undone.",
+            "You're about to delete ${keys.length} transaction${keys.length > 1 ? 's' : ''} forever. This cannot be undone.",
             textAlign: TextAlign.center,
           ).bodyLarge(color: Colors.white.withValues(alpha: 0.7)),
           32.heightBox,

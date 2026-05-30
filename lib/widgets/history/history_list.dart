@@ -9,6 +9,7 @@ import 'package:montage/viewmodels/transaction_list_view_model.dart';
 import 'package:montage/widgets/shared/selectable_transaction_list_item.dart';
 import 'package:montage/widgets/shared/transaction_modals.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class HistoryList extends StatelessWidget {
   final TransactionListViewModel vm;
@@ -40,42 +41,43 @@ class HistoryList extends StatelessWidget {
       );
     }
 
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      itemCount: items.length,
-      itemBuilder: (context, index) {
-        final tx = items[index];
-        return SelectableTransactionListItem(
-          transaction: tx,
-          currency: settings.selectedCurrency,
-          isSelected: vm.selectedIds.contains(tx.id),
-          isSelectionMode: vm.isSelectionMode,
-          isHistoryMode: !isArchiveMode,
-          isArchiveMode: isArchiveMode,
-          onToggleSelection: (key) => vm.toggleSelection(key),
-          onPrimaryAction: (key) async {
-            await context.read<TransactionProvider>().restoreTransactions([key]);
-            if (context.mounted) {
-              ToastUtils.show(context, 'Transaction restored', isError: false);
-            }
-          },
-          onDelete: (key) => TransactionModals.showDeleteConfirm(
-            context: context,
-            vm: vm,
-            keys: [key],
-          ),
-          // Archive mode: left swipe delete moves to History (soft delete)
-          onArchive: isArchiveMode
-              ? (key) async {
-                  await context.read<TransactionProvider>().deleteTransaction(key);
-                  if (context.mounted) {
-                    ToastUtils.show(context, 'Moved to History', isError: false);
+    return SlidableAutoCloseBehavior(
+      child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          final tx = items[index];
+          return SelectableTransactionListItem(
+            transaction: tx,
+            currency: settings.selectedCurrency,
+            isSelected: vm.selectedIds.contains(tx.id),
+            isSelectionMode: vm.isSelectionMode,
+            isHistoryMode: !isArchiveMode,
+            isArchiveMode: isArchiveMode,
+            onToggleSelection: (key) => vm.toggleSelection(key),
+            onPrimaryAction: (key) async {
+              await context.read<TransactionProvider>().restoreTransactions([key]);
+              if (context.mounted) {
+                ToastUtils.show(context, 'Transaction restored', isError: false);
+              }
+            },
+            onDelete: (key) => TransactionModals.showDeleteConfirm(
+              context: context,
+              vm: vm,
+              keys: [key],
+            ),
+            onArchive: isArchiveMode
+                ? (key) async {
+                    await context.read<TransactionProvider>().deleteTransaction(key);
+                    if (context.mounted) {
+                      ToastUtils.show(context, 'Moved to History', isError: false);
+                    }
                   }
-                }
-              : null,
-        );
-      },
+                : null,
+          );
+        },
+      ),
     );
   }
 }

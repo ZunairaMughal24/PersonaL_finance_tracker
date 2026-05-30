@@ -17,6 +17,7 @@ import 'package:montage/widgets/history/export_bottom_sheet.dart';
 import 'package:montage/widgets/shared/transaction_modals.dart';
 import 'package:montage/core/utils/toast_utility.dart';
 import 'package:montage/widgets/shared/transaction_section_header.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class ActivityScreen extends StatelessWidget {
   const ActivityScreen({super.key});
@@ -202,29 +203,31 @@ class _ActivityScreenBodyState extends State<_ActivityScreenBody> {
                       );
                     }
 
-                    return ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: filtered.length,
-                      itemBuilder: (context, index) {
-                        final tx = filtered[index];
-                        return SelectableTransactionListItem(
-                          transaction: tx,
-                          currency: settings.selectedCurrency,
-                          isSelected: vm.selectedIds.contains(tx.id),
-                          isSelectionMode: vm.isSelectionMode,
-                          isHistoryMode: false,
-                          onToggleSelection: (key) => vm.toggleSelection(key),
-                          onPrimaryAction: (key) {
-                            context.push(
-                              AppRoutes.editTransactionScreenRoute,
-                              extra: tx,
-                            );
-                          },
-                          onDelete: (key) => vm.deleteSingleTransaction(key),
-                          onArchive: (key) => vm.archiveSingleTransaction(key),
-                        );
-                      },
+                    return SlidableAutoCloseBehavior(
+                      child: ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        itemCount: filtered.length,
+                        itemBuilder: (context, index) {
+                          final tx = filtered[index];
+                          return SelectableTransactionListItem(
+                            transaction: tx,
+                            currency: settings.selectedCurrency,
+                            isSelected: vm.selectedIds.contains(tx.id),
+                            isSelectionMode: vm.isSelectionMode,
+                            isHistoryMode: false,
+                            onToggleSelection: (key) => vm.toggleSelection(key),
+                            onPrimaryAction: (key) {
+                              context.push(
+                                AppRoutes.editTransactionScreenRoute,
+                                extra: tx,
+                              );
+                            },
+                            onDelete: (key) => vm.deleteSingleTransaction(key),
+                            onArchive: (key) => vm.archiveSingleTransaction(key),
+                          );
+                        },
+                      ),
                     );
                   },
                 ),

@@ -10,6 +10,7 @@ import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/core/utils/padding_extention.dart';
 
 import 'package:montage/widgets/shared/selectable_transaction_list_item.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class RecentTransactionsList extends StatelessWidget {
   const RecentTransactionsList({super.key});
@@ -41,34 +42,35 @@ class RecentTransactionsList extends StatelessWidget {
     final itemCount = transactions.length > 5 ? 5 : transactions.length;
 
     return Consumer<UserSettingsProvider>(
-      builder: (context, settings, _) => ListView.separated(
-        padding: const EdgeInsets.only(bottom: 4),
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: itemCount,
-        separatorBuilder: (context, index) => const SizedBox(height: 4),
-        itemBuilder: (context, index) {
-          final tx = transactions[index];
-          return SelectableTransactionListItem(
-            transaction: tx,
-            currency: settings.selectedCurrency,
-            isSelected: false,
-            isSelectionMode: false,
-            isHistoryMode: false,
-            onToggleSelection: (_) {},
-            onPrimaryAction: (key) {
-              context.push(AppRoutes.editTransactionScreenRoute, extra: tx);
-            },
-            onDelete: (key) {
-              transactionProvider.deleteTransaction(key);
-              ToastUtils.show(context, 'Transaction deleted', isError: false);
-            },
-            onArchive: (key) {
-              transactionProvider.archiveTransaction(key);
-              ToastUtils.show(context, 'Transaction archived', isError: false);
-            },
-          );
-        },
+      builder: (context, settings, _) => SlidableAutoCloseBehavior(
+        child: ListView.builder(
+          padding: EdgeInsets.zero,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: itemCount,
+          itemBuilder: (context, index) {
+            final tx = transactions[index];
+            return SelectableTransactionListItem(
+              transaction: tx,
+              currency: settings.selectedCurrency,
+              isSelected: false,
+              isSelectionMode: false,
+              isHistoryMode: false,
+              onToggleSelection: (_) {},
+              onPrimaryAction: (key) {
+                context.push(AppRoutes.editTransactionScreenRoute, extra: tx);
+              },
+              onDelete: (key) {
+                transactionProvider.deleteTransaction(key);
+                ToastUtils.show(context, 'Transaction deleted', isError: false);
+              },
+              onArchive: (key) {
+                transactionProvider.archiveTransaction(key);
+                ToastUtils.show(context, 'Transaction archived', isError: false);
+              },
+            );
+          },
+        ),
       ),
     );
   }

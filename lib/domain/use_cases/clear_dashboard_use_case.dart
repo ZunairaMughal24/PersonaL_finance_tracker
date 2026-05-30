@@ -10,8 +10,8 @@ class ClearDashboardUseCase {
     final now = DateTime.now().millisecondsSinceEpoch;
     final updates = <int, Transaction>{};
     for (final tx in _repository.getAll()) {
-      if (!tx.isArchived && tx.id != null) {
-        updates[tx.id!] = tx.copyWith(isArchived: true, lastModified: now);
+      if (!tx.isArchived && !tx.isDeleted && tx.id != null) {
+        updates[tx.id!] = tx.copyWith(isArchived: true, isDeleted: false, lastModified: now);
       }
     }
     if (updates.isNotEmpty) await _repository.updateBulk(updates);
