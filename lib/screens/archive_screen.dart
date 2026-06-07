@@ -74,6 +74,7 @@ class _ArchiveScreenBodyState extends State<_ArchiveScreenBody> {
       child: TransactionActionBar(
         selectedCount: vm.selectedCount,
         isHistoryMode: true,
+        isArchiveMode: true,
         onPrimaryAction: () async {
           final count = vm.selectedCount;
           Navigator.pop(context);

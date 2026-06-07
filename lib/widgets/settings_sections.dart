@@ -417,8 +417,8 @@ class ExportSection extends StatelessWidget {
               onTap: () => context.push(AppRoutes.historyScreenRoute),
             ),
             SettingsTile(
-              icon: Icons.archive_rounded,
-              iconColor: Colors.purpleAccent,
+              icon: Icons.archive_outlined,
+              iconColor: const Color.fromARGB(255, 206, 100, 255),
               title: "Archive",
               subtitle: "Transactions cleaned from view, balance unchanged",
               onTap: () => context.push(AppRoutes.archiveScreenRoute),

@@ -60,7 +60,7 @@ class TransactionActionSheet extends StatelessWidget {
             svgAsset: isSpecialMode ? AppImages.trashBin : null,
             icon: isSpecialMode ? null : Icons.history_rounded,
             title: isSpecialMode ? "Delete Permanently" : "Move to History",
-            iconColor: isSpecialMode ? Colors.redAccent : Colors.blueGrey,
+            iconColor: isSpecialMode ? Colors.redAccent : Colors.purpleAccent,
             onTap: () {
               Navigator.pop(context);
               onDelete();

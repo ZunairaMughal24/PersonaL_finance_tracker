@@ -8,7 +8,8 @@ import 'package:montage/core/constants/app_images.dart';
 class TransactionActionBar extends StatelessWidget {
   final int selectedCount;
   final bool isHistoryMode;
-  final VoidCallback onPrimaryAction; // Restore for history, Move to History for activity
+  final bool isArchiveMode;
+  final VoidCallback onPrimaryAction; // Restore for history/archive, Move to History for activity
   final VoidCallback? onArchive; // Archive Selected (activity mode only)
   final VoidCallback onExport;
   final VoidCallback onDelete;
@@ -18,6 +19,7 @@ class TransactionActionBar extends StatelessWidget {
     super.key,
     required this.selectedCount,
     required this.isHistoryMode,
+    this.isArchiveMode = false,
     required this.onPrimaryAction,
     this.onArchive,
     required this.onExport,
@@ -31,17 +33,17 @@ class TransactionActionBar extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          isHistoryMode ? "Action History" : "Batch Actions",
+          isArchiveMode ? "Archive Actions" : isHistoryMode ? "Action History" : "Batch Actions",
         ).titleLarge(color: Colors.white, weight: FontWeight.bold),
         8.heightBox,
         Text(
           "$selectedCount items selected",
         ).bodyLarge(color: Colors.white.withValues(alpha: 0.6)),
         24.heightBox,
-        if (isHistoryMode)
+        if (isHistoryMode || isArchiveMode)
           _buildMenuOption(
-            icon: Icons.settings_backup_restore_rounded,
-            title: "Restore Selected",
+            icon: isArchiveMode ? Icons.unarchive_rounded : Icons.settings_backup_restore_rounded,
+            title: isArchiveMode ? "Unarchive Selected" : "Restore Selected",
             iconColor: Colors.blueAccent,
             onTap: onPrimaryAction,
           ),
@@ -62,7 +64,7 @@ class TransactionActionBar extends StatelessWidget {
           svgAsset: isHistoryMode ? AppImages.trashBin : null,
           icon: isHistoryMode ? null : Icons.history_rounded,
           title: isHistoryMode ? "Delete Permanently" : "Move to History",
-          iconColor: isHistoryMode ? Colors.redAccent : Colors.blueGrey,
+          iconColor: isHistoryMode ? Colors.redAccent : Colors.purpleAccent,
           onTap: isHistoryMode ? onDelete : onPrimaryAction,
         ),
       ],
