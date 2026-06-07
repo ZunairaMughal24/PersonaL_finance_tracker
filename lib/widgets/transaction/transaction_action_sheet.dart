@@ -6,12 +6,14 @@ import 'package:montage/core/constants/app_images.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 
 class TransactionActionSheet extends StatelessWidget {
+  final bool isSpecialMode;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
   final VoidCallback onDetail;
 
   const TransactionActionSheet({
     super.key,
+    this.isSpecialMode = false,
     required this.onEdit,
     required this.onDelete,
     required this.onDetail,
@@ -55,9 +57,10 @@ class TransactionActionSheet extends StatelessWidget {
           ),
           Divider(color: Colors.white.withValues(alpha: 0.05), height: 1),
           _buildMenuOption(
-            svgAsset: AppImages.trashBin,
-            title: "Delete Transaction",
-            iconColor: Colors.redAccent,
+            svgAsset: isSpecialMode ? AppImages.trashBin : null,
+            icon: isSpecialMode ? null : Icons.history_rounded,
+            title: isSpecialMode ? "Delete Permanently" : "Move to History",
+            iconColor: isSpecialMode ? Colors.redAccent : Colors.blueGrey,
             onTap: () {
               Navigator.pop(context);
               onDelete();

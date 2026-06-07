@@ -105,8 +105,10 @@ class SelectableTransactionListItem extends StatelessWidget {
                 icon: _isSpecialMode
                     ? Icons.delete_forever_rounded
                     : Icons.delete_rounded,
-                label: 'Delete',
-                onTap: () => _showPermanentDeleteConfirm(context, id),
+                label: _isSpecialMode ? 'Delete' : 'History',
+                onTap: () => _isSpecialMode
+                    ? _showPermanentDeleteConfirm(context, id)
+                    : _showMoveToHistoryConfirm(context, id),
               ),
             ],
           ),
@@ -128,6 +130,7 @@ class SelectableTransactionListItem extends StatelessWidget {
                 child: TransactionListItem(
                   transaction: transaction,
                   currency: currency,
+                  isSpecialMode: _isSpecialMode,
                   outerPadding: EdgeInsets.zero,
                   onDelete: () => _isSpecialMode
                       ? _showPermanentDeleteConfirm(context, id)
@@ -149,6 +152,13 @@ class SelectableTransactionListItem extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void _showMoveToHistoryConfirm(BuildContext context, int id) {
+    TransactionModals.showMoveToHistoryConfirm(
+      context: context,
+      onConfirm: () => onDelete(id),
     );
   }
 

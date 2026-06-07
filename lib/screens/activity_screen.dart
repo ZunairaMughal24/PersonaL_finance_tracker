@@ -73,11 +73,23 @@ class _ActivityScreenBodyState extends State<_ActivityScreenBody> {
         onPrimaryAction: () async {
           final count = vm.selectedCount;
           Navigator.pop(context);
+          await vm.moveSelectedToHistory();
+          if (context.mounted) {
+            ToastUtils.show(
+              context,
+              "$count transaction${count > 1 ? 's' : ''} moved to history",
+              isError: false,
+            );
+          }
+        },
+        onArchive: () async {
+          final count = vm.selectedCount;
+          Navigator.pop(context);
           await vm.archiveSelected();
           if (context.mounted) {
             ToastUtils.show(
               context,
-              "$count transaction${count > 1 ? 's' : ''} deleted",
+              "$count transaction${count > 1 ? 's' : ''} archived",
               isError: false,
             );
           }
@@ -96,11 +108,17 @@ class _ActivityScreenBodyState extends State<_ActivityScreenBody> {
           );
         },
         onDelete: () {
+          final count = vm.selectedCount;
           Navigator.pop(context);
           TransactionModals.showDeleteConfirm(
             context: context,
-            vm: vm,
-            keys: vm.selectedIds.toList(),
+            count: count,
+            onConfirm: () async {
+              await vm.deleteSelected();
+              if (context.mounted) {
+                ToastUtils.show(context, "$count transaction${count > 1 ? 's' : ''} deleted permanently", isError: true);
+              }
+            },
           );
         },
         onCancel: () {

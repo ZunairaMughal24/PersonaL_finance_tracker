@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/utils/toast_utility.dart';
 import 'package:montage/viewmodels/transaction_list_view_model.dart';
 import 'package:montage/widgets/shared/transaction_modals.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -147,9 +148,25 @@ class _AppBarPopupMenu extends StatelessWidget {
           vm.setIsIncomeFilter(null);
         } else if (val == 'restore_all' || val == 'clear_dashboard') {
           if (vm.isHistoryMode) {
-            TransactionModals.showRestoreAllConfirm(context: context, vm: vm);
+            TransactionModals.showRestoreAllConfirm(
+              context: context,
+              onConfirm: () async {
+                await vm.restoreAll();
+                if (context.mounted) {
+                  ToastUtils.show(context, "All transactions restored successfully", isError: false);
+                }
+              },
+            );
           } else {
-            TransactionModals.showArchiveAllConfirm(context: context, vm: vm);
+            TransactionModals.showArchiveAllConfirm(
+              context: context,
+              onConfirm: () async {
+                await vm.archiveAll();
+                if (context.mounted) {
+                  ToastUtils.show(context, "All transactions moved to history", isError: false);
+                }
+              },
+            );
           }
         }
       },

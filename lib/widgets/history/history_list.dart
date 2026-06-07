@@ -3,11 +3,9 @@ import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/core/utils/toast_utility.dart';
-import 'package:montage/providers/transaction_provider.dart';
 import 'package:montage/providers/user_settings_provider.dart';
 import 'package:montage/viewmodels/transaction_list_view_model.dart';
 import 'package:montage/widgets/shared/selectable_transaction_list_item.dart';
-import 'package:montage/widgets/shared/transaction_modals.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -57,19 +55,21 @@ class HistoryList extends StatelessWidget {
             isArchiveMode: isArchiveMode,
             onToggleSelection: (key) => vm.toggleSelection(key),
             onPrimaryAction: (key) async {
-              await context.read<TransactionProvider>().restoreTransactions([key]);
+              await vm.restoreSingleTransaction(key);
               if (context.mounted) {
                 ToastUtils.show(context, 'Transaction restored', isError: false);
               }
             },
-            onDelete: (key) => TransactionModals.showDeleteConfirm(
-              context: context,
-              vm: vm,
-              keys: [key],
-            ),
+            // Confirmation already shown by swipe — directly delete here to avoid double sheet.
+            onDelete: (key) async {
+              await vm.deleteSinglePermanently(key);
+              if (context.mounted) {
+                ToastUtils.show(context, 'Transaction permanently deleted', isError: true);
+              }
+            },
             onArchive: isArchiveMode
                 ? (key) async {
-                    await context.read<TransactionProvider>().deleteTransaction(key);
+                    await vm.deleteSingleTransaction(key);
                     if (context.mounted) {
                       ToastUtils.show(context, 'Moved to History', isError: false);
                     }

@@ -142,6 +142,11 @@ class TransactionListViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> archiveAll() async {
+    selectAll();
+    await archiveSelected();
+  }
+
   Future<void> restoreSelected() async {
     await _transactionProvider.restoreTransactions(_selectedIds.toList());
     _selectedIds.clear();
@@ -154,8 +159,27 @@ class TransactionListViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> moveSelectedToHistory() async {
+    for (final id in _selectedIds.toList()) {
+      await _transactionProvider.deleteTransaction(id);
+    }
+    _selectedIds.clear();
+    _isSelectionMode = false;
+    notifyListeners();
+  }
+
   Future<void> deleteSingleTransaction(int id) async {
     await _transactionProvider.deleteTransaction(id);
+    notifyListeners();
+  }
+
+  Future<void> deleteSinglePermanently(int id) async {
+    await _transactionProvider.deletePermanently([id]);
+    notifyListeners();
+  }
+
+  Future<void> restoreSingleTransaction(int id) async {
+    await _transactionProvider.restoreTransactions([id]);
     notifyListeners();
   }
 

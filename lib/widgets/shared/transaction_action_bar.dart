@@ -8,8 +8,8 @@ import 'package:montage/core/constants/app_images.dart';
 class TransactionActionBar extends StatelessWidget {
   final int selectedCount;
   final bool isHistoryMode;
-  final VoidCallback
-  onPrimaryAction; // Restore for history, Archive for activity
+  final VoidCallback onPrimaryAction; // Restore for history, Move to History for activity
+  final VoidCallback? onArchive; // Archive Selected (activity mode only)
   final VoidCallback onExport;
   final VoidCallback onDelete;
   final VoidCallback onCancel;
@@ -19,6 +19,7 @@ class TransactionActionBar extends StatelessWidget {
     required this.selectedCount,
     required this.isHistoryMode,
     required this.onPrimaryAction,
+    this.onArchive,
     required this.onExport,
     required this.onDelete,
     required this.onCancel,
@@ -44,6 +45,13 @@ class TransactionActionBar extends StatelessWidget {
             iconColor: Colors.blueAccent,
             onTap: onPrimaryAction,
           ),
+        if (!isHistoryMode && onArchive != null)
+          _buildMenuOption(
+            icon: Icons.archive_rounded,
+            title: "Archive Selected",
+            iconColor: Colors.orangeAccent,
+            onTap: onArchive!,
+          ),
         _buildMenuOption(
           icon: Icons.ios_share_rounded,
           title: "Export Selected",
@@ -51,9 +59,10 @@ class TransactionActionBar extends StatelessWidget {
           onTap: onExport,
         ),
         _buildMenuOption(
-          svgAsset: AppImages.trashBin,
-          title: isHistoryMode ? "Delete Permanently" : "Move to Trash",
-          iconColor: Colors.redAccent,
+          svgAsset: isHistoryMode ? AppImages.trashBin : null,
+          icon: isHistoryMode ? null : Icons.history_rounded,
+          title: isHistoryMode ? "Delete Permanently" : "Move to History",
+          iconColor: isHistoryMode ? Colors.redAccent : Colors.blueGrey,
           onTap: isHistoryMode ? onDelete : onPrimaryAction,
         ),
       ],

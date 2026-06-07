@@ -100,11 +100,17 @@ class _ArchiveScreenBodyState extends State<_ArchiveScreenBody> {
           );
         },
         onDelete: () {
+          final count = vm.selectedCount;
           Navigator.pop(context);
           TransactionModals.showDeleteConfirm(
             context: context,
-            vm: vm,
-            keys: vm.selectedIds.toList(),
+            count: count,
+            onConfirm: () async {
+              await vm.deleteSelected();
+              if (context.mounted) {
+                ToastUtils.show(context, "$count transaction${count > 1 ? 's' : ''} deleted permanently", isError: true);
+              }
+            },
           );
         },
         onCancel: () {

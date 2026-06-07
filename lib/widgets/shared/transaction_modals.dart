@@ -1,15 +1,69 @@
 import 'package:flutter/material.dart';
-import 'package:montage/viewmodels/transaction_list_view_model.dart';
 import 'package:montage/widgets/app_bottom_sheet.dart';
 import 'package:montage/widgets/app_button.dart';
-import 'package:montage/core/utils/toast_utility.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
-import 'package:montage/providers/transaction_provider.dart';
-import 'package:provider/provider.dart';
 
 class TransactionModals {
-  // Single-item delete — used from swipe actions on individual tiles.
+  // Single-item soft-delete — swipe action on activity/home moves item to History.
+  static void showMoveToHistoryConfirm({
+    required BuildContext context,
+    required VoidCallback onConfirm,
+  }) {
+    const color = Color(0xFF6C63FF);
+    AppBottomSheet.show(
+      context: context,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.15),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.history_rounded, color: color, size: 32),
+          ),
+          20.heightBox,
+          const Text(
+            "Move to History?",
+            textAlign: TextAlign.center,
+          ).titleLarge(color: Colors.white, weight: FontWeight.bold),
+          12.heightBox,
+          const Text(
+            "This transaction will be moved to History. You can restore it anytime.",
+            textAlign: TextAlign.center,
+          ).bodyLarge(color: Colors.white.withValues(alpha: 0.7)),
+          32.heightBox,
+          Row(
+            children: [
+              Expanded(
+                child: AppButton(
+                  text: "Cancel",
+                  color: Colors.transparent,
+                  textColor: Colors.white,
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ),
+              16.widthBox,
+              Expanded(
+                child: AppButton(
+                  text: "Move",
+                  color: color,
+                  onPressed: () {
+                    Navigator.pop(context);
+                    onConfirm();
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Single-item permanent delete — used from history/archive swipe actions.
   static void showSingleDeleteConfirm({
     required BuildContext context,
     required VoidCallback onConfirm,
@@ -25,11 +79,7 @@ class TransactionModals {
               color: Colors.redAccent.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
-            child: const Icon(
-              Icons.delete_forever_rounded,
-              color: Colors.redAccent,
-              size: 32,
-            ),
+            child: const Icon(Icons.delete_forever_rounded, color: Colors.redAccent, size: 32),
           ),
           20.heightBox,
           const Text(
@@ -70,11 +120,11 @@ class TransactionModals {
     );
   }
 
-  // Batch delete — used from selection mode action bar (requires VM + keys).
+  // Batch permanent delete — shown from selection mode action bar.
   static void showDeleteConfirm({
     required BuildContext context,
-    required TransactionListViewModel vm,
-    required List<int> keys,
+    required int count,
+    required VoidCallback onConfirm,
   }) {
     AppBottomSheet.show(
       context: context,
@@ -87,11 +137,7 @@ class TransactionModals {
               color: Colors.redAccent.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
-            child: const Icon(
-              Icons.delete_forever_rounded,
-              color: Colors.redAccent,
-              size: 32,
-            ),
+            child: const Icon(Icons.delete_forever_rounded, color: Colors.redAccent, size: 32),
           ),
           20.heightBox,
           const Text(
@@ -100,7 +146,7 @@ class TransactionModals {
           ).titleLarge(color: Colors.white, weight: FontWeight.bold),
           12.heightBox,
           Text(
-            "You're about to delete ${keys.length} transaction${keys.length > 1 ? 's' : ''} forever. This cannot be undone.",
+            "You're about to delete $count transaction${count > 1 ? 's' : ''} forever. This cannot be undone.",
             textAlign: TextAlign.center,
           ).bodyLarge(color: Colors.white.withValues(alpha: 0.7)),
           32.heightBox,
@@ -119,23 +165,9 @@ class TransactionModals {
                 child: AppButton(
                   text: "Delete",
                   color: Colors.redAccent,
-                  onPressed: () async {
+                  onPressed: () {
                     Navigator.pop(context);
-                    if (keys.length == vm.selectedCount) {
-                      await vm.deleteSelected();
-                    } else {
-                      await context
-                          .read<TransactionProvider>()
-                          .deletePermanently(keys);
-                      vm.clearSelection();
-                    }
-                    if (context.mounted) {
-                      ToastUtils.show(
-                        context,
-                        "${keys.length} transaction${keys.length > 1 ? 's' : ''} deleted permanently",
-                        isError: true,
-                      );
-                    }
+                    onConfirm();
                   },
                 ),
               ),
@@ -148,7 +180,7 @@ class TransactionModals {
 
   static void showRestoreAllConfirm({
     required BuildContext context,
-    required TransactionListViewModel vm,
+    required VoidCallback onConfirm,
   }) {
     AppBottomSheet.show(
       context: context,
@@ -173,7 +205,7 @@ class TransactionModals {
             textAlign: TextAlign.center,
           ).titleLarge(color: Colors.white, weight: FontWeight.bold),
           12.heightBox,
-          Text(
+          const Text(
             "Do you want to restore all items?",
             textAlign: TextAlign.center,
           ).bodyLarge(color: Colors.white.withValues(alpha: 0.7)),
@@ -193,16 +225,9 @@ class TransactionModals {
                 child: AppButton(
                   text: "Restore All",
                   color: Colors.blueAccent,
-                  onPressed: () async {
+                  onPressed: () {
                     Navigator.pop(context);
-                    await vm.restoreAll();
-                    if (context.mounted) {
-                      ToastUtils.show(
-                        context,
-                        "All transactions restored successfully",
-                        isError: false,
-                      );
-                    }
+                    onConfirm();
                   },
                 ),
               ),
@@ -215,7 +240,7 @@ class TransactionModals {
 
   static void showArchiveAllConfirm({
     required BuildContext context,
-    required TransactionListViewModel vm,
+    required VoidCallback onConfirm,
   }) {
     AppBottomSheet.show(
       context: context,
@@ -228,11 +253,7 @@ class TransactionModals {
               color: Colors.orangeAccent.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
-            child: const Icon(
-              Icons.delete_sweep_rounded,
-              color: Colors.orangeAccent,
-              size: 32,
-            ),
+            child: const Icon(Icons.delete_sweep_rounded, color: Colors.orangeAccent, size: 32),
           ),
           20.heightBox,
           const Text(
@@ -240,7 +261,7 @@ class TransactionModals {
             textAlign: TextAlign.center,
           ).titleLarge(color: Colors.white, weight: FontWeight.bold),
           12.heightBox,
-          Text(
+          const Text(
             "This will move all current transactions to history. You can restore them anytime.",
             textAlign: TextAlign.center,
           ).bodyLarge(color: Colors.white.withValues(alpha: 0.7)),
@@ -260,18 +281,9 @@ class TransactionModals {
                 child: AppButton(
                   text: "Delete All",
                   color: Colors.orangeAccent,
-                  onPressed: () async {
+                  onPressed: () {
                     Navigator.pop(context);
-                    // Select all first to use archiveSelected
-                    vm.selectAll();
-                    await vm.archiveSelected();
-                    if (context.mounted) {
-                      ToastUtils.show(
-                        context,
-                        "All transactions moved to history",
-                        isError: false,
-                      );
-                    }
+                    onConfirm();
                   },
                 ),
               ),

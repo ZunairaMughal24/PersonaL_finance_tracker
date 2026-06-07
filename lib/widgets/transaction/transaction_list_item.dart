@@ -12,6 +12,7 @@ import 'package:montage/widgets/transaction/transaction_detail_sheet.dart';
 class TransactionListItem extends StatelessWidget {
   final Transaction transaction;
   final String currency;
+  final bool isSpecialMode;
   final VoidCallback? onDelete;
   final VoidCallback? onEdit;
   final Color? borderColor;
@@ -21,6 +22,7 @@ class TransactionListItem extends StatelessWidget {
     super.key,
     required this.transaction,
     required this.currency,
+    this.isSpecialMode = false,
     this.onDelete,
     this.onEdit,
     this.borderColor,
@@ -174,6 +176,7 @@ class TransactionListItem extends StatelessWidget {
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (context) => TransactionActionSheet(
+        isSpecialMode: isSpecialMode,
         onEdit: () => onEdit?.call(),
         onDelete: () => onDelete?.call(),
         onDetail: () => _showDetailSheet(context),
