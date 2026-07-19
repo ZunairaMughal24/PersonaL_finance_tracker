@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:montage/core/utils/date_formatter.dart';
 import 'package:montage/domain/entities/transaction.dart';
 import 'package:montage/providers/transaction_provider.dart';
@@ -100,6 +101,13 @@ class TransactionFormViewModel extends ChangeNotifier {
       if (newPath != null) setImagePath(newPath);
     } finally {
       _isSavingImage = false;
+    }
+  }
+
+  Future<void> pickAndSetImage(ImageSource source) async {
+    final XFile? image = await _mediaService.pickImage(source);
+    if (image != null) {
+      await handleImageSelected(image.path, image.name);
     }
   }
 

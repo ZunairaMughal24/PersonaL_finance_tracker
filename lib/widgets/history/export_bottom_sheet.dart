@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/domain/entities/transaction.dart';
-import 'package:montage/services/export_service.dart';
+import 'package:montage/viewmodels/export_view_model.dart';
 import 'package:montage/widgets/glass_container.dart';
 import 'package:montage/widgets/app_bottom_sheet.dart';
 
@@ -10,8 +10,9 @@ class ExportBottomSheet extends StatelessWidget {
   final List<Transaction> transactions;
   final String userName;
   final String currency;
+  final ExportViewModel _exportViewModel = ExportViewModel();
 
-  const ExportBottomSheet({
+  ExportBottomSheet({
     super.key,
     required this.transactions,
     required this.userName,
@@ -53,7 +54,7 @@ class ExportBottomSheet extends StatelessWidget {
           color: Colors.blueAccent,
           onTap: () {
             Navigator.pop(context);
-            ExportService.exportToText(transactions, userName);
+            _exportViewModel.exportAsText(transactions, userName);
           },
         ),
         12.heightBox,
@@ -65,7 +66,7 @@ class ExportBottomSheet extends StatelessWidget {
           color: Colors.redAccent,
           onTap: () {
             Navigator.pop(context);
-            ExportService.exportToPDF(transactions, currency, userName);
+            _exportViewModel.exportAsPdf(transactions, currency, userName);
           },
         ),
         12.heightBox,
@@ -77,7 +78,7 @@ class ExportBottomSheet extends StatelessWidget {
           color: Colors.greenAccent,
           onTap: () {
             Navigator.pop(context);
-            ExportService.exportToExcel(transactions, userName);
+            _exportViewModel.exportAsCsv(transactions, userName);
           },
         ),
       ],

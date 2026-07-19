@@ -18,11 +18,7 @@ class TransactionUIUtils {
     );
 
     if (source != null) {
-      final ImagePicker picker = ImagePicker();
-      final XFile? image = await picker.pickImage(source: source);
-      if (image != null) {
-        await vm.handleImageSelected(image.path, image.name);
-      }
+      await vm.pickAndSetImage(source);
     }
   }
 

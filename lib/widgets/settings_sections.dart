@@ -12,10 +12,9 @@ import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/providers/auth_provider.dart';
 import 'package:montage/providers/transaction_provider.dart';
 import 'package:montage/providers/user_settings_provider.dart';
-import 'package:montage/services/export_service.dart';
+import 'package:montage/viewmodels/export_view_model.dart';
 import 'package:montage/widgets/glass_container.dart';
 import 'package:montage/widgets/settings_components.dart';
-import 'package:montage/core/utils/settings_ui_utils.dart';
 
 void _showWorkInProgress(BuildContext context) {
   ToastUtils.show(context, "Implementation is in progress", isError: false);
@@ -175,8 +174,7 @@ class _ProfileCardState extends State<ProfileCard> {
                       _isEditingName = true;
                     });
                   },
-                  onPickImage: () =>
-                      SettingsUIUtils.pickProfileImage(context, settings),
+                  onPickImage: () => settings.pickAndSetProfileImage(),
                 ),
                 icon: Icon(
                   Icons.edit_outlined,
@@ -385,14 +383,17 @@ class ExportSection extends StatelessWidget {
   void _performExport(BuildContext context, bool isCsv, bool includeHistory) {
     final txProvider = context.read<TransactionProvider>();
     final settings = context.read<UserSettingsProvider>();
-    final transactions = includeHistory
-        ? txProvider.allTransactions
-        : txProvider.transactions;
+    final exportViewModel = ExportViewModel();
+    final transactions = exportViewModel.resolveTransactions(
+      includeHistory: includeHistory,
+      currentTransactions: txProvider.transactions,
+      allTransactions: txProvider.allTransactions,
+    );
 
     if (isCsv) {
-      ExportService.exportToExcel(transactions, settings.userName);
+      exportViewModel.exportAsCsv(transactions, settings.userName);
     } else {
-      ExportService.exportToPDF(
+      exportViewModel.exportAsPdf(
         transactions,
         settings.selectedCurrency,
         settings.userName,

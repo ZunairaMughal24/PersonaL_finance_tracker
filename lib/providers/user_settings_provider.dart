@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:montage/core/interfaces/i_user_settings_repository.dart';
 import 'package:montage/core/constants/app_keys.dart';
+import 'package:montage/services/media_service.dart';
 
 class UserSettingsProvider extends ChangeNotifier {
+  final MediaService _mediaService = MediaService();
   late IUserSettingsRepository _repository;
   String? _userId;
   String _selectedCurrency = 'USD';
@@ -140,6 +143,13 @@ class UserSettingsProvider extends ChangeNotifier {
     await _repository.put(AppKeys.biometricEnabled, enabled);
     _pushToCloud();
     notifyListeners();
+  }
+
+  Future<void> pickAndSetProfileImage() async {
+    final XFile? image = await _mediaService.pickImage(ImageSource.gallery);
+    if (image != null) {
+      await updateProfileImage(image.path);
+    }
   }
 
   Future<void> updateProfileImage(String? path) async {
