@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/constants/app_images.dart';
 import 'package:flutter/material.dart';
 
 enum BackgroundStyle {
@@ -89,8 +90,7 @@ class AppBackground extends StatelessWidget {
       children: [
         Positioned.fill(
           child: CachedNetworkImage(
-            imageUrl:
-                'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=2574&auto=format&fit=crop',
+            imageUrl: AppImages.premiumHybridHeroUrl,
             fit: BoxFit.cover,
             errorWidget: (context, url, error) =>
                 Container(color: AppColors.background),

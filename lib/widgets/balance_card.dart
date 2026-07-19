@@ -5,6 +5,7 @@ import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/widgets/glass_container.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/constants/app_images.dart';
 import 'package:montage/core/utils/currency_utils.dart';
 import 'package:montage/providers/user_settings_provider.dart';
 import 'package:provider/provider.dart';
@@ -42,8 +43,7 @@ class TotalBalanceCard extends StatelessWidget {
             children: [
               Positioned.fill(
                 child: CachedNetworkImage(
-                  imageUrl:
-                      'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=2574&auto=format&fit=crop',
+                  imageUrl: AppImages.premiumHybridHeroUrl,
                   fit: BoxFit.cover,
                   placeholder: (context, url) => Container(
                     decoration: const BoxDecoration(

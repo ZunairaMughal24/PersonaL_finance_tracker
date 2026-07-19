@@ -6,6 +6,10 @@ class AppImages {
   static const String analyticsBackground = 'assets/images/newbg2.jpeg';
   static const String profileBackground = 'assets/images/newbg6.jpeg';
 
+  // Remote
+  static const String premiumHybridHeroUrl =
+      'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=2574&auto=format&fit=crop';
+
   // Icons
   static const String journalIcon = 'assets/icons/journal_icon.png';
   static const String lineChartIcon = 'assets/icons/line_chart.png';

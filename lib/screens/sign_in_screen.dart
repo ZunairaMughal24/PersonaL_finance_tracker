@@ -11,11 +11,9 @@ import 'package:montage/providers/auth_provider.dart';
 import 'package:montage/viewmodels/auth_form_view_model.dart';
 import 'package:montage/widgets/app_button.dart';
 import 'package:montage/widgets/app_text_field.dart';
-import 'package:montage/core/utils/animation_utils.dart';
-import 'package:montage/widgets/glass_container.dart';
+import 'package:montage/widgets/auth_form_card.dart';
+import 'package:montage/widgets/password_visibility_toggle.dart';
 import 'package:montage/widgets/app_background.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:montage/core/constants/app_images.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
@@ -50,158 +48,132 @@ class _SignInContentState extends State<SignInContent> {
             child: Column(
               children: [
                 140.heightBox,
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14),
-                  child: FadeSlideTransition(
-                    duration: const Duration(milliseconds: 1200),
-                    child: GlassContainer(
-                      borderRadius: 24,
-                      borderOpacity: 0.1,
-                      padding: const EdgeInsets.all(16),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            14.heightBox,
-                            const Text("Welcome Back")
-                                .h1(color: Colors.white, fontSize: 24),
-                            6.heightBox,
-                            const Text(
-                              "Please sign in to your account",
-                              textAlign: TextAlign.center,
-                            ).bodyMedium(color: Colors.white70),
-                            20.heightBox,
-                            AppTextField(
-                              title: "Email Address",
-                              hint: "Enter your email",
-                              controller: form.signInEmailController,
-                              validator: Validators.emailValidator,
-                              errorText: form.signInEmailError,
-                              onChanged: (_) =>
-                                  form.clearErrors(field: 'signInEmail'),
-                              textInputAction: TextInputAction.next,
-                              prefixChild: const Icon(
-                                Icons.email_rounded,
-                                color: Colors.white70,
-                                size: 20,
-                              ),
-                            ),
-                            12.heightBox,
-                            AppTextField(
-                              title: "Password",
-                              hint: "Enter your password",
-                              controller: form.signInPasswordController,
-                              obscureText: !form.isSignInPasswordVisible,
-                              validator: Validators.passwordValidator,
-                              errorText: form.signInPasswordError,
-                              onChanged: (_) =>
-                                  form.clearErrors(field: 'signInPassword'),
-                              textInputAction: TextInputAction.done,
-                              prefixChild: const Icon(
-                                Icons.lock_rounded,
-                                color: Colors.white70,
-                                size: 20,
-                              ),
-                              suffixChild: IconButton(
-                                onPressed: form.toggleSignInPasswordVisibility,
-                                icon: form.isSignInPasswordVisible
-                                    ? Icon(
-                                        Icons.visibility,
-                                        color:
-                                            Colors.white.withValues(alpha: 0.35),
-                                        size: 20,
-                                      )
-                                    : SvgPicture.asset(
-                                        AppImages.eyeClosed,
-                                        colorFilter: ColorFilter.mode(
-                                          Colors.white.withValues(alpha: 0.35),
-                                          BlendMode.srcIn,
-                                        ),
-                                        height: 20,
-                                      ),
-                              ),
-                            ),
-                            10.heightBox,
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      height: 24,
-                                      width: 24,
-                                      child: Checkbox(
-                                        value: form.rememberMe,
-                                        onChanged: form.toggleRememberMe,
-                                        side: const BorderSide(
-                                            color: Colors.white70),
-                                        checkColor: AppColors.primaryColor,
-                                        activeColor: Colors.white,
-                                      ),
-                                    ),
-                                    8.widthBox,
-                                    const Text("Remember me")
-                                        .bodyMedium(color: Colors.white70),
-                                  ],
-                                ),
-                                GestureDetector(
-                                  onTap: () {},
-                                  child: const Text("Forgot Password?").bodyMedium(
-                                    color: Colors.white70,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            30.heightBox,
-                            AppButton(
-                              text: "Login",
-                              isLoading: auth.isLoading,
-                              onPressed: () {
-                                if (_formKey.currentState?.validate() ?? false) {
-                                  auth
-                                      .signIn(
-                                    form.signInEmailController.text.trim(),
-                                    form.signInPasswordController.text.trim(),
-                                  )
-                                      .then((failure) {
-                                    if (!context.mounted) return;
-                                    if (failure == null) {
-                                      context.go(
-                                          AppRoutes.mainNavigationScreenRoute);
-                                    } else if (failure.code != null) {
-                                      form.handleSignInFailure(failure);
-                                    } else {
-                                      ToastUtils.show(context, failure.message);
-                                    }
-                                  });
-                                }
-                              },
-                              color: AppColors.primaryColor.withValues(alpha: 0.4),
-                              textColor: Colors.white,
-                              width: double.infinity,
-                            ),
-                            20.heightBox,
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text("Don't have an account? ")
-                                    .bodyMedium(color: Colors.white70),
-                                GestureDetector(
-                                  onTap: () =>
-                                      context.go(AppRoutes.signUpScreenRoute),
-                                  child: const Text("Sign Up").bodyMedium(
-                                    color: Colors.white,
-                                    weight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            5.heightBox,
-                          ],
-                        ),
+                AuthFormCard(
+                  formKey: _formKey,
+                  children: [
+                    14.heightBox,
+                    const Text(
+                      "Welcome Back",
+                    ).h1(color: Colors.white, fontSize: 24),
+                    6.heightBox,
+                    const Text(
+                      "Please sign in to your account",
+                      textAlign: TextAlign.center,
+                    ).bodyMedium(color: Colors.white70),
+                    20.heightBox,
+                    AppTextField(
+                      title: "Email Address",
+                      hint: "Enter your email",
+                      controller: form.signInEmailController,
+                      validator: Validators.emailValidator,
+                      errorText: form.signInEmailError,
+                      onChanged: (_) => form.clearErrors(field: 'signInEmail'),
+                      textInputAction: TextInputAction.next,
+                      prefixChild: const Icon(
+                        Icons.email_rounded,
+                        color: Colors.white70,
+                        size: 20,
                       ),
                     ),
-                  ),
+                    12.heightBox,
+                    AppTextField(
+                      title: "Password",
+                      hint: "Enter your password",
+                      controller: form.signInPasswordController,
+                      obscureText: !form.isSignInPasswordVisible,
+                      validator: Validators.passwordValidator,
+                      errorText: form.signInPasswordError,
+                      onChanged: (_) =>
+                          form.clearErrors(field: 'signInPassword'),
+                      textInputAction: TextInputAction.done,
+                      prefixChild: const Icon(
+                        Icons.lock_rounded,
+                        color: Colors.white70,
+                        size: 20,
+                      ),
+                      suffixChild: PasswordVisibilityToggle(
+                        isVisible: form.isSignInPasswordVisible,
+                        onPressed: form.toggleSignInPasswordVisibility,
+                      ),
+                    ),
+                    10.heightBox,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: Checkbox(
+                                value: form.rememberMe,
+                                onChanged: form.toggleRememberMe,
+                                side: const BorderSide(color: Colors.white70),
+                                checkColor: AppColors.primaryColor,
+                                activeColor: Colors.white,
+                              ),
+                            ),
+                            8.widthBox,
+                            const Text(
+                              "Remember me",
+                            ).bodyMedium(color: Colors.white70),
+                          ],
+                        ),
+                        GestureDetector(
+                          onTap: () {},
+                          child: const Text(
+                            "Forgot Password?",
+                          ).bodyMedium(color: Colors.white70),
+                        ),
+                      ],
+                    ),
+                    30.heightBox,
+                    AppButton(
+                      text: "Login",
+                      isLoading: auth.isLoading,
+                      onPressed: () {
+                        if (_formKey.currentState?.validate() ?? false) {
+                          auth
+                              .signIn(
+                                form.signInEmailController.text.trim(),
+                                form.signInPasswordController.text.trim(),
+                              )
+                              .then((failure) {
+                                if (!context.mounted) return;
+                                if (failure == null) {
+                                  context.go(
+                                    AppRoutes.mainNavigationScreenRoute,
+                                  );
+                                } else if (failure.code != null) {
+                                  form.handleSignInFailure(failure);
+                                } else {
+                                  ToastUtils.show(context, failure.message);
+                                }
+                              });
+                        }
+                      },
+                      color: AppColors.primaryColor.withValues(alpha: 0.4),
+                      textColor: Colors.white,
+                      width: double.infinity,
+                    ),
+                    20.heightBox,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Don't have an account? ",
+                        ).bodyMedium(color: Colors.white70),
+                        GestureDetector(
+                          onTap: () => context.go(AppRoutes.signUpScreenRoute),
+                          child: const Text("Sign Up").bodyMedium(
+                            color: Colors.white,
+                            weight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    5.heightBox,
+                  ],
                 ),
               ],
             ),
