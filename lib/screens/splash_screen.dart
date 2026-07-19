@@ -4,8 +4,6 @@ import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/core/utils/animation_utils.dart';
 import 'package:montage/widgets/glass_container.dart';
 
-import 'package:montage/widgets/app_background.dart';
-
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -16,67 +14,78 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
-    return AppBackground(
-      style: BackgroundStyle.glowMesh,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FadeScaleTransition(
-              key: const ValueKey('logo'),
-              duration: const Duration(milliseconds: 1200),
-              child: GlassContainer(
-                borderRadius: 100,
-                padding: const EdgeInsets.all(20),
-                blur: 40,
-                child: Container(
-                  padding: const EdgeInsets.all(14),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 8,
-                        spreadRadius: 1,
-                      ),
-                    ],
-                  ),
-                  child: Image.asset(
-                    AppImages.lineChartIcon,
-                    height: 70,
-                    width: 70,
-                  ),
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: Image.asset(AppImages.splashBackground, fit: BoxFit.cover),
+        ),
+        Positioned.fill(
+          child: Container(color: Colors.black.withValues(alpha: 0.35)),
+        ),
+        _buildContent(context),
+      ],
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          FadeScaleTransition(
+            key: const ValueKey('logo'),
+            duration: const Duration(milliseconds: 1200),
+            child: GlassContainer(
+              borderRadius: 100,
+              padding: const EdgeInsets.all(20),
+              blur: 40,
+              child: Container(
+                padding: const EdgeInsets.all(14),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 8,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+                child: Image.asset(
+                  AppImages.lineChartIcon,
+                  height: 70,
+                  width: 70,
                 ),
               ),
             ),
-            40.heightBox,
-            FadeSlideTransition(
-              interval: const Interval(0.3, 1.0, curve: Curves.easeOut),
-              child: Column(
-                children: [
-                  Text(
-                    "MONTAGE",
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 3,
-                    ),
+          ),
+          40.heightBox,
+          FadeSlideTransition(
+            interval: const Interval(0.3, 1.0, curve: Curves.easeOut),
+            child: Column(
+              children: [
+                Text(
+                  "MONTAGE",
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 3,
                   ),
-                  8.heightBox,
-                  Text(
-                    "FINANCIAL DISCIPLINE REFINED",
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.white.withValues(alpha: 0.6),
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 2,
-                    ),
+                ),
+                8.heightBox,
+                Text(
+                  "FINANCIAL DISCIPLINE REFINED",
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Colors.white.withValues(alpha: 0.6),
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 2,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

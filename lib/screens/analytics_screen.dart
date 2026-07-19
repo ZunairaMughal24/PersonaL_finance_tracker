@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/constants/app_images.dart';
 import 'package:montage/providers/category_provider.dart';
 import 'package:montage/widgets/analytics/spending_category_breakdown.dart';
 import 'package:montage/widgets/analytics/trends_weekly_breakdown.dart';
 import 'package:montage/widgets/glass_container.dart';
-import 'package:montage/widgets/app_background.dart';
 import 'package:montage/widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:montage/widgets/analytics/trends_bar_chart.dart';
@@ -58,9 +58,26 @@ class _AnalyticsScreenContentState extends State<_AnalyticsScreenContent> {
   Widget build(BuildContext context) {
     final vm = context.watch<AnalyticsViewModel>();
 
-    return AppBackground(
-      style: BackgroundStyle.silkDark,
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      extendBodyBehindAppBar: true,
       appBar: const CustomAppBar(title: "Spending Analytics"),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(AppImages.analyticsBackground, fit: BoxFit.cover),
+          ),
+          Positioned.fill(
+            child: Container(color: Colors.black.withValues(alpha: 0.35)),
+          ),
+          _buildBody(vm),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBody(AnalyticsViewModel vm) {
+    return SizedBox.expand(
       child: vm.summary.categoryTotals.isEmpty
           ? _buildEmptyState()
           : GestureDetector(

@@ -2,6 +2,10 @@ class AppImages {
   static const String bg1 = 'assets/images/bg1.jpeg';
   static const String bg2 = 'assets/images/bg2.jpeg';
 
+  static const String splashBackground = 'assets/images/newbg6.jpeg';
+  static const String analyticsBackground = 'assets/images/newbg2.jpeg';
+  static const String profileBackground = 'assets/images/newbg6.jpeg';
+
   // Icons
   static const String journalIcon = 'assets/icons/journal_icon.png';
   static const String lineChartIcon = 'assets/icons/line_chart.png';
