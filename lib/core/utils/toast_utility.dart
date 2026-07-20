@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
 
 class ToastUtils {
   static void show(
@@ -109,12 +110,11 @@ class _ToastWidgetState extends State<_ToastWidget>
                 Expanded(
                   child: Text(
                     widget.message,
-                    style: TextStyle(
+                    style: AppTextTheme.body(
                       color: Colors.white.withValues(alpha: 0.9),
                       fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.3,
-                    ),
+                      weight: FontWeight.w600,
+                    ).copyWith(letterSpacing: 0.3),
                   ),
                 ),
               ],

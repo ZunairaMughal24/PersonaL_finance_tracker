@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/providers/category_provider.dart';
 import 'package:montage/widgets/glass_container.dart';
@@ -106,19 +107,20 @@ class _CategoryEditorDialogView extends StatelessWidget {
                   return TextField(
                     controller: vm.controller,
                     autofocus: true,
-                    style: const TextStyle(
+                    style: AppTextTheme.body(
                       color: Colors.white,
+                      weight: FontWeight.w600,
                       fontSize: 16,
-                      fontWeight: FontWeight.w600,
                     ),
                     decoration: InputDecoration(
                       hintText: "Category Name",
-                      hintStyle: TextStyle(
+                      hintStyle: AppTextTheme.body(
                         color: Colors.white.withValues(alpha: 0.3),
-                        fontWeight: FontWeight.w500,
+                        weight: FontWeight.w500,
+                        fontSize: 16,
                       ),
                       errorText: vm.errorText,
-                      errorStyle: const TextStyle(
+                      errorStyle: AppTextTheme.body(
                         color: AppColors.red,
                         fontSize: 12,
                       ),

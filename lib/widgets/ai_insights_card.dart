@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
 import 'package:montage/viewmodels/home_view_model.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -93,13 +94,11 @@ class AIInsightsCard extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 insights,
-                                style: TextStyle(
+                                style: AppTextTheme.body(
                                   color: Colors.white.withValues(alpha: 0.95),
+                                  weight: FontWeight.w500,
                                   fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                  height: 1.5,
-                                  letterSpacing: 0.2,
-                                ),
+                                ).copyWith(height: 1.5),
                               ),
                             ),
                           ],

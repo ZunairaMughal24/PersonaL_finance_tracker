@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
 import 'package:montage/core/utils/currency_utils.dart';
 import 'package:montage/core/utils/date_formatter.dart';
 import 'package:montage/core/constants/app_images.dart';
@@ -32,27 +33,29 @@ class AmountDisplay extends StatelessWidget {
           children: [
             Text(
               "$symbol $amount",
-              style: TextStyle(
-                fontSize: 48,
-                fontWeight: FontWeight.bold,
-                color: isIncome ? AppColors.green : AppColors.red,
-                shadows: [
-                  BoxShadow(
-                    color: (isIncome ? AppColors.green : AppColors.red)
-                        .withValues(alpha: 0.3),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
+              style:
+                  AppTextTheme.mono(
+                    color: isIncome ? AppColors.green : AppColors.red,
+                    weight: FontWeight.bold,
+                    fontSize: 48,
+                  ).copyWith(
+                    shadows: [
+                      BoxShadow(
+                        color: (isIncome ? AppColors.green : AppColors.red)
+                            .withValues(alpha: 0.3),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
-                ],
-              ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
             Text(
               "Tap to edit amount",
-              style: TextStyle(
-                fontSize: 13,
+              style: AppTextTheme.body(
                 color: AppColors.white.withValues(alpha: 0.5),
+                fontSize: 13,
               ),
             ),
           ],
@@ -81,9 +84,9 @@ class TransactionDatePicker extends StatelessWidget {
         children: [
           Text(
             "Date",
-            style: TextStyle(
+            style: AppTextTheme.body(
               fontSize: 15,
-              fontWeight: FontWeight.w500,
+              weight: FontWeight.w500,
               color: AppColors.white.withValues(alpha: 0.7),
             ),
           ),
@@ -144,10 +147,10 @@ class TransactionDatePicker extends StatelessWidget {
                   const SizedBox(width: 12),
                   Text(
                     DateUtilsCustom.formatDate(selectedDate),
-                    style: const TextStyle(
+                    style: AppTextTheme.body(
                       color: Colors.white,
                       fontSize: 16,
-                      fontWeight: FontWeight.w500,
+                      weight: FontWeight.w500,
                     ),
                   ),
                 ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:montage/core/constants/app_images.dart';
 import 'package:montage/widgets/pulse_effect.dart';
@@ -209,9 +210,9 @@ class _KeypadHeader extends StatelessWidget {
                 if (hasOperators)
                   Text(
                     formattedResult,
-                    style: TextStyle(
+                    style: AppTextTheme.mono(
                       fontSize: 14,
-                      fontWeight: FontWeight.w400,
+                      weight: FontWeight.w400,
                       color: Colors.white.withValues(alpha: 0.5),
                     ),
                     maxLines: 1,
@@ -222,9 +223,9 @@ class _KeypadHeader extends StatelessWidget {
                   alignment: Alignment.centerRight,
                   child: Text(
                     amount == "0" ? "0" : formattedAmount,
-                    style: const TextStyle(
+                    style: AppTextTheme.mono(
                       fontSize: 32,
-                      fontWeight: FontWeight.w600,
+                      weight: FontWeight.w600,
                       color: Colors.white,
                     ),
                     maxLines: 1,
@@ -275,7 +276,7 @@ class _KeypadNoteField extends StatelessWidget {
         children: [
           Text(
             "Note : ",
-            style: TextStyle(
+            style: AppTextTheme.body(
               color: Colors.white.withValues(alpha: 0.3),
               fontSize: 16,
             ),
@@ -285,11 +286,12 @@ class _KeypadNoteField extends StatelessWidget {
               controller: controller,
               onChanged: onChanged,
               focusNode: focusNode,
-              style: const TextStyle(color: Colors.white, fontSize: 16),
+              style: AppTextTheme.body(color: Colors.white, fontSize: 16),
               decoration: InputDecoration(
                 hintText: "Enter a note...",
-                hintStyle: TextStyle(
+                hintStyle: AppTextTheme.body(
                   color: Colors.white.withValues(alpha: 0.2),
+                  fontSize: 16,
                 ),
                 border: InputBorder.none,
                 isDense: true,
@@ -446,10 +448,10 @@ class _KeypadGrid extends StatelessWidget {
       child: _KeypadButton(
         label: label,
         onTap: () => onKeyPressed(value),
-        labelStyle: const TextStyle(
+        labelStyle: AppTextTheme.mono(
           fontSize: 22,
           color: Colors.white,
-          fontWeight: FontWeight.w400,
+          weight: FontWeight.w400,
         ),
       ),
     );
@@ -477,9 +479,9 @@ class _KeypadGrid extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               isToday ? "Today" : DateFormat('dd MMM').format(selectedDate),
-              style: TextStyle(
+              style: AppTextTheme.body(
                 color: isToday ? AppColors.primaryLight : Colors.white,
-                fontWeight: FontWeight.w600,
+                weight: FontWeight.w600,
                 fontSize: 15,
               ),
             ),
@@ -510,10 +512,10 @@ class _KeypadGrid extends StatelessWidget {
         onTap: showEqual ? onEqualPressed : onComplete,
         backgroundColor: AppColors.primaryColor.withValues(alpha: 0.2),
         labelStyle: showEqual
-            ? const TextStyle(
+            ? AppTextTheme.mono(
                 fontSize: 28,
                 color: Colors.white,
-                fontWeight: FontWeight.w600,
+                weight: FontWeight.w600,
               )
             : null,
       ),
@@ -575,10 +577,10 @@ class _KeypadButton extends StatelessWidget {
                           label!,
                           style:
                               labelStyle ??
-                              const TextStyle(
+                              AppTextTheme.mono(
                                 fontSize: 23,
                                 color: Colors.white,
-                                fontWeight: FontWeight.w500,
+                                weight: FontWeight.w500,
                               ),
                         )
                       : Icon(icon, color: Colors.white, size: iconSize)),

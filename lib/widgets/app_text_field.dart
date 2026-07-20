@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
 import 'package:montage/core/utils/animation_utils.dart';
 
 class AppTextField extends StatefulWidget {
@@ -52,12 +53,11 @@ class _AppTextFieldState extends State<AppTextField> {
           children: [
             Text(
               widget.title,
-              style: TextStyle(
+              style: AppTextTheme.body(
                 fontSize: 13,
-                fontWeight: FontWeight.w600,
+                weight: FontWeight.w600,
                 color: AppColors.white.withValues(alpha: 0.6),
-                letterSpacing: 0.4,
-              ),
+              ).copyWith(letterSpacing: 0.4),
             ),
             const SizedBox(height: 6),
             ShakeTransition(
@@ -82,15 +82,15 @@ class _AppTextFieldState extends State<AppTextField> {
                     field.didChange(value);
                     if (widget.onChanged != null) widget.onChanged!(value);
                   },
-                  style: const TextStyle(
+                  style: AppTextTheme.body(
                     color: Colors.white,
                     fontSize: 15,
-                    fontWeight: FontWeight.w500,
+                    weight: FontWeight.w500,
                   ),
                   decoration: InputDecoration(
                     hintText: widget.hint,
                     labelText: widget.label,
-                    hintStyle: TextStyle(
+                    hintStyle: AppTextTheme.body(
                       color: AppColors.white.withValues(alpha: 0.35),
                       fontSize: 14,
                     ),
@@ -132,10 +132,10 @@ class _AppTextFieldState extends State<AppTextField> {
                         padding: const EdgeInsets.only(top: 2, left: 4),
                         child: Text(
                           displayError,
-                          style: const TextStyle(
+                          style: AppTextTheme.body(
                             color: Colors.redAccent,
                             fontSize: 12,
-                            fontWeight: FontWeight.w400,
+                            weight: FontWeight.w400,
                           ),
                         ),
                       ),

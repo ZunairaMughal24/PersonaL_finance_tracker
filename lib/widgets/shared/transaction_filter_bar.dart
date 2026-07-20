@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/domain/entities/transaction.dart';
 import 'package:montage/providers/user_settings_provider.dart';
@@ -111,13 +112,12 @@ class _ExportChip extends StatelessWidget {
           children: [
             const Icon(Icons.ios_share_rounded, size: 18, color: Colors.white),
             6.widthBox,
-            const Text(
+            Text(
               "Export",
-              style: TextStyle(
+              style: AppTextTheme.body(
                 color: Colors.white,
                 fontSize: 14,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.2,
+                weight: FontWeight.w700,
               ),
             ),
           ],

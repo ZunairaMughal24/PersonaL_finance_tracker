@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/constants/app_images.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
 import 'package:montage/core/utils/date_formatter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -24,15 +25,15 @@ class CustomDatePicker extends StatelessWidget {
       children: [
         Text(
           "Date",
-          style: const TextStyle(
+          style: AppTextTheme.body(
             fontSize: 16,
-            fontWeight: FontWeight.w500,
+            weight: FontWeight.w500,
             color: AppColors.white,
           ),
         ),
         TextFormField(
           readOnly: true,
-          style: const TextStyle(color: Colors.white),
+          style: AppTextTheme.body(color: Colors.white),
           controller: TextEditingController(text: textValue),
 
           onTap: () async {
@@ -46,7 +47,7 @@ class CustomDatePicker extends StatelessWidget {
           },
           decoration: InputDecoration(
             hintText: "Select Date",
-            hintStyle: TextStyle(color: AppColors.grey),
+            hintStyle: AppTextTheme.body(color: AppColors.grey),
             prefixIcon: Padding(
               padding: const EdgeInsets.all(12.0),
               child: SvgPicture.asset(

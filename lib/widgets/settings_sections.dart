@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:montage/config/router.dart';
 import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/constants/app_images.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/core/utils/toast_utility.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
@@ -98,10 +99,10 @@ class _ProfileCardState extends State<ProfileCard> {
                       ? TextField(
                           controller: _nameController,
                           autofocus: true,
-                          style: const TextStyle(
+                          style: AppTextTheme.body(
                             color: Colors.white,
+                            weight: FontWeight.bold,
                             fontSize: 18,
-                            fontWeight: FontWeight.bold,
                           ),
                           decoration: InputDecoration(
                             isDense: true,

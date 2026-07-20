@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:montage/config/router.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
 import 'package:montage/screens/analytics_screen.dart';
 import 'package:montage/screens/home_screen.dart';
 import 'package:montage/screens/settings_screen.dart';
@@ -179,10 +180,10 @@ class MainNavScreenState extends State<MainNavScreen> {
               const SizedBox(height: 2),
               Text(
                 label,
-                style: TextStyle(
+                style: AppTextTheme.body(
                   color: color,
                   fontSize: 13,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                  weight: isSelected ? FontWeight.w600 : FontWeight.w500,
                 ),
               ),
             ],

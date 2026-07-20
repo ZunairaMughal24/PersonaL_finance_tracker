@@ -1,0 +1,22 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // helper function to check if user is logged in
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // helper function to check if the data belongs to the logged-in user
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    // Match the user document and all sub-collections (transactions, settings)
+    match /users/{userId}/{document=**} {
+      // Allow read/write ONLY if user is logged in AND they are the owner of this ID
+      allow read, write: if isSignedIn() && isOwner(userId);
+    }
+  }
+}

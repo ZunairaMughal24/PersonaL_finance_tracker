@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
 import 'package:montage/core/utils/haptic_feedback_helper.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 
@@ -87,12 +88,11 @@ class AppButton extends StatelessWidget {
                 : icon == null
                 ? Text(
                     text,
-                    style: TextStyle(
+                    style: AppTextTheme.body(
                       color: textColor,
                       fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.5,
-                    ),
+                      weight: FontWeight.w700,
+                    ).copyWith(letterSpacing: 0.5),
                   )
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -101,12 +101,11 @@ class AppButton extends StatelessWidget {
                       8.widthBox,
                       Text(
                         text,
-                        style: TextStyle(
+                        style: AppTextTheme.body(
                           color: textColor,
                           fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.5,
-                        ),
+                          weight: FontWeight.w700,
+                        ).copyWith(letterSpacing: 0.5),
                       ),
                     ],
                   ),

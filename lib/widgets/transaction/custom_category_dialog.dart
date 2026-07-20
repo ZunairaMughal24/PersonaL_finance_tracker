@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/widgets/glass_container.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
@@ -90,16 +91,17 @@ class _CustomCategoryDialogState extends State<CustomCategoryDialog> {
                   return TextField(
                     controller: _controller,
                     autofocus: true,
-                    style: const TextStyle(
+                    style: AppTextTheme.body(
                       color: Colors.white,
+                      weight: FontWeight.w600,
                       fontSize: 16,
-                      fontWeight: FontWeight.w600,
                     ),
                     decoration: InputDecoration(
                       hintText: "e.g. Shopping, Rent, Gifts",
-                      hintStyle: TextStyle(
+                      hintStyle: AppTextTheme.body(
                         color: Colors.white.withValues(alpha: 0.3),
-                        fontWeight: FontWeight.w500,
+                        weight: FontWeight.w500,
+                        fontSize: 16,
                       ),
                       filled: true,
                       fillColor: Colors.white.withValues(alpha: 0.05),

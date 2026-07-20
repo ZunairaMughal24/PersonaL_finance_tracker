@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/domain/entities/transaction.dart';
 import 'package:montage/widgets/transaction/transaction_list_item.dart';
@@ -205,12 +206,11 @@ class _ActionButton extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   label.toUpperCase(),
-                  style: const TextStyle(
+                  style: AppTextTheme.body(
                     color: Colors.white,
                     fontSize: 8,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.5,
-                  ),
+                    weight: FontWeight.w700,
+                  ).copyWith(letterSpacing: 0.5),
                 ),
               ],
             ),

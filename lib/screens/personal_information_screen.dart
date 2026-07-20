@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/core/utils/padding_extention.dart';
@@ -38,9 +39,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
   Widget build(BuildContext context) {
     return AppBackground(
       style: BackgroundStyle.silkDark,
-      appBar: const CustomAppBar(
-        title: "Personal Information",
-      ),
+      appBar: const CustomAppBar(title: "Personal Information"),
       child: SafeArea(
         child: Consumer<UserSettingsProvider>(
           builder: (context, settings, _) => SingleChildScrollView(
@@ -129,17 +128,18 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                         controller: controller,
                         autofocus: true,
                         keyboardType: keyboardType,
-                        style: const TextStyle(
+                        style: AppTextTheme.body(
                           color: Colors.white,
                           fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                          weight: FontWeight.w600,
                         ),
                         decoration: const InputDecoration(
                           isDense: true,
                           contentPadding: EdgeInsets.symmetric(vertical: 4),
                           enabledBorder: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: AppColors.primaryColor),
+                            borderSide: BorderSide(
+                              color: AppColors.primaryColor,
+                            ),
                           ),
                           focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
@@ -192,10 +192,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                         value,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                      ).bodyLarge(
-                        color: Colors.white,
-                        weight: FontWeight.w600,
-                      ),
+                      ).bodyLarge(color: Colors.white, weight: FontWeight.w600),
                     ),
                     GestureDetector(
                       onTap: onEditTap,
@@ -227,11 +224,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
             weight: FontWeight.w600,
           ),
           8.heightBox,
-          Text(
-            value,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-          ).bodyLarge(
+          Text(value, overflow: TextOverflow.ellipsis, maxLines: 1).bodyLarge(
             color: Colors.white.withValues(alpha: 0.7),
             weight: FontWeight.w500,
           ),

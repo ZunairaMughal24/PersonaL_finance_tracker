@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/widgets/glass_container.dart';
 
@@ -53,13 +54,12 @@ class TransactionFilterChip extends StatelessWidget {
             6.widthBox,
             Text(
               label,
-              style: TextStyle(
+              style: AppTextTheme.body(
                 color: isSelected
                     ? Colors.white
                     : Colors.white.withValues(alpha: 0.6),
                 fontSize: 14,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
-                letterSpacing: 0.2,
+                weight: isSelected ? FontWeight.w700 : FontWeight.w600,
               ),
             ),
           ],

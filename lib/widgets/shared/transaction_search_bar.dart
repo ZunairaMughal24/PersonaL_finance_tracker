@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/constants/app_images.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
 import 'package:montage/core/utils/widget_utility_extention.dart';
 import 'package:montage/widgets/glass_container.dart';
 
@@ -49,10 +50,10 @@ class TransactionSearchBar extends StatelessWidget {
               child: TextField(
                 focusNode: focusNode,
                 onChanged: onChanged,
-                style: const TextStyle(color: Colors.white, fontSize: 15),
+                style: AppTextTheme.body(color: Colors.white, fontSize: 15),
                 decoration: InputDecoration(
                   hintText: hintText,
-                  hintStyle: TextStyle(
+                  hintStyle: AppTextTheme.body(
                     color: Colors.white.withValues(alpha: 0.3),
                     fontSize: 14,
                   ),

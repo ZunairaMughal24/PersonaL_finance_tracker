@@ -7,6 +7,7 @@ import 'package:montage/models/trends_model.dart';
 import 'package:montage/providers/user_settings_provider.dart';
 import 'package:montage/widgets/glass_container.dart';
 import 'package:provider/provider.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
 import 'package:montage/core/themes/text_theme_extension.dart';
 
 class TrendsBarChart extends StatelessWidget {
@@ -68,9 +69,9 @@ class TrendsBarChart extends StatelessWidget {
                         rod.toY,
                         settings.selectedCurrency,
                       ),
-                      TextStyle(
+                      AppTextTheme.mono(
                         color: rodIndex == 0 ? AppColors.green : AppColors.red,
-                        fontWeight: FontWeight.bold,
+                        weight: FontWeight.bold,
                         fontSize: 14,
                       ),
                     );

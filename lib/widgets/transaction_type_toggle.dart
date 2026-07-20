@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
 import 'package:montage/widgets/glass_container.dart';
 
 class TransactionTypeToggle extends StatelessWidget {
@@ -79,16 +80,15 @@ class TransactionTypeToggle extends StatelessWidget {
                           const SizedBox(width: 8),
                           Text(
                             "Income",
-                            style: TextStyle(
+                            style: AppTextTheme.body(
                               color: isIncome
                                   ? Colors.white
                                   : Colors.white.withValues(alpha: 0.4),
-                              fontWeight: isIncome
+                              weight: isIncome
                                   ? FontWeight.w700
                                   : FontWeight.w500,
                               fontSize: 14,
-                              letterSpacing: 0.5,
-                            ),
+                            ).copyWith(letterSpacing: 0.5),
                           ),
                         ],
                       ),
@@ -117,16 +117,15 @@ class TransactionTypeToggle extends StatelessWidget {
                           const SizedBox(width: 8),
                           Text(
                             "Expense",
-                            style: TextStyle(
+                            style: AppTextTheme.body(
                               color: !isIncome
                                   ? Colors.white
                                   : Colors.white.withValues(alpha: 0.4),
-                              fontWeight: !isIncome
+                              weight: !isIncome
                                   ? FontWeight.w700
                                   : FontWeight.w500,
                               fontSize: 14,
-                              letterSpacing: 0.5,
-                            ),
+                            ).copyWith(letterSpacing: 0.5),
                           ),
                         ],
                       ),

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
 import 'package:montage/core/constants/app_images.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:montage/core/enums/sync_status.dart';
 import 'package:montage/widgets/glass_container.dart';
@@ -67,21 +68,19 @@ class HomeHeader extends StatelessWidget {
                 children: [
                   Text(
                     'Hello, ${userName.split(' ')[0]}!',
-                    style: const TextStyle(
+                    style: AppTextTheme.h3(
                       color: AppColors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: -0.5,
-                    ),
+                      weight: FontWeight.bold,
+                    ).copyWith(fontSize: 18, letterSpacing: -0.5),
                   ),
                   Row(
                     children: [
                       Text(
                         summaryText,
-                        style: TextStyle(
+                        style: AppTextTheme.body(
                           color: AppColors.white.withValues(alpha: 0.9),
                           fontSize: 13,
-                          fontWeight: FontWeight.w400,
+                          weight: FontWeight.w400,
                         ),
                       ),
                       if (syncStatus != SyncStatus.idle) ...[

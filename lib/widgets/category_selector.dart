@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
 
 class CategorySelector extends StatelessWidget {
   final String selectedCategory;
@@ -24,7 +25,15 @@ class CategorySelector extends StatelessWidget {
     // Static lists to identify what NOT to long-press
     final staticCats = isIncome
         ? ["salary", "business", "gifts", "investment", "other"]
-        : ["food", "transport", "rent", "health", "shopping", "entertainment", "other"];
+        : [
+            "food",
+            "transport",
+            "rent",
+            "health",
+            "shopping",
+            "entertainment",
+            "other",
+          ];
 
     final totalItems = categories.length + (onAddCategory != null ? 1 : 0);
 
@@ -71,10 +80,10 @@ class CategorySelector extends StatelessWidget {
                     textAlign: TextAlign.center,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: AppTextTheme.body(
                       color: Colors.white.withValues(alpha: 0.7),
                       fontSize: 13,
-                      fontWeight: FontWeight.w500,
+                      weight: FontWeight.w500,
                     ),
                   ),
                 ],
@@ -91,7 +100,9 @@ class CategorySelector extends StatelessWidget {
 
           return GestureDetector(
             onTap: () => onCategorySelected(catName),
-            onLongPress: isStatic ? null : () => onCategoryLongPress?.call(catName),
+            onLongPress: isStatic
+                ? null
+                : () => onCategoryLongPress?.call(catName),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -134,12 +145,12 @@ class CategorySelector extends StatelessWidget {
                   textAlign: TextAlign.center,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
+                  style: AppTextTheme.body(
                     color: isSelected
                         ? Colors.white
                         : Colors.white.withValues(alpha: 0.7),
                     fontSize: 13,
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                    weight: isSelected ? FontWeight.w600 : FontWeight.w500,
                   ),
                 ),
               ],

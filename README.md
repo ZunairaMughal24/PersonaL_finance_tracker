@@ -1,9 +1,9 @@
 # Montage
 
 > [!NOTE]
-> **PROPRIETARY & CONFIDENTIAL**
+> **ALL RIGHTS RESERVED**
 > 
-> © 2026 Zunaira Mughal. All rights reserved. Unauthorized cloning, distribution, or usage of this repository is strictly prohibited.
+> © 2026 Zunaira Mughal. All rights reserved. This repository is shared for viewing and demonstration purposes only. Copying, cloning, distributing, or reusing this code, in whole or in part, is not permitted without prior written permission from the author.
 
 Montage is a professional-grade, dark-themed personal finance management application built with Flutter. Structured with a glassmorphic visual system, Montage integrates local capability with background cloud storage synchronization to deliver an offline-first financial tracking experience.
 

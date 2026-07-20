@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
 import 'package:montage/core/utils/toast_utility.dart';
 import 'package:montage/viewmodels/transaction_list_view_model.dart';
 import 'package:montage/widgets/shared/transaction_modals.dart';
@@ -56,12 +57,10 @@ class TransactionAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       title: Text(
         vm.isSelectionMode ? '${vm.selectedCount} Selected' : title,
-        style: const TextStyle(
+        style: AppTextTheme.h2(
           color: Colors.white,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 0.5,
-          fontSize: 21,
-        ),
+          weight: FontWeight.bold,
+        ).copyWith(letterSpacing: 0.5, fontSize: 21),
       ),
       centerTitle: true,
       backgroundColor: Colors.transparent,
@@ -153,7 +152,11 @@ class _AppBarPopupMenu extends StatelessWidget {
               onConfirm: () async {
                 await vm.restoreAll();
                 if (context.mounted) {
-                  ToastUtils.show(context, "All transactions restored successfully", isError: false);
+                  ToastUtils.show(
+                    context,
+                    "All transactions restored successfully",
+                    isError: false,
+                  );
                 }
               },
             );
@@ -163,7 +166,11 @@ class _AppBarPopupMenu extends StatelessWidget {
               onConfirm: () async {
                 await vm.archiveAll();
                 if (context.mounted) {
-                  ToastUtils.show(context, "All transactions moved to history", isError: false);
+                  ToastUtils.show(
+                    context,
+                    "All transactions moved to history",
+                    isError: false,
+                  );
                 }
               },
             );
@@ -239,11 +246,10 @@ class _AppBarPopupMenu extends StatelessWidget {
           const SizedBox(width: 12),
           Text(
             label,
-            style: const TextStyle(
+            style: AppTextTheme.body(
               color: Colors.white,
               fontSize: 14,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.2,
+              weight: FontWeight.w600,
             ),
           ),
         ],

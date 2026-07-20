@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:montage/config/router.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
 import 'package:montage/screens/main_navigation_screen.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -50,12 +51,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               : null),
       title: Text(
         title,
-        style: const TextStyle(
+        style: AppTextTheme.h2(
           color: Colors.white,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 0.5,
-          fontSize: 21,
-        ),
+          weight: FontWeight.bold,
+        ).copyWith(letterSpacing: 0.5, fontSize: 21),
       ),
       centerTitle: centerTitle,
       titleSpacing: titleSpacing,

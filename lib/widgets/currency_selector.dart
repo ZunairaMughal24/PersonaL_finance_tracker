@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:montage/core/constants/app_colors.dart';
+import 'package:montage/core/themes/app_text_theme.dart';
 
 class CurrencySelector extends StatelessWidget {
   final String selectedCurrency;
@@ -28,9 +29,9 @@ class CurrencySelector extends StatelessWidget {
         child: DropdownButton<String>(
           value: selectedCurrency,
           dropdownColor: AppColors.surface,
-          style: const TextStyle(
+          style: AppTextTheme.body(
             color: AppColors.white,
-            fontWeight: FontWeight.bold,
+            weight: FontWeight.bold,
           ),
           icon: const Icon(
             Icons.arrow_drop_down,
